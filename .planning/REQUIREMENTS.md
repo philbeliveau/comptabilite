@@ -177,13 +177,97 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| INGEST-01 | Phase 1 | Pending |
+| INGEST-02 | Phase 1 | Pending |
+| INGEST-03 | Phase 1 | Pending |
+| INGEST-04 | Phase 1 | Pending |
+| INGEST-05 | Phase 1 | Pending |
+| CAT-01 | Phase 1 | Pending |
+| CAT-02 | Phase 3 | Pending |
+| CAT-03 | Phase 3 | Pending |
+| CAT-04 | Phase 3 | Pending |
+| CAT-05 | Phase 3 | Pending |
+| CAT-06 | Phase 3 | Pending |
+| CAT-07 | Phase 3 | Pending |
+| CAT-08 | Phase 3 | Pending |
+| CAT-09 | Phase 3 | Pending |
+| CAT-10 | Phase 3 | Pending |
+| CAT-11 | Phase 3 | Pending |
+| PAY-01 | Phase 2 | Pending |
+| PAY-02 | Phase 2 | Pending |
+| PAY-03 | Phase 2 | Pending |
+| PAY-04 | Phase 2 | Pending |
+| PAY-05 | Phase 2 | Pending |
+| PAY-06 | Phase 2 | Pending |
+| PAY-07 | Phase 2 | Pending |
+| PAY-08 | Phase 2 | Pending |
+| PAY-09 | Phase 2 | Pending |
+| PAY-10 | Phase 2 | Pending |
+| PAY-11 | Phase 2 | Pending |
+| PAY-12 | Phase 2 | Pending |
+| TAX-01 | Phase 2 | Pending |
+| TAX-02 | Phase 2 | Pending |
+| TAX-03 | Phase 2 | Pending |
+| TAX-04 | Phase 2 | Pending |
+| TAX-05 | Phase 2 | Pending |
+| TAX-06 | Phase 2 | Pending |
+| CCA-01 | Phase 2 | Pending |
+| CCA-02 | Phase 2 | Pending |
+| CCA-03 | Phase 2 | Pending |
+| CCA-04 | Phase 2 | Pending |
+| CCA-05 | Phase 2 | Pending |
+| CCA-06 | Phase 2 | Pending |
+| LOAN-01 | Phase 2 | Pending |
+| LOAN-02 | Phase 2 | Pending |
+| LOAN-03 | Phase 2 | Pending |
+| LOAN-04 | Phase 2 | Pending |
+| INV-01 | Phase 5 | Pending |
+| INV-02 | Phase 5 | Pending |
+| INV-03 | Phase 5 | Pending |
+| DOC-01 | Phase 5 | Pending |
+| DOC-02 | Phase 5 | Pending |
+| DOC-03 | Phase 5 | Pending |
+| DOC-04 | Phase 5 | Pending |
+| MCP-01 | Phase 4 | Pending |
+| MCP-02 | Phase 4 | Pending |
+| MCP-03 | Phase 4 | Pending |
+| MCP-04 | Phase 4 | Pending |
+| MCP-05 | Phase 4 | Pending |
+| MCP-06 | Phase 4 | Pending |
+| WEB-01 | Phase 4 | Pending |
+| WEB-02 | Phase 4 | Pending |
+| WEB-03 | Phase 4 | Pending |
+| WEB-04 | Phase 4 | Pending |
+| WEB-05 | Phase 4 | Pending |
+| CPA-01 | Phase 5 | Pending |
+| CPA-02 | Phase 5 | Pending |
+| CPA-03 | Phase 5 | Pending |
+| CPA-04 | Phase 5 | Pending |
+| CPA-05 | Phase 5 | Pending |
+| CPA-06 | Phase 5 | Pending |
+| CPA-07 | Phase 5 | Pending |
+| CPA-08 | Phase 5 | Pending |
+| CPA-09 | Phase 5 | Pending |
+| CLI-01 | Phase 1 | Pending |
+| CLI-02 | Phase 3 | Pending |
+| CLI-03 | Phase 3 | Pending |
+| CLI-04 | Phase 2 | Pending |
+| CLI-05 | Phase 5 | Pending |
+| CLI-06 | Phase 1 | Pending |
+| AUTO-01 | Phase 5 | Pending |
+| AUTO-02 | Phase 5 | Pending |
+| AUTO-03 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 67 total
-- Mapped to phases: 0
-- Unmapped: 67 (pending roadmap creation)
+- v1 requirements: 85 total
+- Mapped to phases: 85
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-18*
-*Last updated: 2026-02-18 after initial definition*
+*Last updated: 2026-02-18 after roadmap creation*
