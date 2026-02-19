@@ -5,17 +5,6 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
-2026-02-02 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
-  source: "rbc-carte-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-2.csv"
-  ligne: "5"
-  confiance: "0.9"
-  source_ia: "llm"
-  compte_propose: "Depenses:Repas-Representation"
-  Passifs:CartesCredit:RBC       -5.31 CAD
-  Depenses:Repas-Representation   5.31 CAD
-
 2026-02-03 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"

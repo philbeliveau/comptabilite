@@ -1,5 +1,6 @@
-# Regles de categorisation automatique
-# Format : chaque regle a un nom, des conditions (regex sur payee/narration), et un compte cible
-# Les regles sont evaluees dans l'ordre ; la premiere correspondance gagne
-# Ajouter des regles au fur et a mesure des imports
-regles: []
+regles:
+- compte: Depenses:Repas-Representation
+  condition:
+    payee: Mollo\ Cafe\ Montreal
+  confiance: 0.95
+  nom: auto-mollo-cafe-montreal
