@@ -1,4 +1,4 @@
-"""Tests pour les importateurs RBC (CSV cheques, CSV carte credit)."""
+"""Tests pour les importateurs RBC (CSV cheques, CSV carte credit, OFX)."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ from compteqc.ingestion.normalisation import (
 )
 from compteqc.ingestion.rbc_carte import RBCCarteImporter
 from compteqc.ingestion.rbc_cheques import RBCChequesImporter
+from compteqc.ingestion.rbc_ofx import RBCOfxImporter
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -242,3 +243,91 @@ class TestRBCCarteImporter:
         txns = importer.extract(str(FIXTURES / "rbc_carte_sample.csv"), [])
         for txn in txns:
             assert txn.meta["source"] == "rbc-carte-csv"
+
+
+# ---------------------------------------------------------------------------
+# Tests RBCOfxImporter
+# ---------------------------------------------------------------------------
+
+
+class TestRBCOfxImporter:
+    @pytest.fixture
+    def importer(self):
+        return RBCOfxImporter(
+            account="Actifs:Banque:RBC:Cheques",
+            account_id="12345-6789012",
+        )
+
+    def test_identify_bon_fichier(self, importer):
+        assert importer.identify(str(FIXTURES / "rbc_sample.ofx")) is True
+
+    def test_identify_mauvais_account_id(self):
+        imp = RBCOfxImporter(account="Actifs:Banque:RBC:Cheques", account_id="99999-0000000")
+        assert imp.identify(str(FIXTURES / "rbc_sample.ofx")) is False
+
+    def test_identify_non_ofx(self, importer, tmp_path):
+        f = tmp_path / "test.csv"
+        f.write_text("not ofx")
+        assert importer.identify(str(f)) is False
+
+    def test_account(self, importer):
+        assert importer.account("any") == "Actifs:Banque:RBC:Cheques"
+
+    def test_extract_nombre_transactions(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        assert len(txns) == 6
+
+    def test_extract_montants_decimal(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            for posting in txn.postings:
+                assert isinstance(posting.units.number, Decimal)
+
+    def test_extract_deux_postings(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            assert len(txn.postings) == 2
+
+    def test_extract_postings_balancent(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            total = sum(p.units.number for p in txn.postings)
+            assert total == Decimal("0")
+
+    def test_extract_flag_en_attente(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            assert txn.flag == "!"
+
+    def test_extract_fitid_present(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            assert "fitid" in txn.meta
+            assert txn.meta["fitid"] != ""
+
+    def test_extract_metadata(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            assert txn.meta["source"] == "rbc-ofx"
+            assert txn.meta["categorisation"] == "non-classe"
+
+    def test_deduplication_fitid(self, importer):
+        """Re-importer le meme OFX retourne 0 nouvelles transactions (FITID dedup)."""
+        filepath = str(FIXTURES / "rbc_sample.ofx")
+        txns1 = importer.extract(filepath, [])
+        assert len(txns1) == 6
+        txns2 = importer.extract(filepath, txns1)
+        assert len(txns2) == 0
+
+    def test_extract_comptes_corrects(self, importer):
+        txns = importer.extract(str(FIXTURES / "rbc_sample.ofx"), [])
+        for txn in txns:
+            assert txn.postings[0].account == "Actifs:Banque:RBC:Cheques"
+            assert txn.postings[1].account == "Depenses:Non-Classe"
+
+    def test_extract_fichier_invalide_raise(self, tmp_path):
+        f = tmp_path / "bad.ofx"
+        f.write_text("this is not valid OFX")
+        imp = RBCOfxImporter(account="Actifs:Banque:RBC:Cheques", account_id="12345-6789012")
+        with pytest.raises(ValueError, match="invalide"):
+            imp.extract(str(f), [])
