@@ -4,143 +4,85 @@
 
 {% set pending = extension.pending_transactions() %}
 
-<style>
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    font-weight: bold;
-    color: #fff;
-  }
-  .badge-elevee { background-color: #2e7d32; }
-  .badge-moderee { background-color: #f9a825; color: #333; }
-  .badge-revision { background-color: #c62828; }
-  .source-tag {
-    display: block;
-    font-size: 0.75em;
-    color: #666;
-    margin-top: 2px;
-  }
-  .gros-montant {
-    font-weight: bold;
-    color: #c62828;
-  }
-  .gros-montant::after {
-    content: " \26A0";
-  }
-  .approbation-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .approbation-table th,
-  .approbation-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-  }
-  .approbation-table th {
-    background-color: #f5f5f5;
-  }
-  .actions-bar {
-    margin: 12px 0;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .actions-bar button {
-    padding: 6px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .btn-approuver {
-    background-color: #2e7d32;
-    color: #fff;
-    border-color: #2e7d32;
-  }
-  .btn-rejeter {
-    background-color: #c62828;
-    color: #fff;
-    border-color: #c62828;
-  }
-  .confirmer-gros {
-    margin-left: auto;
-    font-size: 0.9em;
-  }
-</style>
-
-<h2>File d'approbation</h2>
-
-<p>{{ pending | length }} transaction(s) en attente de revision</p>
+<div class="cqc-page-header">
+  <h2>File d'approbation</h2>
+  <span class="cqc-subtitle">{{ pending | length }} transaction(s) en attente de revision</span>
+</div>
 
 {% if pending %}
 <form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/approuver">
 
-  <div class="actions-bar">
-    <button type="button" onclick="toggleAll(true)">Tout selectionner</button>
-    <button type="button" onclick="toggleAll(false)">Tout deselectionner</button>
-    <button type="submit" class="btn-approuver">Approuver la selection</button>
-    <label class="confirmer-gros">
+  <div class="cqc-actions-bar">
+    <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleAll(true)">Tout selectionner</button>
+    <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleAll(false)">Tout deselectionner</button>
+    <button type="submit" class="cqc-btn cqc-btn-success">Approuver la selection</button>
+    <label class="cqc-label" style="margin-left: auto;">
       <input type="checkbox" name="confirmer_gros_montants">
       Confirmer les montants &gt; 2 000 $
     </label>
   </div>
 
-  <table class="approbation-table">
-    <thead>
-      <tr>
-        <th><input type="checkbox" id="select-all" onchange="toggleAll(this.checked)"></th>
-        <th>Date</th>
-        <th>Beneficiaire</th>
-        <th>Narration</th>
-        <th>Montant</th>
-        <th>Categorie proposee</th>
-        <th>Confiance</th>
-        <th>Source</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for txn in pending %}
-      <tr>
-        <td><input type="checkbox" name="ids" value="{{ loop.index0 }}"></td>
-        <td>{{ txn.date }}</td>
-        <td>{{ txn.payee }}</td>
-        <td>{{ txn.narration }}</td>
-        <td class="{{ 'gros-montant' if txn.gros_montant else '' }}">{{ "{:,.2f}".format(txn.montant) }} $</td>
-        <td>{{ txn.get("compte_propose", "-") }}</td>
-        <td>
-          {% if txn.niveau == "elevee" %}
-            <span class="badge badge-elevee">Confiance elevee</span>
-          {% elif txn.niveau == "moderee" %}
-            <span class="badge badge-moderee">Confiance moderee</span>
-          {% else %}
-            <span class="badge badge-revision">Revision requise</span>
-          {% endif %}
-          <span class="source-tag">{{ txn.source }}</span>
-        </td>
-        <td>{{ txn.source }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="cqc-card-flush">
+    <table class="cqc-table">
+      <thead>
+        <tr>
+          <th style="width: 40px;"><input type="checkbox" id="select-all" onchange="toggleAll(this.checked)"></th>
+          <th>Date</th>
+          <th>Beneficiaire</th>
+          <th>Narration</th>
+          <th class="montant">Montant</th>
+          <th>Categorie proposee</th>
+          <th>Confiance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in pending %}
+        <tr>
+          <td><input type="checkbox" name="ids" value="{{ loop.index0 }}"></td>
+          <td>{{ txn.date }}</td>
+          <td>{{ txn.payee }}</td>
+          <td>{{ txn.narration }}</td>
+          <td class="montant {{ 'cqc-gros-montant' if txn.gros_montant else '' }}">{{ "{:,.2f}".format(txn.montant) }} $</td>
+          <td>{{ txn.get("compte_propose", "-") }}</td>
+          <td>
+            {% if txn.niveau == "elevee" %}
+              <span class="cqc-badge cqc-badge-success">Elevee</span>
+            {% elif txn.niveau == "moderee" %}
+              <span class="cqc-badge cqc-badge-warning">Moderee</span>
+            {% else %}
+              <span class="cqc-badge cqc-badge-error">Revision</span>
+            {% endif %}
+            <span class="cqc-source-tag">{{ txn.source }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </form>
 
-<h3>Rejeter une transaction</h3>
-<form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/rejeter">
-  <label>
-    Indice de la transaction :
-    <input type="number" name="id" min="0" max="{{ pending | length - 1 }}" required style="width: 60px;">
-  </label>
-  <label>
-    Compte corrige (optionnel) :
-    <input type="text" name="compte_corrige" placeholder="Depenses:Bureau:Fournitures" style="width: 300px;">
-  </label>
-  <button type="submit" class="btn-rejeter">Rejeter</button>
-</form>
+<div class="cqc-card">
+  <h3 class="cqc-section-title">Rejeter une transaction</h3>
+  <form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/rejeter"
+        style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
+    <label class="cqc-label" style="flex-direction: column; align-items: flex-start;">
+      Indice de la transaction
+      <input type="number" name="id" min="0" max="{{ pending | length - 1 }}" required
+             class="cqc-input" style="width: 70px;">
+    </label>
+    <label class="cqc-label" style="flex-direction: column; align-items: flex-start; flex: 1; min-width: 200px;">
+      Compte corrige (optionnel)
+      <input type="text" name="compte_corrige" placeholder="Depenses:Bureau:Fournitures"
+             class="cqc-input" style="width: 100%;">
+    </label>
+    <button type="submit" class="cqc-btn cqc-btn-error">Rejeter</button>
+  </form>
+</div>
 
 {% else %}
-<p><em>Aucune transaction en attente.</em></p>
+<div class="cqc-empty">
+  Aucune transaction en attente.
+</div>
 {% endif %}
 
 <script>

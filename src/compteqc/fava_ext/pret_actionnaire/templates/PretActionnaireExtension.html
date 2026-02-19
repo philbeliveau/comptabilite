@@ -5,150 +5,105 @@
 {% set status = extension.loan_status() %}
 {% set s152 = extension.s152_status() %}
 
-<style>
-  .pret-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 24px;
-  }
-  .pret-table th,
-  .pret-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-  }
-  .pret-table th {
-    background-color: #f5f5f5;
-  }
-  .pret-table .montant {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-  .alerte-box {
-    padding: 12px 16px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    border-left: 6px solid;
-  }
-  .alerte-normal {
-    background-color: #e8f5e9;
-    border-color: #2e7d32;
-    color: #1b5e20;
-  }
-  .alerte-attention {
-    background-color: #fff8e1;
-    border-color: #f9a825;
-    color: #7c6900;
-  }
-  .alerte-urgent {
-    background-color: #fff3e0;
-    border-color: #ff9800;
-    color: #e65100;
-  }
-  .alerte-critique {
-    background-color: #ffebee;
-    border-color: #c62828;
-    color: #b71c1c;
-    font-weight: bold;
-  }
-  .solde-box {
-    padding: 12px 16px;
-    background-color: #f5f5f5;
-    border-radius: 6px;
-    margin-bottom: 20px;
-  }
-  .solde-montant {
-    font-size: 1.4em;
-    font-weight: bold;
-  }
-  .solde-direction {
-    color: #666;
-    margin-top: 4px;
-  }
-  .positif { color: #c62828; }
-  .negatif { color: #2e7d32; }
-</style>
-
-<h2>Pret actionnaire - Statut</h2>
+<div class="cqc-page-header">
+  <h2>Pret actionnaire</h2>
+  <span class="cqc-subtitle">Statut et suivi s.15(2)</span>
+</div>
 
 {% if s152 %}
-<div class="alerte-box alerte-{{ s152.niveau_alerte }}">
-  <strong>Alerte s.15(2)</strong><br>
-  Date d'inclusion s.15(2) : <strong>{{ s152.date_inclusion }}</strong>
-  ({{ s152.jours_restants }} jour{{ 's' if s152.jours_restants != 1 else '' }} restant{{ 's' if s152.jours_restants != 1 else '' }})<br>
-  {{ s152.message }}
-</div>
+  {% if s152.niveau_alerte == "normal" %}
+    <div class="cqc-alert cqc-alert-success">
+  {% elif s152.niveau_alerte == "attention" %}
+    <div class="cqc-alert cqc-alert-amber">
+  {% elif s152.niveau_alerte == "urgent" %}
+    <div class="cqc-alert cqc-alert-warning">
+  {% else %}
+    <div class="cqc-alert cqc-alert-error">
+  {% endif %}
+    <strong>Alerte s.15(2)</strong>
+    Date d'inclusion : <strong>{{ s152.date_inclusion }}</strong>
+    ({{ s152.jours_restants }} jour{{ 's' if s152.jours_restants != 1 else '' }} restant{{ 's' if s152.jours_restants != 1 else '' }})<br>
+    {{ s152.message }}
+  </div>
 {% endif %}
 
-<div class="solde-box">
-  <div class="solde-montant">{{ "{:,.2f}".format(status.solde_net) }} $</div>
-  <div class="solde-direction">{{ status.direction }}</div>
+<div class="cqc-solde-box">
+  <div class="cqc-solde-montant">{{ "{:,.2f}".format(status.solde_net) }} $</div>
+  <div class="cqc-solde-direction">{{ status.direction }}</div>
 </div>
 
 {% if s152 and s152.avances %}
-<h3>Avances ouvertes (s.15(2))</h3>
-<table class="pret-table">
-  <thead>
-    <tr>
-      <th>Date de l'avance</th>
-      <th class="montant">Montant initial</th>
-      <th class="montant">Solde restant</th>
-      <th>Date d'inclusion</th>
-      <th>Jours restants</th>
-      <th>Niveau</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for a in s152.avances %}
-    <tr>
-      <td>{{ a.date_avance }}</td>
-      <td class="montant">{{ "{:,.2f}".format(a.montant) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(a.solde_restant) }} $</td>
-      <td>{{ a.date_inclusion }}</td>
-      <td>{{ a.jours_restants }}</td>
-      <td>
-        {% if a.niveau == "normal" %}
-          <span style="color: #2e7d32;">Normal</span>
-        {% elif a.niveau == "attention" %}
-          <span style="color: #f9a825;">Attention</span>
-        {% elif a.niveau == "urgent" %}
-          <span style="color: #ff9800;">Urgent</span>
-        {% else %}
-          <span style="color: #c62828; font-weight: bold;">CRITIQUE</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="cqc-card-flush">
+  <div style="padding: 16px 24px 0;">
+    <h3 class="cqc-section-title">Avances ouvertes (s.15(2))</h3>
+  </div>
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Date de l'avance</th>
+        <th class="montant">Montant initial</th>
+        <th class="montant">Solde restant</th>
+        <th>Date d'inclusion</th>
+        <th>Jours restants</th>
+        <th>Niveau</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in s152.avances %}
+      <tr>
+        <td>{{ a.date_avance }}</td>
+        <td class="montant">{{ "{:,.2f}".format(a.montant) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(a.solde_restant) }} $</td>
+        <td>{{ a.date_inclusion }}</td>
+        <td>{{ a.jours_restants }}</td>
+        <td>
+          {% if a.niveau == "normal" %}
+            <span class="cqc-badge cqc-badge-success">Normal</span>
+          {% elif a.niveau == "attention" %}
+            <span class="cqc-badge cqc-badge-warning">Attention</span>
+          {% elif a.niveau == "urgent" %}
+            <span class="cqc-badge cqc-badge-warning">Urgent</span>
+          {% else %}
+            <span class="cqc-badge cqc-badge-error">CRITIQUE</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endif %}
 
-<h3>Historique des mouvements</h3>
-{% if status.mouvements %}
-<table class="pret-table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Description</th>
-      <th class="montant">Montant</th>
-      <th class="montant">Solde courant</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for m in status.mouvements %}
-    <tr>
-      <td>{{ m.date }}</td>
-      <td>{{ m.description }}</td>
-      <td class="montant {{ 'positif' if m.montant > 0 else 'negatif' }}">
-        {{ "{:+,.2f}".format(m.montant) }} $
-      </td>
-      <td class="montant">{{ "{:,.2f}".format(m.solde_courant) }} $</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p><em>Aucun mouvement enregistre pour cet exercice.</em></p>
-{% endif %}
+<div class="cqc-card-flush">
+  <div style="padding: 16px 24px 0;">
+    <h3 class="cqc-section-title">Historique des mouvements</h3>
+  </div>
+  {% if status.mouvements %}
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th class="montant">Montant</th>
+        <th class="montant">Solde courant</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in status.mouvements %}
+      <tr>
+        <td>{{ m.date }}</td>
+        <td>{{ m.description }}</td>
+        <td class="montant {{ 'cqc-positif' if m.montant > 0 else 'cqc-negatif' }}">
+          {{ "{:+,.2f}".format(m.montant) }} $
+        </td>
+        <td class="montant">{{ "{:,.2f}".format(m.solde_courant) }} $</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="cqc-empty">Aucun mouvement enregistre pour cet exercice.</div>
+  {% endif %}
+</div>
 
 {% endblock %}

@@ -2,121 +2,68 @@
 
 {% block content %}
 
-<style>
-  .dropzone {
-    min-height: 200px;
-    border: 3px dashed #90a4ae;
-    border-radius: 12px;
-    background-color: #fafafa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin: 20px 0;
-    padding: 20px;
-  }
-  .dropzone:hover {
-    border-color: #1976d2;
-    background-color: #e3f2fd;
-  }
-  .dropzone.dragover {
-    border-color: #2e7d32;
-    background-color: #e8f5e9;
-    border-style: solid;
-  }
-  .dropzone-text {
-    text-align: center;
-    color: #546e7a;
-    font-size: 1.1em;
-  }
-  .dropzone-text .icone {
-    font-size: 3em;
-    display: block;
-    margin-bottom: 12px;
-  }
-  .info-banner {
-    padding: 16px 20px;
-    background-color: #e3f2fd;
-    border-left: 6px solid #1565c0;
-    border-radius: 6px;
-    margin: 16px 0;
-    color: #0d47a1;
-  }
-  .recus-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-  }
-  .recus-table th,
-  .recus-table td {
-    padding: 8px 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-  }
-  .recus-table th {
-    background-color: #f5f5f5;
-  }
-  .formats-note {
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 8px;
-  }
-</style>
-
-<h2>Televersement de recus et factures</h2>
+<div class="cqc-page-header">
+  <h2>Televersement de recus et factures</h2>
+</div>
 
 {% if not extension.upload_disponible() %}
-<div class="info-banner">
+<div class="cqc-alert cqc-alert-info">
   L'extraction automatique par IA sera disponible apres la Phase 5.
   Les fichiers telecharges seront conserves dans le dossier documents/.
 </div>
 {% endif %}
 
-<form id="upload-form" method="POST"
-      action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/upload"
-      enctype="multipart/form-data">
+<div class="cqc-card">
+  <form id="upload-form" method="POST"
+        action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/upload"
+        enctype="multipart/form-data">
 
-  <div id="dropzone" class="dropzone">
-    <div class="dropzone-text">
-      <span class="icone">&#128194;</span>
-      <strong>Glissez-deposez un fichier ici</strong><br>
-      ou cliquez pour selectionner
+    <div id="dropzone" class="cqc-dropzone">
+      <div class="cqc-dropzone-text">
+        <span class="icone">&#128194;</span>
+        <strong>Glissez-deposez un fichier ici</strong><br>
+        ou cliquez pour selectionner
+      </div>
     </div>
+
+    <input type="file" id="fichier-input" name="fichier"
+           accept=".pdf,.jpg,.jpeg,.png,.heic"
+           style="display: none;">
+  </form>
+
+  <p style="font-size: 0.85em; color: var(--qc-muted, #64748B); margin-top: 8px;">
+    Formats acceptes : PDF, JPEG, PNG, HEIC
+  </p>
+</div>
+
+<div class="cqc-card-flush">
+  <div style="padding: 16px 24px 0;">
+    <h3 class="cqc-section-title">Recus recents</h3>
   </div>
-
-  <input type="file" id="fichier-input" name="fichier"
-         accept=".pdf,.jpg,.jpeg,.png,.heic"
-         style="display: none;">
-</form>
-
-<p class="formats-note">Formats acceptes : PDF, JPEG, PNG, HEIC</p>
-
-<h3>Recus recents</h3>
-
-{% set recents = extension.recent_uploads() %}
-{% if recents %}
-<table class="recus-table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Fichier</th>
-      <th>Chemin</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for doc in recents %}
-    <tr>
-      <td>{{ doc.date }}</td>
-      <td>{{ doc.filename }}</td>
-      <td>{{ doc.chemin }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p><em>Aucun recu recent.</em></p>
-{% endif %}
+  {% set recents = extension.recent_uploads() %}
+  {% if recents %}
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Fichier</th>
+        <th>Chemin</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in recents %}
+      <tr>
+        <td>{{ doc.date }}</td>
+        <td>{{ doc.filename }}</td>
+        <td style="font-size: 0.85em; color: var(--qc-muted, #64748B);">{{ doc.chemin }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="cqc-empty">Aucun recu recent.</div>
+  {% endif %}
+</div>
 
 <script>
 (function() {
@@ -124,19 +71,16 @@
   var fileInput = document.getElementById('fichier-input');
   var form = document.getElementById('upload-form');
 
-  // Click to select file
   dropzone.addEventListener('click', function() {
     fileInput.click();
   });
 
-  // File selected via input
   fileInput.addEventListener('change', function() {
     if (fileInput.files.length > 0) {
       form.submit();
     }
   });
 
-  // Drag events
   dropzone.addEventListener('dragover', function(e) {
     e.preventDefault();
     e.stopPropagation();

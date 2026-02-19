@@ -5,87 +5,81 @@
 {% set periodes = extension.tax_summary() %}
 {% set totaux = extension.totaux_annuels() %}
 
-<style>
-  .taxes-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 24px;
-  }
-  .taxes-table th,
-  .taxes-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-  }
-  .taxes-table th {
-    background-color: #f5f5f5;
-  }
-  .taxes-table .montant {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-  .sommaire-row {
-    font-weight: bold;
-    background-color: #f0f0f0;
-  }
-  .sommaire-row td {
-    border-top: 2px solid #333;
-  }
-  .positif { color: #c62828; }
-  .negatif { color: #2e7d32; }
-</style>
+<div class="cqc-page-header">
+  <h2>TPS/TVQ</h2>
+  <span class="cqc-subtitle">Suivi par periode de production {{ extension.annee() }} &mdash; Frequence : {{ extension.frequence() }}</span>
+</div>
 
-<h2>TPS/TVQ - Suivi par periode de production {{ extension.annee() }}</h2>
+<div class="cqc-kpi-row">
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Remise nette TPS</div>
+    <div class="cqc-kpi-value {{ 'cqc-error' if totaux.remise_nette_tps > 0 else 'cqc-success' if totaux.remise_nette_tps < 0 else '' }}">
+      {{ "{:,.2f}".format(totaux.remise_nette_tps) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Remise nette TVQ</div>
+    <div class="cqc-kpi-value {{ 'cqc-error' if totaux.remise_nette_tvq > 0 else 'cqc-success' if totaux.remise_nette_tvq < 0 else '' }}">
+      {{ "{:,.2f}".format(totaux.remise_nette_tvq) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Transactions</div>
+    <div class="cqc-kpi-value">{{ totaux.nb_transactions }}</div>
+  </div>
+</div>
 
-<p>Frequence de declaration : <strong>{{ extension.frequence() }}</strong></p>
+<div class="cqc-card-flush">
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Periode</th>
+        <th class="montant">TPS percue</th>
+        <th class="montant">TVQ percue</th>
+        <th class="montant">CTI (TPS)</th>
+        <th class="montant">RTI (TVQ)</th>
+        <th class="montant">Remise TPS</th>
+        <th class="montant">Remise TVQ</th>
+        <th class="montant">Txns</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in periodes %}
+      <tr>
+        <td>{{ p.periode }}</td>
+        <td class="montant">{{ "{:,.2f}".format(p.tps_percue) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(p.tvq_percue) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(p.ctis_tps) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(p.rtis_tvq) }} $</td>
+        <td class="montant {{ 'cqc-positif' if p.remise_nette_tps > 0 else 'cqc-negatif' if p.remise_nette_tps < 0 else '' }}">
+          {{ "{:,.2f}".format(p.remise_nette_tps) }} $
+        </td>
+        <td class="montant {{ 'cqc-positif' if p.remise_nette_tvq > 0 else 'cqc-negatif' if p.remise_nette_tvq < 0 else '' }}">
+          {{ "{:,.2f}".format(p.remise_nette_tvq) }} $
+        </td>
+        <td class="montant">{{ p.nb_transactions }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="sommaire-row">
+        <td>Total annuel</td>
+        <td class="montant">{{ "{:,.2f}".format(totaux.tps_percue) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(totaux.tvq_percue) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(totaux.ctis_tps) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(totaux.rtis_tvq) }} $</td>
+        <td class="montant {{ 'cqc-positif' if totaux.remise_nette_tps > 0 else 'cqc-negatif' if totaux.remise_nette_tps < 0 else '' }}">
+          {{ "{:,.2f}".format(totaux.remise_nette_tps) }} $
+        </td>
+        <td class="montant {{ 'cqc-positif' if totaux.remise_nette_tvq > 0 else 'cqc-negatif' if totaux.remise_nette_tvq < 0 else '' }}">
+          {{ "{:,.2f}".format(totaux.remise_nette_tvq) }} $
+        </td>
+        <td class="montant">{{ totaux.nb_transactions }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-<table class="taxes-table">
-  <thead>
-    <tr>
-      <th>Periode</th>
-      <th class="montant">TPS percue</th>
-      <th class="montant">TVQ percue</th>
-      <th class="montant">CTI (TPS paye)</th>
-      <th class="montant">RTI (TVQ paye)</th>
-      <th class="montant">Remise nette TPS</th>
-      <th class="montant">Remise nette TVQ</th>
-      <th class="montant">Transactions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for p in periodes %}
-    <tr>
-      <td>{{ p.periode }}</td>
-      <td class="montant">{{ "{:,.2f}".format(p.tps_percue) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(p.tvq_percue) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(p.ctis_tps) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(p.rtis_tvq) }} $</td>
-      <td class="montant {{ 'positif' if p.remise_nette_tps > 0 else 'negatif' if p.remise_nette_tps < 0 else '' }}">
-        {{ "{:,.2f}".format(p.remise_nette_tps) }} $
-      </td>
-      <td class="montant {{ 'positif' if p.remise_nette_tvq > 0 else 'negatif' if p.remise_nette_tvq < 0 else '' }}">
-        {{ "{:,.2f}".format(p.remise_nette_tvq) }} $
-      </td>
-      <td class="montant">{{ p.nb_transactions }}</td>
-    </tr>
-    {% endfor %}
-    <tr class="sommaire-row">
-      <td>Total annuel</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.tps_percue) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.tvq_percue) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.ctis_tps) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.rtis_tvq) }} $</td>
-      <td class="montant {{ 'positif' if totaux.remise_nette_tps > 0 else 'negatif' if totaux.remise_nette_tps < 0 else '' }}">
-        {{ "{:,.2f}".format(totaux.remise_nette_tps) }} $
-      </td>
-      <td class="montant {{ 'positif' if totaux.remise_nette_tvq > 0 else 'negatif' if totaux.remise_nette_tvq < 0 else '' }}">
-        {{ "{:,.2f}".format(totaux.remise_nette_tvq) }} $
-      </td>
-      <td class="montant">{{ totaux.nb_transactions }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><em>Remise nette positive = montant du au gouvernement. Negative = remboursement a recevoir.</em></p>
+<div class="cqc-alert cqc-alert-info">
+  Remise nette positive = montant du au gouvernement. Negative = remboursement a recevoir.
+</div>
 
 {% endblock %}

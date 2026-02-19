@@ -2,117 +2,50 @@
 
 {% block content %}
 
-<style>
-  .alerte-banniere {
-    padding: 16px 20px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border-left: 6px solid;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .alerte-critique {
-    background-color: #ffebee;
-    border-left-color: #c62828;
-    color: #b71c1c;
-  }
-  .alerte-urgent {
-    background-color: #fff3e0;
-    border-left-color: #e65100;
-    color: #bf360c;
-  }
-  .alerte-normal {
-    background-color: #fffde7;
-    border-left-color: #f9a825;
-    color: #f57f17;
-  }
-  .alerte-info {
-    background-color: #e3f2fd;
-    border-left-color: #1565c0;
-    color: #0d47a1;
-  }
-  .alerte-ok {
-    background-color: #e8f5e9;
-    border-left-color: #2e7d32;
-    color: #1b5e20;
-    padding: 16px 20px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border-left: 6px solid;
-  }
-  .alerte-icone {
-    font-size: 1.5em;
-  }
-  .alerte-contenu {
-    flex: 1;
-  }
-  .alerte-contenu strong {
-    display: block;
-    margin-bottom: 4px;
-  }
-  .alerte-jours {
-    font-size: 0.9em;
-    opacity: 0.8;
-  }
-  .placeholder-box {
-    padding: 24px;
-    background-color: #e3f2fd;
-    border: 2px dashed #1976d2;
-    border-radius: 8px;
-    margin: 20px 0;
-  }
-  .placeholder-box h3 {
-    color: #1976d2;
-    margin-top: 0;
-  }
-  .echeances-list {
-    margin: 16px 0;
-    padding-left: 20px;
-  }
-  .echeances-list li {
-    margin: 6px 0;
-  }
-</style>
-
-<h2>Echeances et rappels de production</h2>
+<div class="cqc-page-header">
+  <h2>Echeances et rappels de production</h2>
+</div>
 
 {% if extension.echeances_disponible() %}
   {% set alertes = extension.alertes() %}
   {% if alertes %}
     {% for alerte in alertes %}
-      <div class="alerte-banniere {{ alerte.classe_css }}">
-        <span class="alerte-icone">
+      {% if alerte.urgence == "critique" %}
+        <div class="cqc-alert cqc-alert-error">
+      {% elif alerte.urgence == "urgent" %}
+        <div class="cqc-alert cqc-alert-warning">
+      {% elif alerte.urgence == "normal" %}
+        <div class="cqc-alert cqc-alert-amber">
+      {% else %}
+        <div class="cqc-alert cqc-alert-info">
+      {% endif %}
+        <strong>
           {% if alerte.urgence == "critique" %}&#9888;
           {% elif alerte.urgence == "urgent" %}&#9201;
           {% elif alerte.urgence == "normal" %}&#128197;
           {% else %}&#8505;
           {% endif %}
-        </span>
-        <div class="alerte-contenu">
-          <strong>{{ alerte.description }}</strong>
-          <span>Date limite : {{ alerte.date_limite }}</span>
-          <span class="alerte-jours">
-            {% if alerte.jours_restants > 0 %}
-              (dans {{ alerte.jours_restants }} jours)
-            {% elif alerte.jours_restants == 0 %}
-              (aujourd'hui)
-            {% else %}
-              (en retard de {{ -alerte.jours_restants }} jours)
-            {% endif %}
-          </span>
-        </div>
+          {{ alerte.description }}
+        </strong>
+        Date limite : {{ alerte.date_limite }}
+        {% if alerte.jours_restants > 0 %}
+          (dans {{ alerte.jours_restants }} jours)
+        {% elif alerte.jours_restants == 0 %}
+          (aujourd'hui)
+        {% else %}
+          (en retard de {{ -alerte.jours_restants }} jours)
+        {% endif %}
       </div>
     {% endfor %}
   {% else %}
-    <div class="alerte-ok">
+    <div class="cqc-alert cqc-alert-success">
       <strong>Aucune echeance imminente</strong>
-      <p>Toutes les echeances de production sont a jour.</p>
+      Toutes les echeances de production sont a jour.
     </div>
   {% endif %}
 
 {% else %}
-  <div class="placeholder-box">
+  <div class="cqc-placeholder">
     <h3>Phase 5 -- A venir</h3>
     <p>
       Le module d'echeances sera disponible apres l'implementation de la Phase 5.
@@ -120,7 +53,7 @@
       et les alertes de pret actionnaire s.15(2).
     </p>
     <p><strong>Echeances qui seront suivies :</strong></p>
-    <ul class="echeances-list">
+    <ul>
       <li>TPS/TVQ trimestriel</li>
       <li>T2 (declaration de revenus des societes)</li>
       <li>CO-17 (declaration de revenus Quebec)</li>

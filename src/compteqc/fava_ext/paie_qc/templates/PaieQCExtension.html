@@ -6,120 +6,98 @@
 {% set impots = extension.retenues_impot() %}
 {% set totaux = extension.totaux() %}
 
-<style>
-  .paie-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 24px;
-  }
-  .paie-table th,
-  .paie-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-  }
-  .paie-table th {
-    background-color: #f5f5f5;
-  }
-  .paie-table .montant {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-  .statut-atteint {
-    color: #2e7d32;
-    font-weight: bold;
-  }
-  .statut-restant {
-    color: #666;
-    font-size: 0.9em;
-  }
-  .sommaire-row {
-    font-weight: bold;
-    background-color: #f0f0f0;
-  }
-  .sommaire-row td {
-    border-top: 2px solid #333;
-  }
-</style>
+<div class="cqc-page-header">
+  <h2>Paie Quebec</h2>
+  <span class="cqc-subtitle">Cumulatif annuel {{ extension.annee() }}</span>
+</div>
 
-<h2>Paie Quebec - Cumulatif annuel {{ extension.annee() }}</h2>
+<div class="cqc-kpi-row">
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Salaire brut YTD</div>
+    <div class="cqc-kpi-value">{{ "{:,.2f}".format(totaux.salaire_brut_ytd) }} $</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Retenues employe</div>
+    <div class="cqc-kpi-value cqc-error">{{ "{:,.2f}".format(totaux.total_retenues_employe) }} $</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Cotisations employeur</div>
+    <div class="cqc-kpi-value cqc-warning">{{ "{:,.2f}".format(totaux.total_cotisations_employeur) }} $</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Salaire net YTD</div>
+    <div class="cqc-kpi-value cqc-success">{{ "{:,.2f}".format(totaux.salaire_net_ytd) }} $</div>
+  </div>
+</div>
 
-<h3>Cotisations</h3>
-<table class="paie-table">
-  <thead>
-    <tr>
-      <th>Cotisation</th>
-      <th class="montant">Employe YTD</th>
-      <th class="montant">Employeur YTD</th>
-      <th class="montant">Maximum annuel (employe)</th>
-      <th>Statut</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for cot in summary %}
-    <tr>
-      <td>{{ cot.nom }}</td>
-      <td class="montant">{{ "{:,.2f}".format(cot.employe) }} $</td>
-      <td class="montant">{{ "{:,.2f}".format(cot.employeur) }} $</td>
-      <td class="montant">
-        {% if cot.maximum_employe > 0 %}
-          {{ "{:,.2f}".format(cot.maximum_employe) }} $
-        {% else %}
-          -
-        {% endif %}
-      </td>
-      <td>
-        {% if cot.atteint_employe %}
-          <span class="statut-atteint">Atteint</span>
-        {% elif cot.maximum_employe > 0 %}
-          <span class="statut-restant">{{ "{:,.2f}".format(cot.maximum_employe - cot.employe) }} $ restant</span>
-        {% else %}
-          -
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="cqc-card-flush">
+  <div style="padding: 16px 24px 0;">
+    <h3 class="cqc-section-title">Cotisations</h3>
+  </div>
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Cotisation</th>
+        <th class="montant">Employe YTD</th>
+        <th class="montant">Employeur YTD</th>
+        <th class="montant">Maximum annuel</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cot in summary %}
+      <tr>
+        <td>{{ cot.nom }}</td>
+        <td class="montant">{{ "{:,.2f}".format(cot.employe) }} $</td>
+        <td class="montant">{{ "{:,.2f}".format(cot.employeur) }} $</td>
+        <td class="montant">
+          {% if cot.maximum_employe > 0 %}
+            {{ "{:,.2f}".format(cot.maximum_employe) }} $
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>
+          {% if cot.atteint_employe %}
+            <span class="cqc-badge cqc-badge-success">Atteint</span>
+          {% elif cot.maximum_employe > 0 %}
+            {% set pct = (cot.employe / cot.maximum_employe * 100) | int %}
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="cqc-progress" style="width: 80px;">
+                <div class="cqc-progress-bar" style="width: {{ pct }}%;"></div>
+              </div>
+              <span style="font-size: 0.85em; color: var(--qc-muted);">{{ "{:,.2f}".format(cot.maximum_employe - cot.employe) }} $ restant</span>
+            </div>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-<h3>Retenues d'impot</h3>
-<table class="paie-table">
-  <thead>
-    <tr>
-      <th>Palier</th>
-      <th class="montant">Impot retenu YTD</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for imp in impots %}
-    <tr>
-      <td>{{ imp.palier }}</td>
-      <td class="montant">{{ "{:,.2f}".format(imp.montant) }} $</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<h3>Sommaire</h3>
-<table class="paie-table">
-  <tbody>
-    <tr>
-      <td>Salaire brut YTD</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.salaire_brut_ytd) }} $</td>
-    </tr>
-    <tr>
-      <td>Total retenues employe (cotisations + impots)</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.total_retenues_employe) }} $</td>
-    </tr>
-    <tr>
-      <td>Total cotisations employeur</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.total_cotisations_employeur) }} $</td>
-    </tr>
-    <tr class="sommaire-row">
-      <td>Salaire net YTD</td>
-      <td class="montant">{{ "{:,.2f}".format(totaux.salaire_net_ytd) }} $</td>
-    </tr>
-  </tbody>
-</table>
+<div class="cqc-card-flush">
+  <div style="padding: 16px 24px 0;">
+    <h3 class="cqc-section-title">Retenues d'impot</h3>
+  </div>
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Palier</th>
+        <th class="montant">Impot retenu YTD</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for imp in impots %}
+      <tr>
+        <td>{{ imp.palier }}</td>
+        <td class="montant">{{ "{:,.2f}".format(imp.montant) }} $</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}
