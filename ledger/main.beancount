@@ -9,3 +9,4 @@ option "name_expenses" "Depenses"
 include "comptes.beancount"
 ; Les fichiers mensuels seront ajoutes dynamiquement
 include "2026/01.beancount"
+include "2025/11.beancount"

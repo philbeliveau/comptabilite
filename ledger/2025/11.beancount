@@ -1,0 +1,494 @@
+; Transactions novembre 2025
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2025-11-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "2"
+  Actifs:Banque:RBC:Cheques   66.67 CAD
+  Depenses:Non-Classe        -66.67 CAD
+
+2025-11-06 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "3"
+  Actifs:Banque:RBC:Cheques   522.67 CAD
+  Depenses:Non-Classe        -522.67 CAD
+
+2025-11-10 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "4"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Non-Classe         81.14 CAD
+
+2025-11-13 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "5"
+  Actifs:Banque:RBC:Cheques   176.56 CAD
+  Depenses:Non-Classe        -176.56 CAD
+
+2025-11-17 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "6"
+  Actifs:Banque:RBC:Cheques   2195.00 CAD
+  Depenses:Non-Classe        -2195.00 CAD
+
+2025-11-17 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "7"
+  Actifs:Banque:RBC:Cheques  -35.00 CAD
+  Depenses:Non-Classe         35.00 CAD
+
+2025-11-20 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "8"
+  Actifs:Banque:RBC:Cheques   329.90 CAD
+  Depenses:Non-Classe        -329.90 CAD
+
+2025-11-27 ! "Paiement Divers Carte Rbc" "PAIEMENT DIVERS CARTE RBC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "9"
+  Actifs:Banque:RBC:Cheques  -2237.84 CAD
+  Depenses:Non-Classe         2237.84 CAD
+
+2025-12-01 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "10"
+  Actifs:Banque:RBC:Cheques  -38.69 CAD
+  Depenses:Non-Classe         38.69 CAD
+
+2025-12-01 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "11"
+  Actifs:Banque:RBC:Cheques  -89.09 CAD
+  Depenses:Non-Classe         89.09 CAD
+
+2025-12-01 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "12"
+  Actifs:Banque:RBC:Cheques  -1775.00 CAD
+  Depenses:Non-Classe         1775.00 CAD
+
+2025-12-03 ! "Frais Mensuels" "FRAIS MENSUELS"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "13"
+  Actifs:Banque:RBC:Cheques  -12.95 CAD
+  Depenses:Non-Classe         12.95 CAD
+
+2025-12-04 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "14"
+  Actifs:Banque:RBC:Cheques   34.37 CAD
+  Depenses:Non-Classe        -34.37 CAD
+
+2025-12-04 ! "Achat Pdi-Sc---2231 Deer Crossing" "ACHAT PDI-SC---2231 DEER CROSSING"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "15"
+  Actifs:Banque:RBC:Cheques  -35.00 CAD
+  Depenses:Non-Classe         35.00 CAD
+
+2025-12-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "16"
+  Actifs:Banque:RBC:Cheques   66.67 CAD
+  Depenses:Non-Classe        -66.67 CAD
+
+2025-12-08 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "17"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Non-Classe         81.14 CAD
+
+2025-12-15 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "18"
+  Actifs:Banque:RBC:Cheques   16.00 CAD
+  Depenses:Non-Classe        -16.00 CAD
+
+2025-12-15 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "19"
+  Actifs:Banque:RBC:Cheques   50.00 CAD
+  Depenses:Non-Classe        -50.00 CAD
+
+2025-12-15 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "20"
+  Actifs:Banque:RBC:Cheques   500.00 CAD
+  Depenses:Non-Classe        -500.00 CAD
+
+2025-12-17 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "21"
+  Actifs:Banque:RBC:Cheques   16.00 CAD
+  Depenses:Non-Classe        -16.00 CAD
+
+2025-12-22 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "23"
+  Actifs:Banque:RBC:Cheques  -35.00 CAD
+  Depenses:Non-Classe         35.00 CAD
+
+2025-12-30 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "24"
+  Actifs:Banque:RBC:Cheques   161.00 CAD
+  Depenses:Non-Classe        -161.00 CAD
+
+2025-12-30 ! "Paiement Divers Carte Rbc" "PAIEMENT DIVERS CARTE RBC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "25"
+  Actifs:Banque:RBC:Cheques  -1642.70 CAD
+  Depenses:Non-Classe         1642.70 CAD
+
+2025-12-31 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "26"
+  Actifs:Banque:RBC:Cheques   60.15 CAD
+  Depenses:Non-Classe        -60.15 CAD
+
+2026-01-02 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "27"
+  Actifs:Banque:RBC:Cheques   700.00 CAD
+  Depenses:Non-Classe        -700.00 CAD
+
+2026-01-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "28"
+  Actifs:Banque:RBC:Cheques  -38.69 CAD
+  Depenses:Non-Classe         38.69 CAD
+
+2026-01-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "29"
+  Actifs:Banque:RBC:Cheques  -89.09 CAD
+  Depenses:Non-Classe         89.09 CAD
+
+2026-01-02 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "30"
+  Actifs:Banque:RBC:Cheques  -1775.00 CAD
+  Depenses:Non-Classe         1775.00 CAD
+
+2026-01-02 ! "Frais Mensuels" "FRAIS MENSUELS"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "31"
+  Actifs:Banque:RBC:Cheques  -12.95 CAD
+  Depenses:Non-Classe         12.95 CAD
+
+2026-01-05 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "32"
+  Actifs:Banque:RBC:Cheques   11.00 CAD
+  Depenses:Non-Classe        -11.00 CAD
+
+2026-01-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "33"
+  Actifs:Banque:RBC:Cheques   66.67 CAD
+  Depenses:Non-Classe        -66.67 CAD
+
+2026-01-05 ! "Tps Canada" "TPS CANADA"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "34"
+  Actifs:Banque:RBC:Cheques   89.56 CAD
+  Depenses:Non-Classe        -89.56 CAD
+
+2026-01-05 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "35"
+  Actifs:Banque:RBC:Cheques  -20.00 CAD
+  Depenses:Non-Classe         20.00 CAD
+
+2026-01-06 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "36"
+  Actifs:Banque:RBC:Cheques   12.00 CAD
+  Depenses:Non-Classe        -12.00 CAD
+
+2026-01-07 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "37"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Non-Classe         81.14 CAD
+
+2026-01-12 ! "Dep Tiers W3-3019" "DEP TIERS W3-3019"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "38"
+  Actifs:Banque:RBC:Cheques   2250.00 CAD
+  Depenses:Non-Classe        -2250.00 CAD
+
+2026-01-12 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "39"
+  Actifs:Banque:RBC:Cheques   180.00 CAD
+  Depenses:Non-Classe        -180.00 CAD
+
+2026-01-12 ! "Costco Wholesal Achat Pdi ---- 1384" "COSTCO WHOLESAL ACHAT PDI ---- 1384"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "40"
+  Actifs:Banque:RBC:Cheques  -210.66 CAD
+  Depenses:Non-Classe         210.66 CAD
+
+2026-01-19 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "41"
+  Actifs:Banque:RBC:Cheques   11.00 CAD
+  Depenses:Non-Classe        -11.00 CAD
+
+2026-01-19 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "42"
+  Actifs:Banque:RBC:Cheques   900.00 CAD
+  Depenses:Non-Classe        -900.00 CAD
+
+2026-01-19 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "43"
+  Actifs:Banque:RBC:Cheques  -8.00 CAD
+  Depenses:Non-Classe         8.00 CAD
+
+2026-01-21 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "44"
+  Actifs:Banque:RBC:Cheques  -40.00 CAD
+  Depenses:Non-Classe         40.00 CAD
+
+2026-01-26 ! "Achat Pdi-Sc---3874 Costco Wholesal" "ACHAT PDI-SC---3874 COSTCO WHOLESAL"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "45"
+  Actifs:Banque:RBC:Cheques  -240.53 CAD
+  Depenses:Non-Classe         240.53 CAD
+
+2026-01-27 ! "Paiement Divers Carte Rbc" "PAIEMENT DIVERS CARTE RBC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "46"
+  Actifs:Banque:RBC:Cheques  -1973.69 CAD
+  Depenses:Non-Classe         1973.69 CAD
+
+2026-01-27 ! "Paiement Paiement W3 - 1426 Saaq-Immatric" "Paiement PAIEMENT W3 - 1426 SAAQ-IMMATRIC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "47"
+  Actifs:Banque:RBC:Cheques  -400.86 CAD
+  Depenses:Non-Classe         400.86 CAD
+
+2026-01-28 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "48"
+  Actifs:Banque:RBC:Cheques   500.00 CAD
+  Depenses:Non-Classe        -500.00 CAD
+
+2026-01-29 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "49"
+  Actifs:Banque:RBC:Cheques   34.39 CAD
+  Depenses:Non-Classe        -34.39 CAD
+
+2026-02-02 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "50"
+  Actifs:Banque:RBC:Cheques   321.00 CAD
+  Depenses:Non-Classe        -321.00 CAD
+
+2026-02-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "51"
+  Actifs:Banque:RBC:Cheques  -38.69 CAD
+  Depenses:Non-Classe         38.69 CAD
+
+2026-02-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "52"
+  Actifs:Banque:RBC:Cheques  -89.09 CAD
+  Depenses:Non-Classe         89.09 CAD
+
+2026-02-02 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "53"
+  Actifs:Banque:RBC:Cheques  -1775.00 CAD
+  Depenses:Non-Classe         1775.00 CAD
+
+2026-02-03 ! "Frais Mensuels" "FRAIS MENSUELS"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "54"
+  Actifs:Banque:RBC:Cheques  -12.95 CAD
+  Depenses:Non-Classe         12.95 CAD
+
+2026-02-05 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "55"
+  Actifs:Banque:RBC:Cheques   40.00 CAD
+  Depenses:Non-Classe        -40.00 CAD
+
+2026-02-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "56"
+  Actifs:Banque:RBC:Cheques   66.67 CAD
+  Depenses:Non-Classe        -66.67 CAD
+
+2026-02-05 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "57"
+  Actifs:Banque:RBC:Cheques  -35.00 CAD
+  Depenses:Non-Classe         35.00 CAD
+
+2026-02-10 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "58"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Non-Classe         81.14 CAD
+
+2026-02-13 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "59"
+  Actifs:Banque:RBC:Cheques   900.00 CAD
+  Depenses:Non-Classe        -900.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "60"
+  Actifs:Banque:RBC:Cheques   18.00 CAD
+  Depenses:Non-Classe        -18.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "61"
+  Actifs:Banque:RBC:Cheques   20.00 CAD
+  Depenses:Non-Classe        -20.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "62"
+  Actifs:Banque:RBC:Cheques   150.00 CAD
+  Depenses:Non-Classe        -150.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE"
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "63"
+  Actifs:Banque:RBC:Cheques  -22.00 CAD
+  Depenses:Non-Classe         22.00 CAD

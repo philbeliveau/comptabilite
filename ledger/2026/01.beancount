@@ -4,3 +4,787 @@ option "name_liabilities" "Passifs"
 option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
+
+2026-01-06 ! "Anthropic Anthropic.Comca" "ANTHROPIC ANTHROPIC.COMCA 11.50 USD @ 1.415600000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "64"
+  Passifs:CartesCredit:RBC  -16.28 CAD
+  Depenses:Non-Classe        16.28 CAD
+
+2026-01-06 ! "Req/020100060033430 Quebec Qc" "REQ/020100060033430 QUEBEC QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "65"
+  Passifs:CartesCredit:RBC  -41.00 CAD
+  Depenses:Non-Classe        41.00 CAD
+
+2026-01-06 ! "Familiprix 3002 Montreal Qc" "FAMILIPRIX 3002 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "66"
+  Passifs:CartesCredit:RBC  -13.49 CAD
+  Depenses:Non-Classe        13.49 CAD
+
+2026-01-06 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "67"
+  Passifs:CartesCredit:RBC  -16.56 CAD
+  Depenses:Non-Classe        16.56 CAD
+
+2026-01-07 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "68"
+  Passifs:CartesCredit:RBC  -4.60 CAD
+  Depenses:Non-Classe        4.60 CAD
+
+2026-01-08 ! "Stash Cafe Montreal Qc" "STASH CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "69"
+  Passifs:CartesCredit:RBC  -87.74 CAD
+  Depenses:Non-Classe        87.74 CAD
+
+2026-01-08 ! "Le Phillips Montreal Qc" "LE PHILLIPS MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "70"
+  Passifs:CartesCredit:RBC  -31.91 CAD
+  Depenses:Non-Classe        31.91 CAD
+
+2026-01-09 ! "Ls Philemon Bar Montreal Qc" "LS Philemon Bar Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "71"
+  Passifs:CartesCredit:RBC  -42.50 CAD
+  Depenses:Non-Classe        42.50 CAD
+
+2026-01-09 ! "Spotify P3E3Cc497A Stockholm" "Spotify P3E3CC497A Stockholm"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "72"
+  Passifs:CartesCredit:RBC  -20.57 CAD
+  Depenses:Non-Classe        20.57 CAD
+
+2026-01-09 ! "Boucherie Les 2 Freres Montreal Qc" "BOUCHERIE LES 2 FRERES Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "73"
+  Passifs:CartesCredit:RBC  -44.25 CAD
+  Depenses:Non-Classe        44.25 CAD
+
+2026-01-09 ! "Fromagerie Hamel Montreal Qc" "FROMAGERIE HAMEL MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "74"
+  Passifs:CartesCredit:RBC  -3.70 CAD
+  Depenses:Non-Classe        3.70 CAD
+
+2026-01-09 ! "Adelard Belanger Et Fils Montreal Qc" "ADELARD BELANGER ET FILS MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "75"
+  Passifs:CartesCredit:RBC  -22.99 CAD
+  Depenses:Non-Classe        22.99 CAD
+
+2026-01-09 ! "Sp Beau Degat Bierer Montreal Qc" "SP BEAU DEGAT BIERER MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "76"
+  Passifs:CartesCredit:RBC  -4.79 CAD
+  Depenses:Non-Classe        4.79 CAD
+
+2026-01-09 ! "Pasta Bella Atwater Montreal Qc" "Pasta Bella Atwater Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "77"
+  Passifs:CartesCredit:RBC  -4.25 CAD
+  Depenses:Non-Classe        4.25 CAD
+
+2026-01-10 ! "Saq23132 Marche Atwater Montreal Qc" "SAQ23132 MARCHE ATWATER MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "78"
+  Passifs:CartesCredit:RBC  -71.70 CAD
+  Depenses:Non-Classe        71.70 CAD
+
+2026-01-11 ! "Ls Muni Gc Montreal Qc" "LS Muni GC Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "79"
+  Passifs:CartesCredit:RBC  -58.19 CAD
+  Depenses:Non-Classe        58.19 CAD
+
+2026-01-12 ! "Anthropic Anthropic.Comca" "ANTHROPIC ANTHROPIC.COMCA 11.50 USD @ 1.426900000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "80"
+  Passifs:CartesCredit:RBC  -16.41 CAD
+  Depenses:Non-Classe        16.41 CAD
+
+2026-01-13 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "81"
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Depenses:Non-Classe        4.88 CAD
+
+2026-01-13 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "82"
+  Passifs:CartesCredit:RBC  -4.60 CAD
+  Depenses:Non-Classe        4.60 CAD
+
+2026-01-14 ! "Ls Le Cafe Bloom Montreal Qc" "LS le cafe bloom Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "83"
+  Passifs:CartesCredit:RBC  -4.67 CAD
+  Depenses:Non-Classe        4.67 CAD
+
+2026-01-16 ! "Sp Beau Degat Bierer Montreal Qc" "SP BEAU DEGAT BIERER MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "84"
+  Passifs:CartesCredit:RBC  -8.01 CAD
+  Depenses:Non-Classe        8.01 CAD
+
+2026-01-16 ! "Ls Le Cafe Bloom Montreal Qc" "LS le cafe bloom Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "85"
+  Passifs:CartesCredit:RBC  -9.10 CAD
+  Depenses:Non-Classe        9.10 CAD
+
+2026-01-17 ! "Mollo Boulangerie & Lab Montreal Qc" "MOLLO BOULANGERIE & LAB MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "86"
+  Passifs:CartesCredit:RBC  -12.13 CAD
+  Depenses:Non-Classe        12.13 CAD
+
+2026-01-19 ! "Microsoft*Subscription Mississauga On" "Microsoft*Subscription Mississauga ON"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "87"
+  Passifs:CartesCredit:RBC  -2.30 CAD
+  Depenses:Non-Classe        2.30 CAD
+
+2026-01-19 ! "Ls Bar Caffettiera Montreal Qc" "LS Bar Caffettiera Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "88"
+  Passifs:CartesCredit:RBC  -10.48 CAD
+  Depenses:Non-Classe        10.48 CAD
+
+2026-01-19 ! "Openrouter, Inc Openrouter.Ainy" "OPENROUTER, INC OPENROUTER.AINY 63.30 USD @ 1.427900000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "89"
+  Passifs:CartesCredit:RBC  -90.39 CAD
+  Depenses:Non-Classe        90.39 CAD
+
+2026-01-19 ! "Mcdonald'S #40060 Montreal Qc" "MCDONALD'S #40060 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "90"
+  Passifs:CartesCredit:RBC  -10.35 CAD
+  Depenses:Non-Classe        10.35 CAD
+
+2026-01-19 ! "Gerts Student Bar Montreal Qc" "GERTS STUDENT BAR MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "91"
+  Passifs:CartesCredit:RBC  -12.25 CAD
+  Depenses:Non-Classe        12.25 CAD
+
+2026-01-19 ! "Mckibbin'S Bishop Montreal Qc" "MCKIBBIN'S BISHOP MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "92"
+  Passifs:CartesCredit:RBC  -10.48 CAD
+  Depenses:Non-Classe        10.48 CAD
+
+2026-01-20 ! "Www.Perplexity.Ai Www.Perplexitc" "WWW.PERPLEXITY.AI WWW.PERPLEXITC 23.00 USD @ 1.426900000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "93"
+  Passifs:CartesCredit:RBC  -32.82 CAD
+  Depenses:Non-Classe        32.82 CAD
+
+2026-01-20 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "94"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-01-21 ! "Saq23132 Marche Atwater Montreal Qc" "SAQ23132 MARCHE ATWATER MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "95"
+  Passifs:CartesCredit:RBC  -32.25 CAD
+  Depenses:Non-Classe        32.25 CAD
+
+2026-01-21 ! "Railway Railway.Com Ca" "RAILWAY RAILWAY.COM CA 11.49 USD @ 1.422100000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "96"
+  Passifs:CartesCredit:RBC  -16.34 CAD
+  Depenses:Non-Classe        16.34 CAD
+
+2026-01-21 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "97"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-01-22 ! "Ls 49Th Parallel Coffe Montreal Qc" "LS 49th Parallel Coffe Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "98"
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Depenses:Non-Classe        4.88 CAD
+
+2026-01-22 ! "Openrouter, Inc Openrouter.Ainy" "OPENROUTER, INC OPENROUTER.AINY 52.75 USD @ 1.419100000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "99"
+  Passifs:CartesCredit:RBC  -74.86 CAD
+  Depenses:Non-Classe        74.86 CAD
+
+2026-01-23 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "100"
+  Passifs:CartesCredit:RBC  -29.04 CAD
+  Depenses:Non-Classe        29.04 CAD
+
+2026-01-24 ! "Saq23132 Marche Atwater Montreal Qc" "SAQ23132 MARCHE ATWATER MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "101"
+  Passifs:CartesCredit:RBC  -35.10 CAD
+  Depenses:Non-Classe        35.10 CAD
+
+2026-01-24 ! "Fromagerie Hamel Montreal Qc" "FROMAGERIE HAMEL MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "102"
+  Passifs:CartesCredit:RBC  -3.70 CAD
+  Depenses:Non-Classe        3.70 CAD
+
+2026-01-24 ! "Fromagerie Du Marche Montreal Qc" "FROMAGERIE DU MARCHE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "103"
+  Passifs:CartesCredit:RBC  -4.35 CAD
+  Depenses:Non-Classe        4.35 CAD
+
+2026-01-24 ! "Boucherie Les 2 Freres Montreal Qc" "BOUCHERIE LES 2 FRERES Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "104"
+  Passifs:CartesCredit:RBC  -16.00 CAD
+  Depenses:Non-Classe        16.00 CAD
+
+2026-01-24 ! "Adelard Belanger Et Fils Montreal Qc" "ADELARD BELANGER ET FILS MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "105"
+  Passifs:CartesCredit:RBC  -27.23 CAD
+  Depenses:Non-Classe        27.23 CAD
+
+2026-01-24 ! "Brulerie Aux 4 Vents Montreal Qc" "BRULERIE AUX 4 VENTS MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "106"
+  Passifs:CartesCredit:RBC  -2.00 CAD
+  Depenses:Non-Classe        2.00 CAD
+
+2026-01-24 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "107"
+  Passifs:CartesCredit:RBC  -31.98 CAD
+  Depenses:Non-Classe        31.98 CAD
+
+2026-01-25 ! "Www.Perplexity.Ai Www.Perplexitc" "WWW.PERPLEXITY.AI WWW.PERPLEXITC 23.00 USD @ 1.414700000000"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "108"
+  Passifs:CartesCredit:RBC  -32.54 CAD
+  Depenses:Non-Classe        32.54 CAD
+
+2026-01-25 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "109"
+  Passifs:CartesCredit:RBC  -4.11 CAD
+  Depenses:Non-Classe        4.11 CAD
+
+2026-01-26 ! "Paiement Automatise - Merci" "PAIEMENT AUTOMATISE - MERCI"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "110"
+  Passifs:CartesCredit:RBC   1973.69 CAD
+  Depenses:Non-Classe       -1973.69 CAD
+
+2026-01-26 ! "Apple.Com/Bill 866-712-7753 On" "APPLE.COM/BILL 866-712-7753 ON"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "111"
+  Passifs:CartesCredit:RBC  -1.48 CAD
+  Depenses:Non-Classe        1.48 CAD
+
+2026-01-26 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "112"
+  Passifs:CartesCredit:RBC  -5.08 CAD
+  Depenses:Non-Classe        5.08 CAD
+
+2026-01-27 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "113"
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Depenses:Non-Classe        4.88 CAD
+
+2026-01-27 ! "Iherb Iherb.Com Iherb.Com" "IHERB IHERB.COM iherb.com"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "114"
+  Passifs:CartesCredit:RBC  -49.63 CAD
+  Depenses:Non-Classe        49.63 CAD
+
+2026-01-28 ! "Amzn Mktp Ca*Yc8609Tw3 866-216-1072 On" "AMZN Mktp CA*YC8609TW3 866-216-1072 ON"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "115"
+  Passifs:CartesCredit:RBC  -31.68 CAD
+  Depenses:Non-Classe        31.68 CAD
+
+2026-01-28 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "116"
+  Passifs:CartesCredit:RBC  -5.31 CAD
+  Depenses:Non-Classe        5.31 CAD
+
+2026-01-29 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "117"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-01-29 ! "Fizz (Tx. Incl.) Montreal Qc" "FIZZ (TX. INCL.) MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "118"
+  Passifs:CartesCredit:RBC  -25.93 CAD
+  Depenses:Non-Classe        25.93 CAD
+
+2026-01-30 ! "Sq *F.C.E. Foundation Culmontreal Qc" "SQ *F.C.E. FOUNDATION CULMontreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "119"
+  Passifs:CartesCredit:RBC  -20.00 CAD
+  Depenses:Non-Classe        20.00 CAD
+
+2026-01-30 ! "Stm Mcgill Die101/2751 Montreal Qc" "STM MCGILL DIE101/2751 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "120"
+  Passifs:CartesCredit:RBC  -3.75 CAD
+  Depenses:Non-Classe        3.75 CAD
+
+2026-01-30 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "121"
+  Passifs:CartesCredit:RBC  -5.99 CAD
+  Depenses:Non-Classe        5.99 CAD
+
+2026-01-31 ! "Claude.Ai Subscription Anthropic.Comca" "CLAUDE.AI SUBSCRIPTION ANTHROPIC.COMCA"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "122"
+  Passifs:CartesCredit:RBC  -321.93 CAD
+  Depenses:Non-Classe        321.93 CAD
+
+2026-01-31 ! "Mollo Boulangerie & Lab Montreal Qc" "MOLLO BOULANGERIE & LAB MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "123"
+  Passifs:CartesCredit:RBC  -6.50 CAD
+  Depenses:Non-Classe        6.50 CAD
+
+2026-02-01 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "124"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-01 ! "Mobil@ 4232 Gas Stn Verdun Qc" "MOBIL@ 4232 GAS STN VERDUN QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "125"
+  Passifs:CartesCredit:RBC  -65.06 CAD
+  Depenses:Non-Classe        65.06 CAD
+
+2026-02-02 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "126"
+  Passifs:CartesCredit:RBC  -5.31 CAD
+  Depenses:Non-Classe        5.31 CAD
+
+2026-02-02 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "127"
+  Passifs:CartesCredit:RBC  -37.09 CAD
+  Depenses:Non-Classe        37.09 CAD
+
+2026-02-03 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "128"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-04 ! "Ls Lord William Pub Montreal Qc" "LS Lord William Pub Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "129"
+  Passifs:CartesCredit:RBC  -12.50 CAD
+  Depenses:Non-Classe        12.50 CAD
+
+2026-02-04 ! "Rwco 2499 Montreal Qc" "RWCO 2499 Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "130"
+  Passifs:CartesCredit:RBC   36.15 CAD
+  Depenses:Non-Classe       -36.15 CAD
+
+2026-02-04 ! "Boucherie Les 2 Freres Montreal Qc" "BOUCHERIE LES 2 FRERES Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "131"
+  Passifs:CartesCredit:RBC  -30.00 CAD
+  Depenses:Non-Classe        30.00 CAD
+
+2026-02-04 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "132"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-04 ! "Brulerie Aux 4 Vents Montreal Qc" "BRULERIE AUX 4 VENTS MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "133"
+  Passifs:CartesCredit:RBC  -3.00 CAD
+  Depenses:Non-Classe        3.00 CAD
+
+2026-02-04 ! "Fizz (Tx. Incl.) Montreal Qc" "FIZZ (TX. INCL.) MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "134"
+  Passifs:CartesCredit:RBC  -49.44 CAD
+  Depenses:Non-Classe        49.44 CAD
+
+2026-02-05 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "135"
+  Passifs:CartesCredit:RBC  -22.80 CAD
+  Depenses:Non-Classe        22.80 CAD
+
+2026-02-08 ! "Maxi Mont St-Hilaire # Mont-Saint-Hiqc" "MAXI MONT ST-HILAIRE # MONT-SAINT-HIQC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "136"
+  Passifs:CartesCredit:RBC  -59.43 CAD
+  Depenses:Non-Classe        59.43 CAD
+
+2026-02-08 ! "Couchetard #436 Otterburn Parqc" "COUCHETARD #436 OTTERBURN PARQC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "137"
+  Passifs:CartesCredit:RBC  -9.50 CAD
+  Depenses:Non-Classe        9.50 CAD
+
+2026-02-09 ! "Spotify P3F2Fef689 Stockholm" "Spotify P3F2FEF689 Stockholm"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "138"
+  Passifs:CartesCredit:RBC  -20.57 CAD
+  Depenses:Non-Classe        20.57 CAD
+
+2026-02-09 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "139"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-09 ! "Familiprix 3002 Montreal Qc" "FAMILIPRIX 3002 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "140"
+  Passifs:CartesCredit:RBC  -244.53 CAD
+  Depenses:Non-Classe        244.53 CAD
+
+2026-02-10 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "141"
+  Passifs:CartesCredit:RBC  -5.31 CAD
+  Depenses:Non-Classe        5.31 CAD
+
+2026-02-12 ! "Le Paradis Du Fromage Montreal Qc" "LE PARADIS DU FROMAGE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "142"
+  Passifs:CartesCredit:RBC  -25.00 CAD
+  Depenses:Non-Classe        25.00 CAD
+
+2026-02-12 ! "Microsoft*Xbox Halifax Ns" "MICROSOFT*XBOX HALIFAX NS"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "143"
+  Passifs:CartesCredit:RBC  -29.88 CAD
+  Depenses:Non-Classe        29.88 CAD
+
+2026-02-12 ! "Microsoft*Xbox Halifax Ns" "MICROSOFT*XBOX HALIFAX NS"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "144"
+  Passifs:CartesCredit:RBC  -9.19 CAD
+  Depenses:Non-Classe        9.19 CAD
+
+2026-02-12 ! "Boucherie Les 2 Freres Montreal Qc" "BOUCHERIE LES 2 FRERES Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "145"
+  Passifs:CartesCredit:RBC  -7.52 CAD
+  Depenses:Non-Classe        7.52 CAD
+
+2026-02-12 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "146"
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Depenses:Non-Classe        4.88 CAD
+
+2026-02-12 ! "Sqdc77075 Mtl St-Henri Montreal Qc" "SQDC77075 MTL ST-HENRI MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "147"
+  Passifs:CartesCredit:RBC  -25.20 CAD
+  Depenses:Non-Classe        25.20 CAD
+
+2026-02-12 ! "Terrines Et Pates 2024 Montreal Qc" "TERRINES ET PATES 2024 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "148"
+  Passifs:CartesCredit:RBC  -5.85 CAD
+  Depenses:Non-Classe        5.85 CAD
+
+2026-02-12 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "149"
+  Passifs:CartesCredit:RBC  -15.68 CAD
+  Depenses:Non-Classe        15.68 CAD
+
+2026-02-12 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "150"
+  Passifs:CartesCredit:RBC  -6.19 CAD
+  Depenses:Non-Classe        6.19 CAD
+
+2026-02-13 ! "Restaurant Grinder Montreal Qc" "RESTAURANT GRINDER MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "151"
+  Passifs:CartesCredit:RBC  -323.64 CAD
+  Depenses:Non-Classe        323.64 CAD
+
+2026-02-14 ! "Savsav Saint-Henri Qc" "SAVSAV SAINT-HENRI QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "152"
+  Passifs:CartesCredit:RBC  -7.80 CAD
+  Depenses:Non-Classe        7.80 CAD
+
+2026-02-14 ! "Uber Canada/Ubertrip Toronto On" "UBER CANADA/UBERTRIP TORONTO ON"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "153"
+  Passifs:CartesCredit:RBC  -10.96 CAD
+  Depenses:Non-Classe        10.96 CAD
+
+2026-02-14 ! "Uber Canada/Ubertrip Toronto On" "UBER CANADA/UBERTRIP TORONTO ON"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "154"
+  Passifs:CartesCredit:RBC  -10.85 CAD
+  Depenses:Non-Classe        10.85 CAD
+
+2026-02-15 ! "Poissonnerie Du Marche Atmontreal Qc" "POISSONNERIE DU MARCHE ATMONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "155"
+  Passifs:CartesCredit:RBC  -24.77 CAD
+  Depenses:Non-Classe        24.77 CAD
+
+2026-02-15 ! "Boucherie Les 2 Freres Montreal Qc" "BOUCHERIE LES 2 FRERES Montreal QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "156"
+  Passifs:CartesCredit:RBC  -21.05 CAD
+  Depenses:Non-Classe        21.05 CAD
+
+2026-02-16 ! "Iherb Iherb.Com Iherb.Com" "IHERB IHERB.COM iherb.com"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "157"
+  Passifs:CartesCredit:RBC  -50.33 CAD
+  Depenses:Non-Classe        50.33 CAD
+
+2026-02-16 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "158"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-17 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "159"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-17 ! "Couche-Tard # 1191 Longueuil Qc" "COUCHE-TARD # 1191 LONGUEUIL QC"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "160"
+  Passifs:CartesCredit:RBC  -3.08 CAD
+  Depenses:Non-Classe        3.08 CAD
+
+2026-02-17 ! "Iherb Iherb.Com Iherb.Com" "IHERB IHERB.COM iherb.com"
+  source: "rbc-carte-csv"
+  categorisation: "non-classe"
+  fichier_source: "csv4883.csv"
+  ligne: "161"
+  Passifs:CartesCredit:RBC  -84.28 CAD
+  Depenses:Non-Classe        84.28 CAD
