@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 1 of 5 (Ledger Foundation and Import Pipeline)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: Executing
-Last activity: 2026-02-19 -- Completed 01-01 (Project Foundation)
+Last activity: 2026-02-19 -- Completed 01-02 (RBC Importers and Categorisation Engine)
 
-Progress: [██░░░░░░░░] 7%
+Progress: [██░░░░░░░░] 13%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 5 min
-- Total execution time: 0.08 hours
+- Total plans completed: 2
+- Average duration: 5.5 min
+- Total execution time: 0.18 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 1 | 5 min | 5 min |
+| 01 | 2 | 11 min | 5.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min)
-- Trend: baseline
+- Last 5 plans: 01-01 (5 min), 01-02 (6 min)
+- Trend: stable
 
 *Updated after each plan completion*
 
@@ -47,6 +47,10 @@ Recent decisions affecting current work:
 - [Research]: FastAPI + HTMX + Fava for web layer; no JS build toolchain
 - [01-01]: Beancount v3 name_* options must be in every included file, not just main.beancount
 - [01-01]: Float rejection via Pydantic BeforeValidator (strict mode blocks string date coercion)
+- [01-02]: Credit card sign convention: CSV positive = purchase, maps to negative on carte account posting
+- [01-02]: Dedup strategy: FITID for OFX, date+montant+narration[:20] for CSV
+- [01-02]: Empty categorisation rules file -- build rules incrementally from real imports
+- [01-02]: appliquer_categorisation creates new Transaction instances (immutable transformation)
 
 ### Pending Todos
 
@@ -61,5 +65,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-ledger-foundation-and-import-pipeline/01-01-SUMMARY.md
+Stopped at: Completed 01-02-PLAN.md
+Resume file: .planning/phases/01-ledger-foundation-and-import-pipeline/01-02-SUMMARY.md

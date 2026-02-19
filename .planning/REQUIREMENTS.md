@@ -17,15 +17,15 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Ingestion
 
-- [ ] **INGEST-01**: User can import RBC business bank account transactions from CSV file
-- [ ] **INGEST-02**: User can import RBC business credit card transactions from CSV file
-- [ ] **INGEST-03**: User can import RBC transactions from OFX/QFX file
-- [ ] **INGEST-04**: Imported transactions are normalized (date, amount in CAD, payee, description, memo)
-- [ ] **INGEST-05**: Raw import files are archived in data/processed/ with import metadata
+- [x] **INGEST-01**: User can import RBC business bank account transactions from CSV file
+- [x] **INGEST-02**: User can import RBC business credit card transactions from CSV file
+- [x] **INGEST-03**: User can import RBC transactions from OFX/QFX file
+- [x] **INGEST-04**: Imported transactions are normalized (date, amount in CAD, payee, description, memo)
+- [x] **INGEST-05**: Raw import files are archived in data/processed/ with import metadata
 
 ### Categorization
 
-- [ ] **CAT-01**: Rule-based engine categorizes transactions using configurable YAML/TOML rules (handles ~60-70%)
+- [x] **CAT-01**: Rule-based engine categorizes transactions using configurable YAML/TOML rules (handles ~60-70%)
 - [ ] **CAT-02**: smart_importer ML predicts account postings from historical data (handles ~20-25% of remainder)
 - [ ] **CAT-03**: Claude LLM categorizes remaining edge cases, constrained to closed chart of accounts list
 - [ ] **CAT-04**: Every categorization has a confidence score and source tag (rule/ml/llm/human)
@@ -182,12 +182,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-03 | Phase 1 | Complete |
 | FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Complete |
-| INGEST-01 | Phase 1 | Pending |
-| INGEST-02 | Phase 1 | Pending |
-| INGEST-03 | Phase 1 | Pending |
-| INGEST-04 | Phase 1 | Pending |
-| INGEST-05 | Phase 1 | Pending |
-| CAT-01 | Phase 1 | Pending |
+| INGEST-01 | Phase 1 | Complete |
+| INGEST-02 | Phase 1 | Complete |
+| INGEST-03 | Phase 1 | Complete |
+| INGEST-04 | Phase 1 | Complete |
+| INGEST-05 | Phase 1 | Complete |
+| CAT-01 | Phase 1 | Complete |
 | CAT-02 | Phase 3 | Pending |
 | CAT-03 | Phase 3 | Pending |
 | CAT-04 | Phase 3 | Pending |
