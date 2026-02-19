@@ -126,3 +126,201 @@ option "name_expenses" "Depenses"
   compte_propose: "Capital:Dividendes-Declares"
   Actifs:Banque:RBC:Cheques    -87.5 CAD
   Capital:Dividendes-Declares   87.5 CAD
+
+2026-02-01 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "3"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-02 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "4"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -37.09 CAD
+  Depenses:Repas-Representation   37.09 CAD
+
+2026-02-02 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "5"
+  confiance: "0.9"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -5.31 CAD
+  Depenses:Repas-Representation   5.31 CAD
+
+2026-02-03 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "6"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-04 ! "Rwco 2499 Montreal" "RWCO 2499 Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "7"
+  confiance: "0.3"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC   36.15 CAD
+  Depenses:Non-Classe       -36.15 CAD
+
+2026-02-04 ! "Boucherie Les 2 Freres Montreal" "BOUCHERIE LES 2 FRERES Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "8"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -30.0 CAD
+  Depenses:Repas-Representation   30.0 CAD
+
+2026-02-04 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "9"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-04 ! "Brulerie Aux 4 Vents Montreal" "BRULERIE AUX 4 VENTS MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "10"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -3.0 CAD
+  Depenses:Repas-Representation   3.0 CAD
+
+2026-02-04 ! "Ls Lord William Pub Montreal" "LS Lord William Pub Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "12"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -12.5 CAD
+  Depenses:Repas-Representation   12.5 CAD
+
+2026-02-05 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "13"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -22.8 CAD
+  Depenses:Repas-Representation   22.8 CAD
+
+2026-02-08 ! "Couchetard #436 Otterburn Par" "COUCHETARD #436 OTTERBURN PAR" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "14"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -9.5 CAD
+  Depenses:Non-Classe        9.5 CAD
+
+2026-02-09 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "17"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Depenses:Non-Classe        5.13 CAD
+
+2026-02-10 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "19"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -5.31 CAD
+  Depenses:Repas-Representation   5.31 CAD
+
+2026-02-12 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "20"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -6.19 CAD
+  Depenses:Non-Classe        6.19 CAD
+
+2026-02-12 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "21"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -15.68 CAD
+  Depenses:Repas-Representation   15.68 CAD
+
+2026-02-12 ! "Sqdc77075 Mtl St-Henri Montreal" "SQDC77075 MTL ST-HENRI MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "23"
+  confiance: "0.9"
+  source_ia: "llm"
+  compte_propose: "Depenses:Divers"
+  Passifs:CartesCredit:RBC  -25.2 CAD
+  Depenses:Divers            25.2 CAD
+
+2026-02-12 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "24"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Depenses:Non-Classe        4.88 CAD
+
+2026-02-12 ! "Le Paradis Du Fromage Montreal" "LE PARADIS DU FROMAGE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "28"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Passifs:CartesCredit:RBC  -25.0 CAD
+  Depenses:Non-Classe        25.0 CAD
