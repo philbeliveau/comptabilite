@@ -68,5 +68,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-03-PLAN.md (Phase 1 complete)
-Resume file: .planning/phases/01-ledger-foundation-and-import-pipeline/01-03-SUMMARY.md
+Stopped at: Phase 3 context gathered
+Resume file: .planning/phases/03-ai-categorization-and-review-workflow/03-CONTEXT.md
