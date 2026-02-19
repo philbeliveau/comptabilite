@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 4 of 5 (MCP Server and Web Dashboard) -- IN PROGRESS
-Plan: 1 of 4 in current phase
-Status: Plan 04-01 Complete
-Last activity: 2026-02-19 -- Completed 04-01 (MCP Server Core and Query Tools)
+Plan: 3 of 4 in current phase
+Status: Plan 04-03 Complete
+Last activity: 2026-02-19 -- Completed 04-03 (Fava Approval Queue Extension)
 
-Progress: [████████░░] 80%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
-- Average duration: 5.3 min
-- Total execution time: 1.05 hours
+- Total plans completed: 14
+- Average duration: 5.0 min
+- Total execution time: 1.12 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [████████░░] 80%
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 5 | 23 min | 4.6 min |
 | 03 | 3 | 17 min | 5.7 min |
-| 04 | 1 | 4 min | 4.0 min |
+| 04 | 3 | 10 min | 3.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (4 min), 02-05 (2 min), 03-02 (8 min), 03-03 (5 min), 04-01 (4 min)
+- Last 5 plans: 02-05 (2 min), 03-02 (8 min), 03-03 (5 min), 04-01 (4 min), 04-03 (3 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -85,6 +85,9 @@ Recent decisions affecting current work:
 - [04-01]: Tool response cap at 50 items with tronque flag for pagination
 - [04-01]: French field names in all MCP tool responses
 - [04-01]: AppContext dataclass with reload() for in-memory ledger refresh after mutations
+- [04-03]: lister_pending supports both meta key conventions (confiance/source_ia and confidence/ai-source)
+- [04-03]: niveau_confiance and est_gros_montant as module-level helpers for testability
+- [04-03]: Standard HTML form POST + redirect for Fava extension (no HTMX)
 
 ### Pending Todos
 
@@ -99,5 +102,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-01-PLAN.md
-Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-01-SUMMARY.md
+Stopped at: Completed 04-03-PLAN.md
+Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-03-SUMMARY.md

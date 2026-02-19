@@ -101,11 +101,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Web Dashboard
 
-- [ ] **WEB-01**: Fava serves as base web UI for ledger browsing, trial balance, P&L, balance sheet
-- [ ] **WEB-02**: Custom Fava extension for transaction approval workflow (pending queue, approve/reject)
+- [x] **WEB-01**: Fava serves as base web UI for ledger browsing, trial balance, P&L, balance sheet
+- [x] **WEB-02**: Custom Fava extension for transaction approval workflow (pending queue, approve/reject)
 - [ ] **WEB-03**: Custom Fava extension for Quebec-specific report views (payroll, CCA, GST/QST)
 - [ ] **WEB-04**: Custom Fava extension for CPA export package generation
-- [ ] **WEB-05**: Dashboard shows confidence indicators for AI-categorized transactions
+- [x] **WEB-05**: Dashboard shows confidence indicators for AI-categorized transactions
 
 ### CPA Export
 
@@ -239,11 +239,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MCP-04 | Phase 4 | Pending |
 | MCP-05 | Phase 4 | Complete |
 | MCP-06 | Phase 4 | Complete |
-| WEB-01 | Phase 4 | Pending |
-| WEB-02 | Phase 4 | Pending |
+| WEB-01 | Phase 4 | Complete |
+| WEB-02 | Phase 4 | Complete |
 | WEB-03 | Phase 4 | Pending |
 | WEB-04 | Phase 4 | Pending |
-| WEB-05 | Phase 4 | Pending |
+| WEB-05 | Phase 4 | Complete |
 | CPA-01 | Phase 5 | Pending |
 | CPA-02 | Phase 5 | Pending |
 | CPA-03 | Phase 5 | Pending |
