@@ -61,7 +61,48 @@ option "name_expenses" "Depenses"
 2025-01-01 open Passifs:Retenues-A-Payer CAD
   gifi: "2620"
 
+; Sous-comptes de retenues pour suivi cumul annuel (YTD) par type de cotisation
+2025-01-01 open Passifs:Retenues:QPP-Base CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues:QPP-Supp1 CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues:QPP-Supp2 CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues:RQAP CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues:AE CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues:Impot-Federal CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues:Impot-Quebec CAD
+  gifi: "2620"
+
 2025-01-01 open Passifs:Cotisations-Employeur CAD
+  gifi: "2620"
+
+; Sous-comptes de cotisations employeur pour suivi cumul annuel (YTD)
+2025-01-01 open Passifs:Cotisations-Employeur:QPP CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Cotisations-Employeur:RQAP CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Cotisations-Employeur:AE CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Cotisations-Employeur:FSS CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Cotisations-Employeur:CNESST CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Cotisations-Employeur:Normes-Travail CAD
   gifi: "2620"
 
 2025-01-01 open Passifs:Impots-A-Payer:Federal CAD
