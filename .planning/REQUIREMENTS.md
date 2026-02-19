@@ -39,17 +39,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Quebec Payroll
 
-- [ ] **PAY-01**: User can run payroll for a given gross salary amount and pay period
+- [x] **PAY-01**: User can run payroll for a given gross salary amount and pay period
 - [x] **PAY-02**: System calculates QPP base (5.3%), QPP additional 1 (1.0%), QPP additional 2 (4.0%) with correct maximums and exemptions
 - [x] **PAY-03**: System calculates RQAP employer (0.602%) and employee (0.430%) contributions
 - [x] **PAY-04**: System calculates EI at Quebec rate (employer 1.82%, employee 1.30%) with MIE cap
 - [x] **PAY-05**: System calculates FSS (1.65% for payroll under $1M, service sector)
 - [x] **PAY-06**: System calculates CNESST based on assigned classification rate
 - [x] **PAY-07**: System calculates labour standards contribution (0.06%)
-- [ ] **PAY-08**: System calculates federal income tax withholding with Quebec 16.5% abatement
-- [ ] **PAY-09**: System calculates Quebec provincial income tax withholding using TP-1015.F-V formulas
+- [x] **PAY-08**: System calculates federal income tax withholding with Quebec 16.5% abatement
+- [x] **PAY-09**: System calculates Quebec provincial income tax withholding using TP-1015.F-V formulas
 - [x] **PAY-10**: System tracks year-to-date totals and stops contributions at annual maximums
-- [ ] **PAY-11**: Payroll generates complete journal entries (salary expense, deductions, employer contributions, net pay)
+- [x] **PAY-11**: Payroll generates complete journal entries (salary expense, deductions, employer contributions, net pay)
 - [x] **PAY-12**: All payroll rates are config-driven in rates.py, updatable annually
 
 ### GST/QST
@@ -124,7 +124,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CLI-01**: User can import bank files via CLI command
 - [ ] **CLI-02**: User can run categorization pipeline via CLI command
 - [ ] **CLI-03**: User can review and approve pending transactions via CLI
-- [ ] **CLI-04**: User can run payroll via CLI command
+- [x] **CLI-04**: User can run payroll via CLI command
 - [ ] **CLI-05**: User can generate CPA export package via CLI command
 - [x] **CLI-06**: User can query ledger balances and run reports via CLI
 
@@ -198,17 +198,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAT-09 | Phase 3 | Pending |
 | CAT-10 | Phase 3 | Pending |
 | CAT-11 | Phase 3 | Pending |
-| PAY-01 | Phase 2 | Pending |
+| PAY-01 | Phase 2 | Complete |
 | PAY-02 | Phase 2 | Complete |
 | PAY-03 | Phase 2 | Complete |
 | PAY-04 | Phase 2 | Complete |
 | PAY-05 | Phase 2 | Complete |
 | PAY-06 | Phase 2 | Complete |
 | PAY-07 | Phase 2 | Complete |
-| PAY-08 | Phase 2 | Pending |
-| PAY-09 | Phase 2 | Pending |
+| PAY-08 | Phase 2 | Complete |
+| PAY-09 | Phase 2 | Complete |
 | PAY-10 | Phase 2 | Complete |
-| PAY-11 | Phase 2 | Pending |
+| PAY-11 | Phase 2 | Complete |
 | PAY-12 | Phase 2 | Complete |
 | TAX-01 | Phase 2 | Complete |
 | TAX-02 | Phase 2 | Complete |
@@ -256,7 +256,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLI-01 | Phase 1 | Complete |
 | CLI-02 | Phase 3 | Pending |
 | CLI-03 | Phase 3 | Pending |
-| CLI-04 | Phase 2 | Pending |
+| CLI-04 | Phase 2 | Complete |
 | CLI-05 | Phase 5 | Pending |
 | CLI-06 | Phase 1 | Complete |
 | AUTO-01 | Phase 5 | Pending |

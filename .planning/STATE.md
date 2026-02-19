@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 2 of 5 (Quebec Domain Logic)
-Plan: 4 of 4 in current phase
-Status: Executing Phase 2
-Last activity: 2026-02-19 -- Completed 02-04 (CCA/DPA and Shareholder Loan)
+Plan: 4 of 4 in current phase (ALL COMPLETE)
+Status: Phase 2 Complete
+Last activity: 2026-02-19 -- Completed 02-02 (Payroll Engine and Tax Withholding)
 
 Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 5.5 min
-- Total execution time: 0.55 hours
+- Total plans completed: 7
+- Average duration: 5.7 min
+- Total execution time: 0.67 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 19 min | 6.3 min |
-| 02 | 3 | 14 min | 4.7 min |
+| 02 | 4 | 21 min | 5.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (6 min), 01-03 (8 min), 02-01 (5 min), 02-03 (4 min), 02-04 (5 min)
+- Last 5 plans: 01-03 (8 min), 02-01 (5 min), 02-03 (4 min), 02-04 (5 min), 02-02 (7 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -65,6 +65,8 @@ Recent decisions affecting current work:
 - [02-04]: s.15(2) inclusion date from fiscal year-end + 1 year (not loan date + 1 year)
 - [02-04]: FIFO repayment allocation for per-advance s.15(2) deadline tracking
 - [02-04]: Circularity detection: 20% tolerance, 30-day window per s.15(2.6)
+- [02-02]: Salary offset Pret-Actionnaire uses credit posting (not debit) for correct transaction balancing
+- [02-02]: FSS estimated by annualizing from (YTD + current) mass salariale
 
 ### Pending Todos
 
@@ -79,5 +81,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-04-PLAN.md
-Resume file: .planning/phases/02-quebec-domain-logic/02-04-SUMMARY.md
+Stopped at: Completed 02-02-PLAN.md (Phase 2 all plans complete)
+Resume file: .planning/phases/02-quebec-domain-logic/02-02-SUMMARY.md
