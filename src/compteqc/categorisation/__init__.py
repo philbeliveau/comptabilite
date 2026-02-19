@@ -6,12 +6,31 @@ import copy
 
 from beancount.core import data
 
+from compteqc.categorisation.capex import DetecteurCAPEX
+from compteqc.categorisation.llm import ClassificateurLLM
+from compteqc.categorisation.ml import PredicteurML
 from compteqc.categorisation.moteur import MoteurRegles, ResultatCategorisation
+from compteqc.categorisation.pending import (
+    approuver_transactions,
+    ecrire_pending,
+    lire_pending,
+    rejeter_transactions,
+)
+from compteqc.categorisation.pipeline import PipelineCategorisation, ResultatPipeline
 
 __all__ = [
+    "ClassificateurLLM",
+    "DetecteurCAPEX",
     "MoteurRegles",
+    "PipelineCategorisation",
+    "PredicteurML",
     "ResultatCategorisation",
+    "ResultatPipeline",
     "appliquer_categorisation",
+    "approuver_transactions",
+    "ecrire_pending",
+    "lire_pending",
+    "rejeter_transactions",
 ]
 
 
