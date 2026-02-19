@@ -60,12 +60,20 @@ def lister_pending(entries: list) -> list[dict]:
                 if p.units and p.units.number > 0:
                     montant += p.units.number
 
+            # Meta keys: pending.py uses 'confiance'/'source_ia'/'compte_propose',
+            # while some paths use 'confidence'/'ai-source'. Support both.
+            meta = entry.meta or {}
+            confiance = meta.get("confiance", meta.get("confidence", "unknown"))
+            source = meta.get("source_ia", meta.get("ai-source", "unknown"))
+            compte_propose = meta.get("compte_propose", "")
+
             pending.append({
                 "date": str(entry.date),
                 "payee": entry.payee or "",
                 "narration": entry.narration or "",
-                "confiance": entry.meta.get("confidence", "unknown") if entry.meta else "unknown",
-                "source": entry.meta.get("ai-source", "unknown") if entry.meta else "unknown",
+                "confiance": confiance,
+                "source": source,
+                "compte_propose": compte_propose,
                 "montant": montant,
             })
     return pending

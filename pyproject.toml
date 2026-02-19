@@ -20,6 +20,9 @@ dependencies = [
     "smart-importer>=1.2",
     "anthropic>=0.82.0",
     "mcp>=1.25,<2",
+    "openai>=2.21.0",
+    "python-dotenv>=1.2.1",
+    "fava>=1.30",
 ]
 
 [project.scripts]

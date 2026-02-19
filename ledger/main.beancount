@@ -8,5 +8,7 @@ option "name_expenses" "Depenses"
 
 include "comptes.beancount"
 ; Les fichiers mensuels seront ajoutes dynamiquement
+
+2010-01-01 custom "fava-extension" "compteqc.fava_ext.approbation"
 include "2026/01.beancount"
 include "2025/11.beancount"

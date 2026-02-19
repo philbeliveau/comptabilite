@@ -1,0 +1,1 @@
+# Extensions Fava pour CompteQC.
