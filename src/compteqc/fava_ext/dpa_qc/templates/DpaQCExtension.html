@@ -1,0 +1,85 @@
+{% set page_title = "DPA/CCA" %}
+
+{% block content %}
+
+{% set schedule = extension.cca_schedule() %}
+{% set totaux = extension.totaux() %}
+
+<style>
+  .dpa-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+  .dpa-table th,
+  .dpa-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  .dpa-table th {
+    background-color: #f5f5f5;
+  }
+  .dpa-table .montant {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .sommaire-row {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+  .sommaire-row td {
+    border-top: 2px solid #333;
+  }
+  .note-cpa {
+    margin-top: 16px;
+    padding: 8px 12px;
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    font-size: 0.9em;
+  }
+</style>
+
+<h2>Deduction pour amortissement - Exercice {{ extension.annee() }}</h2>
+
+<table class="dpa-table">
+  <thead>
+    <tr>
+      <th>Classe</th>
+      <th>Description</th>
+      <th class="montant">FNACC debut</th>
+      <th class="montant">Acquisitions</th>
+      <th class="montant">Dispositions</th>
+      <th class="montant">DPA reclamee</th>
+      <th class="montant">FNACC fin</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in schedule %}
+    <tr>
+      <td>{{ row.classe }}</td>
+      <td>{{ row.description }}</td>
+      <td class="montant">{{ "{:,.2f}".format(row.fnacc_debut) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(row.acquisitions) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(row.dispositions) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(row.dpa_reclamee) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(row.fnacc_fin) }} $</td>
+    </tr>
+    {% endfor %}
+    <tr class="sommaire-row">
+      <td colspan="2">Total</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.fnacc_debut) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.acquisitions) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.dispositions) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.dpa_reclamee) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.fnacc_fin) }} $</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note-cpa">
+  Les ecritures DPA sont marquees '!' pour revision par le comptable.
+  La DPA est discretionnaire -- le CPA determinera le montant optimal a reclamer.
+</div>
+
+{% endblock %}
