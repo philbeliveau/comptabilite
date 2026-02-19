@@ -31,10 +31,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CAT-04**: Every categorization has a confidence score and source tag (rule/ml/llm/human)
 - [x] **CAT-05**: Transactions below 80% confidence are flagged for mandatory human review
 - [x] **CAT-06**: AI-categorized transactions go to pending.beancount staging file with #pending tag
-- [ ] **CAT-07**: User can approve, reject, or recategorize pending transactions
+- [x] **CAT-07**: User can approve, reject, or recategorize pending transactions
 - [x] **CAT-08**: Approved transactions move from pending to monthly ledger files
 - [x] **CAT-09**: Transactions >$500 are auto-flagged as potential CAPEX with suggested CCA class
-- [ ] **CAT-10**: User corrections feed back into rule engine (auto-generate rules after N identical corrections)
+- [x] **CAT-10**: User corrections feed back into rule engine (auto-generate rules after N identical corrections)
 - [x] **CAT-11**: LLM categorizations stored with prompt/response for drift detection
 
 ### Quebec Payroll
@@ -123,7 +123,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **CLI-01**: User can import bank files via CLI command
 - [x] **CLI-02**: User can run categorization pipeline via CLI command
-- [ ] **CLI-03**: User can review and approve pending transactions via CLI
+- [x] **CLI-03**: User can review and approve pending transactions via CLI
 - [x] **CLI-04**: User can run payroll via CLI command
 - [ ] **CLI-05**: User can generate CPA export package via CLI command
 - [x] **CLI-06**: User can query ledger balances and run reports via CLI
@@ -193,10 +193,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAT-04 | Phase 3 | Complete |
 | CAT-05 | Phase 3 | Complete |
 | CAT-06 | Phase 3 | Complete |
-| CAT-07 | Phase 3 | Pending |
+| CAT-07 | Phase 3 | Complete |
 | CAT-08 | Phase 3 | Complete |
 | CAT-09 | Phase 3 | Complete |
-| CAT-10 | Phase 3 | Pending |
+| CAT-10 | Phase 3 | Complete |
 | CAT-11 | Phase 3 | Complete |
 | PAY-01 | Phase 2 | Complete |
 | PAY-02 | Phase 2 | Complete |
@@ -255,7 +255,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CPA-09 | Phase 5 | Pending |
 | CLI-01 | Phase 1 | Complete |
 | CLI-02 | Phase 3 | Complete |
-| CLI-03 | Phase 3 | Pending |
+| CLI-03 | Phase 3 | Complete |
 | CLI-04 | Phase 2 | Complete |
 | CLI-05 | Phase 5 | Pending |
 | CLI-06 | Phase 1 | Complete |
