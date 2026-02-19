@@ -5,128 +5,6 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
-2026-02-05 ! "Virement Envoyé Alex Abile Tp29Dm" "VIREMENT ENVOYÉ ALEX ABILE TP29DM" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "2"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Depenses:Salaires:Brut"
-  Actifs:Banque:RBC:Cheques  -35 CAD
-  Depenses:Salaires:Brut      35 CAD
-
-2026-02-05 ! "Virement Reçu Anastasiia Subbotina Cabpygau" "VIREMENT REÇU ANASTASIIA SUBBOTINA CABPYGAU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "3"
-  confiance: "0.8"
-  source_ia: "llm"
-  compte_propose: "Capital:Apports"
-  Actifs:Banque:RBC:Cheques   40 CAD
-  Capital:Apports            -40 CAD
-
-2026-02-05 ! "Crédit D'Impôt Pour Solidarité Gouv. Quebec" "CRÉDIT D'IMPÔT POUR SOLIDARITÉ GOUV. QUEBEC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "4"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Revenus:Autres"
-  Actifs:Banque:RBC:Cheques   66.67 CAD
-  Revenus:Autres             -66.67 CAD
-
-2026-02-10 ! "Pmnt Fact Électr Hydro-Quebec" "PMNT FACT ÉLECTR HYDRO-QUEBEC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "5"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Internet-Telecom"
-  Actifs:Banque:RBC:Cheques         -81.14 CAD
-  Depenses:Bureau:Internet-Telecom   81.14 CAD
-
-2026-02-13 ! "Virement Reçu Anastasiia Subbotina Caqztxhr" "VIREMENT REÇU ANASTASIIA SUBBOTINA CAQZTXHR" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "6"
-  confiance: "0.7"
-  source_ia: "llm"
-  compte_propose: "Revenus:Autres"
-  capex: "oui"
-  Actifs:Banque:RBC:Cheques   900 CAD
-  Revenus:Autres             -900 CAD
-
-2026-02-16 ! "Virement Reçu Anastasiia Subbotina Cajbzwez" "VIREMENT REÇU ANASTASIIA SUBBOTINA CAJBZWEZ" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "7"
-  confiance: "0.0"
-  source_ia: "llm"
-  compte_propose: "Depenses:Non-Classe"
-  Actifs:Banque:RBC:Cheques   18 CAD
-  Depenses:Non-Classe        -18 CAD
-
-2026-02-16 ! "Virement Envoyé Patrick O'Neill Esktgj" "VIREMENT ENVOYÉ PATRICK O'NEILL ESKTGJ" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "8"
-  confiance: "0.8"
-  source_ia: "llm"
-  compte_propose: "Capital:Dividendes-Declares"
-  Actifs:Banque:RBC:Cheques    -22 CAD
-  Capital:Dividendes-Declares   22 CAD
-
-2026-02-16 ! "Virement Reçu Anastasiia Subbotina Ca2Hvrmc" "VIREMENT REÇU ANASTASIIA SUBBOTINA CA2HVRMC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "9"
-  confiance: "0.0"
-  source_ia: "llm"
-  compte_propose: "Depenses:Non-Classe"
-  Actifs:Banque:RBC:Cheques   20 CAD
-  Depenses:Non-Classe        -20 CAD
-
-2026-02-16 ! "Virement Reçu Anastasiia Subbotina Cabpbjgc" "VIREMENT REÇU ANASTASIIA SUBBOTINA CABPBJGC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "10"
-  confiance: "0.7"
-  source_ia: "llm"
-  compte_propose: "Revenus:Autres"
-  Actifs:Banque:RBC:Cheques   150 CAD
-  Revenus:Autres             -150 CAD
-
-2026-02-19 ! "Virement Envoyé Mursalem Zppfxl" "VIREMENT ENVOYÉ MURSALEM ZPPFXL" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "11"
-  confiance: "0.3"
-  source_ia: "llm"
-  compte_propose: "Depenses:Non-Classe"
-  Actifs:Banque:RBC:Cheques  -10 CAD
-  Depenses:Non-Classe         10 CAD
-
-2026-02-19 ! "Virement Envoyé Edouard René Ld43Pd" "VIREMENT ENVOYÉ EDOUARD RENÉ LD43PD" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-3.csv"
-  ligne: "12"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Capital:Dividendes-Declares"
-  Actifs:Banque:RBC:Cheques    -87.5 CAD
-  Capital:Dividendes-Declares   87.5 CAD
-
 2026-02-01 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
@@ -226,6 +104,39 @@ option "name_expenses" "Depenses"
   Passifs:CartesCredit:RBC       -12.5 CAD
   Depenses:Repas-Representation   12.5 CAD
 
+2026-02-05 ! "Virement Envoyé Alex Abile Tp29Dm" "VIREMENT ENVOYÉ ALEX ABILE TP29DM" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "2"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Salaires:Brut"
+  Actifs:Banque:RBC:Cheques  -35 CAD
+  Depenses:Salaires:Brut      35 CAD
+
+2026-02-05 ! "Virement Reçu Anastasiia Subbotina Cabpygau" "VIREMENT REÇU ANASTASIIA SUBBOTINA CABPYGAU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "3"
+  confiance: "0.8"
+  source_ia: "llm"
+  compte_propose: "Capital:Apports"
+  Actifs:Banque:RBC:Cheques   40 CAD
+  Capital:Apports            -40 CAD
+
+2026-02-05 ! "Crédit D'Impôt Pour Solidarité Gouv. Quebec" "CRÉDIT D'IMPÔT POUR SOLIDARITÉ GOUV. QUEBEC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "4"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Revenus:Autres"
+  Actifs:Banque:RBC:Cheques   66.67 CAD
+  Revenus:Autres             -66.67 CAD
+
 2026-02-05 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
@@ -259,16 +170,16 @@ option "name_expenses" "Depenses"
   Passifs:CartesCredit:RBC  -5.13 CAD
   Depenses:Non-Classe        5.13 CAD
 
-2026-02-10 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
-  source: "rbc-carte-csv"
+2026-02-10 ! "Pmnt Fact Électr Hydro-Quebec" "PMNT FACT ÉLECTR HYDRO-QUEBEC" #pending
+  source: "rbc-cheques-csv"
   categorisation: "llm"
-  fichier_source: "download-transactions-2.csv"
-  ligne: "19"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "5"
   confiance: "0.95"
   source_ia: "llm"
-  compte_propose: "Depenses:Repas-Representation"
-  Passifs:CartesCredit:RBC       -5.31 CAD
-  Depenses:Repas-Representation   5.31 CAD
+  compte_propose: "Depenses:Bureau:Internet-Telecom"
+  Actifs:Banque:RBC:Cheques         -81.14 CAD
+  Depenses:Bureau:Internet-Telecom   81.14 CAD
 
 2026-02-12 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
   source: "rbc-carte-csv"
@@ -324,6 +235,84 @@ option "name_expenses" "Depenses"
   compte_propose: "Depenses:Non-Classe"
   Passifs:CartesCredit:RBC  -25.0 CAD
   Depenses:Non-Classe        25.0 CAD
+
+2026-02-13 ! "Virement Reçu Anastasiia Subbotina Caqztxhr" "VIREMENT REÇU ANASTASIIA SUBBOTINA CAQZTXHR" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "6"
+  confiance: "0.7"
+  source_ia: "llm"
+  compte_propose: "Revenus:Autres"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   900 CAD
+  Revenus:Autres             -900 CAD
+
+2026-02-16 ! "Virement Reçu Anastasiia Subbotina Cajbzwez" "VIREMENT REÇU ANASTASIIA SUBBOTINA CAJBZWEZ" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "7"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Actifs:Banque:RBC:Cheques   18 CAD
+  Depenses:Non-Classe        -18 CAD
+
+2026-02-16 ! "Virement Envoyé Patrick O'Neill Esktgj" "VIREMENT ENVOYÉ PATRICK O'NEILL ESKTGJ" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "8"
+  confiance: "0.8"
+  source_ia: "llm"
+  compte_propose: "Capital:Dividendes-Declares"
+  Actifs:Banque:RBC:Cheques    -22 CAD
+  Capital:Dividendes-Declares   22 CAD
+
+2026-02-16 ! "Virement Reçu Anastasiia Subbotina Ca2Hvrmc" "VIREMENT REÇU ANASTASIIA SUBBOTINA CA2HVRMC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "9"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Actifs:Banque:RBC:Cheques   20 CAD
+  Depenses:Non-Classe        -20 CAD
+
+2026-02-16 ! "Virement Reçu Anastasiia Subbotina Cabpbjgc" "VIREMENT REÇU ANASTASIIA SUBBOTINA CABPBJGC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "10"
+  confiance: "0.7"
+  source_ia: "llm"
+  compte_propose: "Revenus:Autres"
+  Actifs:Banque:RBC:Cheques   150 CAD
+  Revenus:Autres             -150 CAD
+
+2026-02-19 ! "Virement Envoyé Mursalem Zppfxl" "VIREMENT ENVOYÉ MURSALEM ZPPFXL" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "11"
+  confiance: "0.3"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  Actifs:Banque:RBC:Cheques  -10 CAD
+  Depenses:Non-Classe         10 CAD
+
+2026-02-19 ! "Virement Envoyé Edouard René Ld43Pd" "VIREMENT ENVOYÉ EDOUARD RENÉ LD43PD" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-3.csv"
+  ligne: "12"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Capital:Dividendes-Declares"
+  Actifs:Banque:RBC:Cheques    -87.5 CAD
+  Capital:Dividendes-Declares   87.5 CAD
 
 2026-02-19 ! "Test Sans Cle Api Dummy Vendor" "TEST SANS CLE API DUMMY VENDOR" #pending
   source: "rbc-cheques-csv"

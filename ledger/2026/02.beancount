@@ -1,0 +1,18 @@
+; Transactions fevrier 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-02-10 * "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "19"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  approuve: "oui"
+  Passifs:CartesCredit:RBC       -5.31 CAD
+  Depenses:Repas-Representation   5.31 CAD
