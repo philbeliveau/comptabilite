@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 Phase: 5 of 5 (Reporting, CPA Export and Document Management)
 Plan: 5 of 5 in current phase
 Status: Executing Phase 05
-Last activity: 2026-02-19 -- Completed 05-04 (Document Ingestion Pipeline)
+Last activity: 2026-02-19 -- Completed 05-02 (Invoice Generation System)
 
-Progress: [██████████] 97%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 20
 - Average duration: 4.9 min
-- Total execution time: 1.45 hours
+- Total execution time: 1.53 hours
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [██████████] 97%
 | 04 | 5 | 26 min | 5.2 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-03 (3 min), 04-04 (5 min), 04-05 (5 min), 05-05 (4 min), 05-04 (5 min)
+- Last 5 plans: 04-04 (5 min), 04-05 (5 min), 05-05 (4 min), 05-04 (5 min), 05-02 (5 min)
 - Trend: stable
 
 *Updated after each plan completion*
-| Phase 05 P04 | 5 | 2 tasks | 9 files |
+| Phase 05 P02 | 5 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -107,6 +107,11 @@ Recent decisions affecting current work:
 - [05-04]: Amount (60%) + date (40%) weighted scoring for receipt matching
 - [05-04]: Image resize to 1568px max via Pillow before sending to Claude Vision
 - [05-04]: Pillow added as project dependency for image processing
+- [05-02]: WeasyPrint for HTML-to-PDF invoice generation (Jinja2 template + CSS)
+- [05-02]: YAML-based invoice registry (low volume, no database needed)
+- [05-02]: FAC-YYYY-NNN sequential numbering (Quebec legal requirement for gapless invoices)
+- [05-02]: Lazy WeasyPrint import to avoid system dependency crash at module load
+- [05-02]: PDF test skipped when pango/gobject system deps unavailable
 
 ### Pending Todos
 
@@ -121,5 +126,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 05-04-PLAN.md
-Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-04-SUMMARY.md
+Stopped at: Completed 05-02-PLAN.md
+Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-02-SUMMARY.md

@@ -79,9 +79,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Invoice Generation
 
-- [ ] **INV-01**: User can generate professional invoices for consulting clients with GST/QST
-- [ ] **INV-02**: Invoice tracks payment status (sent, paid, overdue)
-- [ ] **INV-03**: Invoices link to accounts receivable entries in the ledger
+- [x] **INV-01**: User can generate professional invoices for consulting clients with GST/QST
+- [x] **INV-02**: Invoice tracks payment status (sent, paid, overdue)
+- [x] **INV-03**: Invoices link to accounts receivable entries in the ledger
 
 ### Receipt/Document Management
 
@@ -226,9 +226,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LOAN-02 | Phase 2 | Complete |
 | LOAN-03 | Phase 2 | Complete |
 | LOAN-04 | Phase 2 | Complete |
-| INV-01 | Phase 5 | Pending |
-| INV-02 | Phase 5 | Pending |
-| INV-03 | Phase 5 | Pending |
+| INV-01 | Phase 5 | Complete |
+| INV-02 | Phase 5 | Complete |
+| INV-03 | Phase 5 | Complete |
 | DOC-01 | Phase 5 | Complete |
 | DOC-02 | Phase 5 | Complete |
 | DOC-03 | Phase 5 | Complete |
