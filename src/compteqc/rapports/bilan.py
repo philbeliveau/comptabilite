@@ -46,8 +46,11 @@ class Bilan(BaseReport):
                 resultat_net -= montant  # debits positifs -> -(+x) = -x
 
         total_actifs = self._q(sum(actifs.values(), Decimal("0")))
-        total_passifs = self._q(sum((abs(v) for v in passifs.values()), Decimal("0")))
-        total_capitaux = self._q(sum((abs(v) for v in capitaux.values()), Decimal("0")) + resultat_net)
+        # Passifs and capitaux are credit (negative) in beancount; negate to show positive.
+        # Contra-equity accounts (e.g. Dividendes-Declares) are debit (positive) and
+        # correctly reduce equity when we negate the raw sum.
+        total_passifs = self._q(-sum(passifs.values(), Decimal("0")))
+        total_capitaux = self._q(-sum(capitaux.values(), Decimal("0")) + resultat_net)
         total_passifs_capitaux = self._q(total_passifs + total_capitaux)
 
         lignes_actifs = [
@@ -55,11 +58,11 @@ class Bilan(BaseReport):
             for k, v in sorted(actifs.items())
         ]
         lignes_passifs = [
-            {"compte": k, "gifi": gifi_map.get(k, ""), "montant": self._q(abs(v))}
+            {"compte": k, "gifi": gifi_map.get(k, ""), "montant": self._q(-v)}
             for k, v in sorted(passifs.items())
         ]
         lignes_capitaux = [
-            {"compte": k, "gifi": gifi_map.get(k, ""), "montant": self._q(abs(v))}
+            {"compte": k, "gifi": gifi_map.get(k, ""), "montant": self._q(-v)}
             for k, v in sorted(capitaux.items())
         ]
 

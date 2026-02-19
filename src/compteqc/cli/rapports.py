@@ -292,24 +292,25 @@ def bilan() -> None:
 
     tableau.add_section()
 
-    # Passifs
+    # Passifs (negatifs en beancount, on negue pour afficher en positif)
     total_passifs = Decimal("0")
     tableau.add_row("[bold]PASSIFS[/bold]", "")
     for nom, montant in sorted(passifs.items()):
-        # Passifs sont negatifs en beancount, afficher en positif
-        total_passifs += abs(montant)
-        tableau.add_row(f"  {nom}", _formater_montant(abs(montant)))
+        affiche = -montant
+        total_passifs += affiche
+        tableau.add_row(f"  {nom}", _formater_montant(affiche))
     tableau.add_row(
         "[bold]Total passifs[/bold]",
         f"[bold]{_formater_montant(total_passifs)}[/bold]",
     )
 
-    # Capitaux propres
+    # Capitaux propres (negatifs en beancount sauf contra-equity comme Dividendes)
     total_capitaux = Decimal("0")
     tableau.add_row("[bold]CAPITAUX PROPRES[/bold]", "")
     for nom, montant in sorted(capitaux.items()):
-        total_capitaux += abs(montant)
-        tableau.add_row(f"  {nom}", _formater_montant(abs(montant)))
+        affiche = -montant
+        total_capitaux += affiche
+        tableau.add_row(f"  {nom}", _formater_montant(affiche))
     if resultat_net != 0:
         total_capitaux += resultat_net
         tableau.add_row("  Resultat net de l'exercice", _formater_montant(resultat_net))
