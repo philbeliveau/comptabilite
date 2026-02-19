@@ -12,27 +12,27 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 Phase: 3 of 5 (AI Categorization and Review Workflow)
 Plan: 1 of 3 in current phase
 Status: In Progress
-Last activity: 2026-02-19 -- Completed 03-01 (Three-Tier Categorization Pipeline)
+Last activity: 2026-02-19 -- Completed 02-05 (Shareholder Loan Ledger Bridge)
 
-Progress: [████████░░] 65%
+Progress: [████████░░] 69%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 5.5 min
-- Total execution time: 0.73 hours
+- Total plans completed: 9
+- Average duration: 5.1 min
+- Total execution time: 0.77 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 19 min | 6.3 min |
-| 02 | 4 | 21 min | 5.3 min |
+| 02 | 5 | 23 min | 4.6 min |
 | 03 | 1 | 4 min | 4.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (5 min), 02-03 (4 min), 02-04 (5 min), 02-02 (7 min), 03-01 (4 min)
+- Last 5 plans: 02-03 (4 min), 02-04 (5 min), 02-02 (7 min), 03-01 (4 min), 02-05 (2 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -72,6 +72,8 @@ Recent decisions affecting current work:
 - [03-01]: SVC(probability=True) for Platt scaling confidence scores
 - [03-01]: ClassificateurLLM as runtime_checkable Protocol for loose coupling with 03-02
 - [03-01]: CAPEX keyword-based CCA class suggestion (class 50 computers, 8 furniture, 10 vehicles, 12 software)
+- [02-05]: Reuse paie/ytd.py entry-reading pattern for shareholder loan bridge (isinstance + year + account match)
+- [02-05]: No tag filtering for pret actionnaire (all transactions touching the account are relevant)
 
 ### Pending Todos
 
@@ -86,5 +88,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-CONTEXT.md
+Stopped at: Completed 02-05-PLAN.md (shareholder loan ledger bridge)
+Resume file: .planning/phases/02-quebec-domain-logic/02-05-SUMMARY.md
