@@ -1,0 +1,125 @@
+{% set page_title = "Paie Quebec" %}
+
+{% block content %}
+
+{% set summary = extension.payroll_summary() %}
+{% set impots = extension.retenues_impot() %}
+{% set totaux = extension.totaux() %}
+
+<style>
+  .paie-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+  .paie-table th,
+  .paie-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  .paie-table th {
+    background-color: #f5f5f5;
+  }
+  .paie-table .montant {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .statut-atteint {
+    color: #2e7d32;
+    font-weight: bold;
+  }
+  .statut-restant {
+    color: #666;
+    font-size: 0.9em;
+  }
+  .sommaire-row {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+  .sommaire-row td {
+    border-top: 2px solid #333;
+  }
+</style>
+
+<h2>Paie Quebec - Cumulatif annuel {{ extension.annee() }}</h2>
+
+<h3>Cotisations</h3>
+<table class="paie-table">
+  <thead>
+    <tr>
+      <th>Cotisation</th>
+      <th class="montant">Employe YTD</th>
+      <th class="montant">Employeur YTD</th>
+      <th class="montant">Maximum annuel (employe)</th>
+      <th>Statut</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cot in summary %}
+    <tr>
+      <td>{{ cot.nom }}</td>
+      <td class="montant">{{ "{:,.2f}".format(cot.employe) }} $</td>
+      <td class="montant">{{ "{:,.2f}".format(cot.employeur) }} $</td>
+      <td class="montant">
+        {% if cot.maximum_employe > 0 %}
+          {{ "{:,.2f}".format(cot.maximum_employe) }} $
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        {% if cot.atteint_employe %}
+          <span class="statut-atteint">Atteint</span>
+        {% elif cot.maximum_employe > 0 %}
+          <span class="statut-restant">{{ "{:,.2f}".format(cot.maximum_employe - cot.employe) }} $ restant</span>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Retenues d'impot</h3>
+<table class="paie-table">
+  <thead>
+    <tr>
+      <th>Palier</th>
+      <th class="montant">Impot retenu YTD</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for imp in impots %}
+    <tr>
+      <td>{{ imp.palier }}</td>
+      <td class="montant">{{ "{:,.2f}".format(imp.montant) }} $</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Sommaire</h3>
+<table class="paie-table">
+  <tbody>
+    <tr>
+      <td>Salaire brut YTD</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.salaire_brut_ytd) }} $</td>
+    </tr>
+    <tr>
+      <td>Total retenues employe (cotisations + impots)</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.total_retenues_employe) }} $</td>
+    </tr>
+    <tr>
+      <td>Total cotisations employeur</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.total_cotisations_employeur) }} $</td>
+    </tr>
+    <tr class="sommaire-row">
+      <td>Salaire net YTD</td>
+      <td class="montant">{{ "{:,.2f}".format(totaux.salaire_net_ytd) }} $</td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
