@@ -19,6 +19,7 @@ dependencies = [
     "python-dateutil>=2.9.0.post0",
     "smart-importer>=1.2",
     "anthropic>=0.82.0",
+    "mcp>=1.25,<2",
 ]
 
 [project.scripts]
