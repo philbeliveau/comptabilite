@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Facture {{ facture.numero }}</title>
+    <style>{{ css }}</style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-info">
+            {% if config.logo_path %}
+            <img src="{{ config.logo_path }}" alt="Logo" class="logo">
+            {% endif %}
+            <h1 class="company-name">{{ config.nom_entreprise }}</h1>
+            {% if config.adresse %}
+            <p class="company-address">{{ config.adresse }}</p>
+            {% endif %}
+            {% if config.telephone %}
+            <p>{{ config.telephone }}</p>
+            {% endif %}
+            {% if config.courriel %}
+            <p>{{ config.courriel }}</p>
+            {% endif %}
+        </div>
+        <div class="invoice-info">
+            <h2 class="invoice-title">FACTURE</h2>
+            <table class="invoice-meta">
+                <tr><td class="label">Numero :</td><td>{{ facture.numero }}</td></tr>
+                <tr><td class="label">Date :</td><td>{{ facture.date }}</td></tr>
+                <tr><td class="label">Echeance :</td><td>{{ facture.date_echeance }}</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="client-section">
+        <h3>Facturer a :</h3>
+        <p class="client-name">{{ facture.nom_client }}</p>
+        {% if facture.adresse_client %}
+        <p class="client-address">{{ facture.adresse_client }}</p>
+        {% endif %}
+    </div>
+
+    <table class="line-items">
+        <thead>
+            <tr>
+                <th class="col-description">Description</th>
+                <th class="col-qty">Quantite</th>
+                <th class="col-price">Prix unitaire</th>
+                <th class="col-subtotal">Sous-total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in facture.lignes %}
+            <tr>
+                <td>{{ ligne.description }}</td>
+                <td class="number">{{ ligne.quantite }}</td>
+                <td class="number">{{ "%.2f"|format(ligne.prix_unitaire) }} $</td>
+                <td class="number">{{ "%.2f"|format(ligne.sous_total) }} $</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals-section">
+        <table class="totals">
+            <tr>
+                <td class="totals-label">Sous-total :</td>
+                <td class="totals-amount">{{ "%.2f"|format(facture.sous_total) }} $</td>
+            </tr>
+            <tr>
+                <td class="totals-label">TPS (5%) :</td>
+                <td class="totals-amount">{{ "%.2f"|format(facture.tps) }} $</td>
+            </tr>
+            <tr>
+                <td class="totals-label">TVQ (9,975%) :</td>
+                <td class="totals-amount">{{ "%.2f"|format(facture.tvq) }} $</td>
+            </tr>
+            <tr class="total-row">
+                <td class="totals-label"><strong>TOTAL :</strong></td>
+                <td class="totals-amount"><strong>{{ "%.2f"|format(facture.total) }} $</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    {% if facture.notes %}
+    <div class="notes-section">
+        <h3>Notes</h3>
+        <p>{{ facture.notes }}</p>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>TPS : {{ config.numero_tps }} | TVQ : {{ config.numero_tvq }}</p>
+    </div>
+</body>
+</html>
