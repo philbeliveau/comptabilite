@@ -83,12 +83,13 @@ Plans:
   3. Fava serves as the web UI showing trial balance, P&L, and balance sheet with correct Quebec chart of accounts
   4. Custom Fava extensions provide a pending transaction approval queue and Quebec-specific report views (payroll, CCA, GST/QST) in the browser
   5. AI-categorized transactions in the dashboard show their confidence score and source tag visually
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — MCP server core with FastMCP, shared service layer, and ledger/Quebec query tools
+- [ ] 04-02-PLAN.md — MCP mutation tools: categorization with reasoning, batch approval with guardrails, payroll
+- [ ] 04-03-PLAN.md — Fava base setup and transaction approval queue extension with confidence badges
+- [ ] 04-04-PLAN.md — Quebec Fava extensions (payroll, GST/QST, CCA, shareholder loan) and CPA export stub
 
 ### Phase 5: Reporting, CPA Export, and Document Management
 **Goal**: User can generate a complete year-end CPA package that the accountant can review in under one hour, invoices can be created for consulting clients, receipts can be ingested and matched to transactions, and the system tracks filing deadlines with alerts
@@ -118,5 +119,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. Ledger Foundation and Import Pipeline | 0/3 | Not started | - |
 | 2. Quebec Domain Logic | 0/4 | Not started | - |
 | 3. AI Categorization and Review Workflow | 0/3 | Not started | - |
-| 4. MCP Server and Web Dashboard | 0/3 | Not started | - |
+| 4. MCP Server and Web Dashboard | 0/4 | Not started | - |
 | 5. Reporting, CPA Export, and Document Management | 0/4 | Not started | - |
