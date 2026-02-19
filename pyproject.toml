@@ -1,0 +1,44 @@
+[project]
+name = "compteqc"
+version = "0.1.0"
+description = "Systeme comptable automatise pour consultant IT incorpore au Quebec"
+readme = "README.md"
+authors = [
+    { name = "Philippe Beliveau", email = "philbeliveau@hotmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "beancount>=3.2",
+    "beangulp>=0.2",
+    "beanquery>=0.2",
+    "ofxtools>=0.9",
+    "typer>=0.24",
+    "rich",
+    "pydantic>=2",
+    "pyyaml",
+]
+
+[project.scripts]
+cqc = "compteqc.cli.app:app"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.5,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
