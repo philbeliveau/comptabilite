@@ -65,12 +65,12 @@ Plans:
   3. AI-categorized transactions land in pending.beancount with #pending tag, and user can approve, reject, or recategorize them via CLI before they move to monthly ledger files
   4. Transactions over $500 are auto-flagged as potential CAPEX with a suggested CCA class
   5. User corrections feed back into the rule engine (auto-generate rules after repeated identical corrections) and LLM categorizations are stored with prompt/response for drift detection
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md — Pipeline orchestrator, ML tier (smart_importer), CAPEX detector, confidence thresholds (TDD)
+- [ ] 03-02-PLAN.md — LLM tier (Anthropic Claude), pending.beancount staging, JSONL logging, import CLI integration
+- [ ] 03-03-PLAN.md — Review CLI (`cqc reviser`), feedback loop, auto-rule generation from corrections
 
 ### Phase 4: MCP Server and Web Dashboard
 **Goal**: Claude can interact with the accounting system through MCP tools for querying, categorizing, and approving transactions, and the user has a web-based dashboard for ledger exploration, transaction approval, and Quebec-specific report views
