@@ -1,0 +1,10 @@
+option "title" "CompteQC - Corporation Consultation IT (Quebec)"
+option "operating_currency" "CAD"
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+include "comptes.beancount"
+; Les fichiers mensuels seront ajoutes dynamiquement

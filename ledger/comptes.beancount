@@ -1,0 +1,243 @@
+; =============================================================================
+; Plan comptable CompteQC - Consultant IT incorpore au Quebec (CCPC)
+; Codes GIFI en metadata pour mappage aux declarations fiscales
+; =============================================================================
+
+; Options requises pour que Beancount reconnaisse les noms de comptes francais
+; (doit etre present dans chaque fichier qui declare des comptes)
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+; -----------------------------------------------------------------------------
+; ACTIFS (GIFI 1000-1999)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Actifs:Banque:RBC:Cheques CAD
+  gifi: "1001"
+
+2025-01-01 open Actifs:Banque:RBC:Epargne CAD
+  gifi: "1001"
+
+2025-01-01 open Actifs:ComptesClients CAD
+  gifi: "1060"
+
+2025-01-01 open Actifs:TPS-Payee CAD
+  gifi: "1300"
+
+2025-01-01 open Actifs:TVQ-Payee CAD
+  gifi: "1300"
+
+2025-01-01 open Actifs:Prepaye:Assurances CAD
+  gifi: "1302"
+
+2025-01-01 open Actifs:Immobilisations:Informatique CAD
+  gifi: "1740"
+
+2025-01-01 open Actifs:Immobilisations:Mobilier CAD
+  gifi: "1740"
+
+2025-01-01 open Actifs:Immobilisations:Amortissement-Cumule CAD
+  gifi: "1742"
+
+; -----------------------------------------------------------------------------
+; PASSIFS (GIFI 2000-2999)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Passifs:CartesCredit:RBC CAD
+  gifi: "2700"
+
+2025-01-01 open Passifs:TPS-Percue CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:TVQ-Percue CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Salaires-A-Payer CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Retenues-A-Payer CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Cotisations-Employeur CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Impots-A-Payer:Federal CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Impots-A-Payer:Quebec CAD
+  gifi: "2620"
+
+2025-01-01 open Passifs:Pret-Actionnaire CAD
+  gifi: "2480"
+
+; -----------------------------------------------------------------------------
+; CAPITAUX PROPRES (GIFI 3000-3999)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Capital:Actions-Ordinaires CAD
+  gifi: "3500"
+
+2025-01-01 open Capital:Benefices-Non-Repartis CAD
+  gifi: "3600"
+
+2025-01-01 open Capital:Dividendes-Declares CAD
+  gifi: "3701"
+
+2025-01-01 open Capital:Apports CAD
+  gifi: "3470"
+
+; -----------------------------------------------------------------------------
+; REVENUS (GIFI 8000+)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Revenus:Consultation CAD
+  gifi: "8000"
+
+2025-01-01 open Revenus:Produit-Logiciel CAD
+  gifi: "8000"
+
+2025-01-01 open Revenus:Interets CAD
+  gifi: "8090"
+
+2025-01-01 open Revenus:Autres CAD
+  gifi: "8230"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Salaires et charges sociales (GIFI 8960)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Salaires:Brut CAD
+  gifi: "8960"
+
+2025-01-01 open Depenses:Salaires:RRQ-Employeur CAD
+  gifi: "8960"
+
+2025-01-01 open Depenses:Salaires:RQAP-Employeur CAD
+  gifi: "8960"
+
+2025-01-01 open Depenses:Salaires:AE-Employeur CAD
+  gifi: "8960"
+
+2025-01-01 open Depenses:Salaires:FSS CAD
+  gifi: "8960"
+
+2025-01-01 open Depenses:Salaires:CNESST CAD
+  gifi: "8960"
+
+2025-01-01 open Depenses:Salaires:Normes-Travail CAD
+  gifi: "8960"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Bureau et operations (GIFI 8810-8811)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Bureau:Loyer CAD
+  gifi: "8810"
+
+2025-01-01 open Depenses:Bureau:Internet-Telecom CAD
+  gifi: "8811"
+
+2025-01-01 open Depenses:Bureau:Abonnements-Logiciels CAD
+  gifi: "8811"
+
+2025-01-01 open Depenses:Bureau:Fournitures CAD
+  gifi: "8811"
+
+2025-01-01 open Depenses:Bureau:Entretien CAD
+  gifi: "8811"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Honoraires professionnels (GIFI 8860)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Honoraires-Professionnels:Comptable CAD
+  gifi: "8860"
+
+2025-01-01 open Depenses:Honoraires-Professionnels:Juridique CAD
+  gifi: "8860"
+
+2025-01-01 open Depenses:Honoraires-Professionnels:Autres CAD
+  gifi: "8860"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Assurances (GIFI 8690)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Assurances:Responsabilite CAD
+  gifi: "8690"
+
+2025-01-01 open Depenses:Assurances:Autres CAD
+  gifi: "8690"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Vehicule (GIFI 9281)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Vehicule:Carburant CAD
+  gifi: "9281"
+
+2025-01-01 open Depenses:Vehicule:Entretien CAD
+  gifi: "9281"
+
+2025-01-01 open Depenses:Vehicule:Assurance CAD
+  gifi: "9281"
+
+2025-01-01 open Depenses:Vehicule:Stationnement CAD
+  gifi: "9281"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Deplacement et representation (GIFI 9200, 8523)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Deplacement:Transport CAD
+  gifi: "9200"
+
+2025-01-01 open Depenses:Deplacement:Hebergement CAD
+  gifi: "9200"
+
+2025-01-01 open Depenses:Repas-Representation CAD
+  gifi: "8523"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Formation, marketing, bancaire (GIFI divers)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Formation CAD
+  gifi: "8811"
+
+2025-01-01 open Depenses:Publicite-Marketing CAD
+  gifi: "8520"
+
+2025-01-01 open Depenses:Frais-Bancaires CAD
+  gifi: "8710"
+
+2025-01-01 open Depenses:Interet:Bancaire CAD
+  gifi: "8710"
+
+; -----------------------------------------------------------------------------
+; DEPENSES - Amortissement, impots, taxes, divers (GIFI divers)
+; -----------------------------------------------------------------------------
+
+2025-01-01 open Depenses:Amortissement CAD
+  gifi: "8670"
+
+2025-01-01 open Depenses:Impots:Federal CAD
+  gifi: "9060"
+
+2025-01-01 open Depenses:Impots:Quebec CAD
+  gifi: "9060"
+
+2025-01-01 open Depenses:TPS-Remise CAD
+  gifi: "8760"
+
+2025-01-01 open Depenses:TVQ-Remise CAD
+  gifi: "8760"
+
+2025-01-01 open Depenses:Divers CAD
+  gifi: "9270"
+
+2025-01-01 open Depenses:Non-Classe CAD
+  gifi: "9990"
