@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 4 of 5 (MCP Server and Web Dashboard) -- IN PROGRESS
-Plan: 3 of 4 in current phase
-Status: Plan 04-03 Complete
-Last activity: 2026-02-19 -- Completed 04-03 (Fava Approval Queue Extension)
+Phase: 4 of 5 (MCP Server and Web Dashboard) -- COMPLETE
+Plan: 4 of 4 in current phase
+Status: Phase 04 Complete
+Last activity: 2026-02-19 -- Completed 04-04 (Quebec Fava Dashboards)
 
-Progress: [█████████░] 90%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: 5.1 min
-- Total execution time: 1.22 hours
+- Total execution time: 1.30 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [█████████░] 90%
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 5 | 23 min | 4.6 min |
 | 03 | 3 | 17 min | 5.7 min |
-| 04 | 4 | 16 min | 4.0 min |
+| 04 | 4 | 21 min | 5.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (8 min), 03-03 (5 min), 04-01 (4 min), 04-02 (6 min), 04-03 (3 min)
+- Last 5 plans: 03-03 (5 min), 04-01 (4 min), 04-02 (6 min), 04-03 (3 min), 04-04 (5 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -92,6 +92,9 @@ Recent decisions affecting current work:
 - [04-03]: lister_pending supports both meta key conventions (confiance/source_ia and confidence/ai-source)
 - [04-03]: niveau_confiance and est_gros_montant as module-level helpers for testability
 - [04-03]: Standard HTML form POST + redirect for Fava extension (no HTMX)
+- [04-04]: niveau_alerte_s152 as module-level helper for testability (same pattern as 04-03)
+- [04-04]: CCA extension loads actifs.yaml from ledger directory by default, falls back to empty registre
+- [04-04]: TaxesQCExtension supports config string for frequence (annuel/trimestriel)
 
 ### Pending Todos
 
@@ -106,5 +109,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-03-PLAN.md
-Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-03-SUMMARY.md
+Stopped at: Completed 04-04-PLAN.md (Phase 04 complete)
+Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-04-SUMMARY.md
