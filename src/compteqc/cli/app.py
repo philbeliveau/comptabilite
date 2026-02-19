@@ -72,9 +72,11 @@ def main(
 
 # Import et enregistrement des sous-commandes
 from compteqc.cli.importer import importer_app  # noqa: E402
+from compteqc.cli.paie import app as paie_app  # noqa: E402
 from compteqc.cli.rapports import rapport_app, revue, soldes  # noqa: E402
 
 app.add_typer(importer_app, name="importer", help="Importer des fichiers bancaires")
+app.add_typer(paie_app, name="paie", help="Gestion de la paie")
 app.add_typer(rapport_app, name="rapport", help="Rapports financiers (balance, resultats, bilan)")
 app.command(name="soldes", help="Afficher les soldes de tous les comptes")(soldes)
 app.command(name="revue", help="Afficher les transactions non-classees")(revue)
