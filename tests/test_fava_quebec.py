@@ -12,9 +12,11 @@ from fava.ext import FavaExtensionBase
 
 from compteqc.fava_ext.approbation import ApprobationExtension
 from compteqc.fava_ext.dpa_qc import DpaQCExtension
+from compteqc.fava_ext.echeances import EcheancesExtension
 from compteqc.fava_ext.export_cpa import ExportCPAExtension
 from compteqc.fava_ext.paie_qc import PaieQCExtension
 from compteqc.fava_ext.pret_actionnaire import PretActionnaireExtension, niveau_alerte_s152
+from compteqc.fava_ext.recus import RecusExtension
 from compteqc.fava_ext.taxes_qc import TaxesQCExtension
 
 # Racine du projet
@@ -33,6 +35,8 @@ PROJECT_ROOT = Path(__file__).parent.parent
         (DpaQCExtension, "DPA/CCA"),
         (PretActionnaireExtension, "Pret actionnaire"),
         (ExportCPAExtension, "Export CPA"),
+        (EcheancesExtension, "Echeances"),
+        (RecusExtension, "Recus"),
     ],
 )
 def test_report_title(cls, expected_title):
@@ -53,6 +57,8 @@ def test_report_title(cls, expected_title):
         DpaQCExtension,
         PretActionnaireExtension,
         ExportCPAExtension,
+        EcheancesExtension,
+        RecusExtension,
     ],
 )
 def test_subclass_of_fava_extension_base(cls):
@@ -73,6 +79,8 @@ def test_subclass_of_fava_extension_base(cls):
         "src/compteqc/fava_ext/dpa_qc/templates/DpaQCExtension.html",
         "src/compteqc/fava_ext/pret_actionnaire/templates/PretActionnaireExtension.html",
         "src/compteqc/fava_ext/export_cpa/templates/ExportCPAExtension.html",
+        "src/compteqc/fava_ext/echeances/templates/EcheancesExtension.html",
+        "src/compteqc/fava_ext/recus/templates/RecusExtension.html",
     ],
 )
 def test_template_exists(template_path):
@@ -86,7 +94,7 @@ def test_template_exists(template_path):
 # ---------------------------------------------------------------------------
 
 def test_main_beancount_has_all_extensions():
-    """main.beancount contient 6 directives fava-extension."""
+    """main.beancount contient 8 directives fava-extension."""
     main_path = PROJECT_ROOT / "ledger" / "main.beancount"
     assert main_path.exists(), "ledger/main.beancount manquant"
 
@@ -95,13 +103,13 @@ def test_main_beancount_has_all_extensions():
         line for line in content.splitlines()
         if 'fava-extension' in line and line.strip().startswith("2010")
     ]
-    assert len(extension_lines) == 6, (
-        f"Attendu 6 directives fava-extension, trouve {len(extension_lines)}: {extension_lines}"
+    assert len(extension_lines) == 8, (
+        f"Attendu 8 directives fava-extension, trouve {len(extension_lines)}: {extension_lines}"
     )
 
 
 def test_main_beancount_has_specific_extensions():
-    """main.beancount contient les 6 extensions specifiques."""
+    """main.beancount contient les 8 extensions specifiques."""
     main_path = PROJECT_ROOT / "ledger" / "main.beancount"
     content = main_path.read_text()
 
@@ -112,6 +120,8 @@ def test_main_beancount_has_specific_extensions():
         "compteqc.fava_ext.dpa_qc",
         "compteqc.fava_ext.pret_actionnaire",
         "compteqc.fava_ext.export_cpa",
+        "compteqc.fava_ext.echeances",
+        "compteqc.fava_ext.recus",
     ]
     for ext in expected:
         assert ext in content, f"Extension manquante dans main.beancount: {ext}"
