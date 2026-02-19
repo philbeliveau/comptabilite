@@ -63,7 +63,7 @@ def proposer_categorie(
         from compteqc.categorisation.capex import DetecteurCAPEX
         from compteqc.categorisation.moteur import MoteurRegles
         from compteqc.categorisation.pipeline import PipelineCategorisation
-        from compteqc.categorisation.regles import ConfigRegles
+        from compteqc.categorisation.regles import ConfigRegles, charger_regles
 
         app = ctx.request_context.lifespan_context
 
@@ -72,9 +72,9 @@ def proposer_categorie(
         regles_path = os.path.join(os.path.dirname(app.ledger_path), "regles.yaml")
 
         if os.path.exists(regles_path):
-            config = ConfigRegles.charger(regles_path)
+            config = charger_regles(regles_path)
         else:
-            config = ConfigRegles(regles=[], comptes_valides=set())
+            config = ConfigRegles(regles=[])
 
         moteur = MoteurRegles(config)
         detecteur = DetecteurCAPEX()
