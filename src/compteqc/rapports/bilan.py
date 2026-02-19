@@ -45,9 +45,9 @@ class Bilan(BaseReport):
             elif acct.startswith("Depenses"):
                 resultat_net -= montant  # debits positifs -> -(+x) = -x
 
-        total_actifs = self._q(sum(actifs.values()))
-        total_passifs = self._q(sum(abs(v) for v in passifs.values()))
-        total_capitaux = self._q(sum(abs(v) for v in capitaux.values()) + resultat_net)
+        total_actifs = self._q(sum(actifs.values(), Decimal("0")))
+        total_passifs = self._q(sum((abs(v) for v in passifs.values()), Decimal("0")))
+        total_capitaux = self._q(sum((abs(v) for v in capitaux.values()), Decimal("0")) + resultat_net)
         total_passifs_capitaux = self._q(total_passifs + total_capitaux)
 
         lignes_actifs = [

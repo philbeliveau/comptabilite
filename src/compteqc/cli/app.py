@@ -77,6 +77,7 @@ from compteqc.cli.rapports import rapport_app, revue, soldes  # noqa: E402
 from compteqc.cli.facture import facture_app  # noqa: E402
 from compteqc.cli.receipt import receipt_app  # noqa: E402
 from compteqc.cli.reviser import reviser_app  # noqa: E402
+from compteqc.cli.cpa import cpa_app  # noqa: E402
 
 app.add_typer(importer_app, name="importer", help="Importer des fichiers bancaires")
 app.add_typer(paie_app, name="paie", help="Gestion de la paie")
@@ -84,6 +85,7 @@ app.add_typer(rapport_app, name="rapport", help="Rapports financiers (balance, r
 app.add_typer(reviser_app, name="reviser", help="Reviser les transactions en attente")
 app.add_typer(facture_app, name="facture", help="Gestion des factures")
 app.add_typer(receipt_app, name="recu", help="Gestion des recus et documents")
+app.add_typer(cpa_app, name="cpa", help="Export CPA et rapports")
 app.command(name="soldes", help="Afficher les soldes de tous les comptes")(soldes)
 app.command(name="revue", help="Afficher les transactions non-classees")(revue)
 

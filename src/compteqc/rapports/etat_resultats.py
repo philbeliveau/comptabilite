@@ -44,13 +44,13 @@ class EtatResultats(BaseReport):
             {"compte": k, "gifi": gifi_map.get(k, ""), "montant": self._q(-v)}
             for k, v in sorted(revenus.items())
         ]
-        total_revenus = self._q(sum(-v for v in revenus.values()))
+        total_revenus = self._q(sum((-v for v in revenus.values()), Decimal("0")))
 
         lignes_depenses = [
             {"compte": k, "gifi": gifi_map.get(k, ""), "montant": self._q(v)}
             for k, v in sorted(depenses.items())
         ]
-        total_depenses = self._q(sum(depenses.values()))
+        total_depenses = self._q(sum(depenses.values(), Decimal("0")))
 
         resultat_net = self._q(total_revenus - total_depenses)
 
