@@ -19,9 +19,9 @@ Progress: [█████████░] 90%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: 5.0 min
-- Total execution time: 1.12 hours
+- Total plans completed: 15
+- Average duration: 5.1 min
+- Total execution time: 1.22 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [█████████░] 90%
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 5 | 23 min | 4.6 min |
 | 03 | 3 | 17 min | 5.7 min |
-| 04 | 3 | 10 min | 3.3 min |
+| 04 | 4 | 16 min | 4.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-05 (2 min), 03-02 (8 min), 03-03 (5 min), 04-01 (4 min), 04-03 (3 min)
+- Last 5 plans: 03-02 (8 min), 03-03 (5 min), 04-01 (4 min), 04-02 (6 min), 04-03 (3 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -85,6 +85,10 @@ Recent decisions affecting current work:
 - [04-01]: Tool response cap at 50 items with tronque flag for pagination
 - [04-01]: French field names in all MCP tool responses
 - [04-01]: AppContext dataclass with reload() for in-memory ledger refresh after mutations
+- [04-02]: charger_regles() function instead of ConfigRegles.charger() (Pydantic model has no classmethod)
+- [04-02]: Composite key date|payee|narration[:20] for pending transaction identification
+- [04-02]: Auto-approve threshold: confiance >= 0.95, revue_obligatoire=False, abs(montant) <= 2000
+- [04-02]: Unified payroll confirmation with raison field: nouveau_montant, gros_montant, nouveau_et_gros_montant
 - [04-03]: lister_pending supports both meta key conventions (confiance/source_ia and confidence/ai-source)
 - [04-03]: niveau_confiance and est_gros_montant as module-level helpers for testability
 - [04-03]: Standard HTML form POST + redirect for Fava extension (no HTMX)
