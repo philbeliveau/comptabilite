@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 1 of 5 (Ledger Foundation and Import Pipeline)
-Plan: 2 of 3 in current phase
-Status: Executing
-Last activity: 2026-02-19 -- Completed 01-02 (RBC Importers and Categorisation Engine)
+Plan: 3 of 3 in current phase
+Status: Phase 1 Complete
+Last activity: 2026-02-19 -- Completed 01-03 (CLI and Reports)
 
-Progress: [██░░░░░░░░] 13%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 5.5 min
-- Total execution time: 0.18 hours
+- Total plans completed: 3
+- Average duration: 6.3 min
+- Total execution time: 0.32 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 2 | 11 min | 5.5 min |
+| 01 | 3 | 19 min | 6.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (6 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (6 min), 01-03 (8 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -51,6 +51,9 @@ Recent decisions affecting current work:
 - [01-02]: Dedup strategy: FITID for OFX, date+montant+narration[:20] for CSV
 - [01-02]: Empty categorisation rules file -- build rules incrementally from real imports
 - [01-02]: appliquer_categorisation creates new Transaction instances (immutable transformation)
+- [01-03]: Monthly beancount files require name_* options (same Beancount v3 requirement as comptes.beancount)
+- [01-03]: Reports compute balances directly from Transaction postings instead of beanquery
+- [01-03]: Bilan includes resultat net under capitaux propres for accounting equation verification
 
 ### Pending Todos
 
@@ -65,5 +68,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-02-PLAN.md
-Resume file: .planning/phases/01-ledger-foundation-and-import-pipeline/01-02-SUMMARY.md
+Stopped at: Completed 01-03-PLAN.md (Phase 1 complete)
+Resume file: .planning/phases/01-ledger-foundation-and-import-pipeline/01-03-SUMMARY.md

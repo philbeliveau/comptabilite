@@ -121,12 +121,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CLI
 
-- [ ] **CLI-01**: User can import bank files via CLI command
+- [x] **CLI-01**: User can import bank files via CLI command
 - [ ] **CLI-02**: User can run categorization pipeline via CLI command
 - [ ] **CLI-03**: User can review and approve pending transactions via CLI
 - [ ] **CLI-04**: User can run payroll via CLI command
 - [ ] **CLI-05**: User can generate CPA export package via CLI command
-- [ ] **CLI-06**: User can query ledger balances and run reports via CLI
+- [x] **CLI-06**: User can query ledger balances and run reports via CLI
 
 ### Automation & Alerts
 
@@ -253,12 +253,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CPA-07 | Phase 5 | Pending |
 | CPA-08 | Phase 5 | Pending |
 | CPA-09 | Phase 5 | Pending |
-| CLI-01 | Phase 1 | Pending |
+| CLI-01 | Phase 1 | Complete |
 | CLI-02 | Phase 3 | Pending |
 | CLI-03 | Phase 3 | Pending |
 | CLI-04 | Phase 2 | Pending |
 | CLI-05 | Phase 5 | Pending |
-| CLI-06 | Phase 1 | Pending |
+| CLI-06 | Phase 1 | Complete |
 | AUTO-01 | Phase 5 | Pending |
 | AUTO-02 | Phase 5 | Pending |
 | AUTO-03 | Phase 5 | Pending |
