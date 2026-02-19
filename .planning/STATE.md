@@ -92,6 +92,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-02-PLAN.md
-Resume file: .planning/phases/03-ai-categorization-and-review-workflow/03-02-SUMMARY.md
-Resume file: .planning/phases/02-quebec-domain-logic/02-05-SUMMARY.md
+Stopped at: Phase 5 context gathered
+Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-CONTEXT.md
