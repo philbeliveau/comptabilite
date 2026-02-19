@@ -54,6 +54,8 @@ mcp = FastMCP("CompteQC", lifespan=app_lifespan)
 # Importer les modules d'outils (ils s'enregistrent via @mcp.tool())
 import compteqc.mcp.tools.ledger  # noqa: E402, F401
 import compteqc.mcp.tools.quebec  # noqa: E402, F401
+import compteqc.mcp.tools.categorisation  # noqa: E402, F401
+import compteqc.mcp.tools.approbation  # noqa: E402, F401
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")

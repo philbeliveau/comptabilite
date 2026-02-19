@@ -74,3 +74,23 @@ def lister_pending(entries: list) -> list[dict]:
 def formater_montant(montant: Decimal) -> str:
     """Formate un montant en CAD avec 2 decimales et separateur de milliers."""
     return f"{montant:,.2f}"
+
+
+def trouver_pending_par_id(pending_list: list[dict], id_str: str) -> int | None:
+    """Trouve l'index d'une transaction pending par identifiant composite.
+
+    L'identifiant composite est de la forme "date|payee|narration[:20]".
+
+    Args:
+        pending_list: Liste de dicts retournee par lister_pending().
+        id_str: Identifiant composite a rechercher.
+
+    Returns:
+        Index 0-based de la transaction, ou None si introuvable.
+    """
+    for i, entry in enumerate(pending_list):
+        narration = (entry.get("narration") or "")[:20]
+        cle = f"{entry['date']}|{entry['payee']}|{narration}"
+        if cle == id_str:
+            return i
+    return None
