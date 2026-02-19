@@ -47,13 +47,14 @@ Plans:
   3. Capital assets over $500 are tracked by CCA class with half-year rule applied, declining balance depreciation calculated, and year-end CCA entries generated as Beancount transactions
   4. Shareholder loan account (1800) tracks all personal-vs-business transactions and the system alerts at 9 months, 11 months, and 30 days before the s.15(2) inclusion date
   5. All payroll and tax rates are config-driven in rates.py and year-to-date totals stop contributions at annual maximums
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
-- [ ] 02-04: TBD
+- [x] 02-01-PLAN.md — Rates and contributions (frozen Decimal dataclasses, all 7 contribution calculators, YTD)
+- [x] 02-02-PLAN.md — Payroll engine, tax withholding, Beancount journal, CLI
+- [x] 02-03-PLAN.md — GST/QST extraction, treatment rules, filing period summaries
+- [x] 02-04-PLAN.md — CCA/DPA pool calculation, shareholder loan tracking with s.15(2) alerts
+- [ ] 02-05-PLAN.md — Gap closure: shareholder loan ledger-reading bridge (obtenir_etat_pret)
 
 ### Phase 3: AI Categorization and Review Workflow
 **Goal**: Transactions that the rule engine cannot categorize are handled by ML prediction and LLM classification with confidence scoring, and all AI-categorized transactions go through a human review workflow before reaching the official ledger
