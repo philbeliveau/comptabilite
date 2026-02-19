@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 Phase: 5 of 5 (Reporting, CPA Export and Document Management)
 Plan: 5 of 5 in current phase
 Status: Executing Phase 05
-Last activity: 2026-02-19 -- Completed 05-02 (Invoice Generation System)
+Last activity: 2026-02-19 -- Completed 05-01 (CPA Report Engine)
 
 Progress: [██████████] 98%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 21
 - Average duration: 4.9 min
-- Total execution time: 1.53 hours
+- Total execution time: 1.65 hours
 
 **By Phase:**
 
@@ -33,11 +33,12 @@ Progress: [██████████] 98%
 | 04 | 5 | 26 min | 5.2 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-04 (5 min), 04-05 (5 min), 05-05 (4 min), 05-04 (5 min), 05-02 (5 min)
+- Last 5 plans: 04-05 (5 min), 05-05 (4 min), 05-04 (5 min), 05-02 (5 min), 05-01 (7 min)
 - Trend: stable
 
 *Updated after each plan completion*
 | Phase 05 P02 | 5 | 2 tasks | 10 files |
+| Phase 05 P01 | 7 | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,10 @@ Recent decisions affecting current work:
 - [05-02]: FAC-YYYY-NNN sequential numbering (Quebec legal requirement for gapless invoices)
 - [05-02]: Lazy WeasyPrint import to avoid system dependency crash at module load
 - [05-02]: PDF test skipped when pango/gobject system deps unavailable
+- [05-01]: Used calculer_soldes from mcp/services.py (plan referenced nonexistent ledger/rapports.py)
+- [05-01]: GIFI validation checks beancount equation sum (all accounts = 0) rather than transformed form
+- [05-01]: BaseReport ABC pattern: subclasses implement extract_data/csv_headers/csv_rows
+- [05-01]: PDF tests use weasyprint_available fixture for graceful skip when system libs unavailable
 
 ### Pending Todos
 
@@ -126,5 +131,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 05-02-PLAN.md
-Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-02-SUMMARY.md
+Stopped at: Completed 05-01-PLAN.md
+Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-01-SUMMARY.md

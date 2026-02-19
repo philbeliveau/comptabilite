@@ -109,15 +109,15 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CPA Export
 
-- [ ] **CPA-01**: System generates trial balance (CSV + PDF)
-- [ ] **CPA-02**: System generates income statement / P&L (CSV + PDF)
-- [ ] **CPA-03**: System generates balance sheet (CSV + PDF)
+- [x] **CPA-01**: System generates trial balance (CSV + PDF)
+- [x] **CPA-02**: System generates income statement / P&L (CSV + PDF)
+- [x] **CPA-03**: System generates balance sheet (CSV + PDF)
 - [ ] **CPA-04**: System generates payroll summary schedule (gross, deductions, employer contributions)
 - [ ] **CPA-05**: System generates CCA schedule by class (cost, half-year, CCA claimed, UCC)
 - [ ] **CPA-06**: System generates GST/QST reconciliation summary by period
 - [ ] **CPA-07**: System generates shareholder loan continuity schedule
-- [ ] **CPA-08**: GIFI-mapped export validates Schedule 100 balances before generation
-- [ ] **CPA-09**: All reports available as CSV for CPA import into TaxCycle or similar
+- [x] **CPA-08**: GIFI-mapped export validates Schedule 100 balances before generation
+- [x] **CPA-09**: All reports available as CSV for CPA import into TaxCycle or similar
 
 ### CLI
 
@@ -244,15 +244,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WEB-03 | Phase 4 | Complete |
 | WEB-04 | Phase 4 | Complete |
 | WEB-05 | Phase 4 | Complete |
-| CPA-01 | Phase 5 | Pending |
-| CPA-02 | Phase 5 | Pending |
-| CPA-03 | Phase 5 | Pending |
+| CPA-01 | Phase 5 | Complete |
+| CPA-02 | Phase 5 | Complete |
+| CPA-03 | Phase 5 | Complete |
 | CPA-04 | Phase 5 | Pending |
 | CPA-05 | Phase 5 | Pending |
 | CPA-06 | Phase 5 | Pending |
 | CPA-07 | Phase 5 | Pending |
-| CPA-08 | Phase 5 | Pending |
-| CPA-09 | Phase 5 | Pending |
+| CPA-08 | Phase 5 | Complete |
+| CPA-09 | Phase 5 | Complete |
 | CLI-01 | Phase 1 | Complete |
 | CLI-02 | Phase 3 | Complete |
 | CLI-03 | Phase 3 | Complete |
