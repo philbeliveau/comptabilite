@@ -12,7 +12,7 @@ from decimal import Decimal
 
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.pipeline import Pipeline, make_pipeline, make_union
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.svm import SVC
 
 logger = logging.getLogger(__name__)
