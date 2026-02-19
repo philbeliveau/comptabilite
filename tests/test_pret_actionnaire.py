@@ -17,7 +17,14 @@ from compteqc.quebec.pret_actionnaire.alertes import (
     obtenir_alertes_actives,
 )
 from compteqc.quebec.pret_actionnaire.detection import detecter_circularite
-from compteqc.quebec.pret_actionnaire.suivi import MouvementPret, calculer_etat_pret
+from compteqc.quebec.pret_actionnaire.suivi import (
+    MouvementPret,
+    calculer_etat_pret,
+    obtenir_etat_pret,
+)
+
+from beancount.core import amount, data
+from beancount.core.number import D
 
 FIN_EXERCICE_DEC31 = datetime.date(2026, 12, 31)
 
@@ -295,3 +302,81 @@ class TestCircularite:
         patterns = detecter_circularite(mouvements)
 
         assert len(patterns) == 0
+
+
+# --- Helper to build mock Beancount transactions ---
+
+def _make_txn(date, narration, account, montant_str, payee=None):
+    """Build a minimal Beancount Transaction with one posting."""
+    meta = data.new_metadata("<test>", 0)
+    posting = data.Posting(
+        account,
+        amount.Amount(D(montant_str), "CAD"),
+        None,
+        None,
+        None,
+        None,
+    )
+    return data.Transaction(
+        meta, date, "*", payee, narration, frozenset(), frozenset(), [posting]
+    )
+
+
+class TestObtenirEtatPret:
+    """Tests for the ledger-reading bridge obtenir_etat_pret."""
+
+    def test_obtenir_etat_pret_from_entries(self):
+        """Derive loan state from Beancount entries with mixed avances/remboursements."""
+        entries = [
+            _make_txn(datetime.date(2026, 3, 15), "Retrait personnel", "Passifs:Pret-Actionnaire", "5000"),
+            _make_txn(datetime.date(2026, 6, 1), "Remboursement partiel", "Passifs:Pret-Actionnaire", "-2000"),
+            _make_txn(datetime.date(2026, 9, 10), "Deuxieme retrait", "Passifs:Pret-Actionnaire", "3000"),
+        ]
+
+        etat = obtenir_etat_pret(entries, fin_exercice=datetime.date(2026, 12, 31))
+
+        assert etat.solde == Decimal("6000")
+        assert len(etat.avances_ouvertes) == 2
+
+    def test_obtenir_etat_pret_filters_by_fiscal_year(self):
+        """Only entries from the fiscal year are included."""
+        entries = [
+            _make_txn(datetime.date(2025, 11, 1), "Old year avance", "Passifs:Pret-Actionnaire", "10000"),
+            _make_txn(datetime.date(2026, 3, 15), "Current year avance", "Passifs:Pret-Actionnaire", "5000"),
+        ]
+
+        etat = obtenir_etat_pret(entries, fin_exercice=datetime.date(2026, 12, 31))
+
+        assert etat.solde == Decimal("5000")
+        assert len(etat.avances_ouvertes) == 1
+
+    def test_obtenir_etat_pret_ignores_other_accounts(self):
+        """Postings to other accounts are ignored."""
+        entries = [
+            _make_txn(datetime.date(2026, 3, 15), "Retrait", "Passifs:Pret-Actionnaire", "5000"),
+            _make_txn(datetime.date(2026, 3, 15), "Retenue QPP", "Passifs:Retenues:QPP-Base", "-500"),
+        ]
+
+        etat = obtenir_etat_pret(entries, fin_exercice=datetime.date(2026, 12, 31))
+
+        assert etat.solde == Decimal("5000")
+        assert len(etat.mouvements) == 1
+
+    def test_obtenir_etat_pret_empty_entries(self):
+        """Empty entries list returns zero state."""
+        etat = obtenir_etat_pret([], fin_exercice=datetime.date(2026, 12, 31))
+
+        assert etat.solde == Decimal("0")
+        assert len(etat.mouvements) == 0
+        assert len(etat.avances_ouvertes) == 0
+
+    def test_obtenir_etat_pret_narration_as_description(self):
+        """Transaction narration is used as MouvementPret description."""
+        entries = [
+            _make_txn(datetime.date(2026, 5, 1), "Paiement facture personnelle", "Passifs:Pret-Actionnaire", "1500"),
+        ]
+
+        etat = obtenir_etat_pret(entries, fin_exercice=datetime.date(2026, 12, 31))
+
+        assert len(etat.mouvements) == 1
+        assert etat.mouvements[0].description == "Paiement facture personnelle"
