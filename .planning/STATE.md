@@ -5,32 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 1: Ledger Foundation and Import Pipeline
+**Current focus:** Phase 2: Quebec Domain Logic
 
 ## Current Position
 
-Phase: 1 of 5 (Ledger Foundation and Import Pipeline)
-Plan: 3 of 3 in current phase
-Status: Phase 1 Complete
-Last activity: 2026-02-19 -- Completed 01-03 (CLI and Reports)
+Phase: 2 of 5 (Quebec Domain Logic)
+Plan: 3 of 4 in current phase (02-02 remaining)
+Status: Executing Phase 2
+Last activity: 2026-02-19 -- Completed 02-03 (GST/QST Tax Module)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 6.3 min
-- Total execution time: 0.32 hours
+- Total plans completed: 6
+- Average duration: 5.5 min
+- Total execution time: 0.55 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 19 min | 6.3 min |
+| 02 | 3 | 14 min | 4.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (6 min), 01-03 (8 min)
+- Last 5 plans: 01-02 (6 min), 01-03 (8 min), 02-01 (5 min), 02-03 (4 min), 02-04 (5 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -54,6 +55,9 @@ Recent decisions affecting current work:
 - [01-03]: Monthly beancount files require name_* options (same Beancount v3 requirement as comptes.beancount)
 - [01-03]: Reports compute balances directly from Transaction postings instead of beanquery
 - [01-03]: Bilan includes resultat net under capitaux propres for accounting equation verification
+- [02-01]: Tuple instead of list for tax brackets in TauxAnnuels (immutability)
+- [02-01]: Per-deduction-type liability sub-accounts for trivial YTD queries
+- [02-01]: QPP supp1 has NO exemption deduction (differs from QPP base)
 
 ### Pending Todos
 
@@ -68,5 +72,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-ai-categorization-and-review-workflow/03-CONTEXT.md
+Stopped at: Completed 02-01-PLAN.md
+Resume file: .planning/phases/02-quebec-domain-logic/02-01-SUMMARY.md

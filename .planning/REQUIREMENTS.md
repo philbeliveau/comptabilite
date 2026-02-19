@@ -40,17 +40,17 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Quebec Payroll
 
 - [ ] **PAY-01**: User can run payroll for a given gross salary amount and pay period
-- [ ] **PAY-02**: System calculates QPP base (5.3%), QPP additional 1 (1.0%), QPP additional 2 (4.0%) with correct maximums and exemptions
-- [ ] **PAY-03**: System calculates RQAP employer (0.602%) and employee (0.430%) contributions
-- [ ] **PAY-04**: System calculates EI at Quebec rate (employer 1.82%, employee 1.30%) with MIE cap
-- [ ] **PAY-05**: System calculates FSS (1.65% for payroll under $1M, service sector)
-- [ ] **PAY-06**: System calculates CNESST based on assigned classification rate
-- [ ] **PAY-07**: System calculates labour standards contribution (0.06%)
+- [x] **PAY-02**: System calculates QPP base (5.3%), QPP additional 1 (1.0%), QPP additional 2 (4.0%) with correct maximums and exemptions
+- [x] **PAY-03**: System calculates RQAP employer (0.602%) and employee (0.430%) contributions
+- [x] **PAY-04**: System calculates EI at Quebec rate (employer 1.82%, employee 1.30%) with MIE cap
+- [x] **PAY-05**: System calculates FSS (1.65% for payroll under $1M, service sector)
+- [x] **PAY-06**: System calculates CNESST based on assigned classification rate
+- [x] **PAY-07**: System calculates labour standards contribution (0.06%)
 - [ ] **PAY-08**: System calculates federal income tax withholding with Quebec 16.5% abatement
 - [ ] **PAY-09**: System calculates Quebec provincial income tax withholding using TP-1015.F-V formulas
-- [ ] **PAY-10**: System tracks year-to-date totals and stops contributions at annual maximums
+- [x] **PAY-10**: System tracks year-to-date totals and stops contributions at annual maximums
 - [ ] **PAY-11**: Payroll generates complete journal entries (salary expense, deductions, employer contributions, net pay)
-- [ ] **PAY-12**: All payroll rates are config-driven in rates.py, updatable annually
+- [x] **PAY-12**: All payroll rates are config-driven in rates.py, updatable annually
 
 ### GST/QST
 
@@ -199,17 +199,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAT-10 | Phase 3 | Pending |
 | CAT-11 | Phase 3 | Pending |
 | PAY-01 | Phase 2 | Pending |
-| PAY-02 | Phase 2 | Pending |
-| PAY-03 | Phase 2 | Pending |
-| PAY-04 | Phase 2 | Pending |
-| PAY-05 | Phase 2 | Pending |
-| PAY-06 | Phase 2 | Pending |
-| PAY-07 | Phase 2 | Pending |
+| PAY-02 | Phase 2 | Complete |
+| PAY-03 | Phase 2 | Complete |
+| PAY-04 | Phase 2 | Complete |
+| PAY-05 | Phase 2 | Complete |
+| PAY-06 | Phase 2 | Complete |
+| PAY-07 | Phase 2 | Complete |
 | PAY-08 | Phase 2 | Pending |
 | PAY-09 | Phase 2 | Pending |
-| PAY-10 | Phase 2 | Pending |
+| PAY-10 | Phase 2 | Complete |
 | PAY-11 | Phase 2 | Pending |
-| PAY-12 | Phase 2 | Pending |
+| PAY-12 | Phase 2 | Complete |
 | TAX-01 | Phase 2 | Pending |
 | TAX-02 | Phase 2 | Pending |
 | TAX-03 | Phase 2 | Pending |
