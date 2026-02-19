@@ -130,9 +130,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Automation & Alerts
 
-- [ ] **AUTO-01**: Filing deadline calendar with reminders (T4/RL-1 Feb 28, GST/QST Mar 31, T2/CO-17 Jun 30, etc.)
+- [x] **AUTO-01**: Filing deadline calendar with reminders (T4/RL-1 Feb 28, GST/QST Mar 31, T2/CO-17 Jun 30, etc.)
 - [ ] **AUTO-02**: Year-end checklist: verify shareholder loan balance, confirm CCA schedule, reconcile GST/QST, generate CPA package
-- [ ] **AUTO-03**: Payroll remittance tracking (amounts owed vs remitted, upcoming deadlines)
+- [x] **AUTO-03**: Payroll remittance tracking (amounts owed vs remitted, upcoming deadlines)
 
 ## v2 Requirements
 
@@ -259,9 +259,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLI-04 | Phase 2 | Complete |
 | CLI-05 | Phase 5 | Pending |
 | CLI-06 | Phase 1 | Complete |
-| AUTO-01 | Phase 5 | Pending |
+| AUTO-01 | Phase 5 | Complete |
 | AUTO-02 | Phase 5 | Pending |
-| AUTO-03 | Phase 5 | Pending |
+| AUTO-03 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 85 total

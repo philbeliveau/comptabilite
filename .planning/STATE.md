@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 4: MCP Server and Web Dashboard
+**Current focus:** Phase 5: Reporting, CPA Export and Document Management
 
 ## Current Position
 
-Phase: 4 of 5 (MCP Server and Web Dashboard) -- COMPLETE
+Phase: 5 of 5 (Reporting, CPA Export and Document Management)
 Plan: 5 of 5 in current phase
-Status: Phase 04 Complete (including gap-closure plan 05)
-Last activity: 2026-02-19 -- Completed 04-05 (Deadline Alerts and Receipt Upload Extensions)
+Status: Executing Phase 05
+Last activity: 2026-02-19 -- Completed 05-04 (Document Ingestion Pipeline)
 
-Progress: [██████████] 95%
+Progress: [██████████] 97%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17
-- Average duration: 5.1 min
-- Total execution time: 1.30 hours
+- Total plans completed: 18
+- Average duration: 5.0 min
+- Total execution time: 1.37 hours
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [██████████] 95%
 | 04 | 5 | 26 min | 5.2 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-01 (4 min), 04-02 (6 min), 04-03 (3 min), 04-04 (5 min), 04-05 (5 min)
+- Last 5 plans: 04-02 (6 min), 04-03 (3 min), 04-04 (5 min), 04-05 (5 min), 05-05 (4 min)
 - Trend: stable
 
 *Updated after each plan completion*
-| Phase 04 P05 | 5 | 2 tasks | 7 files |
+| Phase 05 P05 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -99,6 +99,10 @@ Recent decisions affecting current work:
 - [04-05]: Try-import pattern for Phase 5 modules (compteqc.echeances.calendrier, compteqc.documents.upload)
 - [04-05]: RecusExtension saves files to documents/ dir even without Phase 5 extraction
 - [04-05]: 4 urgency CSS classes: alerte-critique (red), alerte-urgent (orange), alerte-normal (yellow), alerte-info (blue)
+- [05-05]: Weekend adjustment: Saturday/Sunday deadlines pushed to Monday (standard CRA rule)
+- [05-05]: Urgency thresholds: critique <= 7d, urgent <= 14d, normal <= 30d, info <= 90d
+- [05-05]: CLI footer shows only alerts within 30 days (per discretion recommendation)
+- [05-05]: Payroll remittance assumes regular remitter (15th of following month)
 
 ### Pending Todos
 
@@ -113,5 +117,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-05-PLAN.md (Phase 04 gap-closure complete)
-Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-05-SUMMARY.md
+Stopped at: Completed 05-05-PLAN.md
+Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-05-SUMMARY.md
