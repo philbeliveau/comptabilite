@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Rapport{% endblock %}</title>
+</head>
+<body>
+    <div class="report-header">
+        {% if entreprise %}
+        <div class="entreprise">{{ entreprise }}</div>
+        {% endif %}
+        <h1>{% block report_title %}Rapport{% endblock %}</h1>
+        <div class="meta">
+            {% block subtitle %}{% endblock %}
+            Exercice {{ annee }} | Genere le {{ date_generation }}
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <div class="report-footer">
+        Genere par CompteQC
+    </div>
+</body>
+</html>

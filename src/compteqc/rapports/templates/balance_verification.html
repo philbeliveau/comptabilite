@@ -1,0 +1,39 @@
+{% extends "base_report.html" %}
+
+{% block title %}Balance de verification{% endblock %}
+{% block report_title %}Balance de verification{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Compte</th>
+            <th>GIFI</th>
+            <th class="amount">Debit</th>
+            <th class="amount">Credit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ligne in lignes %}
+        <tr class="sub-account">
+            <td>{{ ligne.compte }}</td>
+            <td>{{ ligne.gifi }}</td>
+            <td class="amount">{% if ligne.debit %}{{ "%.2f"|format(ligne.debit) }}{% endif %}</td>
+            <td class="amount">{% if ligne.credit %}{{ "%.2f"|format(ligne.credit) }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+        <tr class="grand-total">
+            <td>TOTAL</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_debit) }}</td>
+            <td class="amount">{{ "%.2f"|format(total_credit) }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if equilibre %}
+<p class="status-ok">Balance equilibree.</p>
+{% else %}
+<p class="status-error">AVERTISSEMENT : La balance ne balance pas !</p>
+{% endif %}
+{% endblock %}

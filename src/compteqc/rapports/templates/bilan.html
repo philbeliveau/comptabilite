@@ -1,0 +1,84 @@
+{% extends "base_report.html" %}
+
+{% block title %}Bilan{% endblock %}
+{% block report_title %}Bilan{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Compte</th>
+            <th>GIFI</th>
+            <th class="amount">Montant</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="section-header">
+            <td colspan="3">ACTIFS</td>
+        </tr>
+        {% for ligne in lignes_actifs %}
+        <tr class="sub-account">
+            <td>{{ ligne.compte }}</td>
+            <td>{{ ligne.gifi }}</td>
+            <td class="amount">{{ "%.2f"|format(ligne.montant) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td>Total actifs</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_actifs) }}</td>
+        </tr>
+
+        <tr class="section-header">
+            <td colspan="3">PASSIFS</td>
+        </tr>
+        {% for ligne in lignes_passifs %}
+        <tr class="sub-account">
+            <td>{{ ligne.compte }}</td>
+            <td>{{ ligne.gifi }}</td>
+            <td class="amount">{{ "%.2f"|format(ligne.montant) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td>Total passifs</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_passifs) }}</td>
+        </tr>
+
+        <tr class="section-header">
+            <td colspan="3">CAPITAUX PROPRES</td>
+        </tr>
+        {% for ligne in lignes_capitaux %}
+        <tr class="sub-account">
+            <td>{{ ligne.compte }}</td>
+            <td>{{ ligne.gifi }}</td>
+            <td class="amount">{{ "%.2f"|format(ligne.montant) }}</td>
+        </tr>
+        {% endfor %}
+        {% if resultat_net %}
+        <tr class="sub-account">
+            <td>Resultat net de l'exercice</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(resultat_net) }}</td>
+        </tr>
+        {% endif %}
+        <tr class="total">
+            <td>Total capitaux propres</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_capitaux) }}</td>
+        </tr>
+
+        <tr class="grand-total">
+            <td>TOTAL PASSIFS + CAPITAUX</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_passifs_capitaux) }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if equilibre %}
+<p class="status-ok">Equation comptable verifiee : Actifs = Passifs + Capitaux propres</p>
+{% else %}
+<p class="status-error">AVERTISSEMENT : L'equation comptable ne balance pas !</p>
+{% endif %}
+{% endblock %}

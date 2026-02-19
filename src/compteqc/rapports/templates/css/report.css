@@ -1,0 +1,140 @@
+/* Styles pour les rapports financiers CompteQC
+   Optimise pour impression PDF via WeasyPrint */
+
+@page {
+    size: letter;
+    margin: 2cm;
+    @top-center {
+        content: "CompteQC";
+        font-size: 8pt;
+        color: #666;
+    }
+    @bottom-center {
+        content: "Page " counter(page) " / " counter(pages);
+        font-size: 8pt;
+        color: #666;
+    }
+}
+
+body {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 16pt;
+    margin-bottom: 4pt;
+    border-bottom: 2px solid #333;
+    padding-bottom: 4pt;
+}
+
+h2 {
+    font-size: 12pt;
+    margin-top: 14pt;
+    margin-bottom: 6pt;
+    color: #444;
+}
+
+.report-header {
+    margin-bottom: 16pt;
+}
+
+.report-header .entreprise {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #222;
+}
+
+.report-header .meta {
+    font-size: 9pt;
+    color: #666;
+    margin-top: 4pt;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8pt;
+}
+
+th {
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid #333;
+    padding: 4pt 6pt;
+    font-size: 9pt;
+    text-transform: uppercase;
+    color: #555;
+}
+
+td {
+    padding: 3pt 6pt;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+/* Colonnes de montants: tabular-nums, alignement a droite */
+.amount, td.amount, th.amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: "Helvetica Neue", Arial, monospace;
+    white-space: nowrap;
+}
+
+/* Lignes de total */
+tr.total td {
+    font-weight: bold;
+    border-top: 2px solid #333;
+    border-bottom: none;
+    padding-top: 6pt;
+}
+
+tr.grand-total td {
+    font-weight: bold;
+    border-top: 3px double #333;
+    border-bottom: none;
+    padding-top: 8pt;
+    font-size: 11pt;
+}
+
+/* En-tetes de section */
+tr.section-header td {
+    font-weight: bold;
+    padding-top: 12pt;
+    padding-bottom: 4pt;
+    border-bottom: 1px solid #999;
+    background: none;
+    font-size: 10.5pt;
+}
+
+/* Lignes de sous-comptes (indentees) */
+tr.sub-account td:first-child {
+    padding-left: 18pt;
+}
+
+/* Statut d'equilibre */
+.status-ok {
+    color: #2d7d2d;
+    font-weight: bold;
+    margin-top: 12pt;
+}
+
+.status-error {
+    color: #c0392b;
+    font-weight: bold;
+    margin-top: 12pt;
+}
+
+/* Footer */
+.report-footer {
+    margin-top: 24pt;
+    padding-top: 8pt;
+    border-top: 1px solid #ccc;
+    font-size: 8pt;
+    color: #999;
+    text-align: center;
+}

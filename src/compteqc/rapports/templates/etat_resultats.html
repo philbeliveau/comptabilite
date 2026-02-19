@@ -1,0 +1,55 @@
+{% extends "base_report.html" %}
+
+{% block title %}Etat des resultats{% endblock %}
+{% block report_title %}Etat des resultats{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Compte</th>
+            <th>GIFI</th>
+            <th class="amount">Montant</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="section-header">
+            <td colspan="3">REVENUS</td>
+        </tr>
+        {% for ligne in lignes_revenus %}
+        <tr class="sub-account">
+            <td>{{ ligne.compte }}</td>
+            <td>{{ ligne.gifi }}</td>
+            <td class="amount">{{ "%.2f"|format(ligne.montant) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td>Total revenus</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_revenus) }}</td>
+        </tr>
+
+        <tr class="section-header">
+            <td colspan="3">DEPENSES</td>
+        </tr>
+        {% for ligne in lignes_depenses %}
+        <tr class="sub-account">
+            <td>{{ ligne.compte }}</td>
+            <td>{{ ligne.gifi }}</td>
+            <td class="amount">{{ "%.2f"|format(ligne.montant) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td>Total depenses</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_depenses) }}</td>
+        </tr>
+
+        <tr class="grand-total">
+            <td>RESULTAT NET</td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(resultat_net) }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
