@@ -9,11 +9,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Foundation
 
-- [ ] **FOUND-01**: System uses Beancount v3 as double-entry ledger engine with immutable append-only journal
-- [ ] **FOUND-02**: Chart of accounts is GIFI-mapped (accounts 1000-6999) for Quebec IT consultant CCPC
-- [ ] **FOUND-03**: All monetary amounts stored as Python Decimal (never float), GST and QST stored separately per transaction
-- [ ] **FOUND-04**: Ledger data is plain-text .beancount files, git-versioned with auto-commit on changes
-- [ ] **FOUND-05**: Project structure follows modular architecture (ledger/, src/ingestion/, src/quebec/, src/mcp/, src/fava_ext/, src/cli/)
+- [x] **FOUND-01**: System uses Beancount v3 as double-entry ledger engine with immutable append-only journal
+- [x] **FOUND-02**: Chart of accounts is GIFI-mapped (accounts 1000-6999) for Quebec IT consultant CCPC
+- [x] **FOUND-03**: All monetary amounts stored as Python Decimal (never float), GST and QST stored separately per transaction
+- [x] **FOUND-04**: Ledger data is plain-text .beancount files, git-versioned with auto-commit on changes
+- [x] **FOUND-05**: Project structure follows modular architecture (ledger/, src/ingestion/, src/quebec/, src/mcp/, src/fava_ext/, src/cli/)
 
 ### Data Ingestion
 
@@ -177,11 +177,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
-| FOUND-02 | Phase 1 | Pending |
-| FOUND-03 | Phase 1 | Pending |
-| FOUND-04 | Phase 1 | Pending |
-| FOUND-05 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
+| FOUND-02 | Phase 1 | Complete |
+| FOUND-03 | Phase 1 | Complete |
+| FOUND-04 | Phase 1 | Complete |
+| FOUND-05 | Phase 1 | Complete |
 | INGEST-01 | Phase 1 | Pending |
 | INGEST-02 | Phase 1 | Pending |
 | INGEST-03 | Phase 1 | Pending |
