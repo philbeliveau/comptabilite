@@ -63,19 +63,19 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CCA (Capital Cost Allowance)
 
-- [ ] **CCA-01**: System tracks capital assets by CCA class (8, 10, 12, 50, 54)
-- [ ] **CCA-02**: Half-year rule automatically applied for new acquisitions
-- [ ] **CCA-03**: Declining balance depreciation calculated per class with correct rates
-- [ ] **CCA-04**: UCC (undepreciated capital cost) schedule maintained per class
-- [ ] **CCA-05**: System handles disposals and recapture/terminal loss calculations
-- [ ] **CCA-06**: CCA entries generated as Beancount transactions for year-end
+- [x] **CCA-01**: System tracks capital assets by CCA class (8, 10, 12, 50, 54)
+- [x] **CCA-02**: Half-year rule automatically applied for new acquisitions
+- [x] **CCA-03**: Declining balance depreciation calculated per class with correct rates
+- [x] **CCA-04**: UCC (undepreciated capital cost) schedule maintained per class
+- [x] **CCA-05**: System handles disposals and recapture/terminal loss calculations
+- [x] **CCA-06**: CCA entries generated as Beancount transactions for year-end
 
 ### Shareholder Loan
 
-- [ ] **LOAN-01**: Dedicated shareholder loan account (1800) tracks all personal-vs-business transactions
-- [ ] **LOAN-02**: System computes repayment deadline (fiscal year-end + 1 year) per s.15(2)
-- [ ] **LOAN-03**: Alerts at 9 months, 11 months, and 30 days before inclusion date
-- [ ] **LOAN-04**: System flags circular loan-repayment-reborrow patterns
+- [x] **LOAN-01**: Dedicated shareholder loan account (1800) tracks all personal-vs-business transactions
+- [x] **LOAN-02**: System computes repayment deadline (fiscal year-end + 1 year) per s.15(2)
+- [x] **LOAN-03**: Alerts at 9 months, 11 months, and 30 days before inclusion date
+- [x] **LOAN-04**: System flags circular loan-repayment-reborrow patterns
 
 ### Invoice Generation
 
@@ -216,16 +216,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TAX-04 | Phase 2 | Complete |
 | TAX-05 | Phase 2 | Complete |
 | TAX-06 | Phase 2 | Complete |
-| CCA-01 | Phase 2 | Pending |
-| CCA-02 | Phase 2 | Pending |
-| CCA-03 | Phase 2 | Pending |
-| CCA-04 | Phase 2 | Pending |
-| CCA-05 | Phase 2 | Pending |
-| CCA-06 | Phase 2 | Pending |
-| LOAN-01 | Phase 2 | Pending |
-| LOAN-02 | Phase 2 | Pending |
-| LOAN-03 | Phase 2 | Pending |
-| LOAN-04 | Phase 2 | Pending |
+| CCA-01 | Phase 2 | Complete |
+| CCA-02 | Phase 2 | Complete |
+| CCA-03 | Phase 2 | Complete |
+| CCA-04 | Phase 2 | Complete |
+| CCA-05 | Phase 2 | Complete |
+| CCA-06 | Phase 2 | Complete |
+| LOAN-01 | Phase 2 | Complete |
+| LOAN-02 | Phase 2 | Complete |
+| LOAN-03 | Phase 2 | Complete |
+| LOAN-04 | Phase 2 | Complete |
 | INV-01 | Phase 5 | Pending |
 | INV-02 | Phase 5 | Pending |
 | INV-03 | Phase 5 | Pending |

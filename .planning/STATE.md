@@ -61,6 +61,10 @@ Recent decisions affecting current work:
 - [02-03]: Plug value rounding: avant_taxes = total - tps - tvq ensures exact sum
 - [02-03]: Pydantic BaseModel for YAML tax rule validation (not raw dicts)
 - [02-03]: Reconciliation flags TPS-only transactions for human review rather than auto-correcting
+- [02-04]: CCA transactions use '!' flag for discretionary CPA review (not auto-posted)
+- [02-04]: s.15(2) inclusion date from fiscal year-end + 1 year (not loan date + 1 year)
+- [02-04]: FIFO repayment allocation for per-advance s.15(2) deadline tracking
+- [02-04]: Circularity detection: 20% tolerance, 30-day window per s.15(2.6)
 
 ### Pending Todos
 
@@ -75,5 +79,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-03-PLAN.md
-Resume file: .planning/phases/02-quebec-domain-logic/02-03-SUMMARY.md
+Stopped at: Completed 02-04-PLAN.md
+Resume file: .planning/phases/02-quebec-domain-logic/02-04-SUMMARY.md
