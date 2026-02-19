@@ -177,3 +177,228 @@ class TestTraitementFiscal:
         """Verifie que le fichier rules/taxes.yaml se charge correctement."""
         assert regles_from_file.defaut == "taxable"
         assert len(regles_from_file.categories.exempt) > 0
+
+
+# ---------------------------------------------------------------------------
+# Tests: sommaires de periode et concordance TPS/TVQ
+# ---------------------------------------------------------------------------
+
+
+def _creer_transaction(date, narration, postings_data, payee=None):
+    """Helper: cree une transaction Beancount avec des postings simples."""
+    from beancount.core import data
+    from beancount.core.number import D
+
+    meta = data.new_metadata("<test>", 0)
+    txn = data.Transaction(
+        meta=meta,
+        date=date,
+        flag="*",
+        payee=payee,
+        narration=narration,
+        tags=frozenset(),
+        links=frozenset(),
+        postings=[],
+    )
+    for compte, montant in postings_data:
+        data.create_simple_posting(txn, compte, D(str(montant)), "CAD")
+    return txn
+
+
+class TestSommairePeriode:
+    """Tests pour les sommaires de periode de declaration TPS/TVQ."""
+
+    def test_sommaire_periode_simple(self):
+        """3 transactions (2 depenses avec taxes, 1 revenu avec taxes)
+        -> sommaire correct."""
+        import datetime
+
+        from compteqc.quebec.taxes.sommaire import generer_sommaire_periode
+
+        entries = [
+            # Depense 1: $114.98 TTC (TPS $5.00, TVQ $9.98)
+            _creer_transaction(
+                datetime.date(2026, 2, 15),
+                "Achat fournitures",
+                [
+                    ("Depenses:Bureau:Fournitures", "100.00"),
+                    ("Actifs:TPS-Payee", "5.00"),
+                    ("Actifs:TVQ-Payee", "9.98"),
+                    ("Actifs:Banque:RBC:Cheques", "-114.98"),
+                ],
+            ),
+            # Depense 2: $57.49 TTC (TPS $2.50, TVQ $4.99)
+            _creer_transaction(
+                datetime.date(2026, 3, 10),
+                "Abonnement logiciel",
+                [
+                    ("Depenses:Bureau:Abonnements-Logiciels", "50.00"),
+                    ("Actifs:TPS-Payee", "2.50"),
+                    ("Actifs:TVQ-Payee", "4.99"),
+                    ("Actifs:Banque:RBC:Cheques", "-57.49"),
+                ],
+            ),
+            # Revenu: $1149.75 (TPS $50.00, TVQ $99.75 percues)
+            _creer_transaction(
+                datetime.date(2026, 1, 31),
+                "Consultation janvier",
+                [
+                    ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                    ("Revenus:Consultation", "-1000.00"),
+                    ("Passifs:TPS-Percue", "-50.00"),
+                    ("Passifs:TVQ-Percue", "-99.75"),
+                ],
+            ),
+        ]
+
+        sommaire = generer_sommaire_periode(
+            entries,
+            datetime.date(2026, 1, 1),
+            datetime.date(2026, 3, 31),
+        )
+
+        assert sommaire.tps_percue == Decimal("50.00")
+        assert sommaire.tvq_percue == Decimal("99.75")
+        assert sommaire.tps_payee == Decimal("7.50")  # 5.00 + 2.50
+        assert sommaire.tvq_payee == Decimal("14.97")  # 9.98 + 4.99
+        assert sommaire.tps_nette == Decimal("42.50")  # 50.00 - 7.50
+        assert sommaire.tvq_nette == Decimal("84.78")  # 99.75 - 14.97
+        assert sommaire.nb_transactions == 3
+
+    def test_sommaire_trimestriel(self):
+        """Transactions dans 2 trimestres -> chaque sommaire trimestriel est independant."""
+        import datetime
+
+        from compteqc.quebec.taxes.sommaire import generer_sommaires_annuels
+
+        entries = [
+            # Q1: depense avec taxes
+            _creer_transaction(
+                datetime.date(2026, 2, 15),
+                "Achat Q1",
+                [
+                    ("Depenses:Bureau:Fournitures", "100.00"),
+                    ("Actifs:TPS-Payee", "5.00"),
+                    ("Actifs:TVQ-Payee", "9.98"),
+                    ("Actifs:Banque:RBC:Cheques", "-114.98"),
+                ],
+            ),
+            # Q3: revenu avec taxes
+            _creer_transaction(
+                datetime.date(2026, 8, 15),
+                "Consultation Q3",
+                [
+                    ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                    ("Revenus:Consultation", "-1000.00"),
+                    ("Passifs:TPS-Percue", "-50.00"),
+                    ("Passifs:TVQ-Percue", "-99.75"),
+                ],
+            ),
+        ]
+
+        sommaires = generer_sommaires_annuels(entries, 2026, "trimestriel")
+        assert len(sommaires) == 4
+
+        # Q1: depense seulement
+        q1 = sommaires[0]
+        assert q1.tps_payee == Decimal("5.00")
+        assert q1.tvq_payee == Decimal("9.98")
+        assert q1.tps_percue == Decimal("0")
+        assert q1.nb_transactions == 1
+
+        # Q2: rien
+        q2 = sommaires[1]
+        assert q2.nb_transactions == 0
+
+        # Q3: revenu seulement
+        q3 = sommaires[2]
+        assert q3.tps_percue == Decimal("50.00")
+        assert q3.tvq_percue == Decimal("99.75")
+        assert q3.tps_payee == Decimal("0")
+        assert q3.nb_transactions == 1
+
+        # Q4: rien
+        q4 = sommaires[3]
+        assert q4.nb_transactions == 0
+
+
+class TestConcordanceTpsTvq:
+    """Tests pour la verification de concordance TPS/TVQ."""
+
+    def test_concordance_ok(self):
+        """Toutes les transactions ont TPS + TVQ correspondants -> pas de divergence."""
+        import datetime
+
+        from compteqc.quebec.taxes.sommaire import verifier_concordance_tps_tvq
+
+        entries = [
+            _creer_transaction(
+                datetime.date(2026, 1, 15),
+                "Achat avec TPS et TVQ",
+                [
+                    ("Depenses:Bureau:Fournitures", "100.00"),
+                    ("Actifs:TPS-Payee", "5.00"),
+                    ("Actifs:TVQ-Payee", "9.98"),
+                    ("Actifs:Banque:RBC:Cheques", "-114.98"),
+                ],
+            ),
+            _creer_transaction(
+                datetime.date(2026, 2, 28),
+                "Revenu avec TPS et TVQ",
+                [
+                    ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                    ("Revenus:Consultation", "-1000.00"),
+                    ("Passifs:TPS-Percue", "-50.00"),
+                    ("Passifs:TVQ-Percue", "-99.75"),
+                ],
+            ),
+        ]
+
+        divergences = verifier_concordance_tps_tvq(entries, 2026)
+        assert divergences == []
+
+    def test_concordance_mismatch(self):
+        """Transaction avec TPS mais sans TVQ -> divergence signalee."""
+        import datetime
+
+        from compteqc.quebec.taxes.sommaire import verifier_concordance_tps_tvq
+
+        entries = [
+            # Transaction avec TPS seulement (TVQ manquante)
+            _creer_transaction(
+                datetime.date(2026, 3, 15),
+                "AWS - TPS seulement",
+                [
+                    ("Depenses:Bureau:Abonnements-Logiciels", "95.24"),
+                    ("Actifs:TPS-Payee", "4.76"),
+                    ("Actifs:Banque:RBC:Cheques", "-100.00"),
+                ],
+            ),
+        ]
+
+        divergences = verifier_concordance_tps_tvq(entries, 2026)
+        assert len(divergences) == 1
+        assert divergences[0]["has_tps"] is True
+        assert divergences[0]["has_tvq"] is False
+        assert "TPS sans TVQ" in divergences[0]["issue"]
+
+    def test_concordance_exempt_ok(self):
+        """Transaction sans aucune ecriture de taxe (exempt) -> pas de divergence."""
+        import datetime
+
+        from compteqc.quebec.taxes.sommaire import verifier_concordance_tps_tvq
+
+        entries = [
+            # Frais bancaires: exempt, pas de TPS ni TVQ
+            _creer_transaction(
+                datetime.date(2026, 1, 31),
+                "Frais mensuels RBC",
+                [
+                    ("Depenses:Frais-Bancaires", "15.00"),
+                    ("Actifs:Banque:RBC:Cheques", "-15.00"),
+                ],
+            ),
+        ]
+
+        divergences = verifier_concordance_tps_tvq(entries, 2026)
+        assert divergences == []

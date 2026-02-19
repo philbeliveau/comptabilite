@@ -16,7 +16,6 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel
 
-
 # ---------------------------------------------------------------------------
 # Modeles Pydantic pour la validation du YAML
 # ---------------------------------------------------------------------------

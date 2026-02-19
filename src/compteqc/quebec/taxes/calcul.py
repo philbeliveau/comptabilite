@@ -4,7 +4,7 @@ Toute l'arithmetique utilise Decimal avec ROUND_HALF_UP. Les taux TPS et TVQ
 ne sont jamais combines en un seul taux de 14.975%.
 """
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 TWO_PLACES = Decimal("0.01")
 
