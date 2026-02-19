@@ -54,12 +54,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### GST/QST
 
-- [ ] **TAX-01**: System tracks GST collected (5%) and QST collected (9.975%) on revenue separately
-- [ ] **TAX-02**: System tracks GST paid and QST paid on business expenses for ITC/ITR claims
-- [ ] **TAX-03**: GST and QST are calculated separately per line item, each rounded independently (never combined rate)
-- [ ] **TAX-04**: System generates net GST/QST remittance summary by filing period
-- [ ] **TAX-05**: System handles GST/QST-exempt items (financial services, etc.)
-- [ ] **TAX-06**: Automated reconciliation check ensures GST and QST returns derive from identical transaction sets
+- [x] **TAX-01**: System tracks GST collected (5%) and QST collected (9.975%) on revenue separately
+- [x] **TAX-02**: System tracks GST paid and QST paid on business expenses for ITC/ITR claims
+- [x] **TAX-03**: GST and QST are calculated separately per line item, each rounded independently (never combined rate)
+- [x] **TAX-04**: System generates net GST/QST remittance summary by filing period
+- [x] **TAX-05**: System handles GST/QST-exempt items (financial services, etc.)
+- [x] **TAX-06**: Automated reconciliation check ensures GST and QST returns derive from identical transaction sets
 
 ### CCA (Capital Cost Allowance)
 
@@ -210,12 +210,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAY-10 | Phase 2 | Complete |
 | PAY-11 | Phase 2 | Pending |
 | PAY-12 | Phase 2 | Complete |
-| TAX-01 | Phase 2 | Pending |
-| TAX-02 | Phase 2 | Pending |
-| TAX-03 | Phase 2 | Pending |
-| TAX-04 | Phase 2 | Pending |
-| TAX-05 | Phase 2 | Pending |
-| TAX-06 | Phase 2 | Pending |
+| TAX-01 | Phase 2 | Complete |
+| TAX-02 | Phase 2 | Complete |
+| TAX-03 | Phase 2 | Complete |
+| TAX-04 | Phase 2 | Complete |
+| TAX-05 | Phase 2 | Complete |
+| TAX-06 | Phase 2 | Complete |
 | CCA-01 | Phase 2 | Pending |
 | CCA-02 | Phase 2 | Pending |
 | CCA-03 | Phase 2 | Pending |

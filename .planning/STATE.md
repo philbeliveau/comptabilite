@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 2 of 5 (Quebec Domain Logic)
-Plan: 3 of 4 in current phase (02-02 remaining)
+Plan: 4 of 4 in current phase
 Status: Executing Phase 2
-Last activity: 2026-02-19 -- Completed 02-03 (GST/QST Tax Module)
+Last activity: 2026-02-19 -- Completed 02-04 (CCA/DPA and Shareholder Loan)
 
 Progress: [██████░░░░] 60%
 
@@ -58,6 +58,9 @@ Recent decisions affecting current work:
 - [02-01]: Tuple instead of list for tax brackets in TauxAnnuels (immutability)
 - [02-01]: Per-deduction-type liability sub-accounts for trivial YTD queries
 - [02-01]: QPP supp1 has NO exemption deduction (differs from QPP base)
+- [02-03]: Plug value rounding: avant_taxes = total - tps - tvq ensures exact sum
+- [02-03]: Pydantic BaseModel for YAML tax rule validation (not raw dicts)
+- [02-03]: Reconciliation flags TPS-only transactions for human review rather than auto-correcting
 
 ### Pending Todos
 
@@ -72,5 +75,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-01-PLAN.md
-Resume file: .planning/phases/02-quebec-domain-logic/02-01-SUMMARY.md
+Stopped at: Completed 02-03-PLAN.md
+Resume file: .planning/phases/02-quebec-domain-logic/02-03-SUMMARY.md
