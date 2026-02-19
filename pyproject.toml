@@ -16,6 +16,7 @@ dependencies = [
     "rich",
     "pydantic>=2",
     "pyyaml",
+    "python-dateutil>=2.9.0.post0",
 ]
 
 [project.scripts]
@@ -27,6 +28,7 @@ dev = [
     "pytest-cov",
     "ruff",
     "mypy",
+    "freezegun>=1.5.5",
 ]
 
 [build-system]
