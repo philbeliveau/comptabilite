@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 3 of 5 (AI Categorization and Review Workflow)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In Progress
-Last activity: 2026-02-19 -- Completed 02-05 (Shareholder Loan Ledger Bridge)
+Last activity: 2026-02-19 -- Completed 03-02 (LLM Classifier and Pending Staging)
 
-Progress: [████████░░] 69%
+Progress: [████████░░] 73%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 5.1 min
-- Total execution time: 0.77 hours
+- Total plans completed: 10
+- Average duration: 5.4 min
+- Total execution time: 0.90 hours
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [████████░░] 69%
 |-------|-------|-------|----------|
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 5 | 23 min | 4.6 min |
-| 03 | 1 | 4 min | 4.0 min |
+| 03 | 2 | 12 min | 6.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (4 min), 02-04 (5 min), 02-02 (7 min), 03-01 (4 min), 02-05 (2 min)
+- Last 5 plans: 02-04 (5 min), 02-02 (7 min), 03-01 (4 min), 02-05 (2 min), 03-02 (8 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -72,6 +72,10 @@ Recent decisions affecting current work:
 - [03-01]: SVC(probability=True) for Platt scaling confidence scores
 - [03-01]: ClassificateurLLM as runtime_checkable Protocol for loose coupling with 03-02
 - [03-01]: CAPEX keyword-based CCA class suggestion (class 50 computers, 8 furniture, 10 vehicles, 12 software)
+- [03-02]: Anthropic messages.parse() with Pydantic output_format for constrained structured output
+- [03-02]: beancount.parser.parse_string instead of loader.load_file for pending (avoids Open directive validation)
+- [03-02]: Lazy Anthropic client initialization to avoid import-time API key requirement
+- [03-02]: SHA-256 prompt hash (16 chars) in JSONL log for drift detection without storing full prompts
 - [02-05]: Reuse paie/ytd.py entry-reading pattern for shareholder loan bridge (isinstance + year + account match)
 - [02-05]: No tag filtering for pret actionnaire (all transactions touching the account are relevant)
 
@@ -88,5 +92,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-05-PLAN.md (shareholder loan ledger bridge)
+Stopped at: Completed 03-02-PLAN.md
+Resume file: .planning/phases/03-ai-categorization-and-review-workflow/03-02-SUMMARY.md
 Resume file: .planning/phases/02-quebec-domain-logic/02-05-SUMMARY.md
