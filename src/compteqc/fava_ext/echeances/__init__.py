@@ -61,7 +61,11 @@ class EcheancesExtension(FavaExtensionBase):
             fin_exercice = date(date.today().year, 12, 31)
 
             echeances = calculer_echeances(fin_exercice)
-            self._alertes = obtenir_alertes(echeances)
+            alertes_brutes = obtenir_alertes(echeances)
+            # Pre-compute CSS class for each alert (Jinja2 can't call Python functions)
+            for alerte in alertes_brutes:
+                alerte["classe_css"] = couleur_urgence(alerte.get("urgence", "info"))
+            self._alertes = alertes_brutes
             self._echeances_disponible = True
         except ImportError:
             self._alertes = []

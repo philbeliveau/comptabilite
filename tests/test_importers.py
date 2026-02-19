@@ -1,4 +1,4 @@
-"""Tests pour les importateurs RBC (CSV cheques, CSV carte credit, OFX)."""
+"""Tests pour les importateurs RBC (CSV chèques, CSV carte crédit, OFX)."""
 
 from __future__ import annotations
 
@@ -37,7 +37,6 @@ class TestNettoyerBeneficiaire:
         assert nettoyer_beneficiaire("BELL CANADA 1234567") == "Bell Canada"
 
     def test_conserve_numero_court(self):
-        # Les numeros de moins de 5 chiffres ne sont pas retires
         assert nettoyer_beneficiaire("ACME INC 42") == "Acme Inc 42"
 
     def test_title_case(self):
@@ -104,11 +103,16 @@ class TestRBCChequesImporter:
     def importer(self):
         return RBCChequesImporter()
 
-    def test_identify_bon_fichier(self, importer):
+    def test_identify_cheques_only(self, importer):
         assert importer.identify(str(FIXTURES / "rbc_cheques_sample.csv")) is True
 
-    def test_identify_mauvais_fichier(self, importer):
+    def test_identify_carte_only_returns_false(self, importer):
+        """Un fichier avec seulement du Visa ne doit pas matcher chèques."""
         assert importer.identify(str(FIXTURES / "rbc_carte_sample.csv")) is False
+
+    def test_identify_combined_file(self, importer):
+        """Un fichier combiné contenant du chèques doit matcher."""
+        assert importer.identify(str(FIXTURES / "rbc_combined_sample.csv")) is True
 
     def test_identify_non_csv(self, importer, tmp_path):
         f = tmp_path / "test.txt"
@@ -121,6 +125,13 @@ class TestRBCChequesImporter:
     def test_extract_nombre_transactions(self, importer):
         txns = importer.extract(str(FIXTURES / "rbc_cheques_sample.csv"), [])
         assert len(txns) == 8
+
+    def test_extract_from_combined_only_cheques(self, importer):
+        """Depuis un fichier combiné, n'extrait que les lignes Chèques."""
+        txns = importer.extract(str(FIXTURES / "rbc_combined_sample.csv"), [])
+        assert len(txns) == 5
+        for txn in txns:
+            assert txn.meta["source"] == "rbc-cheques-csv"
 
     def test_extract_montants_decimal(self, importer):
         txns = importer.extract(str(FIXTURES / "rbc_cheques_sample.csv"), [])
@@ -151,12 +162,9 @@ class TestRBCChequesImporter:
             assert txn.meta["categorisation"] == "non-classe"
 
     def test_deduplication_meme_fichier(self, importer):
-        """Importer deux fois le meme fichier retourne 0 nouvelles transactions."""
         filepath = str(FIXTURES / "rbc_cheques_sample.csv")
         txns1 = importer.extract(filepath, [])
         assert len(txns1) == 8
-
-        # Re-importer avec les transactions precedentes comme existing
         txns2 = importer.extract(filepath, txns1)
         assert len(txns2) == 0
 
@@ -165,6 +173,22 @@ class TestRBCChequesImporter:
         for txn in txns:
             assert txn.postings[0].account == "Actifs:Banque:RBC:Cheques"
             assert txn.postings[1].account == "Depenses:Non-Classe"
+
+    def test_depot_montant_positif(self, importer):
+        """Un dépôt (positif dans CSV) doit débiter le compte bancaire."""
+        txns = importer.extract(str(FIXTURES / "rbc_cheques_sample.csv"), [])
+        # Premier txn est un dépôt de 522.67
+        depot = txns[0]
+        assert depot.postings[0].units.number == Decimal("522.67")
+        assert depot.postings[1].units.number == Decimal("-522.67")
+
+    def test_paiement_montant_negatif(self, importer):
+        """Un paiement (négatif dans CSV) doit créditer le compte bancaire."""
+        txns = importer.extract(str(FIXTURES / "rbc_cheques_sample.csv"), [])
+        # Deuxième txn est un paiement de -81.14
+        paiement = txns[1]
+        assert paiement.postings[0].units.number == Decimal("-81.14")
+        assert paiement.postings[1].units.number == Decimal("81.14")
 
 
 # ---------------------------------------------------------------------------
@@ -177,11 +201,16 @@ class TestRBCCarteImporter:
     def importer(self):
         return RBCCarteImporter()
 
-    def test_identify_bon_fichier(self, importer):
+    def test_identify_carte_only(self, importer):
         assert importer.identify(str(FIXTURES / "rbc_carte_sample.csv")) is True
 
-    def test_identify_mauvais_fichier(self, importer):
+    def test_identify_cheques_only_returns_false(self, importer):
+        """Un fichier avec seulement du chèques ne doit pas matcher Visa."""
         assert importer.identify(str(FIXTURES / "rbc_cheques_sample.csv")) is False
+
+    def test_identify_combined_file(self, importer):
+        """Un fichier combiné contenant du Visa doit matcher."""
+        assert importer.identify(str(FIXTURES / "rbc_combined_sample.csv")) is True
 
     def test_account(self, importer):
         assert importer.account("any") == "Passifs:CartesCredit:RBC"
@@ -189,6 +218,13 @@ class TestRBCCarteImporter:
     def test_extract_nombre_transactions(self, importer):
         txns = importer.extract(str(FIXTURES / "rbc_carte_sample.csv"), [])
         assert len(txns) == 8
+
+    def test_extract_from_combined_only_visa(self, importer):
+        """Depuis un fichier combiné, n'extrait que les lignes Visa."""
+        txns = importer.extract(str(FIXTURES / "rbc_combined_sample.csv"), [])
+        assert len(txns) == 5
+        for txn in txns:
+            assert txn.meta["source"] == "rbc-carte-csv"
 
     def test_extract_montants_decimal(self, importer):
         txns = importer.extract(str(FIXTURES / "rbc_carte_sample.csv"), [])
@@ -212,25 +248,24 @@ class TestRBCCarteImporter:
         for txn in txns:
             assert txn.flag == "!"
 
-    def test_carte_achat_signes_corrects(self, importer):
-        """Un achat (positif dans CSV) doit crediter la carte et debiter la depense."""
+    def test_visa_achat_signes_corrects(self, importer):
+        """Un achat Visa (négatif dans CSV RBC) : carte reçoit le négatif, dépense le positif."""
         txns = importer.extract(str(FIXTURES / "rbc_carte_sample.csv"), [])
-        # Premier txn est un achat de 45.67
+        # Premier txn: achat Anthropic de -16.28
         achat = txns[0]
-        # Posting carte credit: negatif (credit = augmente le passif)
-        assert achat.postings[0].units.number == Decimal("-45.67")
-        # Posting depense: positif (debit)
-        assert achat.postings[1].units.number == Decimal("45.67")
+        assert achat.postings[0].units.number == Decimal("-16.28")
+        assert achat.postings[0].account == "Passifs:CartesCredit:RBC"
+        assert achat.postings[1].units.number == Decimal("16.28")
+        assert achat.postings[1].account == "Depenses:Non-Classe"
 
-    def test_carte_paiement_signes_corrects(self, importer):
-        """Un paiement (negatif dans CSV) doit debiter la carte et crediter la depense."""
+    def test_visa_paiement_signes_corrects(self, importer):
+        """Un paiement Visa (positif dans CSV RBC) : carte reçoit le positif, contrepartie le négatif."""
         txns = importer.extract(str(FIXTURES / "rbc_carte_sample.csv"), [])
-        # 5eme txn est un paiement de -2500.00
-        paiement = txns[4]
-        # Posting carte credit: positif (debit = diminue le passif)
-        assert paiement.postings[0].units.number == Decimal("2500.00")
-        # Posting contrepartie: negatif
-        assert paiement.postings[1].units.number == Decimal("-2500.00")
+        # 7e txn (index 6): paiement de 1973.69
+        paiement = txns[6]
+        assert paiement.postings[0].units.number == Decimal("1973.69")
+        assert paiement.postings[0].account == "Passifs:CartesCredit:RBC"
+        assert paiement.postings[1].units.number == Decimal("-1973.69")
 
     def test_deduplication_meme_fichier(self, importer):
         filepath = str(FIXTURES / "rbc_carte_sample.csv")
@@ -242,6 +277,68 @@ class TestRBCCarteImporter:
     def test_extract_metadata(self, importer):
         txns = importer.extract(str(FIXTURES / "rbc_carte_sample.csv"), [])
         for txn in txns:
+            assert txn.meta["source"] == "rbc-carte-csv"
+
+
+# ---------------------------------------------------------------------------
+# Tests fichier réel RBC (Latin-1 encodé)
+# ---------------------------------------------------------------------------
+
+
+class TestRealRBCFile:
+    """Tests avec le vrai fichier RBC pour valider l'encodage et le parsing."""
+
+    @pytest.fixture
+    def real_file(self):
+        path = FIXTURES / "rbc_real_sample.csv"
+        if not path.exists():
+            pytest.skip("Fichier reel RBC non disponible")
+        return path
+
+    def test_cheques_identify_real(self, real_file):
+        imp = RBCChequesImporter()
+        assert imp.identify(str(real_file)) is True
+
+    def test_carte_identify_real(self, real_file):
+        imp = RBCCarteImporter()
+        assert imp.identify(str(real_file)) is True
+
+    def test_cheques_extract_real(self, real_file):
+        imp = RBCChequesImporter()
+        txns = imp.extract(str(real_file), [])
+        assert len(txns) > 0
+        for txn in txns:
+            assert txn.meta["source"] == "rbc-cheques-csv"
+            assert isinstance(txn.postings[0].units.number, Decimal)
+            assert len(txn.postings) == 2
+            total = sum(p.units.number for p in txn.postings)
+            assert total == Decimal("0")
+
+    def test_carte_extract_real(self, real_file):
+        imp = RBCCarteImporter()
+        txns = imp.extract(str(real_file), [])
+        assert len(txns) > 0
+        for txn in txns:
+            assert txn.meta["source"] == "rbc-carte-csv"
+            assert isinstance(txn.postings[0].units.number, Decimal)
+            assert len(txn.postings) == 2
+            total = sum(p.units.number for p in txn.postings)
+            assert total == Decimal("0")
+
+    def test_combined_no_overlap(self, real_file):
+        """Chèques et Visa ne se chevauchent pas."""
+        imp_ch = RBCChequesImporter()
+        imp_vi = RBCCarteImporter()
+        txns_ch = imp_ch.extract(str(real_file), [])
+        txns_vi = imp_vi.extract(str(real_file), [])
+        # Le total des deux doit couvrir toutes les lignes de données
+        # (moins les lignes vides éventuelles)
+        assert len(txns_ch) > 0
+        assert len(txns_vi) > 0
+        # Pas de source croisée
+        for txn in txns_ch:
+            assert txn.meta["source"] == "rbc-cheques-csv"
+        for txn in txns_vi:
             assert txn.meta["source"] == "rbc-carte-csv"
 
 
@@ -312,7 +409,6 @@ class TestRBCOfxImporter:
             assert txn.meta["categorisation"] == "non-classe"
 
     def test_deduplication_fitid(self, importer):
-        """Re-importer le meme OFX retourne 0 nouvelles transactions (FITID dedup)."""
         filepath = str(FIXTURES / "rbc_sample.ofx")
         txns1 = importer.extract(filepath, [])
         assert len(txns1) == 6

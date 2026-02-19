@@ -75,7 +75,7 @@
 <p>{{ pending | length }} transaction(s) en attente de revision</p>
 
 {% if pending %}
-<form method="POST" action="{{ url_for('extension_endpoint', bfile=g.beancount_file_slug, extension_name=extension.name, endpoint='approuver') }}">
+<form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/approuver">
 
   <div class="actions-bar">
     <button type="button" onclick="toggleAll(true)">Tout selectionner</button>
@@ -127,7 +127,7 @@
 </form>
 
 <h3>Rejeter une transaction</h3>
-<form method="POST" action="{{ url_for('extension_endpoint', bfile=g.beancount_file_slug, extension_name=extension.name, endpoint='rejeter') }}">
+<form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/rejeter">
   <label>
     Indice de la transaction :
     <input type="number" name="id" min="0" max="{{ pending | length - 1 }}" required style="width: 60px;">

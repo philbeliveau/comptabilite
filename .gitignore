@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+.venv/
+
+# Caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# Environment / secrets
+.env
+
+# Runtime data
+data/corrections/
+data/llm_log/
+logs/
+
+# Testing artifacts
+testing-documents/
+tests/fixtures/rbc_combined_sample.csv
+tests/fixtures/rbc_real_sample.csv
+
+# Transcripts / research notes
+transcript/
+research/

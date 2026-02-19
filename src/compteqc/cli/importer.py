@@ -157,10 +157,10 @@ def _creer_pipeline(
     llm = ClassificateurLLM(comptes_valides=sorted(comptes_valides))
     if llm.est_disponible:
         classificateur_llm = llm
-        console.print("  [dim]LLM: Anthropic API disponible[/dim]")
+        console.print("  [dim]LLM: OpenRouter API disponible[/dim]")
     else:
         console.print(
-            "  [dim]LLM: ANTHROPIC_API_KEY non definie, tier LLM desactive[/dim]"
+            "  [dim]LLM: OPENROUTER_API_KEY non definie, tier LLM desactive[/dim]"
         )
 
     # CAPEX

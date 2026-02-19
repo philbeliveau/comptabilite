@@ -11,7 +11,6 @@ import pytest
 
 from compteqc.categorisation.llm import (
     ClassificateurLLM,
-    ResultatClassificationLLM,
     ResultatLLM,
 )
 
@@ -38,16 +37,22 @@ def classificateur(chemin_log):
 
 
 def _make_mock_response(compte: str, confiance: float, raisonnement: str, est_capex: bool = False):
-    """Cree un mock de reponse Anthropic ParsedMessage."""
-    parsed = ResultatClassificationLLM(
-        compte=compte,
-        confiance=confiance,
-        raisonnement=raisonnement,
-        est_capex=est_capex,
-    )
+    """Cree un mock de reponse OpenAI ChatCompletion."""
+    content_json = json.dumps({
+        "compte": compte,
+        "confiance": confiance,
+        "raisonnement": raisonnement,
+        "est_capex": est_capex,
+    })
+    message = MagicMock()
+    message.content = content_json
+
+    choice = MagicMock()
+    choice.message = message
+
     response = MagicMock()
-    response.parsed_output = parsed
-    response.usage = MagicMock(input_tokens=150, output_tokens=50)
+    response.choices = [choice]
+    response.usage = MagicMock(prompt_tokens=150, completion_tokens=50)
     return response
 
 
@@ -61,7 +66,7 @@ class TestClassificateurLLM:
         )
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             resultat = classificateur.classifier("Tim Hortons", "cafe", Decimal("5.50"))
 
@@ -78,7 +83,7 @@ class TestClassificateurLLM:
         )
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             resultat = classificateur.classifier("Inconnu", "achat", Decimal("100.00"))
 
@@ -93,7 +98,7 @@ class TestClassificateurLLM:
         )
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             resultat = classificateur.classifier("Apple", "MacBook Pro", Decimal("2500.00"))
 
@@ -105,7 +110,7 @@ class TestClassificateurLLM:
         mock_response = _make_mock_response("Depenses:Repas", 0.9, "Cafe")
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             classificateur.classifier("Tim Hortons", "cafe", Decimal("5.50"))
 
@@ -117,19 +122,19 @@ class TestClassificateurLLM:
         assert entry["payee"] == "Tim Hortons"
         assert entry["narration"] == "cafe"
         assert entry["montant"] == "5.50"
-        assert entry["modele"] == "claude-sonnet-4-5-20250929"
+        assert entry["modele"] == "anthropic/claude-sonnet-4"
         assert entry["compte"] == "Depenses:Repas"
         assert entry["confiance"] == 0.9
         assert "prompt_hash" in entry
         assert "timestamp" in entry
-        assert entry["tokens_utilises"] == 200  # 150 input + 50 output
+        assert entry["tokens_utilises"] == 200  # 150 prompt + 50 completion
 
     def test_jsonl_log_multiple_entries(self, classificateur, chemin_log):
         """Plusieurs classifications s'ajoutent au meme fichier JSONL."""
         mock_response = _make_mock_response("Depenses:Repas", 0.9, "Cafe")
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             classificateur.classifier("Tim Hortons", "cafe", Decimal("5.50"))
             classificateur.classifier("Starbucks", "latte", Decimal("6.00"))
@@ -138,19 +143,19 @@ class TestClassificateurLLM:
         assert len(lines) == 2
 
     def test_est_disponible_with_key(self, classificateur):
-        """est_disponible retourne True quand ANTHROPIC_API_KEY est defini."""
-        with patch.dict("os.environ", {"ANTHROPIC_API_KEY": "sk-fake-key"}):
+        """est_disponible retourne True quand OPENROUTER_API_KEY est defini."""
+        with patch.dict("os.environ", {"OPENROUTER_API_KEY": "sk-or-fake"}):
             assert classificateur.est_disponible is True
 
     def test_est_disponible_without_key(self, classificateur):
-        """est_disponible retourne False quand ANTHROPIC_API_KEY n'est pas defini."""
+        """est_disponible retourne False quand OPENROUTER_API_KEY n'est pas defini."""
         with patch.dict("os.environ", {}, clear=True):
             assert classificateur.est_disponible is False
 
     def test_api_error_returns_non_classe(self, classificateur):
         """Erreur API retourne Non-Classe avec confiance 0."""
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.side_effect = Exception("Network error")
+            mock_client.return_value.chat.completions.create.side_effect = Exception("Network error")
 
             resultat = classificateur.classifier("Test", "test", Decimal("10.00"))
 
@@ -164,7 +169,7 @@ class TestClassificateurLLM:
         mock_response = _make_mock_response("Depenses:Repas", 0.9, "Cafe")
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             classificateur.classifier(
                 "Tim Hortons",
@@ -175,9 +180,9 @@ class TestClassificateurLLM:
                 ],
             )
 
-        # Verify the prompt was built with historique
-        call_args = mock_client.return_value.messages.parse.call_args
-        prompt_content = call_args.kwargs["messages"][0]["content"]
+        call_args = mock_client.return_value.chat.completions.create.call_args
+        messages = call_args.kwargs["messages"]
+        prompt_content = messages[1]["content"]
         assert "HISTORIQUE DE CE VENDEUR" in prompt_content
         assert "Depenses:Repas" in prompt_content
 
@@ -186,7 +191,7 @@ class TestClassificateurLLM:
         mock_response = _make_mock_response("Depenses:Repas", 0.9, "Cafe")
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             classificateur.classifier(
                 "Tim Hortons",
@@ -197,8 +202,9 @@ class TestClassificateurLLM:
                 ],
             )
 
-        call_args = mock_client.return_value.messages.parse.call_args
-        prompt_content = call_args.kwargs["messages"][0]["content"]
+        call_args = mock_client.return_value.chat.completions.create.call_args
+        messages = call_args.kwargs["messages"]
+        prompt_content = messages[1]["content"]
         assert "TRANSACTIONS SIMILAIRES" in prompt_content
         assert "Starbucks" in prompt_content
 
@@ -207,12 +213,13 @@ class TestClassificateurLLM:
         mock_response = _make_mock_response("Depenses:Repas", 0.9, "Cafe")
 
         with patch.object(classificateur, "_get_client") as mock_client:
-            mock_client.return_value.messages.parse.return_value = mock_response
+            mock_client.return_value.chat.completions.create.return_value = mock_response
 
             classificateur.classifier("Test", "test", Decimal("10.00"))
 
-        call_args = mock_client.return_value.messages.parse.call_args
-        prompt_content = call_args.kwargs["messages"][0]["content"]
+        call_args = mock_client.return_value.chat.completions.create.call_args
+        messages = call_args.kwargs["messages"]
+        prompt_content = messages[1]["content"]
         assert "COMPTES VALIDES" in prompt_content
         assert "Depenses:Repas" in prompt_content
         assert "Depenses:Transport" in prompt_content

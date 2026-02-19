@@ -40,19 +40,19 @@ class DpaQCExtension(FavaExtensionBase):
         # Tenter de charger le registre d'actifs
         try:
             if self._registre_path:
-                registre = RegistreActifs.charger(self._registre_path)
+                registre = RegistreActifs(self._registre_path)
+                registre.charger()
             else:
                 # Chemin par defaut relatif au ledger
                 from pathlib import Path
 
                 ledger_dir = Path(self.ledger.beancount_file_path).parent
                 registre_path = ledger_dir / "actifs.yaml"
-                if registre_path.exists():
-                    registre = RegistreActifs.charger(str(registre_path))
-                else:
-                    registre = RegistreActifs(actifs=[])
+                registre = RegistreActifs(str(registre_path))
+                registre.charger()
         except Exception:
-            registre = RegistreActifs(actifs=[])
+            registre = RegistreActifs()
+            registre._actifs = []
 
         # Construire les pools avec UCC d'ouverture a zero (premiere annee)
         # Dans une version future, l'UCC precedent proviendra du ledger

@@ -75,7 +75,7 @@ Each task was committed atomically:
 2. **Task 2 RED: Failing tests for contribution calculators** - `2f59ea2` (test)
 3. **Task 2 GREEN: Implement contribution calculators and YTD tracking** - `002a7c5` (feat)
 
-**Plan metadata:** [pending] (docs: complete plan)
+**Plan metadata:** `afb7a80` (docs: complete plan)
 
 _Note: Task 2 followed TDD with separate RED and GREEN commits._
 
@@ -108,6 +108,14 @@ None - no external service configuration required.
 - rates.py and cotisations.py are ready for the payroll engine (Plan 02-02) to orchestrate
 - YTD tracking ready to derive cumuls from real payroll transactions
 - Chart of accounts validated with bean-check
+
+## Self-Check: PASSED
+
+- All 7 created files exist on disk
+- All 3 task commits verified in git log (64aeba8, 2f59ea2, 002a7c5)
+- 75 tests passing (43 rates + 32 contributions)
+- bean-check passes with new sub-accounts
+- No float literals in rates.py or cotisations.py
 
 ---
 *Phase: 02-quebec-domain-logic*

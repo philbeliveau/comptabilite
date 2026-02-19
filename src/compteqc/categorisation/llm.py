@@ -1,7 +1,7 @@
 """Classificateur LLM pour les transactions non classees par regles ou ML.
 
-Utilise l'API Anthropic avec structured output (messages.parse) pour
-classifier les transactions selon le plan comptable. Toutes les
+Utilise OpenRouter (API compatible OpenAI) avec structured output JSON
+pour classifier les transactions selon le plan comptable. Toutes les
 interactions sont journalisees en JSONL pour la detection de derive.
 """
 
@@ -16,9 +16,13 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
+
+# Charger .env au niveau du module
+load_dotenv()
 
 
 class ResultatClassificationLLM(BaseModel):
@@ -44,22 +48,77 @@ class ResultatLLM:
 
 
 _PROMPT_SYSTEME = """\
-Tu es un comptable specialise pour une corporation IT au Quebec (CCPC).
-Tu dois classifier une transaction dans le plan comptable fourni.
+Tu es un comptable specialise pour une CCPC (corporation IT) au Quebec.
+Le proprietaire est un consultant IT solo (revenus ~230k$/an). Il se verse un salaire via \
+un service de paie externe ("Depot De Paie Consultants En"). La corporation a un seul \
+employe (le proprietaire) et un produit logiciel (Enact).
+
+CONTEXTE CRITIQUE — DEPENSES PERSONNELLES:
+Le compte bancaire corporatif est parfois utilise pour des depenses personnelles.
+Toute depense PERSONNELLE doit aller dans Passifs:Pret-Actionnaire (pret a l'actionnaire).
+Ceci est TRES IMPORTANT pour la conformite fiscale (article 15(2) LIR).
+
+DEPENSES PERSONNELLES (-> Passifs:Pret-Actionnaire):
+- Epiceries: IGA, Metro, Provigo, Maxi, Costco (nourriture), Super C, PA
+- Depanneurs: Couche-Tard, Deps
+- Cafes personnels: petits montants ($3-15) dans un cafe sans contexte d'affaires
+- Vetements: RWCO, Zara, H&M, Simons, etc.
+- Virements personnels: "Virement Envoye" ou "Virement Recu" a/de personnes physiques \
+(amis, famille) = personnel. Montant recu d'un proche = remboursement personnel, \
+utilise Passifs:Pret-Actionnaire (credit).
+- "Vir Courriel Virement Envoye/Recu" generiques = personnel
+- Cannabis (SQDC), alcool (SAQ) = personnel
+- Divertissement personnel: Netflix, Spotify (sauf si clairement d'affaires)
+
+DEPENSES D'AFFAIRES LEGITIMES:
+- Depenses:Repas-Representation — repas d'affaires avec clients/collegues (restaurants, \
+pubs). En cas de doute pour un restaurant, utilise ce compte avec confiance 0.70-0.80.
+- Depenses:Bureau:Internet-Telecom — telecom, internet d'affaires
+- Depenses:Bureau:Abonnements-Logiciels — SaaS, outils de dev, cloud (AWS, GitHub, etc.)
+- Depenses:Bureau:Fournitures — papeterie, petit materiel de bureau
+- Depenses:Bureau:Loyer — loyer du bureau
+- Depenses:Bureau:Entretien — electricite (Hydro-Quebec), entretien bureau
+- Depenses:Deplacement:Transport — Uber/taxi/transport pour affaires
+- Depenses:Deplacement:Hebergement — hotel pour deplacement professionnel
+- Depenses:Vehicule:Carburant — essence (portion affaires)
+- Depenses:Formation — cours, conferences, livres techniques
+- Depenses:Publicite-Marketing — publicite, domaines, marketing
+- Depenses:Frais-Bancaires — frais mensuels bancaires, frais de virement
+- Depenses:Honoraires-Professionnels:Comptable — CPA, comptable
+- Depenses:Honoraires-Professionnels:Juridique — avocat, notaire
+- Depenses:Assurances:Responsabilite — assurance erreurs et omissions
+- Depenses:Salaires:Brut — NE PAS utiliser pour les imports bancaires (gere par module paie)
+- Passifs:CartesCredit:RBC — paiement de carte de credit (transfert entre comptes)
+
+REVENUS:
+- Revenus:Consultation — paiements de clients pour services IT
+- Revenus:Produit-Logiciel — revenus du produit Enact
+- Revenus:Interets — interets bancaires
+- Revenus:Autres — credits d'impot, remboursements gouvernementaux
+
+TRANSACTIONS INTER-COMPTES:
+- "Paiement Divers Carte Rbc" = paiement de carte credit -> Passifs:CartesCredit:RBC
+- "Depot De Paie Consultants En" = versement salaire via service de paie -> ignore ou \
+Depenses:Salaires:Brut avec confiance 0.70 (normalement gere par module paie)
 
 REGLES STRICTES:
-- Choisis UNIQUEMENT parmi les comptes valides listes ci-dessous.
-- Set est_capex=true UNIQUEMENT pour achats d'immobilisations (ordinateurs, meubles, etc.)
-- Ta confiance doit refleter ta certitude reelle sur la classification.
-- Ne mentionne JAMAIS la TPS/TVQ/GST/QST ni aucun calcul de taxe.
-- Si tu n'es pas certain, utilise une confiance basse.
+- Choisis UNIQUEMENT parmi les comptes valides listes dans le prompt utilisateur.
+- est_capex=true UNIQUEMENT pour immobilisations (ordinateurs >500$, meubles, equipement).
+- Ta confiance doit refleter ta certitude reelle.
+- Ne mentionne JAMAIS la TPS/TVQ/GST/QST.
+- Confiance basse (<0.5) si tu n'es pas sur — ca enverra en revue humaine.
+- N'utilise JAMAIS Depenses:Non-Classe si tu peux raisonnablement classifier.
+- Depenses:Divers est pour les depenses d'affaires inclassables, PAS pour le personnel.
+
+Tu DOIS repondre UNIQUEMENT en JSON valide avec ce schema exact:
+{"compte": "...", "confiance": 0.0, "raisonnement": "...", "est_capex": false}
 """
 
 
 class ClassificateurLLM:
-    """Classificateur LLM utilisant l'API Anthropic avec structured output.
+    """Classificateur LLM utilisant OpenRouter (API compatible OpenAI).
 
-    Utilise client.messages.parse() avec un modele Pydantic (output_format)
+    Utilise le SDK openai pointe vers OpenRouter avec JSON mode
     pour obtenir des reponses structurees et validees.
     """
 
@@ -67,7 +126,7 @@ class ClassificateurLLM:
         self,
         comptes_valides: list[str],
         chemin_log: Path = Path("data/llm_log/categorisations.jsonl"),
-        modele: str = "claude-sonnet-4-5-20250929",
+        modele: str = "anthropic/claude-sonnet-4",
     ) -> None:
         self._comptes_valides = set(comptes_valides)
         self._chemin_log = chemin_log
@@ -75,17 +134,22 @@ class ClassificateurLLM:
         self._client = None
 
     def _get_client(self):
-        """Initialise le client Anthropic de facon lazy."""
+        """Initialise le client OpenAI pointe vers OpenRouter de facon lazy."""
         if self._client is None:
-            import anthropic
+            from openai import OpenAI
 
-            self._client = anthropic.Anthropic()
+            self._client = OpenAI(
+                api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+                base_url=os.environ.get(
+                    "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
+                ),
+            )
         return self._client
 
     @property
     def est_disponible(self) -> bool:
-        """True si la cle API Anthropic est configuree."""
-        return bool(os.environ.get("ANTHROPIC_API_KEY"))
+        """True si la cle API OpenRouter est configuree."""
+        return bool(os.environ.get("OPENROUTER_API_KEY"))
 
     def classifier(
         self,
@@ -95,7 +159,7 @@ class ClassificateurLLM:
         historique_vendeur: list[dict] | None = None,
         transactions_similaires: list[dict] | None = None,
     ) -> ResultatLLM:
-        """Classifie une transaction via l'API Anthropic.
+        """Classifie une transaction via OpenRouter.
 
         Args:
             payee: Nom du beneficiaire.
@@ -113,15 +177,21 @@ class ClassificateurLLM:
 
         try:
             client = self._get_client()
-            response = client.messages.parse(
+            response = client.chat.completions.create(
                 model=self._modele,
                 max_tokens=256,
-                system=_PROMPT_SYSTEME,
-                messages=[{"role": "user", "content": prompt}],
-                output_format=ResultatClassificationLLM,
+                messages=[
+                    {"role": "system", "content": _PROMPT_SYSTEME},
+                    {"role": "user", "content": prompt},
+                ],
+                response_format={"type": "json_object"},
             )
 
-            resultat_parse = response.parsed_output
+            contenu = response.choices[0].message.content
+            # OpenRouter peut retourner du JSON enveloppe dans des fences markdown
+            if contenu.startswith("```"):
+                contenu = contenu.strip("`").removeprefix("json").strip()
+            resultat_parse = ResultatClassificationLLM.model_validate_json(contenu)
 
             # Valider que le compte retourne est dans la liste des comptes valides
             if resultat_parse.compte not in self._comptes_valides:
@@ -156,7 +226,7 @@ class ClassificateurLLM:
             return resultat
 
         except Exception:
-            logger.warning("Erreur lors de l'appel API Anthropic", exc_info=True)
+            logger.warning("Erreur lors de l'appel API OpenRouter", exc_info=True)
             return ResultatLLM(
                 compte="Depenses:Non-Classe",
                 confiance=0.0,
@@ -216,12 +286,12 @@ class ClassificateurLLM:
 
         prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:16]
 
-        # Extraire les tokens utilises
+        # Extraire les tokens utilises (format OpenAI)
         tokens_utilises = 0
         if hasattr(response, "usage") and response.usage:
             tokens_utilises = (
-                getattr(response.usage, "input_tokens", 0)
-                + getattr(response.usage, "output_tokens", 0)
+                getattr(response.usage, "prompt_tokens", 0)
+                + getattr(response.usage, "completion_tokens", 0)
             )
 
         entry = {

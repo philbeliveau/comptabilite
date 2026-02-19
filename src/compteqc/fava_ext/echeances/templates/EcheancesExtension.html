@@ -2,8 +2,6 @@
 
 {% block content %}
 
-{% from "compteqc.fava_ext.echeances" import couleur_urgence %}
-
 <style>
   .alerte-banniere {
     padding: 16px 20px;
@@ -83,7 +81,7 @@
   {% set alertes = extension.alertes() %}
   {% if alertes %}
     {% for alerte in alertes %}
-      <div class="alerte-banniere {{ extension.module.couleur_urgence(alerte.urgence) if extension.module else 'alerte-info' }}">
+      <div class="alerte-banniere {{ alerte.classe_css }}">
         <span class="alerte-icone">
           {% if alerte.urgence == "critique" %}&#9888;
           {% elif alerte.urgence == "urgent" %}&#9201;

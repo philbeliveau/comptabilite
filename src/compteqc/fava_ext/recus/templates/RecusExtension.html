@@ -74,7 +74,7 @@
 {% endif %}
 
 <form id="upload-form" method="POST"
-      action="{{ url_for('extension_endpoint', bfile=g.beancount_file_slug, extension_name=extension.name, endpoint='upload') }}"
+      action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/upload"
       enctype="multipart/form-data">
 
   <div id="dropzone" class="dropzone">
@@ -101,7 +101,7 @@
     <tr>
       <th>Date</th>
       <th>Fichier</th>
-      <th>Compte</th>
+      <th>Chemin</th>
     </tr>
   </thead>
   <tbody>
@@ -109,7 +109,7 @@
     <tr>
       <td>{{ doc.date }}</td>
       <td>{{ doc.filename }}</td>
-      <td>{{ doc.account }}</td>
+      <td>{{ doc.chemin }}</td>
     </tr>
     {% endfor %}
   </tbody>

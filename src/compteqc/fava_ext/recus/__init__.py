@@ -31,25 +31,37 @@ class RecusExtension(FavaExtensionBase):
     def after_load_file(self) -> None:
         """Verifie la disponibilite du module Phase 5 et charge les recus recents."""
         try:
-            import compteqc.documents.upload  # type: ignore[import-not-found]  # noqa: F401
+            from compteqc.documents.upload import telecharger_recu  # noqa: F401
+            from compteqc.documents.extraction import extraire_recu  # noqa: F401
             self._upload_disponible = True
-        except ImportError:
+        except (ImportError, Exception):
             self._upload_disponible = False
 
         # Scanner les entrees recentes avec document directive
         self._recent_uploads = self._charger_recents()
 
     def _charger_recents(self) -> list[dict]:
-        """Charge les 10 derniers documents du ledger."""
+        """Charge les 10 derniers fichiers du repertoire documents/."""
+        from datetime import datetime
+
         recents: list[dict] = []
         try:
-            from beancount.core.data import Document
-            for entry in reversed(self.ledger.all_entries):
-                if isinstance(entry, Document):
+            ledger_path = Path(self.ledger.beancount_file_path)
+            documents_dir = ledger_path.parent / "documents"
+            if not documents_dir.exists():
+                return recents
+            fichiers = sorted(
+                documents_dir.rglob("*"),
+                key=lambda f: f.stat().st_mtime,
+                reverse=True,
+            )
+            for f in fichiers:
+                if f.is_file() and f.suffix.lower() in {".pdf", ".jpg", ".jpeg", ".png", ".heic"}:
+                    mtime = datetime.fromtimestamp(f.stat().st_mtime)
                     recents.append({
-                        "date": str(entry.date),
-                        "filename": Path(entry.filename).name,
-                        "account": entry.account,
+                        "date": mtime.strftime("%Y-%m-%d %H:%M"),
+                        "filename": f.name,
+                        "chemin": str(f.relative_to(documents_dir)),
                     })
                     if len(recents) >= 10:
                         break
@@ -88,11 +100,12 @@ class RecusExtension(FavaExtensionBase):
 
         if self._upload_disponible:
             try:
-                from compteqc.documents.upload import upload_document  # type: ignore[import-not-found]
-                from compteqc.documents.extraction import extraire_donnees  # type: ignore[import-not-found]
+                from compteqc.documents.upload import telecharger_recu
+                from compteqc.documents.extraction import extraire_recu
 
-                upload_document(dest, documents_dir)
-                donnees = extraire_donnees(dest)
+                ledger_dir = ledger_path.parent
+                stored = telecharger_recu(dest, ledger_dir)
+                donnees = extraire_recu(stored)
 
                 # Recharger le ledger
                 self.ledger.load_file()

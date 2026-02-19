@@ -68,7 +68,8 @@ Produce a complete year-end CPA package (trial balance, P&L, balance sheet, payr
 <deferred>
 ## Deferred Ideas
 
-None — discussion stayed within phase scope
+- **Fava dashboard alert banners** — Deadline alerts in Fava web UI banners deferred to Phase 4 (Fava extensions). Phase 5 implements alert logic + CLI surface; Phase 4 adds the Fava rendering layer.
+- **Fava drag-and-drop receipt upload** — Web-based receipt upload via Fava UI deferred to Phase 4 (Fava extensions). Phase 5 implements CLI upload + extraction logic; Phase 4 adds the web upload endpoint.
 
 </deferred>
 

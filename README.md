@@ -122,19 +122,77 @@ fava ledger/main.beancount
 
 Custom extensions add tabs for: approval queue, payroll dashboard, GST/QST summaries, CCA schedules, shareholder loan tracking, filing deadlines, receipts, and CPA export.
 
-### MCP Server
+### MCP Server (Claude Code / Claude Desktop)
 
-For use with Claude Desktop or Claude Code:
+The MCP server lets you talk to your accounting data directly through Claude. Claude reads your Beancount ledger into memory and exposes 13 tools for querying and modifying it.
+
+#### Setup with Claude Code
+
+From the project directory, run once:
 
 ```bash
-uv run python -m compteqc.mcp.server
+claude mcp add compteqc -- uv run python -m compteqc.mcp
 ```
 
-Environment variables:
-- `COMPTEQC_LEDGER` -- path to `main.beancount` (default: `ledger/main.beancount`)
-- `COMPTEQC_READONLY` -- set to `true` for read-only mode
+Then restart Claude Code (exit and relaunch). That's it -- Claude now has access to your ledger.
 
-Available tools: `soldes_comptes`, `balance_verification`, `etat_resultats`, `bilan`, `sommaire_tps_tvq`, `etat_dpa`, `etat_pret_actionnaire`, `proposer_categorie`, `lister_pending_tool`, `approuver_lot`, `rejeter`, `calculer_paie_tool`, `lancer_paie`.
+#### Setup with Claude Desktop
+
+Add this to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "compteqc": {
+      "command": "uv",
+      "args": ["run", "python", "-m", "compteqc.mcp"],
+      "cwd": "/path/to/comptabilite"
+    }
+  }
+}
+```
+
+#### What you can ask Claude
+
+Once the MCP server is connected, just ask in plain language:
+
+```
+"What are my account balances?"
+"Show me the trial balance"
+"What's my income statement for January?"
+"What's my GST/QST situation?"
+"Show me the CCA schedule"
+"What's the shareholder loan status?"
+"Categorize this: Bell Canada, internet, $85"
+"Show me pending transactions"
+"Approve all pending transactions"
+"Run a payroll dry-run for $4,230.77 gross"
+```
+
+Claude reads the Beancount ledger at `ledger/main.beancount`, parses it into memory, and answers from the live data. After any mutation (approving transactions, running payroll), the ledger is re-read automatically.
+
+#### Environment variables
+
+- `COMPTEQC_LEDGER` -- path to `main.beancount` (default: `ledger/main.beancount`)
+- `COMPTEQC_READONLY` -- set to `true` to block all mutations (query-only mode)
+
+#### Available tools
+
+| Tool | Type | Description |
+|------|------|-------------|
+| `soldes_comptes` | query | Account balances (optional filter) |
+| `balance_verification` | query | Trial balance (debits = credits check) |
+| `etat_resultats` | query | Income statement (optional date range) |
+| `bilan` | query | Balance sheet |
+| `sommaire_tps_tvq` | query | GST/QST summary by period |
+| `etat_dpa` | query | CCA/depreciation schedule by class |
+| `etat_pret_actionnaire` | query | Shareholder loan status + s.15(2) alerts |
+| `proposer_categorie` | mutation | AI-categorize a transaction (rules > ML > LLM) |
+| `lister_pending_tool` | query | List pending transactions awaiting review |
+| `approuver_lot` | mutation | Batch-approve pending transactions ($2,000 guardrail) |
+| `rejeter` | mutation | Reject a pending transaction (with optional correction) |
+| `calculer_paie_tool` | query | Payroll dry-run (preview without writing) |
+| `lancer_paie` | mutation | Run payroll and write to ledger |
 
 ## Project Structure
 
