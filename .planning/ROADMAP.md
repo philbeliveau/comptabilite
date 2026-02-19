@@ -30,12 +30,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can query account balances and run basic reports (trial balance, P&L) via CLI and get correct results
   4. All ledger data is plain-text .beancount files under git version control with auto-commit on changes
   5. Chart of accounts is GIFI-mapped (1000-6999) and all monetary amounts use Decimal (never float)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Fondation projet Python, ledger Beancount, plan comptable Quebec GIFI-mappe
+- [ ] 01-02-PLAN.md — Importateurs RBC (CSV cheques, CSV carte, OFX) et moteur de categorisation par regles
+- [ ] 01-03-PLAN.md — CLI `cqc` : commandes d'import et de rapports en francais
 
 ### Phase 2: Quebec Domain Logic
 **Goal**: User can run payroll with all Quebec deductions calculated correctly, GST/QST is tracked separately on all transactions with ITC/ITR, capital assets are tracked with CCA schedules, and shareholder loan balances are monitored with deadline alerts
