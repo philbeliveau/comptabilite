@@ -19,9 +19,9 @@ Progress: [██████████] 97%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
-- Average duration: 5.0 min
-- Total execution time: 1.37 hours
+- Total plans completed: 19
+- Average duration: 4.9 min
+- Total execution time: 1.45 hours
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [██████████] 97%
 | 04 | 5 | 26 min | 5.2 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (6 min), 04-03 (3 min), 04-04 (5 min), 04-05 (5 min), 05-05 (4 min)
+- Last 5 plans: 04-03 (3 min), 04-04 (5 min), 04-05 (5 min), 05-05 (4 min), 05-04 (5 min)
 - Trend: stable
 
 *Updated after each plan completion*
-| Phase 05 P05 | 4 | 2 tasks | 5 files |
+| Phase 05 P04 | 5 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -103,6 +103,10 @@ Recent decisions affecting current work:
 - [05-05]: Urgency thresholds: critique <= 7d, urgent <= 14d, normal <= 30d, info <= 90d
 - [05-05]: CLI footer shows only alerts within 30 days (per discretion recommendation)
 - [05-05]: Payroll remittance assumes regular remitter (15th of following month)
+- [05-04]: Claude Vision tool_use for structured extraction (not messages.parse -- tool_use gives cleaner JSON)
+- [05-04]: Amount (60%) + date (40%) weighted scoring for receipt matching
+- [05-04]: Image resize to 1568px max via Pillow before sending to Claude Vision
+- [05-04]: Pillow added as project dependency for image processing
 
 ### Pending Todos
 
@@ -117,5 +121,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 05-05-PLAN.md
-Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-05-SUMMARY.md
+Stopped at: Completed 05-04-PLAN.md
+Resume file: .planning/phases/05-reporting-cpa-export-and-document-management/05-04-SUMMARY.md

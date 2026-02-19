@@ -85,10 +85,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Receipt/Document Management
 
-- [ ] **DOC-01**: User can upload receipt/invoice PDFs and images
-- [ ] **DOC-02**: AI extracts vendor, date, amount, tax breakdown from uploaded documents (Claude Vision)
-- [ ] **DOC-03**: Extracted data can be matched to bank transactions for reconciliation
-- [ ] **DOC-04**: Documents stored in ledger/documents/ and linked via Beancount document directive
+- [x] **DOC-01**: User can upload receipt/invoice PDFs and images
+- [x] **DOC-02**: AI extracts vendor, date, amount, tax breakdown from uploaded documents (Claude Vision)
+- [x] **DOC-03**: Extracted data can be matched to bank transactions for reconciliation
+- [x] **DOC-04**: Documents stored in ledger/documents/ and linked via Beancount document directive
 
 ### MCP Server
 
@@ -229,10 +229,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INV-01 | Phase 5 | Pending |
 | INV-02 | Phase 5 | Pending |
 | INV-03 | Phase 5 | Pending |
-| DOC-01 | Phase 5 | Pending |
-| DOC-02 | Phase 5 | Pending |
-| DOC-03 | Phase 5 | Pending |
-| DOC-04 | Phase 5 | Pending |
+| DOC-01 | Phase 5 | Complete |
+| DOC-02 | Phase 5 | Complete |
+| DOC-03 | Phase 5 | Complete |
+| DOC-04 | Phase 5 | Complete |
 | MCP-01 | Phase 4 | Complete |
 | MCP-02 | Phase 4 | Complete |
 | MCP-03 | Phase 4 | Complete |
