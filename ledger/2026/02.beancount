@@ -16,3 +16,18 @@ option "name_expenses" "Depenses"
   approuve: "oui"
   Passifs:CartesCredit:RBC       -5.31 CAD
   Depenses:Repas-Representation   5.31 CAD
+
+2026-02-01 * "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-2.csv"
+  ligne: "3"
+  confiance: "0.0"
+  source_ia: "llm"
+  compte_propose: "Depenses:Non-Classe"
+  approuve: "oui"
+  recategorise: "oui"
+  compte_original: "Depenses:Non-Classe"
+  compte_corrige: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -5.13 CAD
+  Depenses:Repas-Representation   5.13 CAD

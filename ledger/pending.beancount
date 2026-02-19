@@ -5,17 +5,6 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
-2026-02-01 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL" #pending
-  source: "rbc-carte-csv"
-  categorisation: "llm"
-  fichier_source: "download-transactions-2.csv"
-  ligne: "3"
-  confiance: "0.0"
-  source_ia: "llm"
-  compte_propose: "Depenses:Non-Classe"
-  Passifs:CartesCredit:RBC  -5.13 CAD
-  Depenses:Non-Classe        5.13 CAD
-
 2026-02-02 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
