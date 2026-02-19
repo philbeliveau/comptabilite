@@ -324,3 +324,14 @@ option "name_expenses" "Depenses"
   compte_propose: "Depenses:Non-Classe"
   Passifs:CartesCredit:RBC  -25.0 CAD
   Depenses:Non-Classe        25.0 CAD
+
+2026-02-19 ! "Test Sans Cle Api Dummy Vendor" "TEST SANS CLE API DUMMY VENDOR" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "non-classe"
+  fichier_source: "test-no-key.csv"
+  ligne: "2"
+  source_ia: "non-classe"
+  confiance: "0.0"
+  compte_propose: "Depenses:Non-Classe"
+  Actifs:Banque:RBC:Cheques  -99.99 CAD
+  Depenses:Non-Classe         99.99 CAD
