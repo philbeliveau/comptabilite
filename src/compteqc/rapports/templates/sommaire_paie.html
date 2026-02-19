@@ -1,0 +1,53 @@
+{% extends "base_report.html" %}
+
+{% block title %}Sommaire de paie{% endblock %}
+{% block report_title %}Sommaire de paie{% endblock %}
+
+{% block content %}
+<p>{{ nb_periodes }} periode(s) de paie</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th class="amount">Brut</th>
+            <th class="amount">QPP</th>
+            <th class="amount">RQAP</th>
+            <th class="amount">AE</th>
+            <th class="amount">Impot Fed</th>
+            <th class="amount">Impot QC</th>
+            <th class="amount">Total Ret.</th>
+            <th class="amount">Net</th>
+            <th class="amount">Cotis. Empl.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in periodes %}
+        <tr>
+            <td>{{ p.date }}</td>
+            <td class="amount">{{ "%.2f"|format(p.brut) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.qpp_base + p.qpp_supp1 + p.qpp_supp2) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.rqap) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.ae) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.impot_federal) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.impot_quebec) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.total_retenues) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.net) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.total_cotisations) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="grand-total">
+            <td>TOTAL</td>
+            <td class="amount">{{ "%.2f"|format(totaux.brut) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.qpp_base + totaux.qpp_supp1 + totaux.qpp_supp2) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.rqap) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.ae) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.impot_federal) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.impot_quebec) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.total_retenues) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.net) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.total_cotisations) }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

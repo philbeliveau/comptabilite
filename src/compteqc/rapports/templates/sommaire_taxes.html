@@ -1,0 +1,46 @@
+{% extends "base_report.html" %}
+
+{% block title %}Sommaire TPS/TVQ{% endblock %}
+{% block report_title %}Sommaire TPS/TVQ{% endblock %}
+{% block subtitle %}Frequence: {{ frequence }}{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Periode</th>
+            <th class="amount">TPS Percue</th>
+            <th class="amount">CTI (TPS Payee)</th>
+            <th class="amount">TPS Nette</th>
+            <th class="amount">TVQ Percue</th>
+            <th class="amount">RTI (TVQ Payee)</th>
+            <th class="amount">TVQ Nette</th>
+            <th class="amount">Nb Txns</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in periodes %}
+        <tr>
+            <td>{{ p.label }}</td>
+            <td class="amount">{{ "%.2f"|format(p.tps_percue) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.tps_payee) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.tps_nette) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.tvq_percue) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.tvq_payee) }}</td>
+            <td class="amount">{{ "%.2f"|format(p.tvq_nette) }}</td>
+            <td class="amount">{{ p.nb_transactions }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="grand-total">
+            <td>TOTAL</td>
+            <td class="amount">{{ "%.2f"|format(totaux.tps_percue) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.tps_payee) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.tps_nette) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.tvq_percue) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.tvq_payee) }}</td>
+            <td class="amount">{{ "%.2f"|format(totaux.tvq_nette) }}</td>
+            <td class="amount">{{ totaux.nb_transactions }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

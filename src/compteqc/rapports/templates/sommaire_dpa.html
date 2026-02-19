@@ -1,0 +1,77 @@
+{% extends "base_report.html" %}
+
+{% block title %}Sommaire DPA (CCA){% endblock %}
+{% block report_title %}Sommaire DPA (Deduction pour amortissement){% endblock %}
+
+{% block content %}
+{% for c in classes %}
+<h2>Classe {{ c.classe }} - {{ c.description }} ({{ "%.0f"|format(c.taux * 100) }}%)</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th class="amount">FNACC Ouverture</th>
+            <th class="amount">Acquisitions</th>
+            <th class="amount">Dispositions</th>
+            <th>Demi-taux</th>
+            <th class="amount">DPA Reclamee</th>
+            <th class="amount">FNACC Fermeture</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="amount">{{ "%.2f"|format(c.ucc_ouverture) }}</td>
+            <td class="amount">{{ "%.2f"|format(c.acquisitions) }}</td>
+            <td class="amount">{{ "%.2f"|format(c.dispositions) }}</td>
+            <td>{% if c.demi_taux %}Oui{% else %}Non{% endif %}</td>
+            <td class="amount">{{ "%.2f"|format(c.dpa) }}</td>
+            <td class="amount">{{ "%.2f"|format(c.ucc_fermeture) }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if c.actifs %}
+<h3>Detail des actifs</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Date acquisition</th>
+            <th class="amount">Cout</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in c.actifs %}
+        <tr class="sub-account">
+            <td>{{ a.description }}</td>
+            <td>{{ a.date_acquisition }}</td>
+            <td class="amount">{{ "%.2f"|format(a.cout) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endfor %}
+
+<h2>Totaux</h2>
+<table>
+    <thead>
+        <tr>
+            <th class="amount">FNACC Ouverture</th>
+            <th class="amount">Acquisitions</th>
+            <th class="amount">Dispositions</th>
+            <th class="amount">DPA Totale</th>
+            <th class="amount">FNACC Fermeture</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="grand-total">
+            <td class="amount">{{ "%.2f"|format(total_ucc_ouverture) }}</td>
+            <td class="amount">{{ "%.2f"|format(total_acquisitions) }}</td>
+            <td class="amount">{{ "%.2f"|format(total_dispositions) }}</td>
+            <td class="amount">{{ "%.2f"|format(total_dpa) }}</td>
+            <td class="amount">{{ "%.2f"|format(total_ucc_fermeture) }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

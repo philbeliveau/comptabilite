@@ -1,0 +1,81 @@
+{% extends "base_report.html" %}
+
+{% block title %}Sommaire pret actionnaire{% endblock %}
+{% block report_title %}Sommaire du pret actionnaire{% endblock %}
+
+{% block content %}
+<h2>Tableau de continuite</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th class="amount">Avance</th>
+            <th class="amount">Remboursement</th>
+            <th class="amount">Solde</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in mouvements %}
+        <tr>
+            <td>{{ m.date }}</td>
+            <td>{{ m.description }}</td>
+            <td>{{ m.type }}</td>
+            <td class="amount">{% if m.avance %}{{ "%.2f"|format(m.avance) }}{% endif %}</td>
+            <td class="amount">{% if m.remboursement %}{{ "%.2f"|format(m.remboursement) }}{% endif %}</td>
+            <td class="amount">{{ "%.2f"|format(m.solde) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="grand-total">
+            <td>TOTAL</td>
+            <td></td>
+            <td></td>
+            <td class="amount">{{ "%.2f"|format(total_avances) }}</td>
+            <td class="amount">{{ "%.2f"|format(total_remboursements) }}</td>
+            <td class="amount">{{ "%.2f"|format(solde_fin) }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if avances_s152 %}
+<h2>Echeances s.15(2) LIR</h2>
+<p>Avances ouvertes et dates limites d'inclusion au revenu</p>
+<table>
+    <thead>
+        <tr>
+            <th>Date avance</th>
+            <th class="amount">Montant initial</th>
+            <th class="amount">Solde restant</th>
+            <th>Date inclusion</th>
+            <th class="amount">Jours restants</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in avances_s152 %}
+        <tr>
+            <td>{{ a.date_avance }}</td>
+            <td class="amount">{{ "%.2f"|format(a.montant_initial) }}</td>
+            <td class="amount">{{ "%.2f"|format(a.solde_restant) }}</td>
+            <td>{{ a.date_inclusion }}</td>
+            <td class="amount">{{ a.jours_restants }}</td>
+            <td>{% if a.statut == "EN RETARD" %}<span class="status-error">{{ a.statut }}</span>{% else %}{{ a.statut }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if not mouvements %}
+<p class="status-ok">Aucun mouvement sur le pret actionnaire pour l'exercice.</p>
+{% endif %}
+
+{% if a_solde_non_nul %}
+<p class="status-error">ATTENTION: Solde du pret actionnaire non nul a la fin de l'exercice ({{ "%.2f"|format(solde_fin) }} $). Le CPA devrait verifier les implications s.15(2).</p>
+{% else %}
+{% if mouvements %}
+<p class="status-ok">Solde du pret actionnaire nul a la fin de l'exercice.</p>
+{% endif %}
+{% endif %}
+{% endblock %}
