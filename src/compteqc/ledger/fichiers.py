@@ -21,7 +21,16 @@ def chemin_fichier_mensuel(annee: int, mois: int, base_dir: Path) -> Path:
 
     fichier = repertoire_annee / f"{mois:02d}.beancount"
     if not fichier.exists():
-        fichier.write_text(f"; Transactions {_nom_mois(mois)} {annee}\n", encoding="utf-8")
+        # Beancount v3 requiert les options name_* dans chaque fichier inclus
+        entete = (
+            f'; Transactions {_nom_mois(mois)} {annee}\n'
+            'option "name_assets" "Actifs"\n'
+            'option "name_liabilities" "Passifs"\n'
+            'option "name_equity" "Capital"\n'
+            'option "name_income" "Revenus"\n'
+            'option "name_expenses" "Depenses"\n'
+        )
+        fichier.write_text(entete, encoding="utf-8")
 
     return fichier
 
