@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 4 of 5 (MCP Server and Web Dashboard) -- COMPLETE
-Plan: 4 of 4 in current phase
-Status: Phase 04 Complete
-Last activity: 2026-02-19 -- Completed 04-04 (Quebec Fava Dashboards)
+Plan: 5 of 5 in current phase
+Status: Phase 04 Complete (including gap-closure plan 05)
+Last activity: 2026-02-19 -- Completed 04-05 (Deadline Alerts and Receipt Upload Extensions)
 
 Progress: [██████████] 95%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
+- Total plans completed: 17
 - Average duration: 5.1 min
 - Total execution time: 1.30 hours
 
@@ -30,13 +30,14 @@ Progress: [██████████] 95%
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 5 | 23 min | 4.6 min |
 | 03 | 3 | 17 min | 5.7 min |
-| 04 | 4 | 21 min | 5.3 min |
+| 04 | 5 | 26 min | 5.2 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-03 (5 min), 04-01 (4 min), 04-02 (6 min), 04-03 (3 min), 04-04 (5 min)
+- Last 5 plans: 04-01 (4 min), 04-02 (6 min), 04-03 (3 min), 04-04 (5 min), 04-05 (5 min)
 - Trend: stable
 
 *Updated after each plan completion*
+| Phase 04 P05 | 5 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [04-04]: niveau_alerte_s152 as module-level helper for testability (same pattern as 04-03)
 - [04-04]: CCA extension loads actifs.yaml from ledger directory by default, falls back to empty registre
 - [04-04]: TaxesQCExtension supports config string for frequence (annuel/trimestriel)
+- [04-05]: Try-import pattern for Phase 5 modules (compteqc.echeances.calendrier, compteqc.documents.upload)
+- [04-05]: RecusExtension saves files to documents/ dir even without Phase 5 extraction
+- [04-05]: 4 urgency CSS classes: alerte-critique (red), alerte-urgent (orange), alerte-normal (yellow), alerte-info (blue)
 
 ### Pending Todos
 
@@ -109,5 +113,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-04-PLAN.md (Phase 04 complete)
-Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-04-SUMMARY.md
+Stopped at: Completed 04-05-PLAN.md (Phase 04 gap-closure complete)
+Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-05-SUMMARY.md
