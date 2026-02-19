@@ -1,0 +1,42 @@
+# rules/taxes.yaml
+# Regles de traitement fiscal GST/QST
+# Priorite: vendeur > categorie > defaut (taxable)
+
+defaut: taxable  # Nouveaux vendeurs = taxable jusqu'a confirmation
+
+categories:
+  # Depenses toujours exemptes de TPS/TVQ
+  exempt:
+    - "Depenses:Frais-Bancaires"
+    - "Depenses:Interet:Bancaire"
+    - "Depenses:Assurances:*"
+    - "Depenses:Salaires:*"
+
+  # Depenses a taux zero (differentes d'exemptes pour le reporting)
+  zero:
+    - "Depenses:Formation"
+
+vendeurs:
+  # Vendeurs avec traitement exempt (override le defaut de la categorie)
+  exempt:
+    - payee_regex: ".*BANQUE.*|.*RBC.*|.*DESJARDINS.*"
+      raison: "Services financiers"
+    - payee_regex: ".*ASSURANCE.*|.*INTACT.*"
+      raison: "Primes d'assurance"
+
+  # Vendeurs avec TPS seulement (hors Quebec)
+  tps_seulement:
+    - payee_regex: ".*AMAZON.*WEB.*SERVICES.*"
+      raison: "Fournisseur hors Quebec"
+
+clients:
+  # Regles TPS/TVQ sur les revenus par client
+  tps_tvq:
+    - client_regex: ".*PROCOM.*"
+    - client_regex: ".*FORMATION.*"
+
+  tps_seulement:
+    - client_regex: ".*ACME-TORONTO.*"
+
+  aucune_taxe:
+    - client_regex: ".*INTERNATIONAL.*"
