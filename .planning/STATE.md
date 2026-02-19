@@ -58,6 +58,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-18
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-ledger-foundation-and-import-pipeline/01-CONTEXT.md
+Last session: 2026-02-19
+Stopped at: Phase 2 context gathered
+Resume file: .planning/phases/02-quebec-domain-logic/02-CONTEXT.md
