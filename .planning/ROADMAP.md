@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Ledger Foundation and Import Pipeline** - Working Beancount ledger with Quebec COA, RBC import, rule-based categorization, and basic CLI
 - [ ] **Phase 2: Quebec Domain Logic** - Payroll engine, GST/QST tracking, CCA schedules, and shareholder loan management
-- [ ] **Phase 3: AI Categorization and Review Workflow** - ML and LLM categorization tiers, confidence scoring, staging/approval pipeline
+- [x] **Phase 3: AI Categorization and Review Workflow** - ML and LLM categorization tiers, confidence scoring, staging/approval pipeline (completed 2026-02-19)
 - [ ] **Phase 4: MCP Server and Web Dashboard** - Claude integration via MCP tools and Fava-based web UI with custom extensions
 - [ ] **Phase 5: Reporting, CPA Export, and Document Management** - Complete CPA package, invoicing, receipt ingestion, and automation alerts
 
@@ -118,6 +118,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|----------------|--------|-----------|
 | 1. Ledger Foundation and Import Pipeline | 0/3 | Not started | - |
 | 2. Quebec Domain Logic | 0/4 | Not started | - |
-| 3. AI Categorization and Review Workflow | 0/3 | Not started | - |
+| 3. AI Categorization and Review Workflow | 0/3 | Complete    | 2026-02-19 |
 | 4. MCP Server and Web Dashboard | 0/4 | Not started | - |
 | 5. Reporting, CPA Export, and Document Management | 0/4 | Not started | - |
