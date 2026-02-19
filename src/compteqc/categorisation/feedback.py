@@ -16,7 +16,7 @@ from pathlib import Path
 
 import yaml
 
-from compteqc.categorisation.regles import ConditionRegle, ConfigRegles, Regle
+from compteqc.categorisation.regles import ConditionRegle, Regle
 
 logger = logging.getLogger(__name__)
 
