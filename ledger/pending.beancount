@@ -291,3 +291,25 @@ option "name_expenses" "Depenses"
   compte_propose: "Depenses:Non-Classe"
   Actifs:Banque:RBC:Cheques  -99.99 CAD
   Depenses:Non-Classe         99.99 CAD
+
+2026-02-19 ! "Uber Canada Ubertrip Toronto" "UBER CANADA UBERTRIP TORONTO" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "test-llm-fix.csv"
+  ligne: "2"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Deplacement:Transport"
+  Actifs:Banque:RBC:Cheques       -25.50 CAD
+  Depenses:Deplacement:Transport   25.50 CAD
+
+2026-02-19 ! "Netflix.Com Netflix.Com" "NETFLIX.COM NETFLIX.COM" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "test-llm-fix.csv"
+  ligne: "3"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
+  Actifs:Banque:RBC:Cheques              -22.99 CAD
+  Depenses:Bureau:Abonnements-Logiciels   22.99 CAD
