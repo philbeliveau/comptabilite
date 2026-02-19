@@ -17,6 +17,7 @@ dependencies = [
     "pydantic>=2",
     "pyyaml",
     "python-dateutil>=2.9.0.post0",
+    "smart-importer>=1.2",
 ]
 
 [project.scripts]
