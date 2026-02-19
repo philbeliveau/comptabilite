@@ -101,13 +101,14 @@ Plans:
   3. User can generate professional invoices for consulting clients with correct GST/QST, track payment status (sent/paid/overdue), and invoices link to accounts receivable entries in the ledger
   4. User can upload receipt/invoice PDFs and images, AI extracts vendor/date/amount/tax breakdown via Claude Vision, and extracted data matches to bank transactions for reconciliation
   5. Filing deadline calendar sends reminders (T4/RL-1, GST/QST, T2/CO-17 deadlines) and a year-end checklist verifies shareholder loan balance, CCA schedule, GST/QST reconciliation before generating the CPA package
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
-- [ ] 05-04: TBD
+- [ ] 05-01-PLAN.md — Report engine, financial statements (trial balance, P&L, balance sheet), and GIFI export
+- [ ] 05-02-PLAN.md — Invoice generation with GST/QST, payment tracking, and AR ledger integration
+- [ ] 05-03-PLAN.md — CPA schedules (payroll, CCA, GST/QST, shareholder loan), package orchestrator, year-end checklist, CLI
+- [ ] 05-04-PLAN.md — Document ingestion, Claude Vision receipt extraction, and transaction matching
+- [ ] 05-05-PLAN.md — Filing deadline calendar, payroll remittance tracking, and CLI alert integration
 
 ## Progress
 
@@ -120,4 +121,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Quebec Domain Logic | 0/4 | Not started | - |
 | 3. AI Categorization and Review Workflow | 0/3 | Complete    | 2026-02-19 |
 | 4. MCP Server and Web Dashboard | 0/4 | Not started | - |
-| 5. Reporting, CPA Export, and Document Management | 0/4 | Not started | - |
+| 5. Reporting, CPA Export, and Document Management | 0/5 | Not started | - |
