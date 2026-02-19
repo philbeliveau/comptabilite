@@ -112,10 +112,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CPA-01**: System generates trial balance (CSV + PDF)
 - [x] **CPA-02**: System generates income statement / P&L (CSV + PDF)
 - [x] **CPA-03**: System generates balance sheet (CSV + PDF)
-- [ ] **CPA-04**: System generates payroll summary schedule (gross, deductions, employer contributions)
-- [ ] **CPA-05**: System generates CCA schedule by class (cost, half-year, CCA claimed, UCC)
-- [ ] **CPA-06**: System generates GST/QST reconciliation summary by period
-- [ ] **CPA-07**: System generates shareholder loan continuity schedule
+- [x] **CPA-04**: System generates payroll summary schedule (gross, deductions, employer contributions)
+- [x] **CPA-05**: System generates CCA schedule by class (cost, half-year, CCA claimed, UCC)
+- [x] **CPA-06**: System generates GST/QST reconciliation summary by period
+- [x] **CPA-07**: System generates shareholder loan continuity schedule
 - [x] **CPA-08**: GIFI-mapped export validates Schedule 100 balances before generation
 - [x] **CPA-09**: All reports available as CSV for CPA import into TaxCycle or similar
 
@@ -125,13 +125,13 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CLI-02**: User can run categorization pipeline via CLI command
 - [x] **CLI-03**: User can review and approve pending transactions via CLI
 - [x] **CLI-04**: User can run payroll via CLI command
-- [ ] **CLI-05**: User can generate CPA export package via CLI command
+- [x] **CLI-05**: User can generate CPA export package via CLI command
 - [x] **CLI-06**: User can query ledger balances and run reports via CLI
 
 ### Automation & Alerts
 
 - [x] **AUTO-01**: Filing deadline calendar with reminders (T4/RL-1 Feb 28, GST/QST Mar 31, T2/CO-17 Jun 30, etc.)
-- [ ] **AUTO-02**: Year-end checklist: verify shareholder loan balance, confirm CCA schedule, reconcile GST/QST, generate CPA package
+- [x] **AUTO-02**: Year-end checklist: verify shareholder loan balance, confirm CCA schedule, reconcile GST/QST, generate CPA package
 - [x] **AUTO-03**: Payroll remittance tracking (amounts owed vs remitted, upcoming deadlines)
 
 ## v2 Requirements
@@ -247,20 +247,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CPA-01 | Phase 5 | Complete |
 | CPA-02 | Phase 5 | Complete |
 | CPA-03 | Phase 5 | Complete |
-| CPA-04 | Phase 5 | Pending |
-| CPA-05 | Phase 5 | Pending |
-| CPA-06 | Phase 5 | Pending |
-| CPA-07 | Phase 5 | Pending |
+| CPA-04 | Phase 5 | Complete |
+| CPA-05 | Phase 5 | Complete |
+| CPA-06 | Phase 5 | Complete |
+| CPA-07 | Phase 5 | Complete |
 | CPA-08 | Phase 5 | Complete |
 | CPA-09 | Phase 5 | Complete |
 | CLI-01 | Phase 1 | Complete |
 | CLI-02 | Phase 3 | Complete |
 | CLI-03 | Phase 3 | Complete |
 | CLI-04 | Phase 2 | Complete |
-| CLI-05 | Phase 5 | Pending |
+| CLI-05 | Phase 5 | Complete |
 | CLI-06 | Phase 1 | Complete |
 | AUTO-01 | Phase 5 | Complete |
-| AUTO-02 | Phase 5 | Pending |
+| AUTO-02 | Phase 5 | Complete |
 | AUTO-03 | Phase 5 | Complete |
 
 **Coverage:**
