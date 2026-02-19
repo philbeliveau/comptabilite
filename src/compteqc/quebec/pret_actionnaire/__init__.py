@@ -11,7 +11,7 @@ from compteqc.quebec.pret_actionnaire.alertes import (
     obtenir_alertes_actives,
 )
 from compteqc.quebec.pret_actionnaire.detection import detecter_circularite
-from compteqc.quebec.pret_actionnaire.suivi import EtatPret, MouvementPret
+from compteqc.quebec.pret_actionnaire.suivi import EtatPret, MouvementPret, obtenir_etat_pret
 
 __all__ = [
     "AlertePret",
@@ -20,4 +20,5 @@ __all__ = [
     "calculer_dates_alerte",
     "detecter_circularite",
     "obtenir_alertes_actives",
+    "obtenir_etat_pret",
 ]
