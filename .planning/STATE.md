@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 3: AI Categorization and Review Workflow
+**Current focus:** Phase 4: MCP Server and Web Dashboard
 
 ## Current Position
 
-Phase: 3 of 5 (AI Categorization and Review Workflow) -- COMPLETE
-Plan: 3 of 3 in current phase
-Status: Phase Complete
-Last activity: 2026-02-19 -- Completed 03-03 (Review CLI and Feedback Loop)
+Phase: 4 of 5 (MCP Server and Web Dashboard) -- IN PROGRESS
+Plan: 1 of 4 in current phase
+Status: Plan 04-01 Complete
+Last activity: 2026-02-19 -- Completed 04-01 (MCP Server Core and Query Tools)
 
 Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
-- Average duration: 5.4 min
-- Total execution time: 0.98 hours
+- Total plans completed: 12
+- Average duration: 5.3 min
+- Total execution time: 1.05 hours
 
 **By Phase:**
 
@@ -30,9 +30,10 @@ Progress: [████████░░] 80%
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 5 | 23 min | 4.6 min |
 | 03 | 3 | 17 min | 5.7 min |
+| 04 | 1 | 4 min | 4.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (7 min), 03-01 (4 min), 02-05 (2 min), 03-02 (8 min), 03-03 (5 min)
+- Last 5 plans: 03-01 (4 min), 02-05 (2 min), 03-02 (8 min), 03-03 (5 min), 04-01 (4 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -80,6 +81,10 @@ Recent decisions affecting current work:
 - [02-05]: No tag filtering for pret actionnaire (all transactions touching the account are relevant)
 - [03-03]: CLI tests must pass --ledger/--regles args (Typer callback always resets globals from defaults)
 - [03-03]: Beancount parser sorts entries by date when re-parsing pending.beancount
+- [04-01]: Beancount v3 parse_string is at beancount.parser.parser.parse_string (not beancount.parser)
+- [04-01]: Tool response cap at 50 items with tronque flag for pagination
+- [04-01]: French field names in all MCP tool responses
+- [04-01]: AppContext dataclass with reload() for in-memory ledger refresh after mutations
 
 ### Pending Todos
 
@@ -94,5 +99,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-03-PLAN.md (Phase 3 complete)
-Resume file: .planning/phases/03-ai-categorization-and-review-workflow/03-03-SUMMARY.md
+Stopped at: Completed 04-01-PLAN.md
+Resume file: .planning/phases/04-mcp-server-and-web-dashboard/04-01-SUMMARY.md

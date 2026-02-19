@@ -92,12 +92,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### MCP Server
 
-- [ ] **MCP-01**: Custom MCP server exposes ledger query tools (balances, reports, account details)
+- [x] **MCP-01**: Custom MCP server exposes ledger query tools (balances, reports, account details)
 - [ ] **MCP-02**: MCP server exposes categorization tools (propose category for transaction)
 - [ ] **MCP-03**: MCP server exposes payroll tools (run payroll, get payroll summary)
 - [ ] **MCP-04**: MCP server exposes approval workflow tools (list pending, approve, reject)
-- [ ] **MCP-05**: MCP server supports read-only mode for safe exploration
-- [ ] **MCP-06**: MCP server built with official Python MCP SDK (mcp>=1.25,<2)
+- [x] **MCP-05**: MCP server supports read-only mode for safe exploration
+- [x] **MCP-06**: MCP server built with official Python MCP SDK (mcp>=1.25,<2)
 
 ### Web Dashboard
 
@@ -233,12 +233,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOC-02 | Phase 5 | Pending |
 | DOC-03 | Phase 5 | Pending |
 | DOC-04 | Phase 5 | Pending |
-| MCP-01 | Phase 4 | Pending |
+| MCP-01 | Phase 4 | Complete |
 | MCP-02 | Phase 4 | Pending |
 | MCP-03 | Phase 4 | Pending |
 | MCP-04 | Phase 4 | Pending |
-| MCP-05 | Phase 4 | Pending |
-| MCP-06 | Phase 4 | Pending |
+| MCP-05 | Phase 4 | Complete |
+| MCP-06 | Phase 4 | Complete |
 | WEB-01 | Phase 4 | Pending |
 | WEB-02 | Phase 4 | Pending |
 | WEB-03 | Phase 4 | Pending |
