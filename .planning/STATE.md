@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 2: Quebec Domain Logic
+**Current focus:** Phase 3: AI Categorization and Review Workflow
 
 ## Current Position
 
-Phase: 2 of 5 (Quebec Domain Logic)
-Plan: 4 of 4 in current phase (ALL COMPLETE)
-Status: Phase 2 Complete
-Last activity: 2026-02-19 -- Completed 02-02 (Payroll Engine and Tax Withholding)
+Phase: 3 of 5 (AI Categorization and Review Workflow)
+Plan: 1 of 3 in current phase
+Status: In Progress
+Last activity: 2026-02-19 -- Completed 03-01 (Three-Tier Categorization Pipeline)
 
-Progress: [██████░░░░] 60%
+Progress: [████████░░] 65%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 5.7 min
-- Total execution time: 0.67 hours
+- Total plans completed: 8
+- Average duration: 5.5 min
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [██████░░░░] 60%
 |-------|-------|-------|----------|
 | 01 | 3 | 19 min | 6.3 min |
 | 02 | 4 | 21 min | 5.3 min |
+| 03 | 1 | 4 min | 4.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (8 min), 02-01 (5 min), 02-03 (4 min), 02-04 (5 min), 02-02 (7 min)
+- Last 5 plans: 02-01 (5 min), 02-03 (4 min), 02-04 (5 min), 02-02 (7 min), 03-01 (4 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -67,6 +68,10 @@ Recent decisions affecting current work:
 - [02-04]: Circularity detection: 20% tolerance, 30-day window per s.15(2.6)
 - [02-02]: Salary offset Pret-Actionnaire uses credit posting (not debit) for correct transaction balancing
 - [02-02]: FSS estimated by annualizing from (YTD + current) mass salariale
+- [03-01]: Direct sklearn pipeline instead of smart_importer.EntryPredictor (too coupled to beangulp)
+- [03-01]: SVC(probability=True) for Platt scaling confidence scores
+- [03-01]: ClassificateurLLM as runtime_checkable Protocol for loose coupling with 03-02
+- [03-01]: CAPEX keyword-based CCA class suggestion (class 50 computers, 8 furniture, 10 vehicles, 12 software)
 
 ### Pending Todos
 
@@ -74,12 +79,12 @@ None yet.
 
 ### Blockers/Concerns
 
-- smart_importer + Beancount v3 compatibility unverified (affects Phase 3)
+- smart_importer + Beancount v3 compatibility: resolved by bypassing EntryPredictor, using direct sklearn
 - CPA export format preference unknown (consult CPA before Phase 5)
 - Quebec Law 25 compliance for sending financial data to cloud LLM (affects Phase 3)
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-02-PLAN.md (Phase 2 all plans complete)
-Resume file: .planning/phases/02-quebec-domain-logic/02-02-SUMMARY.md
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-ai-categorization-and-review-workflow/03-01-SUMMARY.md

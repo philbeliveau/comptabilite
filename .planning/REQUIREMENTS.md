@@ -26,14 +26,14 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Categorization
 
 - [x] **CAT-01**: Rule-based engine categorizes transactions using configurable YAML/TOML rules (handles ~60-70%)
-- [ ] **CAT-02**: smart_importer ML predicts account postings from historical data (handles ~20-25% of remainder)
+- [x] **CAT-02**: smart_importer ML predicts account postings from historical data (handles ~20-25% of remainder)
 - [ ] **CAT-03**: Claude LLM categorizes remaining edge cases, constrained to closed chart of accounts list
-- [ ] **CAT-04**: Every categorization has a confidence score and source tag (rule/ml/llm/human)
-- [ ] **CAT-05**: Transactions below 80% confidence are flagged for mandatory human review
+- [x] **CAT-04**: Every categorization has a confidence score and source tag (rule/ml/llm/human)
+- [x] **CAT-05**: Transactions below 80% confidence are flagged for mandatory human review
 - [ ] **CAT-06**: AI-categorized transactions go to pending.beancount staging file with #pending tag
 - [ ] **CAT-07**: User can approve, reject, or recategorize pending transactions
 - [ ] **CAT-08**: Approved transactions move from pending to monthly ledger files
-- [ ] **CAT-09**: Transactions >$500 are auto-flagged as potential CAPEX with suggested CCA class
+- [x] **CAT-09**: Transactions >$500 are auto-flagged as potential CAPEX with suggested CCA class
 - [ ] **CAT-10**: User corrections feed back into rule engine (auto-generate rules after N identical corrections)
 - [ ] **CAT-11**: LLM categorizations stored with prompt/response for drift detection
 
@@ -188,14 +188,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INGEST-04 | Phase 1 | Complete |
 | INGEST-05 | Phase 1 | Complete |
 | CAT-01 | Phase 1 | Complete |
-| CAT-02 | Phase 3 | Pending |
+| CAT-02 | Phase 3 | Complete |
 | CAT-03 | Phase 3 | Pending |
-| CAT-04 | Phase 3 | Pending |
-| CAT-05 | Phase 3 | Pending |
+| CAT-04 | Phase 3 | Complete |
+| CAT-05 | Phase 3 | Complete |
 | CAT-06 | Phase 3 | Pending |
 | CAT-07 | Phase 3 | Pending |
 | CAT-08 | Phase 3 | Pending |
-| CAT-09 | Phase 3 | Pending |
+| CAT-09 | Phase 3 | Complete |
 | CAT-10 | Phase 3 | Pending |
 | CAT-11 | Phase 3 | Pending |
 | PAY-01 | Phase 2 | Complete |
