@@ -1,8 +1,8 @@
 """Suivi des corrections utilisateur et generation automatique de regles.
 
 Lorsqu'un utilisateur recategorise une transaction, la correction est
-enregistree. Apres SEUIL_AUTO_REGLE corrections identiques (meme vendeur
-vers meme compte), une regle YAML est automatiquement generee.
+enregistree. Apres 2 corrections identiques (meme vendeur vers meme
+compte), une regle YAML est automatiquement generee.
 """
 
 from __future__ import annotations

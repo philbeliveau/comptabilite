@@ -140,17 +140,17 @@ TAUX_2026 = TauxAnnuels(
         TrancheFederale(
             seuil=Decimal("181440"),
             taux=Decimal("0.26"),
-            constante_k=Decimal("10237"),
+            constante_k=Decimal("10241"),
         ),
         TrancheFederale(
             seuil=Decimal("258482"),
             taux=Decimal("0.29"),
-            constante_k=Decimal("15680"),
+            constante_k=Decimal("15685"),
         ),
         TrancheFederale(
             seuil=Decimal("999999999"),
             taux=Decimal("0.33"),
-            constante_k=Decimal("26019"),
+            constante_k=Decimal("26024"),
         ),
     ),
     tranches_quebec=(

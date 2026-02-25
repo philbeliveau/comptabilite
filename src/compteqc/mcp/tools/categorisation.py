@@ -45,7 +45,7 @@ def proposer_categorie(
     comptable. Retourne la confiance, la source (regle/ML/LLM) et une
     explication en francais du raisonnement.
 
-    Les transactions a haute confiance (>=95%), non-CAPEX, et <=2000$ sont
+    Les transactions a haute confiance (>95%), non-CAPEX, et <=2000$ sont
     auto-approuvees et contournent la file d'attente.
 
     Args:
@@ -107,10 +107,10 @@ def proposer_categorie(
 
     raison = _construire_raison(resultat.source, resultat.compte, resultat.confiance, resultat.regle)
 
-    # Auto-approve: confiance >= 0.95, pas de revue obligatoire, montant <= 2000
+    # Auto-approve: confiance > 0.95, pas de revue obligatoire, montant <= 2000
     seuil_auto = Decimal("2000")
     auto_approuve = (
-        resultat.confiance >= 0.95
+        resultat.confiance > 0.95
         and not resultat.revue_obligatoire
         and abs(montant_decimal) <= seuil_auto
     )

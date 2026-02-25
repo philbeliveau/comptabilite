@@ -57,7 +57,7 @@
         {% endfor %}
         {% if resultat_net %}
         <tr class="sub-account">
-            <td>Resultat net de l'exercice</td>
+            <td>Résultat net de l'exercice</td>
             <td></td>
             <td class="amount">{{ "%.2f"|format(resultat_net) }}</td>
         </tr>
@@ -77,8 +77,8 @@
 </table>
 
 {% if equilibre %}
-<p class="status-ok">Equation comptable verifiee : Actifs = Passifs + Capitaux propres</p>
+<p class="status-ok">Équation comptable vérifiée : Actifs = Passifs + Capitaux propres</p>
 {% else %}
-<p class="status-error">AVERTISSEMENT : L'equation comptable ne balance pas !</p>
+<p class="status-error">AVERTISSEMENT : L'équation comptable ne balance pas !</p>
 {% endif %}
 {% endblock %}

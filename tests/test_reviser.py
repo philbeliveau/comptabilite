@@ -314,46 +314,41 @@ class TestReviserRecategoriser:
         assert result.exit_code == 0
         assert "invalide" in result.output.lower()
 
-    def test_auto_regle_apres_deux_corrections(self, ledger_env):
-        """Apres 2 corrections identiques, une regle auto est generee."""
+    def test_auto_regle_apres_cinq_corrections(self, ledger_env):
+        """Apres 5 corrections identiques, une regle auto est generee."""
         from compteqc.cli.app import app
 
-        # Setup avec 2 transactions du meme vendeur
+        # Setup avec 5 transactions du meme vendeur + 1 other
         # Note: beancount parser sorts by date, so Tim Hortons dates must be
         # before Shell to ensure consistent index ordering after re-parse.
-        txns_resultats = [
-            (
-                _make_txn("Tim Hortons", "cafe matin", Decimal("5.50"),
-                           txn_date=date(2026, 1, 10)),
+        txns_resultats = []
+        for i in range(5):
+            txns_resultats.append((
+                _make_txn("Tim Hortons", f"cafe {i}", Decimal("5.50"),
+                           txn_date=date(2026, 1, 10 + i)),
                 _make_resultat("Depenses:Divers", 0.65),
-            ),
-            (
-                _make_txn("Tim Hortons", "cafe aprem", Decimal("4.50"),
-                           txn_date=date(2026, 1, 11)),
-                _make_resultat("Depenses:Divers", 0.70),
-            ),
-            (
-                _make_txn("Shell", "essence", Decimal("65.00"),
-                           txn_date=date(2026, 1, 20)),
-                _make_resultat("Depenses:Deplacement:Transport", 0.85),
-            ),
-        ]
+            ))
+        txns_resultats.append((
+            _make_txn("Shell", "essence", Decimal("65.00"),
+                       txn_date=date(2026, 1, 20)),
+            _make_resultat("Depenses:Deplacement:Transport", 0.85),
+        ))
         _setup_pending(ledger_env, txns_resultats)
 
-        # Premiere correction
-        result1 = runner.invoke(
-            app, ledger_env["cli_args"] + ["reviser", "recategoriser", "1", "Depenses:Repas-Representation"]
-        )
-        assert result1.exit_code == 0
-        assert "regle auto" not in result1.output.lower()
+        # Corrections 1-4: should not generate a rule
+        for i in range(4):
+            result = runner.invoke(
+                app, ledger_env["cli_args"] + ["reviser", "recategoriser", "1", "Depenses:Repas-Representation"]
+            )
+            assert result.exit_code == 0
+            assert "regle auto" not in result.output.lower()
 
-        # Deuxieme correction identique (meme vendeur, meme compte)
-        # Apres la premiere, l'indice 1 est maintenant "Tim Hortons cafe aprem"
-        result2 = runner.invoke(
+        # 5th correction: should trigger rule generation
+        result5 = runner.invoke(
             app, ledger_env["cli_args"] + ["reviser", "recategoriser", "1", "Depenses:Repas-Representation"]
         )
-        assert result2.exit_code == 0
-        assert "regle auto" in result2.output.lower()
+        assert result5.exit_code == 0
+        assert "regle auto" in result5.output.lower()
 
 
 class TestParseIndices:

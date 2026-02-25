@@ -1,5 +1,5 @@
 regles:
-- compte: Depenses:Repas-Representation
+- compte: Passifs:Pret-Actionnaire
   condition:
     payee: Mollo\ Cafe\ Montreal
   confiance: 0.95

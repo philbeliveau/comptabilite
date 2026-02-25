@@ -113,7 +113,8 @@ def obtenir_etat_pret(
     for entry in entries:
         if not isinstance(entry, data.Transaction):
             continue
-        if entry.date.year != annee:
+        # Include prior years for carry-forward balance
+        if entry.date.year > annee:
             continue
 
         for posting in entry.postings:

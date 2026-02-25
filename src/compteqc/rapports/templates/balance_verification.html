@@ -1,7 +1,7 @@
 {% extends "base_report.html" %}
 
-{% block title %}Balance de verification{% endblock %}
-{% block report_title %}Balance de verification{% endblock %}
+{% block title %}Balance de vérification{% endblock %}
+{% block report_title %}Balance de vérification{% endblock %}
 
 {% block content %}
 <table>
@@ -9,8 +9,8 @@
         <tr>
             <th>Compte</th>
             <th>GIFI</th>
-            <th class="amount">Debit</th>
-            <th class="amount">Credit</th>
+            <th class="amount">Débit</th>
+            <th class="amount">Crédit</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +32,7 @@
 </table>
 
 {% if equilibre %}
-<p class="status-ok">Balance equilibree.</p>
+<p class="status-ok">Balance équilibrée.</p>
 {% else %}
 <p class="status-error">AVERTISSEMENT : La balance ne balance pas !</p>
 {% endif %}

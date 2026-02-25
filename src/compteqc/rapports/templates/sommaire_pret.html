@@ -1,10 +1,10 @@
 {% extends "base_report.html" %}
 
-{% block title %}Sommaire pret actionnaire{% endblock %}
-{% block report_title %}Sommaire du pret actionnaire{% endblock %}
+{% block title %}Sommaire prêt actionnaire{% endblock %}
+{% block report_title %}Sommaire du prêt actionnaire{% endblock %}
 
 {% block content %}
-<h2>Tableau de continuite</h2>
+<h2>Tableau de continuité</h2>
 <table>
     <thead>
         <tr>
@@ -39,7 +39,7 @@
 </table>
 
 {% if avances_s152 %}
-<h2>Echeances s.15(2) LIR</h2>
+<h2>Échéances s.15(2) LIR</h2>
 <p>Avances ouvertes et dates limites d'inclusion au revenu</p>
 <table>
     <thead>
@@ -68,14 +68,14 @@
 {% endif %}
 
 {% if not mouvements %}
-<p class="status-ok">Aucun mouvement sur le pret actionnaire pour l'exercice.</p>
+<p class="status-ok">Aucun mouvement sur le prêt actionnaire pour l'exercice.</p>
 {% endif %}
 
 {% if a_solde_non_nul %}
-<p class="status-error">ATTENTION: Solde du pret actionnaire non nul a la fin de l'exercice ({{ "%.2f"|format(solde_fin) }} $). Le CPA devrait verifier les implications s.15(2).</p>
+<p class="status-error">ATTENTION: Solde du prêt actionnaire non nul à la fin de l'exercice ({{ "%.2f"|format(solde_fin) }} $). Le CPA devrait vérifier les implications s.15(2).</p>
 {% else %}
 {% if mouvements %}
-<p class="status-ok">Solde du pret actionnaire nul a la fin de l'exercice.</p>
+<p class="status-ok">Solde du prêt actionnaire nul à la fin de l'exercice.</p>
 {% endif %}
 {% endif %}
 {% endblock %}

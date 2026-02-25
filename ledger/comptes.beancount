@@ -130,6 +130,10 @@ option "name_expenses" "Depenses"
 2025-01-01 open Capital:Apports CAD
   gifi: "3470"
 
+2025-01-01 open Capital:Ouverture CAD
+  gifi: "3849"
+  ; Compte de contrepartie pour les soldes d'ouverture (pad/balance)
+
 ; -----------------------------------------------------------------------------
 ; REVENUS (GIFI 8000+)
 ; -----------------------------------------------------------------------------
@@ -228,6 +232,10 @@ option "name_expenses" "Depenses"
 
 2025-01-01 open Depenses:Vehicule:Stationnement CAD
   gifi: "9281"
+
+2025-01-01 open Depenses:Vehicule:Immatriculation CAD
+  gifi: "9281"
+  description: "Frais d'immatriculation SAAQ"
 
 ; -----------------------------------------------------------------------------
 ; DEPENSES - Deplacement et representation (GIFI 9200, 8523)

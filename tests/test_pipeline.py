@@ -6,6 +6,7 @@ from decimal import Decimal
 from unittest.mock import MagicMock
 
 import pytest
+from beancount.core import data
 
 from compteqc.categorisation.capex import DetecteurCAPEX
 from compteqc.categorisation.ml import PredicteurML, ResultatML
@@ -274,3 +275,98 @@ class TestPipelineCategorisation:
         assert result.confiance == 1.0
         assert result.est_capex is True
         assert result.classe_dpa == 50
+
+
+# --- Personal Source Type Tests ---
+
+
+class TestPersonalSourceType:
+    """Tests pour le court-circuit source_type='personal'."""
+
+    def _make_txn(self):
+        """Cree une transaction de test avec Depenses:Non-Classe."""
+        import copy
+        import datetime
+
+        meta = data.new_metadata("<test>", 0)
+        meta["categorisation"] = "non-classe"
+        return data.Transaction(
+            meta=meta,
+            date=datetime.date(2026, 1, 15),
+            flag="!",
+            payee="Epicerie IGA",
+            narration="Achat personnel",
+            tags=frozenset(),
+            links=frozenset(),
+            postings=[
+                data.Posting(
+                    account="Actifs:Banque:RBC:Cheques",
+                    units=data.Amount(Decimal("-50.00"), "CAD"),
+                    cost=None,
+                    price=None,
+                    flag=None,
+                    meta=None,
+                ),
+                data.Posting(
+                    account="Depenses:Non-Classe",
+                    units=data.Amount(Decimal("50.00"), "CAD"),
+                    cost=None,
+                    price=None,
+                    flag=None,
+                    meta=None,
+                ),
+            ],
+        )
+
+    def test_personal_source_type_skips_pipeline(self):
+        """source_type='personal' court-circuite le pipeline et route vers Pret-Actionnaire."""
+        from compteqc.cli.importer import _appliquer_pipeline_et_router
+
+        txn = self._make_txn()
+        txn_mod, destination, resultat = _appliquer_pipeline_et_router(
+            txn, pipeline=None, source_type="personal"
+        )
+
+        assert destination == "direct"
+        assert resultat.compte == "Passifs:Pret-Actionnaire"
+        assert resultat.source == "personal"
+        assert resultat.confiance == 1.0
+        assert resultat.est_capex is False
+        assert resultat.classe_dpa is None
+        assert resultat.revue_obligatoire is False
+
+        # Transaction posting changed
+        assert txn_mod.postings[1].account == "Passifs:Pret-Actionnaire"
+        # Flag changed to *
+        assert txn_mod.flag == "*"
+        # Meta set
+        assert txn_mod.meta["source_type"] == "personal"
+        assert txn_mod.meta["categorisation"] == "personal"
+
+    def test_corporate_source_type_uses_normal_pipeline(self):
+        """source_type='corporate' utilise le pipeline normal (appelle categoriser)."""
+        from compteqc.cli.importer import _appliquer_pipeline_et_router
+
+        txn = self._make_txn()
+
+        # Create a mock pipeline
+        mock_pipeline = MagicMock(spec=PipelineCategorisation)
+        mock_pipeline.categoriser.return_value = ResultatPipeline(
+            compte="Depenses:Repas",
+            confiance=0.92,
+            source="ml",
+            regle=None,
+            est_capex=False,
+            classe_dpa=None,
+            revue_obligatoire=False,
+            suggestions=None,
+        )
+        mock_pipeline.determiner_destination.return_value = "pending"
+
+        txn_mod, destination, resultat = _appliquer_pipeline_et_router(
+            txn, pipeline=mock_pipeline, source_type="corporate"
+        )
+
+        # Pipeline should have been called
+        mock_pipeline.categoriser.assert_called_once()
+        assert resultat.source == "ml"

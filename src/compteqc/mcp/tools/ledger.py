@@ -189,8 +189,8 @@ def bilan(
             resultat_net -= montant  # debits sont positifs -> -(+x) = -x
 
     total_actifs = sum(actifs.values())
-    total_passifs = sum(abs(v) for v in passifs.values())
-    total_capitaux = sum(abs(v) for v in capitaux.values()) + resultat_net
+    total_passifs = sum(-v for v in passifs.values())
+    total_capitaux = sum(-v for v in capitaux.values()) + resultat_net
     total_passifs_capitaux = total_passifs + total_capitaux
 
     return {
@@ -199,11 +199,11 @@ def bilan(
             for k, v in sorted(actifs.items())
         ][:MAX_ITEMS],
         "passifs": [
-            {"compte": k, "montant": formater_montant(abs(v))}
+            {"compte": k, "montant": formater_montant(-v)}
             for k, v in sorted(passifs.items())
         ][:MAX_ITEMS],
         "capitaux_propres": [
-            {"compte": k, "montant": formater_montant(abs(v))}
+            {"compte": k, "montant": formater_montant(-v)}
             for k, v in sorted(capitaux.items())
         ] + ([{"compte": "Resultat net de l'exercice", "montant": formater_montant(resultat_net)}] if resultat_net != 0 else []),
         "total_actifs": formater_montant(total_actifs),

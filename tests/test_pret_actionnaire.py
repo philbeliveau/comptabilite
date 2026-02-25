@@ -338,11 +338,24 @@ class TestObtenirEtatPret:
         assert etat.solde == Decimal("6000")
         assert len(etat.avances_ouvertes) == 2
 
-    def test_obtenir_etat_pret_filters_by_fiscal_year(self):
-        """Only entries from the fiscal year are included."""
+    def test_obtenir_etat_pret_includes_prior_years_for_carryforward(self):
+        """Prior-year entries are included for carry-forward balance."""
         entries = [
             _make_txn(datetime.date(2025, 11, 1), "Old year avance", "Passifs:Pret-Actionnaire", "10000"),
             _make_txn(datetime.date(2026, 3, 15), "Current year avance", "Passifs:Pret-Actionnaire", "5000"),
+        ]
+
+        etat = obtenir_etat_pret(entries, fin_exercice=datetime.date(2026, 12, 31))
+
+        # Both prior and current year entries are included
+        assert etat.solde == Decimal("15000")
+        assert len(etat.avances_ouvertes) == 2
+
+    def test_obtenir_etat_pret_excludes_future_years(self):
+        """Entries after the fiscal year-end are excluded."""
+        entries = [
+            _make_txn(datetime.date(2026, 3, 15), "Current year avance", "Passifs:Pret-Actionnaire", "5000"),
+            _make_txn(datetime.date(2027, 1, 15), "Future year avance", "Passifs:Pret-Actionnaire", "3000"),
         ]
 
         etat = obtenir_etat_pret(entries, fin_exercice=datetime.date(2026, 12, 31))

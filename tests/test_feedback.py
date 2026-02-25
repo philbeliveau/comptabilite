@@ -29,11 +29,13 @@ class TestEnregistrerCorrection:
 
         assert result is None
 
-    def test_deuxieme_correction_identique_genere_regle(self, tmp_path):
-        """Apres 2 corrections identiques, une regle est generee."""
+    def test_cinquieme_correction_identique_genere_regle(self, tmp_path):
+        """Apres 5 corrections identiques, une regle est generee."""
         chemin = tmp_path / "historique.json"
 
-        enregistrer_correction(chemin, "Tim Hortons", "Depenses:Repas-Representation")
+        for _ in range(4):
+            result = enregistrer_correction(chemin, "Tim Hortons", "Depenses:Repas-Representation")
+            assert result is None
         result = enregistrer_correction(
             chemin, "Tim Hortons", "Depenses:Repas-Representation"
         )
@@ -57,7 +59,8 @@ class TestEnregistrerCorrection:
         """La regle generee a un pattern regex correct (escape des caracteres speciaux)."""
         chemin = tmp_path / "historique.json"
 
-        enregistrer_correction(chemin, "Tim Hortons (123)", "Depenses:Repas-Representation")
+        for _ in range(4):
+            enregistrer_correction(chemin, "Tim Hortons (123)", "Depenses:Repas-Representation")
         result = enregistrer_correction(
             chemin, "Tim Hortons (123)", "Depenses:Repas-Representation"
         )
@@ -112,17 +115,18 @@ class TestEnregistrerCorrection:
         """Le nom du vendeur est normalise (uppercase + strip)."""
         chemin = tmp_path / "historique.json"
 
-        enregistrer_correction(chemin, "  tim hortons  ", "Depenses:Repas-Representation")
+        for _ in range(4):
+            enregistrer_correction(chemin, "  tim hortons  ", "Depenses:Repas-Representation")
         result = enregistrer_correction(
             chemin, "TIM HORTONS", "Depenses:Repas-Representation"
         )
 
-        # Les deux doivent matcher -> regle generee
+        # Les cinq doivent matcher -> regle generee
         assert result is not None
 
-    def test_seuil_est_deux(self):
-        """Le seuil par defaut est 2."""
-        assert SEUIL_AUTO_REGLE == 2
+    def test_seuil_est_cinq(self):
+        """Le seuil par defaut est 5 (suffisamment eleve pour eviter les faux positifs)."""
+        assert SEUIL_AUTO_REGLE == 5
 
 
 class TestChargerHistorique:

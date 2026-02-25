@@ -66,7 +66,8 @@ DEPENSES PERSONNELLES (-> Passifs:Pret-Actionnaire):
 - Virements personnels: "Virement Envoye" ou "Virement Recu" a/de personnes physiques \
 (amis, famille) = personnel. Montant recu d'un proche = remboursement personnel, \
 utilise Passifs:Pret-Actionnaire (credit).
-- "Vir Courriel Virement Envoye/Recu" generiques = personnel
+- "Vir Courriel Virement Envoye/Recu" generiques = personnel, SAUF si montant ~1775$ \
+(loyer du bureau -> Depenses:Bureau:Loyer avec confiance 0.90)
 - Cannabis (SQDC), alcool (SAQ) = personnel
 - Divertissement personnel: Netflix, Spotify (sauf si clairement d'affaires)
 
@@ -98,8 +99,6 @@ REVENUS:
 
 TRANSACTIONS INTER-COMPTES:
 - "Paiement Divers Carte Rbc" = paiement de carte credit -> Passifs:CartesCredit:RBC
-- "Depot De Paie Consultants En" = versement salaire via service de paie -> ignore ou \
-Depenses:Salaires:Brut avec confiance 0.70 (normalement gere par module paie)
 
 REGLES STRICTES:
 - Choisis UNIQUEMENT parmi les comptes valides listes dans le prompt utilisateur.
@@ -109,6 +108,16 @@ REGLES STRICTES:
 - Confiance basse (<0.5) si tu n'es pas sur — ca enverra en revue humaine.
 - N'utilise JAMAIS Depenses:Non-Classe si tu peux raisonnablement classifier.
 - Depenses:Divers est pour les depenses d'affaires inclassables, PAS pour le personnel.
+
+CORRECTIONS CONNUES (apprises des audits):
+- IMPOT SOLIDARITE GOUV. QUEBEC = credit d'impot personnel, PAS un revenu. \
+Classe comme Passifs:Pret-Actionnaire.
+- DEPOT DE PAIE = gere par module paie, NE PAS classifier. Si vu dans import bancaire, \
+utilise Depenses:Salaires-A-Payer avec confiance 0.60 et revue_obligatoire=true.
+- Adelard Belanger = epicerie/alimentation au marche Atwater, PAS fournitures de bureau. \
+Classe comme Passifs:Pret-Actionnaire (depense personnelle).
+- Gros VIREMENT RECU (>500$) = source incertaine, utilise confiance 0.60 maximum et \
+revue_obligatoire=true.
 
 Tu DOIS repondre UNIQUEMENT en JSON valide avec ce schema exact:
 {"compte": "...", "confiance": 0.0, "raisonnement": "...", "est_capex": false}

@@ -1,7 +1,7 @@
 {% extends "base_report.html" %}
 
-{% block title %}Etat des resultats{% endblock %}
-{% block report_title %}Etat des resultats{% endblock %}
+{% block title %}État des résultats{% endblock %}
+{% block report_title %}État des résultats{% endblock %}
 
 {% block content %}
 <table>
@@ -30,7 +30,7 @@
         </tr>
 
         <tr class="section-header">
-            <td colspan="3">DEPENSES</td>
+            <td colspan="3">DÉPENSES</td>
         </tr>
         {% for ligne in lignes_depenses %}
         <tr class="sub-account">
@@ -40,13 +40,13 @@
         </tr>
         {% endfor %}
         <tr class="total">
-            <td>Total depenses</td>
+            <td>Total dépenses</td>
             <td></td>
             <td class="amount">{{ "%.2f"|format(total_depenses) }}</td>
         </tr>
 
         <tr class="grand-total">
-            <td>RESULTAT NET</td>
+            <td>RÉSULTAT NET</td>
             <td></td>
             <td class="amount">{{ "%.2f"|format(resultat_net) }}</td>
         </tr>

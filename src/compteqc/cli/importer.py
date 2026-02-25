@@ -185,7 +185,7 @@ def _extraire_donnees_entrainement(
         narration = entry.narration or ""
         for posting in entry.postings:
             if (
-                posting.account.startswith("Depenses:")
+                (posting.account.startswith("Depenses:") or posting.account == "Passifs:Pret-Actionnaire")
                 and posting.account != "Depenses:Non-Classe"
             ):
                 donnees.append((payee, narration, posting.account))
@@ -195,14 +195,64 @@ def _extraire_donnees_entrainement(
 
 def _appliquer_pipeline_et_router(
     txn: data.Transaction,
-    pipeline: PipelineCategorisation,
-) -> tuple[data.Transaction, str, "PipelineCategorisation"]:
+    pipeline: PipelineCategorisation | None,
+    source_type: str = "corporate",
+) -> tuple[data.Transaction, str, "ResultatPipeline"]:
     """Applique le pipeline et route la transaction.
+
+    Args:
+        txn: Transaction beancount a router.
+        pipeline: Pipeline de categorisation (None si source_type == "personal").
+        source_type: "corporate" (pipeline normal) ou "personal" (tout -> Pret-Actionnaire).
 
     Returns:
         Tuple (transaction_modifiee, destination, resultat_pipeline).
     """
     from compteqc.categorisation.pipeline import ResultatPipeline
+
+    # Short-circuit pour les comptes personnels: tout va en Pret-Actionnaire
+    if source_type == "personal":
+        nouveaux_postings = []
+        for posting in txn.postings:
+            if posting.account == "Depenses:Non-Classe":
+                nouveau = data.Posting(
+                    account="Passifs:Pret-Actionnaire",
+                    units=posting.units,
+                    cost=posting.cost,
+                    price=posting.price,
+                    flag=posting.flag,
+                    meta=posting.meta,
+                )
+                nouveaux_postings.append(nouveau)
+            else:
+                nouveaux_postings.append(posting)
+
+        meta = copy.copy(txn.meta)
+        meta["categorisation"] = "personal"
+        meta["source_type"] = "personal"
+
+        txn = data.Transaction(
+            meta=meta,
+            date=txn.date,
+            flag="*",
+            payee=txn.payee,
+            narration=txn.narration,
+            tags=txn.tags,
+            links=txn.links,
+            postings=nouveaux_postings,
+        )
+
+        resultat = ResultatPipeline(
+            compte="Passifs:Pret-Actionnaire",
+            confiance=1.0,
+            source="personal",
+            regle=None,
+            est_capex=False,
+            classe_dpa=None,
+            revue_obligatoire=False,
+            suggestions=None,
+        )
+        return txn, "direct", resultat
 
     payee = txn.payee or ""
     narration = txn.narration or ""
@@ -267,6 +317,7 @@ def _importer_avec(
     chemin_main: Path,
     chemin_regles: Path,
     entries_existantes,
+    source_type: str = "corporate",
 ) -> tuple[int, int, int, int]:
     """Execute l'import pour un importateur donne.
 
@@ -282,11 +333,13 @@ def _importer_avec(
         )
         return (0, 0, 0, 0)
 
-    # Creer le pipeline
-    comptes_valides = charger_comptes_existants(chemin_main)
-    pipeline = _creer_pipeline(
-        chemin_main, chemin_regles, comptes_valides, entries_existantes
-    )
+    # Creer le pipeline (inutile pour source personnelle)
+    pipeline = None
+    if source_type != "personal":
+        comptes_valides = charger_comptes_existants(chemin_main)
+        pipeline = _creer_pipeline(
+            chemin_main, chemin_regles, comptes_valides, entries_existantes
+        )
 
     # Router chaque transaction
     txns_direct: list[data.Transaction] = []
@@ -295,7 +348,7 @@ def _importer_avec(
     nb_ia_auto = 0
 
     for txn in nouvelles:
-        txn_mod, destination, resultat = _appliquer_pipeline_et_router(txn, pipeline)
+        txn_mod, destination, resultat = _appliquer_pipeline_et_router(txn, pipeline, source_type)
 
         if destination == "direct":
             txns_direct.append(txn_mod)
@@ -363,6 +416,12 @@ def fichier(
         "-c",
         help="Type de compte : CHEQUES, CARTE, ou AUTO (detection automatique)",
     ),
+    source_type: str = typer.Option(
+        "corporate",
+        "--source-type",
+        "-s",
+        help="Type de source : corporate (normal) ou personal (tout -> Pret-Actionnaire)",
+    ),
 ) -> None:
     """Importer un fichier bancaire dans le ledger.
 
@@ -389,6 +448,13 @@ def fichier(
         )
         raise typer.Exit(1)
 
+    if source_type not in ("corporate", "personal"):
+        console.print(
+            f"[red]Erreur:[/red] --source-type invalide : '{source_type}'. "
+            "Valeurs acceptees : corporate, personal."
+        )
+        raise typer.Exit(1)
+
     console.print(f"Analyse du fichier [cyan]{path.name}[/cyan]...")
     importateurs = _detecter_importateurs(str(path), compte.upper())
 
@@ -412,6 +478,7 @@ def fichier(
 
         nb_imp, nb_reg, nb_ia, nb_pend = _importer_avec(
             imp, path, chemin_main, chemin_regles, entries_existantes,
+            source_type=source_type,
         )
 
         total_importees += nb_imp
@@ -449,6 +516,10 @@ def fichier(
     # Resume final
     total_non_classees = total_importees - total_regles - total_ia_auto - total_pending
     console.print()
+    if source_type == "personal":
+        console.print(
+            "[cyan]Source: personnel (tout -> Pret-Actionnaire)[/cyan]"
+        )
     tableau = Table(title="Resume de l'import", show_header=True)
     tableau.add_column("Metrique", style="cyan")
     tableau.add_column("Valeur", style="green", justify="right")

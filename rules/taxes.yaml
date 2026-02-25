@@ -28,6 +28,18 @@ vendeurs:
   tps_seulement:
     - payee_regex: ".*AMAZON.*WEB.*SERVICES.*"
       raison: "Fournisseur hors Quebec"
+    - payee_regex: ".*ANTHROPIC.*"
+      raison: "Fournisseur US - AI API"
+    - payee_regex: ".*OPENROUTER.*"
+      raison: "Fournisseur US - AI API"
+    - payee_regex: ".*PERPLEXITY.*"
+      raison: "Fournisseur US - AI search"
+    - payee_regex: ".*RAILWAY.*"
+      raison: "Fournisseur US - Cloud hosting"
+    - payee_regex: ".*SPOTIFY.*"
+      raison: "Fournisseur hors Quebec - streaming"
+    - payee_regex: ".*MICROSOFT.*"
+      raison: "Fournisseur hors Quebec - logiciels"
 
 clients:
   # Regles TPS/TVQ sur les revenus par client

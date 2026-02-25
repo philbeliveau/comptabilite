@@ -1,0 +1,1769 @@
+// @ts-check
+// Theme Quebec pour CompteQC — Modern UI rework
+// Couleur primaire tirée du drapeau du Québec (#003DA5)
+
+const THEME_CSS = `
+/* ===== Quebec Color Palette (flag-coherent) ===== */
+:root {
+  /* Core Quebec blue from the fleurdelisé */
+  --qc-blue: #003DA5;
+  --qc-blue-light: #1A5BBF;
+  --qc-blue-lighter: #EDF2FB;
+  --qc-blue-dark: #002B75;
+  --qc-blue-deep: #001840;
+  --qc-white: #FFFFFF;
+
+  /* Surfaces */
+  --qc-surface: #F8FAFC;
+  --qc-surface-raised: #FFFFFF;
+  --qc-surface-sidebar: #0A1628;
+
+  /* Semantic */
+  --qc-success: #16A34A;
+  --qc-success-bg: #F0FDF4;
+  --qc-warning: #EA580C;
+  --qc-warning-bg: #FFF7ED;
+  --qc-error: #DC2626;
+  --qc-error-bg: #FEF2F2;
+  --qc-amber: #D97706;
+  --qc-amber-bg: #FFFBEB;
+  --qc-info-bg: var(--qc-blue-lighter);
+
+  /* Neutrals */
+  --qc-text: #1E293B;
+  --qc-text-secondary: #64748B;
+  --qc-muted: #94A3B8;
+  --qc-border: #E2E8F0;
+  --qc-border-light: #F1F5F9;
+
+  /* Elevation */
+  --qc-shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --qc-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --qc-shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+  --qc-shadow-lg: 0 8px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+
+  /* Radii */
+  --qc-radius: 12px;
+  --qc-radius-sm: 8px;
+  --qc-radius-lg: 16px;
+
+  /* Transitions */
+  --qc-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --qc-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Override Fava variables */
+  --header-background: var(--qc-blue);
+  --header-color: var(--qc-white);
+  --link-color: var(--qc-blue);
+  --sidebar-background: var(--qc-surface-sidebar);
+  --sidebar-border: transparent;
+  --table-header-background: var(--qc-blue-lighter);
+  --table-header-text: var(--qc-blue-dark);
+  --button-background: var(--qc-blue);
+  --button-color: var(--qc-white);
+}
+
+/* ===== Global Reset ===== */
+body, article, aside, header,
+.flex-table, .flex-table span, .flex-table a, .flex-table p,
+ol, ul, li, p, span, div,
+table, th, td, tr,
+input, select, textarea, button,
+label, legend, fieldset,
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+article {
+  background: var(--qc-surface) !important;
+}
+
+/* ===== Fava Header ===== */
+header {
+  background: var(--qc-blue) !important;
+  box-shadow: 0 2px 8px rgba(0, 61, 165, 0.25) !important;
+  position: relative;
+  z-index: 100;
+}
+
+/* Quebec flag logo in header */
+header img#cqc-header-logo {
+  height: 28px !important;
+  width: auto !important;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  object-fit: contain;
+}
+
+header a, header .links a {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: color var(--qc-transition);
+}
+
+header a:hover, header .links a:hover {
+  color: #FFFFFF !important;
+}
+
+header h1 {
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+}
+
+header h1 strong {
+  font-weight: 700 !important;
+}
+
+/* Header filter inputs */
+header input, header select {
+  border-radius: var(--qc-radius-sm) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background: rgba(255,255,255,0.1) !important;
+  color: white !important;
+  backdrop-filter: blur(4px);
+  transition: all var(--qc-transition);
+  font-family: 'Inter', sans-serif !important;
+}
+
+header input:focus, header select:focus {
+  background: rgba(255,255,255,0.18) !important;
+  border-color: rgba(255,255,255,0.4) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.1) !important;
+}
+
+header input::placeholder {
+  color: rgba(255,255,255,0.5) !important;
+}
+
+/* ===== CompteQC Brand Strip ===== */
+#cqc-brand-strip { display: none !important; }
+#cqc-brand-strip {
+  background: linear-gradient(180deg, rgba(0,61,165,0.6) 0%, var(--qc-surface-sidebar) 100%);
+  color: #ffffff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8em;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+  border-bottom: 2px solid rgba(0, 61, 165, 0.3);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  transition: all var(--qc-transition);
+}
+
+#cqc-brand-strip:hover {
+  background: linear-gradient(180deg, rgba(0,61,165,0.75) 0%, var(--qc-surface-sidebar) 100%);
+  border-bottom-color: rgba(0, 61, 165, 0.5);
+}
+
+#cqc-brand-strip .cqc-fleur {
+  font-size: 1.3em;
+  color: #ffffff;
+  opacity: 0.95;
+}
+
+#cqc-brand-strip .cqc-name {
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+#cqc-brand-strip .cqc-sep {
+  opacity: 0.3;
+  margin: 0 2px;
+  color: #ffffff;
+}
+
+#cqc-brand-strip .cqc-app {
+  color: #ffffff;
+  font-size: 0.92em;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+/* ===== Footer ===== */
+footer { display: none !important; }
+
+/* ===== Dark Sidebar ===== */
+aside {
+  background: var(--qc-surface-sidebar) !important;
+  border-right: none !important;
+  box-shadow: 1px 0 0 rgba(255,255,255,0.04) !important;
+  padding-top: 8px !important;
+  width: 310px !important;
+  min-width: 310px !important;
+}
+
+aside ul {
+  padding: 4px 8px !important;
+}
+
+aside li {
+  margin: 1px 0 !important;
+}
+
+aside a {
+  color: rgba(255, 255, 255, 1) !important;
+  font-size: 0.88em !important;
+  font-weight: 450 !important;
+  padding: 7px 12px !important;
+  border-radius: var(--qc-radius-sm) !important;
+  display: block !important;
+  transition: all var(--qc-transition) !important;
+  text-decoration: none !important;
+  letter-spacing: 0.01em;
+}
+
+aside a:hover {
+  color: rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Active sidebar link — Fava uses class or aria */
+aside li.selected a,
+aside a[aria-current],
+aside a.selected {
+  color: #FFFFFF !important;
+  background: rgba(0, 61, 165, 0.5) !important;
+  font-weight: 600 !important;
+}
+
+/* Sidebar section separators */
+aside ul + ul {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  margin-top: 6px !important;
+  padding-top: 6px !important;
+}
+
+/* Sidebar inputs */
+aside input, aside select {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: rgba(255,255,255,0.7) !important;
+  border-radius: var(--qc-radius-sm) !important;
+  font-size: 0.85em !important;
+  padding: 6px 10px !important;
+  transition: all var(--qc-transition);
+  font-family: 'Inter', sans-serif !important;
+}
+
+aside input:focus, aside select:focus {
+  background: rgba(255,255,255,0.1) !important;
+  border-color: rgba(0, 61, 165, 0.6) !important;
+  outline: none !important;
+}
+
+aside input::placeholder {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+/* ===== Main Content Area ===== */
+article {
+  padding: 28px 32px !important;
+}
+
+/* Fava native tables — give them the modern treatment */
+article table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  font-size: 0.9em;
+}
+
+article table th {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.78em !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--qc-text-secondary) !important;
+  background: var(--qc-surface) !important;
+  padding: 10px 14px !important;
+  border-bottom: 2px solid var(--qc-border) !important;
+}
+
+article table td {
+  padding: 10px 14px !important;
+  border-bottom: 1px solid var(--qc-border-light) !important;
+  background: var(--qc-surface-raised) !important;
+  color: var(--qc-text);
+  transition: background var(--qc-transition);
+}
+
+article table tbody tr:hover td {
+  background: var(--qc-blue-lighter) !important;
+}
+
+/* Fava links in content */
+article a {
+  color: var(--qc-blue) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: color var(--qc-transition);
+}
+
+article a:hover {
+  color: var(--qc-blue-light) !important;
+}
+
+/* Fava chart toggles / buttons row */
+article .headerline {
+  margin-bottom: 20px;
+}
+
+/* ===== Card Component ===== */
+.cqc-card {
+  background: var(--qc-surface-raised);
+  border: 1px solid var(--qc-border-light);
+  border-radius: var(--qc-radius);
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--qc-shadow);
+  transition: box-shadow var(--qc-transition-slow);
+}
+
+.cqc-card:hover {
+  box-shadow: var(--qc-shadow-md);
+}
+
+.cqc-card-flush {
+  background: var(--qc-surface-raised);
+  border: 1px solid var(--qc-border-light);
+  border-radius: var(--qc-radius);
+  margin-bottom: 20px;
+  box-shadow: var(--qc-shadow);
+  overflow: hidden;
+  transition: box-shadow var(--qc-transition-slow);
+}
+
+.cqc-card-flush:hover {
+  box-shadow: var(--qc-shadow-md);
+}
+
+/* ===== Section Title ===== */
+.cqc-section-title {
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--qc-text);
+  margin: 0 0 16px 0;
+  padding-left: 14px;
+  border-left: 3px solid var(--qc-blue);
+  letter-spacing: -0.01em;
+}
+
+/* ===== Page Header ===== */
+.cqc-page-header {
+  margin-bottom: 28px;
+}
+
+.cqc-page-header h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: var(--qc-text);
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.cqc-page-header .cqc-subtitle {
+  color: var(--qc-text-secondary);
+  font-size: 0.9em;
+  font-weight: 450;
+}
+
+/* ===== KPI Tiles ===== */
+.cqc-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.cqc-kpi {
+  background: var(--qc-surface-raised);
+  border: 1px solid var(--qc-border-light);
+  border-radius: var(--qc-radius);
+  padding: 20px 22px;
+  box-shadow: var(--qc-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--qc-transition-slow);
+}
+
+.cqc-kpi::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--qc-blue);
+  opacity: 0.7;
+  transition: opacity var(--qc-transition);
+}
+
+.cqc-kpi:hover {
+  box-shadow: var(--qc-shadow-md);
+  transform: translateY(-1px);
+}
+
+.cqc-kpi:hover::before {
+  opacity: 1;
+}
+
+.cqc-kpi-label {
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--qc-text-secondary);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.cqc-kpi-value {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: var(--qc-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.cqc-kpi-value.cqc-success { color: var(--qc-success); }
+.cqc-kpi-value.cqc-error { color: var(--qc-error); }
+.cqc-kpi-value.cqc-warning { color: var(--qc-warning); }
+
+/* ===== Tables ===== */
+.cqc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cqc-table th {
+  background-color: var(--qc-surface);
+  color: var(--qc-text-secondary);
+  font-weight: 600;
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 11px 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--qc-border);
+}
+
+.cqc-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--qc-border-light);
+  background: var(--qc-surface-raised);
+  text-align: left;
+  font-size: 0.9em;
+  color: var(--qc-text);
+  transition: background var(--qc-transition);
+}
+
+.cqc-table tbody tr {
+  background: var(--qc-surface-raised);
+  transition: background var(--qc-transition);
+}
+
+.cqc-table tbody tr:hover {
+  background-color: var(--qc-blue-lighter);
+}
+
+.cqc-table .montant {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.cqc-table .sommaire-row {
+  font-weight: 700;
+  background-color: var(--qc-surface) !important;
+}
+
+.cqc-table .sommaire-row td {
+  border-top: 2px solid var(--qc-blue);
+  color: var(--qc-text);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+/* ===== Badges ===== */
+.cqc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78em;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: all var(--qc-transition);
+}
+
+.cqc-badge-success {
+  background: var(--qc-success-bg);
+  color: var(--qc-success);
+}
+
+.cqc-badge-warning {
+  background: var(--qc-amber-bg);
+  color: var(--qc-amber);
+}
+
+.cqc-badge-error {
+  background: var(--qc-error-bg);
+  color: var(--qc-error);
+}
+
+.cqc-badge-info {
+  background: var(--qc-blue-lighter);
+  color: var(--qc-blue);
+}
+
+.cqc-badge-muted {
+  background: var(--qc-border-light);
+  color: var(--qc-muted);
+}
+
+/* ===== Alerts ===== */
+.cqc-alert {
+  padding: 16px 20px;
+  border-radius: var(--qc-radius);
+  margin-bottom: 16px;
+  border-left: 4px solid;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.cqc-alert strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.cqc-alert-success {
+  background: var(--qc-success-bg);
+  border-color: var(--qc-success);
+  color: #15803D;
+}
+
+.cqc-alert-warning {
+  background: var(--qc-warning-bg);
+  border-color: var(--qc-warning);
+  color: #C2410C;
+}
+
+.cqc-alert-error {
+  background: var(--qc-error-bg);
+  border-color: var(--qc-error);
+  color: #B91C1C;
+}
+
+.cqc-alert-info {
+  background: var(--qc-blue-lighter);
+  border-color: var(--qc-blue);
+  color: var(--qc-blue-dark);
+}
+
+.cqc-alert-amber {
+  background: var(--qc-amber-bg);
+  border-color: var(--qc-amber);
+  color: #92400E;
+}
+
+/* ===== Buttons ===== */
+.cqc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border-radius: var(--qc-radius-sm);
+  font-size: 0.88em;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--qc-transition);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.cqc-btn:active {
+  transform: scale(0.97);
+}
+
+.cqc-btn-primary {
+  background: var(--qc-blue);
+  color: var(--qc-white);
+  border-color: var(--qc-blue);
+  box-shadow: 0 1px 2px rgba(0, 61, 165, 0.2);
+}
+
+.cqc-btn-primary:hover {
+  background: var(--qc-blue-light);
+  box-shadow: 0 2px 6px rgba(0, 61, 165, 0.25);
+}
+
+.cqc-btn-success {
+  background: var(--qc-success);
+  color: var(--qc-white);
+  border-color: var(--qc-success);
+  box-shadow: 0 1px 2px rgba(22, 163, 74, 0.2);
+}
+
+.cqc-btn-success:hover {
+  background: #15803D;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+}
+
+.cqc-btn-error {
+  background: var(--qc-error);
+  color: var(--qc-white);
+  border-color: var(--qc-error);
+  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2);
+}
+
+.cqc-btn-error:hover {
+  background: #B91C1C;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
+}
+
+.cqc-btn-outline {
+  background: var(--qc-white);
+  color: var(--qc-text);
+  border-color: var(--qc-border);
+  box-shadow: var(--qc-shadow-xs);
+}
+
+.cqc-btn-outline:hover {
+  border-color: var(--qc-blue);
+  color: var(--qc-blue);
+  background: var(--qc-blue-lighter);
+}
+
+/* ===== Actions Bar ===== */
+.cqc-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--qc-surface-raised);
+  border: 1px solid var(--qc-border-light);
+  border-radius: var(--qc-radius);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  box-shadow: var(--qc-shadow-xs);
+}
+
+/* ===== Solde Box (shareholder loan) ===== */
+.cqc-solde-box {
+  background: linear-gradient(135deg, var(--qc-blue-dark) 0%, var(--qc-blue) 50%, var(--qc-blue-light) 100%);
+  color: var(--qc-white);
+  padding: 28px 32px;
+  border-radius: var(--qc-radius-lg);
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 61, 165, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.cqc-solde-box::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cqc-solde-montant {
+  font-size: 2.2em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.cqc-solde-direction {
+  opacity: 0.8;
+  margin-top: 6px;
+  font-size: 0.95em;
+  font-weight: 450;
+}
+
+/* ===== Dropzone ===== */
+.cqc-dropzone {
+  min-height: 180px;
+  border: 2px dashed var(--qc-border);
+  border-radius: var(--qc-radius-lg);
+  background: var(--qc-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--qc-transition-slow);
+  margin: 16px 0;
+  padding: 24px;
+}
+
+.cqc-dropzone:hover {
+  border-color: var(--qc-blue);
+  background: var(--qc-blue-lighter);
+  box-shadow: 0 0 0 4px rgba(0, 61, 165, 0.06);
+}
+
+.cqc-dropzone.dragover {
+  border-color: var(--qc-success);
+  background: var(--qc-success-bg);
+  border-style: solid;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+}
+
+.cqc-dropzone-text {
+  text-align: center;
+  color: var(--qc-text-secondary);
+  font-size: 1em;
+}
+
+.cqc-dropzone-text .icone {
+  font-size: 2.5em;
+  display: block;
+  margin-bottom: 10px;
+  color: var(--qc-blue);
+}
+
+/* ===== Placeholder Box ===== */
+.cqc-placeholder {
+  padding: 32px;
+  background: var(--qc-blue-lighter);
+  border: 2px dashed rgba(0, 61, 165, 0.25);
+  border-radius: var(--qc-radius-lg);
+  margin: 20px 0;
+}
+
+.cqc-placeholder h3 {
+  color: var(--qc-blue);
+  margin-top: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.cqc-placeholder ul {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.cqc-placeholder li {
+  margin: 6px 0;
+  color: var(--qc-blue-dark);
+  font-size: 0.92em;
+}
+
+/* ===== Tags ===== */
+.cqc-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--qc-blue-lighter);
+  border: 1px solid rgba(0, 61, 165, 0.15);
+  border-radius: 20px;
+  margin-right: 6px;
+  color: var(--qc-blue);
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+/* ===== Source Tag ===== */
+.cqc-source-tag {
+  display: block;
+  font-size: 0.73em;
+  color: var(--qc-muted);
+  margin-top: 2px;
+  font-weight: 450;
+}
+
+/* ===== Gros montant ===== */
+.cqc-gros-montant {
+  font-weight: 700;
+  color: var(--qc-error);
+}
+
+.cqc-gros-montant::after {
+  content: " \\26A0";
+}
+
+/* ===== Color utilities ===== */
+.cqc-positif { color: var(--qc-error); }
+.cqc-negatif { color: var(--qc-success); }
+
+/* ===== Progress Bar ===== */
+.cqc-progress {
+  height: 6px;
+  background: var(--qc-border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.cqc-progress-bar {
+  height: 100%;
+  background: var(--qc-blue);
+  border-radius: 3px;
+  transition: width var(--qc-transition-slow);
+}
+
+.cqc-progress-bar.cqc-progress-full {
+  background: var(--qc-success);
+}
+
+/* ===== Forms ===== */
+.cqc-input {
+  padding: 9px 14px;
+  border: 1px solid var(--qc-border);
+  border-radius: var(--qc-radius-sm);
+  font-size: 0.9em;
+  font-family: 'Inter', sans-serif;
+  color: var(--qc-text);
+  background: var(--qc-white);
+  transition: all var(--qc-transition);
+}
+
+.cqc-input:focus {
+  outline: none;
+  border-color: var(--qc-blue);
+  box-shadow: 0 0 0 3px rgba(0, 61, 165, 0.08);
+}
+
+.cqc-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88em;
+  color: var(--qc-text-secondary);
+  font-weight: 500;
+}
+
+/* ===== Empty State ===== */
+.cqc-empty {
+  text-align: center;
+  padding: 40px 32px;
+  color: var(--qc-muted);
+  font-size: 0.95em;
+}
+
+/* ===== Note CPA ===== */
+.cqc-note-cpa {
+  padding: 14px 18px;
+  background: var(--qc-amber-bg);
+  border-left: 4px solid var(--qc-amber);
+  border-radius: var(--qc-radius-sm);
+  font-size: 0.88em;
+  color: #92400E;
+  line-height: 1.5;
+}
+
+/* ===== Scrollbar (sidebar) ===== */
+aside::-webkit-scrollbar {
+  width: 4px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* ===== Fava overrides for native components ===== */
+/* Fava uses svelte components — style their containers */
+
+/* Tree table / flex-table (income_statement, balance_sheet, trial_balance) */
+/* Fava 1.30+ uses ol.flex-table.tree-table-new, NOT <table> */
+article .tree-table td {
+  font-size: 0.9em !important;
+}
+
+/* Override Svelte-scoped rgb(64,64,64) with our design system text color */
+article .flex-table {
+  color: var(--qc-text) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+article .flex-table .num {
+  color: var(--qc-text) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dimmed = propagated sums — still readable but clearly secondary */
+article .flex-table .num.dimmed {
+  color: var(--qc-text-secondary) !important;
+  opacity: 1 !important;
+}
+
+/* Account name links in flex-table */
+article .flex-table a {
+  color: var(--qc-blue) !important;
+  font-weight: 500;
+}
+
+/* Row hover highlight for flex-table rows */
+article .flex-table li:hover > p {
+  background: var(--qc-blue-lighter) !important;
+  border-radius: var(--qc-radius-sm);
+}
+
+/* Column header row (CAD / Other) */
+article .flex-table li:first-child .num {
+  color: var(--qc-blue-dark) !important;
+  font-weight: 600;
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Fava buttons in toolbar */
+article button, article .button {
+  font-family: 'Inter', sans-serif !important;
+  border-radius: var(--qc-radius-sm) !important;
+  transition: all var(--qc-transition) !important;
+}
+
+/* Fava chart container */
+article svg {
+  border-radius: var(--qc-radius-sm);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .cqc-kpi-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cqc-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  article {
+    padding: 20px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cqc-kpi-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Sidebar collapsible groups ===== */
+.cqc-sidebar-group { margin: 2px 0; }
+.cqc-sidebar-group-body { display: none; }
+.cqc-sidebar-group.open > .cqc-sidebar-group-body { display: block; }
+.cqc-sidebar-group-title {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.72em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 8px 12px 4px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--qc-transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cqc-sidebar-group-title:hover { color: rgba(255,255,255,0.8); }
+.cqc-sidebar-group-title::before {
+  content: "\\25B8";
+  flex-shrink: 0;
+  transition: transform var(--qc-transition);
+  font-size: 0.9em;
+}
+.cqc-sidebar-group.open > .cqc-sidebar-group-title::before {
+  transform: rotate(90deg);
+}
+/* Remove old ul+ul separator since groups handle visual separation */
+.cqc-sidebar-group ul.navigation { border-top: none !important; margin-top: 0 !important; padding-top: 0 !important; }
+
+/* ===== Report intro blocks ===== */
+.cqc-report-intro {
+  margin-bottom: 24px;
+  border-left: 4px solid var(--qc-blue);
+  background: var(--qc-blue-lighter);
+}
+.cqc-report-intro h3 {
+  margin: 0 0 8px 0;
+  color: var(--qc-blue-dark);
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.cqc-report-intro p {
+  margin: 6px 0;
+  color: var(--qc-text);
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+/* ===== Tooltip system ===== */
+[data-tooltip] {
+  cursor: help;
+  text-decoration: underline dotted var(--qc-muted);
+  text-underline-offset: 3px;
+}
+
+#cqc-tooltip-popup {
+  position: fixed;
+  z-index: 9999;
+  background: var(--qc-surface-sidebar);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--qc-radius-sm);
+  font-size: 0.82em;
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 320px;
+  box-shadow: var(--qc-shadow-lg);
+  pointer-events: none;
+  white-space: normal;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 150ms ease;
+  font-family: 'Inter', sans-serif;
+  transform: translateY(-100%) translateY(-8px);
+}
+
+#cqc-tooltip-popup.cqc-tooltip-visible {
+  opacity: 1;
+  visibility: visible;
+}
+`;
+
+let styleInjected = false;
+let brandInjected = false;
+
+function injectStyle() {
+  if (styleInjected) return;
+  const existing = document.getElementById("cqc-theme-css");
+  if (existing) { styleInjected = true; return; }
+
+  // Inject Google Fonts via <link> (not @import — @import inside dynamic <style> is unreliable)
+  if (!document.getElementById("cqc-font-link")) {
+    const link = document.createElement("link");
+    link.id = "cqc-font-link";
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap";
+    document.head.appendChild(link);
+  }
+
+  const style = document.createElement("style");
+  style.id = "cqc-theme-css";
+  style.textContent = THEME_CSS;
+  document.head.appendChild(style);
+  styleInjected = true;
+}
+
+function injectBrand() {
+  if (brandInjected) return;
+  if (document.getElementById("cqc-brand-strip")) { brandInjected = true; return; }
+
+  const header = document.querySelector("header");
+  if (!header) return;
+
+  const strip = document.createElement("div");
+  strip.id = "cqc-brand-strip";
+  strip.innerHTML = [
+    '<span class="cqc-fleur">\u269C</span>',
+    '<span class="cqc-name">Philippe Beliveau</span>',
+    '<span class="cqc-sep">\u00B7</span>',
+    '<span class="cqc-app">CompteQC</span>',
+  ].join("");
+
+  header.insertAdjacentElement("afterend", strip);
+  brandInjected = true;
+}
+
+/**
+ * Sidebar group definitions: each maps link text patterns to a French group name.
+ * Order matters for display. The last group ("Extensions Québec") is the catch-all.
+ */
+const SIDEBAR_GROUPS = [
+  {
+    name: "Rapports financiers",
+    patterns: ["Income Statement", "Balance Sheet", "Trial Balance", "Journal", "Profit and Loss"],
+    open: true,
+  },
+  {
+    name: "Données et documents",
+    patterns: ["Holdings", "Commodities", "Documents", "Statistics", "Events"],
+    open: false,
+  },
+  {
+    name: "Outils",
+    patterns: ["Editor", "Errors", "Import", "Query", "Options"],
+    open: false,
+  },
+];
+
+function reorganizeSidebar() {
+  const aside = document.querySelector("aside");
+  if (!aside || aside.dataset.cqcGrouped === "true") return;
+
+  const navLists = aside.querySelectorAll("ul.navigation");
+  if (navLists.length === 0) return;
+
+  // Classify each <ul> into a group based on its link text content
+  const grouped = new Map(); // groupName -> [ul, ...]
+  const ungrouped = []; // extension reports catch-all
+
+  navLists.forEach((ul) => {
+    const linkTexts = Array.from(ul.querySelectorAll("a")).map((a) => a.textContent.trim());
+    let matched = false;
+
+    for (const group of SIDEBAR_GROUPS) {
+      const hasMatch = linkTexts.some((text) =>
+        group.patterns.some((pattern) => text.includes(pattern))
+      );
+      if (hasMatch) {
+        if (!grouped.has(group.name)) grouped.set(group.name, []);
+        grouped.get(group.name).push(ul);
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) {
+      ungrouped.push(ul);
+    }
+  });
+
+  // Build collapsible groups using plain <div> elements (avoids native <details> marker)
+  const fragment = document.createDocumentFragment();
+
+  function makeGroup(name, uls, open) {
+    const group = document.createElement("div");
+    group.className = "cqc-sidebar-group" + (open ? " open" : "");
+
+    const title = document.createElement("div");
+    title.className = "cqc-sidebar-group-title";
+    title.textContent = name;
+    title.addEventListener("click", () => group.classList.toggle("open"));
+    group.appendChild(title);
+
+    const body = document.createElement("div");
+    body.className = "cqc-sidebar-group-body";
+    uls.forEach((ul) => body.appendChild(ul));
+    group.appendChild(body);
+
+    return group;
+  }
+
+  for (const group of SIDEBAR_GROUPS) {
+    const uls = grouped.get(group.name);
+    if (!uls || uls.length === 0) continue;
+    fragment.appendChild(makeGroup(group.name, uls, group.open));
+  }
+
+  // Extensions Québec catch-all
+  if (ungrouped.length > 0) {
+    fragment.appendChild(makeGroup("Extensions Québec", ungrouped, true));
+  }
+
+  // Replace original content: remove old <ul>s, append grouped fragment
+  // Keep non-ul children (like inputs, forms) at the top
+  const nonUlChildren = Array.from(aside.children).filter(
+    (child) => !(child.tagName === "UL" && child.classList.contains("navigation"))
+  );
+  aside.innerHTML = "";
+  nonUlChildren.forEach((child) => aside.appendChild(child));
+  aside.appendChild(fragment);
+
+  aside.dataset.cqcGrouped = "true";
+}
+
+const REPORT_INTROS = {
+  income_statement: {
+    titre: "État des résultats (revenus et dépenses)",
+    explication:
+      "Ce rapport montre tous les revenus gagnés et les dépenses engagées sur une période donnée. " +
+      "Il permet de comprendre la rentabilité de votre entreprise : est-ce que vous gagnez plus que vous dépensez?",
+    qui: "Vous, pour suivre la rentabilité. Votre CPA, pour préparer la déclaration T2/CO-17.",
+    fonction: "Fava (comptes Revenus et Depenses dans Beancount)",
+  },
+  balance_sheet: {
+    titre: "Bilan",
+    explication:
+      "Photo instantanée de ce que possède votre entreprise (actifs), ce qu'elle doit (passifs) " +
+      "et sa valeur nette (capitaux propres) à une date précise. Actifs = Passifs + Capitaux propres.",
+    qui: "Votre CPA, pour le bilan du T2. Vous, pour vérifier la santé financière de la société.",
+    fonction: "Fava (comptes Actifs, Passifs, Capitaux-Propres dans Beancount)",
+  },
+  trial_balance: {
+    titre: "Balance de vérification",
+    explication:
+      "Liste de tous les comptes avec leur solde débiteur ou créditeur. Si le total des débits " +
+      "égale le total des crédits, vos livres sont équilibrés. C'est le document de base pour votre CPA.",
+    qui: "Votre CPA, comme point de départ principal pour la déclaration fiscale.",
+    fonction: "Fava (tous les comptes Beancount)",
+  },
+  journal: {
+    titre: "Journal général",
+    explication:
+      "Registre chronologique de toutes les écritures comptables. Chaque transaction y apparaît " +
+      "avec ses débits et crédits. Utile pour retracer comment une opération précise a été enregistrée.",
+    qui: "Vous, pour vérifier une écriture. Votre CPA, pour valider les écritures.",
+    fonction: "Fava (toutes les transactions Beancount)",
+  },
+  "extension/ApprobationExtension": {
+    titre: "File d'approbation",
+    explication:
+      "Transactions catégorisées par l'intelligence artificielle qui attendent votre validation " +
+      "avant d'être intégrées aux livres officiels. Approuver une transaction la déplace du fichier " +
+      "temporaire (pending) vers le grand livre.",
+    qui: "Vous, pour valider les suggestions de l'IA avant qu'elles ne deviennent officielles.",
+    fonction: "compteqc.fava_ext.approbation (ApprobationExtension)",
+  },
+  "extension/PaieQCExtension": {
+    titre: "Tableau de bord de la paie",
+    explication:
+      "Résumé cumulé de votre paie : salaire brut, toutes les retenues employé (RRQ/QPP, RQAP, " +
+      "assurance-emploi, impôts fédéral et provincial) et les cotisations employeur (FSS, CNESST, " +
+      "normes du travail). Le salaire net est ce qui est versé dans votre compte personnel.",
+    qui: "Vous, pour suivre votre rémunération. Votre CPA, pour les feuillets T4/Relevé 1.",
+    fonction: "compteqc.fava_ext.paie (PaieQCExtension)",
+  },
+  "extension/TaxesQCExtension": {
+    titre: "Suivi TPS/TVQ",
+    explication:
+      "Suivi de la TPS (5%) et de la TVQ (9,975%) perçues sur vos factures et payées sur vos " +
+      "achats. La différence entre les taxes perçues et les crédits de taxe sur intrants (CTI/RTI) " +
+      "est le montant net à remettre au gouvernement.",
+    qui: "Vous, pour préparer vos remises de taxes. Votre CPA, pour valider les montants.",
+    fonction: "compteqc.fava_ext.taxes (TaxesQCExtension)",
+  },
+  "extension/DpaQCExtension": {
+    titre: "Amortissement (DPA/CCA)",
+    explication:
+      "Suivi des immobilisations (ordinateurs, meubles, etc.) et de leur déduction pour " +
+      "amortissement annuelle. Chaque catégorie a un taux prescrit par l'ARC (ex. : classe 50 " +
+      "pour les ordinateurs à 55%).",
+    qui: "Votre CPA, pour l'annexe DPA/CCA de la déclaration fiscale.",
+    fonction: "compteqc.fava_ext.dpa (DpaQCExtension)",
+  },
+  "extension/PretActionnaireExtension": {
+    titre: "Prêt actionnaire",
+    explication:
+      "Suivi des mouvements d'argent entre vous personnellement et votre société. Attention : " +
+      "si la société vous prête de l'argent et qu'il n'est pas remboursé dans l'année suivant " +
+      "la fin de l'exercice, ce montant devient un revenu imposable (article 15(2)).",
+    qui: "Vous, pour éviter les pièges fiscaux. Votre CPA, pour vérifier la conformité.",
+    fonction: "compteqc.fava_ext.pret_actionnaire (PretActionnaireExtension)",
+  },
+  "extension/ExportCPAExtension": {
+    titre: "Export pour le comptable",
+    explication:
+      "Génère le dossier complet de fin d'année pour votre CPA : balance de vérification, " +
+      "états financiers, annexes (paie, DPA, TPS/TVQ, prêt actionnaire) et codes IGRF/GIFI. " +
+      "L'objectif : que votre CPA puisse tout réviser en moins d'une heure.",
+    qui: "Votre CPA, comme dossier de travail principal.",
+    fonction: "compteqc.fava_ext.export_cpa (ExportCPAExtension)",
+  },
+  "extension/EcheancesExtension": {
+    titre: "Échéances fiscales",
+    explication:
+      "Calendrier des dates limites fiscales à venir : remise de TPS/TVQ, production des " +
+      "feuillets T4/Relevé 1, déclarations T2/CO-17, acomptes provisionnels. Des alertes " +
+      "de couleur indiquent l'urgence.",
+    qui: "Vous, pour ne jamais manquer une échéance. Votre CPA, pour planifier son travail.",
+    fonction: "compteqc.echeances.calendrier (EcheancesExtension)",
+  },
+  "extension/RecusExtension": {
+    titre: "Reçus et factures",
+    explication:
+      "Téléchargez vos reçus et factures pour les associer aux transactions bancaires. " +
+      "Cela crée une piste de vérification complète : chaque dépense est justifiée par " +
+      "un document original en cas de contrôle fiscal.",
+    qui: "Vous, pour conserver vos pièces justificatives. Votre CPA, pour la vérification.",
+    fonction: "compteqc.documents.upload (RecusExtension)",
+  },
+};
+
+/**
+ * Pedagogical tooltip dictionary.
+ * Keys match the exact textContent.trim() of table headers, KPI labels, and metric names.
+ * Each value has `text` (French explanation) and optional `source` (Python function path).
+ */
+const TOOLTIPS = {
+  // ===== Paie Québec (PaieQCExtension) =====
+  "Salaire brut": {
+    text: "Cumul annuel du salaire avant toute retenue. C'est le montant total que la société vous verse avant impôts et cotisations.",
+    source: "paie.moteur.calculer_paie().salaire_brut",
+  },
+  "Salaire brut YTD": {
+    text: "Cumul du salaire brut depuis le début de l'année (year-to-date). Sert à calculer si les maximums de cotisation sont atteints.",
+    source: "paie.ytd.calculer_cumuls()",
+  },
+  "Retenues employé": {
+    text: "Somme de toutes les déductions prélevées sur votre salaire : impôts fédéral et provincial, RRQ, RQAP et assurance-emploi.",
+    source: "paie.moteur.calculer_paie()",
+  },
+  "Total retenues": {
+    text: "Somme de toutes les déductions prélevées sur votre salaire : impôts fédéral et provincial, RRQ, RQAP et assurance-emploi.",
+    source: "paie.moteur.calculer_paie()",
+  },
+  "Cotisations employeur": {
+    text: "Montant additionnel payé par la société en plus de votre salaire : part employeur RRQ, RQAP, AE, FSS, CNESST et normes du travail.",
+    source: "paie.moteur.calculer_paie()",
+  },
+  "Total employeur": {
+    text: "Montant additionnel payé par la société en plus de votre salaire : part employeur RRQ, RQAP, AE, FSS, CNESST et normes du travail.",
+    source: "paie.moteur.calculer_paie()",
+  },
+  "Salaire net": {
+    text: "Montant déposé dans votre compte bancaire après toutes les retenues. Salaire brut moins toutes les déductions employé.",
+    source: "paie.moteur.calculer_paie().salaire_net",
+  },
+  "Salaire net YTD": {
+    text: "Montant déposé dans votre compte bancaire après toutes les retenues. Salaire brut moins toutes les déductions employé.",
+    source: "paie.moteur.calculer_paie().salaire_net",
+  },
+  "RRQ (base)": {
+    text: "Régime de rentes du Québec, cotisation de base. Cotisation retraite obligatoire prélevée sur le salaire entre l'exemption générale et le premier plafond.",
+    source: "paie.cotisations.calculer_rrq_base()",
+  },
+  "RRQ (supp1)": {
+    text: "Première cotisation supplémentaire RRQ (depuis 2024). Prélevée sur les mêmes gains que la cotisation de base, mais à un taux séparé.",
+    source: "paie.cotisations.calculer_rrq_supp1()",
+  },
+  "RRQ (supp2)": {
+    text: "Deuxième cotisation supplémentaire RRQ (depuis 2024). Prélevée sur les gains entre le premier et le deuxième plafond seulement.",
+    source: "paie.cotisations.calculer_rrq_supp2()",
+  },
+  "RQAP": {
+    text: "Régime québécois d'assurance parentale. Cotisation qui finance les congés de maternité, paternité et parentaux au Québec.",
+    source: "paie.cotisations.calculer_rqap()",
+  },
+  "AE": {
+    text: "Cotisation fédérale d'assurance-emploi. Le Québec a un taux réduit car le RQAP remplace la portion parentale de l'AE.",
+    source: "paie.cotisations.calculer_ae()",
+  },
+  "Assurance-emploi": {
+    text: "Cotisation fédérale d'assurance-emploi. Le Québec a un taux réduit car le RQAP remplace la portion parentale de l'AE.",
+    source: "paie.cotisations.calculer_ae()",
+  },
+  "FSS": {
+    text: "Fonds des services de santé. Taxe payée uniquement par l'employeur sur la masse salariale totale. Finance le système de santé du Québec.",
+    source: "paie.cotisations.calculer_fss()",
+  },
+  "CNESST": {
+    text: "Commission des normes, de l'équité, de la santé et de la sécurité du travail. Assurance obligatoire pour les accidents de travail.",
+    source: "paie.cotisations.calculer_cnesst()",
+  },
+  "Normes du travail": {
+    text: "Contribution obligatoire à la Commission des normes du travail. Finance l'application des lois du travail au Québec.",
+    source: "paie.cotisations.calculer_normes_travail()",
+  },
+  "Impôt fédéral": {
+    text: "Retenue d'impôt fédéral calculée selon les tables de retenues T4127, avec l'abattement du Québec de 16,5 % (les Québécois paient moins d'impôt fédéral car ils paient un impôt provincial séparé).",
+    source: "paie.impots.calculer_impot_federal()",
+  },
+  "Impôt Québec": {
+    text: "Retenue d'impôt provincial calculée selon le guide TP-1015.F-V de Revenu Québec.",
+    source: "paie.impots.calculer_impot_quebec()",
+  },
+  "Impôt provincial": {
+    text: "Retenue d'impôt provincial calculée selon le guide TP-1015.F-V de Revenu Québec.",
+    source: "paie.impots.calculer_impot_quebec()",
+  },
+  "Coût total": {
+    text: "Salaire brut + toutes les cotisations employeur. C'est le vrai coût d'un employé pour la société, bien plus que le salaire brut seul.",
+    source: "paie.moteur.calculer_paie()",
+  },
+  "Maximum atteint": {
+    text: "Ce symbole indique que la cotisation annuelle maximale est atteinte. Les prélèvements s'arrêtent automatiquement pour le reste de l'année.",
+    source: null,
+  },
+  "Période": {
+    text: "Le numéro de la paie dans l'année. Par exemple 12/26 signifie la 12e paie sur 26 périodes bi-hebdomadaires.",
+    source: null,
+  },
+
+  // ===== TPS/TVQ (TaxesQCExtension) =====
+  "TPS perçue": {
+    text: "Taxe sur les produits et services (5 %) facturée à vos clients. Vous la collectez pour le gouvernement fédéral.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "TVQ perçue": {
+    text: "Taxe de vente du Québec (9,975 %) facturée à vos clients. Vous la collectez pour Revenu Québec.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "TPS payée": {
+    text: "Crédit de taxe sur les intrants (CTI). TPS payée sur vos achats d'affaires que vous pouvez récupérer du gouvernement fédéral.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "CTI": {
+    text: "Crédit de taxe sur les intrants. TPS payée sur vos achats d'affaires que vous pouvez récupérer du gouvernement fédéral.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "TVQ payée": {
+    text: "Remboursement de la taxe sur les intrants (RTI). TVQ payée sur vos achats d'affaires que vous pouvez récupérer de Revenu Québec.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "RTI": {
+    text: "Remboursement de la taxe sur les intrants. TVQ payée sur vos achats d'affaires que vous pouvez récupérer de Revenu Québec.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "Net à remettre": {
+    text: "Taxes perçues moins taxes payées = ce que vous devez envoyer au gouvernement. Si négatif, vous avez droit à un remboursement.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+  "Remise nette": {
+    text: "Taxes perçues moins taxes payées = ce que vous devez envoyer au gouvernement. Si négatif, vous avez droit à un remboursement.",
+    source: "taxes.sommaire.calculer_sommaire_tps_tvq()",
+  },
+
+  // ===== DPA/CCA (DpaQCExtension) =====
+  "FNACC ouverture": {
+    text: "Fraction non amortie du coût en capital au début de l'année. C'est la valeur comptable restante de vos actifs avant l'amortissement de cette année.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "UCC ouverture": {
+    text: "Undepreciated capital cost at year start (équivalent anglais de FNACC ouverture). Valeur comptable restante de vos actifs.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "Acquisitions": {
+    text: "Nouveaux actifs achetés pendant l'année, classés par catégorie (ordinateurs, meubles, véhicules, etc.).",
+    source: "dpa.registre.RegistreActifs",
+  },
+  "Dispositions": {
+    text: "Actifs vendus ou mis au rebut pendant l'année. Le produit de disposition réduit la FNACC de la catégorie.",
+    source: "dpa.registre.RegistreActifs",
+  },
+  "DPA réclamée": {
+    text: "Déduction pour amortissement que vous pouvez réclamer cette année. Réduit votre revenu imposable. La DPA est optionnelle et discrétionnaire.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "DPA de l'année": {
+    text: "Déduction pour amortissement que vous pouvez réclamer cette année. Réduit votre revenu imposable. La DPA est optionnelle et discrétionnaire.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "CCA de l'année": {
+    text: "Capital cost allowance (équivalent anglais de DPA). Déduction pour amortissement que vous pouvez réclamer cette année.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "FNACC fermeture": {
+    text: "Valeur comptable restante à la fin de l'année. Calcul : FNACC ouverture + acquisitions - dispositions - DPA.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "UCC fermeture": {
+    text: "Undepreciated capital cost at year end. Équivalent anglais de FNACC fermeture.",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "Taux": {
+    text: "Le pourcentage de déduction annuel fixé par le gouvernement pour cette classe d'actifs. Chaque catégorie a son propre taux.",
+    source: null,
+  },
+  "Classe 8": {
+    text: "Mobilier, appareils et équipement de bureau. Taux d'amortissement : 20 % par année (dégressif).",
+    source: null,
+  },
+  "Classe 10": {
+    text: "Véhicules automobiles. Taux d'amortissement : 30 % par année (dégressif).",
+    source: null,
+  },
+  "Classe 12": {
+    text: "Logiciels et petit outillage (moins de 500 $). Taux d'amortissement : 100 % (déduction complète la première année).",
+    source: null,
+  },
+  "Classe 50": {
+    text: "Matériel informatique (ordinateurs, écrans, serveurs) acheté après 2023. Taux d'amortissement : 55 % par année (dégressif).",
+    source: null,
+  },
+  "Classe 54": {
+    text: "Véhicules zéro émission. Taux d'amortissement variable selon les incitatifs fiscaux en vigueur.",
+    source: null,
+  },
+  "Règle du demi-taux": {
+    text: "La première année d'acquisition, seulement 50 % de la DPA normale est permise. C'est la règle du demi-taux (half-year rule).",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+  "Half-year rule": {
+    text: "La première année d'acquisition, seulement 50 % de la DPA normale est permise (règle du demi-taux).",
+    source: "dpa.calcul.calculer_dpa()",
+  },
+
+  // ===== Prêt actionnaire (PretActionnaireExtension) =====
+  "Solde net": {
+    text: "Balance nette du compte de prêt actionnaire. Positif = la société vous doit de l'argent. Négatif = vous devez de l'argent à la société.",
+    source: "pret_actionnaire.suivi.obtenir_etat_pret()",
+  },
+  "Direction": {
+    text: "Indique qui doit de l'argent à qui : société vers actionnaire ou actionnaire vers société.",
+    source: null,
+  },
+  "Avances ouvertes": {
+    text: "Montants prêtés à l'actionnaire qui n'ont pas encore été remboursés. Chaque avance a sa propre date limite de remboursement.",
+    source: null,
+  },
+  "Date limite s.15(2)": {
+    text: "Si un prêt n'est pas remboursé avant cette date (1 an après la fin de l'exercice fiscal), le montant est ajouté à votre revenu personnel et imposé.",
+    source: "pret_actionnaire.suivi.verifier_delais_s152()",
+  },
+  "Compte à rebours": {
+    text: "Nombre de jours restants avant la date limite de l'article 15(2). Rouge = action immédiate requise.",
+    source: null,
+  },
+  "Alerte critique": {
+    text: "Moins de 30 jours avant l'inclusion au revenu selon l'article 15(2) de la Loi de l'impôt. Action immédiate requise pour éviter l'imposition.",
+    source: null,
+  },
+  "Alerte urgente": {
+    text: "Moins de 90 jours (3 mois) avant l'inclusion au revenu selon l'article 15(2). Planifiez le remboursement rapidement.",
+    source: null,
+  },
+
+  // ===== File d'approbation (ApprobationExtension) =====
+  "Confiance": {
+    text: "Probabilité (0-100 %) que la catégorie suggérée par l'IA est correcte. Plus c'est haut, plus le système est sûr de son choix.",
+    source: "categorisation.pipeline.PipelineCategorisation",
+  },
+  "Source IA": {
+    text: "Quel moteur a catégorisé cette transaction : règle = système de règles automatiques, ml = apprentissage automatique, llm = Claude (intelligence artificielle).",
+    source: "categorisation.pipeline",
+  },
+  "Compte proposé": {
+    text: "Le compte comptable suggéré par l'IA pour cette transaction. Vous pouvez le modifier avant d'approuver.",
+    source: null,
+  },
+  "Catégorie proposée": {
+    text: "La catégorie comptable suggérée par l'IA pour cette transaction. Vous pouvez la modifier avant d'approuver.",
+    source: null,
+  },
+  "Bénéficiaire": {
+    text: "Le nom du fournisseur ou du destinataire du paiement tel qu'il apparaît sur le relevé bancaire.",
+    source: null,
+  },
+  "Gros montant": {
+    text: "Transactions de plus de 2 000 $ qui nécessitent une confirmation explicite avant approbation, par mesure de prudence.",
+    source: null,
+  },
+
+  // ===== Native Fava tables =====
+  "Account": {
+    text: "Le nom du compte comptable dans le plan comptable. Chaque transaction touche au moins 2 comptes (débit et crédit).",
+    source: null,
+  },
+  "Compte": {
+    text: "Le nom du compte comptable dans le plan comptable. Chaque transaction touche au moins 2 comptes (débit et crédit).",
+    source: null,
+  },
+  "Balance": {
+    text: "Le solde du compte. Débit positif pour les actifs et dépenses, crédit positif pour les passifs, capitaux propres et revenus.",
+    source: null,
+  },
+  "Position": {
+    text: "La valeur totale détenue dans ce compte, incluant la devise. Représente le solde à la date sélectionnée.",
+    source: null,
+  },
+  "Change": {
+    text: "La variation du solde pendant la période sélectionnée. Montre combien le compte a augmenté ou diminué.",
+    source: null,
+  },
+  "Narration": {
+    text: "La description de la transaction telle qu'importée de la banque ou saisie manuellement.",
+    source: null,
+  },
+  "Date": {
+    text: "La date à laquelle la transaction a été enregistrée dans le grand livre (ledger).",
+    source: null,
+  },
+};
+
+/**
+ * Attach pedagogical tooltips to table headers, KPI labels/values, and section titles.
+ * Idempotent: removes all existing tooltips before re-attaching.
+ */
+function attachTooltips() {
+  // 1. Idempotent cleanup: remove ALL existing data-tooltip and tabindex from previously tooltipped elements
+  document.querySelectorAll("[data-tooltip]").forEach((el) => {
+    el.removeAttribute("data-tooltip");
+    el.removeAttribute("tabindex");
+  });
+
+  // 2. Query all potential tooltip targets
+  const selectors = [
+    ".cqc-table th",              // extension report table headers
+    ".cqc-kpi-label",             // KPI tile labels
+    ".cqc-kpi-value",             // KPI values (use parent label for lookup)
+    "article table th",           // native Fava table headers
+    ".cqc-section-title",         // section titles
+  ];
+  const elements = document.querySelectorAll(selectors.join(", "));
+
+  elements.forEach((el) => {
+    let lookupKey;
+
+    // Special handling for .cqc-kpi-value: use sibling .cqc-kpi-label text
+    if (el.classList.contains("cqc-kpi-value")) {
+      const parent = el.closest(".cqc-kpi");
+      if (parent) {
+        const label = parent.querySelector(".cqc-kpi-label");
+        if (label) {
+          lookupKey = label.textContent.trim();
+        }
+      }
+      if (!lookupKey) return;
+    } else {
+      lookupKey = el.textContent.trim();
+    }
+
+    // Exact match
+    let tip = TOOLTIPS[lookupKey];
+
+    // Fallback: case-insensitive match
+    if (!tip) {
+      const lowerKey = lookupKey.toLowerCase();
+      for (const [key, value] of Object.entries(TOOLTIPS)) {
+        if (key.toLowerCase() === lowerKey) {
+          tip = value;
+          break;
+        }
+      }
+    }
+
+    if (!tip) return;
+
+    // Format tooltip text as single line (CSS attr() does not support newlines)
+    const tooltipText = tip.source
+      ? tip.text + " | Source : " + tip.source
+      : tip.text;
+
+    el.setAttribute("data-tooltip", tooltipText);
+    el.setAttribute("tabindex", "0");
+  });
+}
+
+function initTooltipPopup() {
+  // Idempotent: only create once
+  if (document.getElementById('cqc-tooltip-popup')) return;
+
+  const popup = document.createElement('div');
+  popup.id = 'cqc-tooltip-popup';
+  document.body.appendChild(popup);
+
+  // Single delegated listener on document
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target.closest('[data-tooltip]');
+    if (!target) {
+      hideTooltip();
+      return;
+    }
+    showTooltip(target);
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    // Only hide if leaving the tooltipped element entirely
+    const target = e.target.closest('[data-tooltip]');
+    if (target && !target.contains(e.relatedTarget)) {
+      hideTooltip();
+    }
+  });
+
+  // Keyboard: show on focus, hide on blur
+  document.addEventListener('focusin', (e) => {
+    const target = e.target.closest('[data-tooltip]');
+    if (target) showTooltip(target);
+  });
+
+  document.addEventListener('focusout', (e) => {
+    const target = e.target.closest('[data-tooltip]');
+    if (target) hideTooltip();
+  });
+}
+
+function showTooltip(el) {
+  const popup = document.getElementById('cqc-tooltip-popup');
+  if (!popup) return;
+
+  const text = el.getAttribute('data-tooltip');
+  if (!text) return;
+
+  const rect = el.getBoundingClientRect();
+  const margin = 8;
+  const maxW = 320;
+  const vw = window.innerWidth;
+
+  popup.textContent = text;
+
+  // Position: left-aligned to element, clamped so popup stays within viewport.
+  // CSS transform: translateY(-100%) translateY(-8px) places it above the element.
+  const left = Math.max(margin, Math.min(rect.left, vw - maxW - margin));
+  const top = rect.top;
+
+  popup.style.left = left + 'px';
+  popup.style.top = top + 'px';
+  popup.classList.add('cqc-tooltip-visible');
+}
+
+function hideTooltip() {
+  const popup = document.getElementById('cqc-tooltip-popup');
+  if (popup) {
+    popup.classList.remove('cqc-tooltip-visible');
+  }
+}
+
+function injectReportHeader() {
+  const article = document.querySelector("article");
+  if (!article) return;
+
+  // Idempotent cleanup: remove existing intro
+  const existing = article.querySelector(".cqc-report-intro");
+  if (existing) existing.remove();
+
+  const path = window.location.pathname;
+  let matchedIntro = null;
+
+  for (const [key, intro] of Object.entries(REPORT_INTROS)) {
+    if (path.includes(key)) {
+      matchedIntro = intro;
+      break;
+    }
+  }
+
+  if (!matchedIntro) return;
+
+  const div = document.createElement("div");
+  div.className = "cqc-report-intro cqc-card";
+  div.innerHTML =
+    "<h3>" + matchedIntro.titre + "</h3>" +
+    "<p>" + matchedIntro.explication + "</p>" +
+    "<p><strong>Qui utilise ce rapport :</strong> " + matchedIntro.qui + "</p>" +
+    '<p class="cqc-source-tag">Source : ' + matchedIntro.fonction + "</p>";
+
+  article.prepend(div);
+}
+
+/** @type import("fava").ExtensionModule */
+export default {
+  init() {
+    injectStyle();
+  },
+  onPageLoad() {
+    injectStyle();
+    initTooltipPopup();
+    injectBrand();
+    reorganizeSidebar();
+    injectReportHeader();
+    attachTooltips();
+  },
+};

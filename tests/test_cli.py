@@ -389,6 +389,50 @@ class TestRapportBilan:
 # =============================================================================
 
 
+# =============================================================================
+# Tests source-type
+# =============================================================================
+
+
+class TestSourceType:
+    def test_source_type_option_validation(self, ledger_tmp):
+        """--source-type avec valeur invalide retourne exit code 1."""
+        src = FIXTURES_DIR / "rbc_cheques_sample.csv"
+        dest = ledger_tmp / "import_test.csv"
+        shutil.copy(src, dest)
+
+        result = runner.invoke(
+            app,
+            [
+                "--ledger",
+                str(ledger_tmp / "ledger" / "main.beancount"),
+                "--regles",
+                str(ledger_tmp / "rules" / "categorisation.yaml"),
+                "importer",
+                "fichier",
+                str(dest),
+                "--source-type",
+                "invalid",
+            ],
+        )
+        assert result.exit_code == 1
+        assert "invalide" in result.output.lower()
+
+    def test_source_type_default_is_corporate(self):
+        """Le defaut de --source-type est 'corporate'."""
+        import inspect
+        from compteqc.cli.importer import fichier as fichier_fn
+
+        sig = inspect.signature(fichier_fn)
+        param = sig.parameters["source_type"]
+        assert param.default.default == "corporate"
+
+
+# =============================================================================
+# Tests revue
+# =============================================================================
+
+
 class TestRevue:
     def test_revue_ledger_vide(self, ledger_tmp):
         result = runner.invoke(

@@ -17,7 +17,7 @@ from compteqc.quebec.rates import TauxAnnuels
 
 DEUX_DECIMALES = Decimal("0.01")
 TAUX_CREDITS_FEDERAL = Decimal("0.14")  # Taux le plus bas federal pour credits
-CREDIT_EMPLOI_CANADA = Decimal("1428")  # Montant du credit d'emploi du Canada 2026
+CREDIT_EMPLOI_CANADA = Decimal("1501")  # Montant du credit d'emploi du Canada 2026 (T4127 Table 8.2)
 
 
 def _arrondir(montant: Decimal) -> Decimal:

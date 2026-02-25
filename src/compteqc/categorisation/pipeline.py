@@ -33,7 +33,7 @@ class ResultatPipeline:
 
     compte: str
     confiance: float
-    source: str  # "regle", "ml", "llm", "non-classe"
+    source: str  # "regle", "ml", "llm", "non-classe", "personal", "pre-categorise"
     regle: str | None
     est_capex: bool
     classe_dpa: int | None

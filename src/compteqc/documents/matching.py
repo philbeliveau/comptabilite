@@ -62,7 +62,7 @@ def proposer_correspondances(
         if premier_posting.units is None:
             continue
 
-        montant_txn = abs(premier_posting.units.number)
+        montant_txn = abs(Decimal(str(premier_posting.units.number)))
 
         # Score montant: 1.0 si < $0.05, decroit lineairement a 0 a $5.00
         diff_montant = abs(donnees.total - montant_txn)
@@ -71,7 +71,7 @@ def proposer_correspondances(
         elif diff_montant >= Decimal("5.00"):
             score_montant = 0.0
         else:
-            score_montant = float(1.0 - (diff_montant - Decimal("0.05")) / Decimal("4.95"))
+            score_montant = float(Decimal("1") - (diff_montant - Decimal("0.05")) / Decimal("4.95"))
 
         # Score date: 1.0 si meme jour, 0.8 si +/- 1 jour, decroit a 0 a 7 jours
         if date_recu is not None:
