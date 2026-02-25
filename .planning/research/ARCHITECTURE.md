@@ -1,472 +1,530 @@
-# Architecture Research
+# Architecture Patterns
 
-**Domain:** AI-assisted accounting system for a solo Quebec IT consultant (CCPC)
-**Researched:** 2026-02-18
-**Confidence:** MEDIUM-HIGH
+**Domain:** Production UI/UX integration into Fava extension architecture
+**Researched:** 2026-02-25
+**Confidence:** HIGH
 
-## Recommendation: Beancount + Fava + Custom MCP + Quebec Plugins
+## Recommended Architecture
 
-Use **Beancount** as the ledger engine, **Fava** as the web dashboard foundation, a **custom Python MCP server** as the AI integration layer, and **custom Beancount plugins** for all Quebec-specific domain logic. This is Option C from the project context, enhanced with a purpose-built MCP server instead of relying on nascent third-party ones.
+### How Fava Works (Critical Context)
 
-**Why Beancount over the alternatives:**
+Fava is a **single-page application**. It intercepts all sidebar link clicks and asynchronously fetches page content via AJAX, replacing only the `<article>` element innerHTML. This has three major implications:
 
-1. **Strict validation prevents silent errors** -- Beancount mandates explicit `open` directives for every account, catching typos that hledger/Ledger would silently accept as new accounts. For an accounting system where correctness matters more than convenience, this is non-negotiable.
-2. **Python-native extensibility** -- Beancount's plugin system runs Python functions inside the core processing loop. You can inject CCA calculators, GST/QST validators, and payroll modules directly into the ledger's load pipeline. With hledger (Haskell) or Ledger (C++), extensibility is external -- you pipe data to/from the executable but cannot modify internal processing.
-3. **Fava provides 80% of the web dashboard** -- Fava already has trial balance, income statement, balance sheet, journal views, BQL queries, document management, and a REST API. Building on Fava's extension system for Quebec-specific views is far less work than building a dashboard from scratch on top of hledger-web.
-4. **smart_importer gives ML categorization out of the box** -- The `smart_importer` plugin predicts account postings from historical data, achieving ~95% accuracy per community reports. This handles the "rules-first" layer; the LLM (via MCP) handles edge cases.
-5. **Plain-text, git-friendly** -- `.beancount` files version-control cleanly, satisfying the auditability requirement.
+1. **`<script>` tags in templates never execute on SPA navigation** -- browsers refuse to execute scripts inserted via innerHTML (per HTML spec). This is why the existing system uses `has_js_module = True` with a separate `.js` file instead.
+2. **The JS module persists across navigations** -- `init()` runs once on first page load, `onPageLoad()` runs on every SPA navigation (including first load). The module's closure state survives across pages.
+3. **The `<article>` element is the only thing that changes** -- header, sidebar, and any injected DOM outside `<article>` persist. CSS injected into `<head>` persists.
 
-**Why NOT hledger:** hledger-mcp is more mature as an MCP server today, but hledger's Haskell codebase means Quebec-specific modules must be external scripts rather than integrated plugins. The MCP server advantage disappears once we build a custom one (which we need anyway for the approval workflow).
-
-**Why NOT PyLedger:** Newest and least battle-tested. SQLite-backed rather than plain-text, which complicates git-based auditability. The built-in MCP is appealing but immature.
-
-## System Overview
+### Current Component Map
 
 ```
-                         +-----------------------+
-                         |   Claude (via MCP)    |
-                         |  - Categorization     |
-                         |  - Natural language    |
-                         |    queries & reports   |
-                         +----------+------------+
-                                    |
-                              MCP Protocol
-                                    |
-                         +----------v------------+
-                         |   MCP Server          |
-                         |   (Python, custom)    |
-                         |  - Tool definitions   |
-                         |  - Approval workflow  |
-                         |  - Confidence scoring |
-                         +--+------+----------+--+
-                            |      |          |
-              +-------------+      |          +-------------+
-              |                    |                        |
-   +----------v-------+  +--------v---------+  +-----------v---------+
-   | Ingestion Layer   |  | Beancount Core   |  | Quebec Modules      |
-   | - RBC CSV/OFX     |  | - Ledger files   |  | - Payroll engine    |
-   | - PDF/receipt OCR  |  | - bean-check     |  | - GST/QST tracker  |
-   | - beangulp import  |  | - BQL queries    |  | - CCA calculator   |
-   | - smart_importer   |  | - Plugins        |  | - Shareholder loan  |
-   +----------+--------+  +--------+---------+  +-----------+---------+
-              |                    |                        |
-              +------>  .beancount files (git)  <-----------+
-                                   |
-                         +---------v----------+
-                         |   Fava (Web UI)     |
-                         |  - Dashboard views  |
-                         |  - Review/approval  |
-                         |  - CPA export       |
-                         |  - Custom extensions |
-                         +---------------------+
+Fava (Flask/Svelte SPA)
+  |
+  +-- ThemeQCExtension (has_js_module=True, no report_title)
+  |     +-- ThemeQCExtension.js (1,769 lines)
+  |           - init(): injectStyle() [once]
+  |           - onPageLoad(): injectStyle + brand + sidebar + reportHeader + tooltips [every nav]
+  |           - THEME_CSS: ~1,050 lines of CSS as JS string constant
+  |           - REPORT_INTROS: pedagogical headers per report
+  |           - TOOLTIPS: 50+ tooltip definitions
+  |           - reorganizeSidebar(): groups nav links into collapsible sections
+  |
+  +-- 8 Report Extensions (report_title set, no JS module)
+  |     +-- ApprobationExtension -- approval queue with POST endpoints
+  |     +-- PaieQCExtension -- payroll dashboard with KPI cards
+  |     +-- TaxesQCExtension -- GST/QST tracking with period table
+  |     +-- DpaQCExtension -- CCA/depreciation schedule
+  |     +-- PretActionnaireExtension -- shareholder loan tracking
+  |     +-- ExportCPAExtension -- CPA export package
+  |     +-- EcheancesExtension -- fiscal deadline calendar
+  |     +-- RecusExtension -- receipt upload with drag-and-drop
+  |
+  +-- Each extension follows the same pattern:
+        Python: after_load_file() computes data, methods expose it
+        Template: Jinja2 calls extension.method(), renders HTML
+        Styling: .cqc-* CSS classes from ThemeQCExtension.js
 ```
 
-### Component Responsibilities
-
-| Component | Responsibility | Communicates With |
-|-----------|---------------|-------------------|
-| **Ingestion Layer** | Parse bank CSVs/OFX, extract data from PDFs/receipts, normalize into Beancount transactions, apply rule-based + ML categorization | Beancount files (writes), MCP Server (receives edge cases) |
-| **Beancount Core** | Source of truth for all financial data. Validates double-entry integrity, runs plugins, executes BQL queries | .beancount files (reads/validates), Fava (serves data), Quebec Modules (via plugin pipeline) |
-| **Quebec Modules** | Domain-specific calculations: payroll deductions, GST/QST ITC/ITR, CCA depreciation schedules, shareholder loan tracking | Beancount Core (as plugins), MCP Server (exposes tools) |
-| **MCP Server** | Bridge between Claude and the accounting system. Exposes tools for categorization, querying, reporting, and approval workflow | Claude (MCP protocol), Beancount Core (reads/writes), Ingestion Layer (triggers imports), Quebec Modules (triggers calculations) |
-| **Fava (Web UI)** | Visual dashboard for transaction review, report viewing, document management, CPA export generation | Beancount Core (reads ledger), MCP Server (shares approval state) |
-| **CLI** | Batch imports, automation scripts, power-user operations | Ingestion Layer (triggers), Beancount Core (reads), Quebec Modules (triggers) |
-
-## Recommended Project Structure
+### Data Flow: Python Extension to Template to JS
 
 ```
-compteqc/
-+-- ledger/                     # Beancount data (git-tracked)
-|   +-- main.beancount          # Master file with includes
-|   +-- accounts.beancount      # Chart of accounts (open directives)
-|   +-- 2026/
-|   |   +-- 01-jan.beancount    # Monthly transaction files
-|   |   +-- 02-feb.beancount
-|   |   +-- payroll.beancount   # Payroll journal entries
-|   |   +-- cca.beancount       # CCA depreciation entries
-|   |   +-- adjustments.beancount
-|   +-- prices.beancount        # Currency/commodity prices
-|   +-- documents/              # Linked receipts/invoices (PDFs)
-|
-+-- src/
-|   +-- ingestion/              # Data import pipeline
-|   |   +-- rbc_csv.py          # RBC CSV importer (beangulp)
-|   |   +-- rbc_ofx.py          # RBC OFX importer
-|   |   +-- pdf_extractor.py    # Receipt/invoice OCR + extraction
-|   |   +-- rules.py            # Rule-based categorization engine
-|   |   +-- config.py           # Importer configuration
-|   |
-|   +-- quebec/                 # Quebec domain modules
-|   |   +-- payroll.py          # Payroll calculation engine
-|   |   +-- gst_qst.py         # GST/QST tracking + ITC/ITR
-|   |   +-- cca.py              # CCA calculator (half-year rule)
-|   |   +-- shareholder_loan.py # Shareholder loan tracker
-|   |   +-- rates.py            # Annual rates (QPP, RQAP, EI, FSS, etc.)
-|   |
-|   +-- plugins/                # Beancount plugins
-|   |   +-- cca_plugin.py       # Auto-generate CCA entries
-|   |   +-- gst_qst_plugin.py   # Validate GST/QST on transactions
-|   |   +-- loan_plugin.py      # Shareholder loan alerts
-|   |
-|   +-- mcp/                    # MCP server
-|   |   +-- server.py           # MCP server entry point
-|   |   +-- tools/              # Tool definitions
-|   |   |   +-- categorize.py   # AI categorization tool
-|   |   |   +-- query.py        # Ledger query tools
-|   |   |   +-- report.py       # Report generation tools
-|   |   |   +-- approve.py      # Approval workflow tools
-|   |   |   +-- import_tool.py  # Import trigger tools
-|   |   +-- prompts.py          # System prompts for Claude
-|   |
-|   +-- fava_ext/               # Fava extensions
-|   |   +-- approval/           # Transaction approval UI
-|   |   +-- cpa_export/         # CPA export package generator
-|   |   +-- quebec_reports/     # Quebec-specific report views
-|   |
-|   +-- cli/                    # CLI commands
-|   |   +-- import_cmd.py       # Batch import command
-|   |   +-- payroll_cmd.py      # Run payroll command
-|   |   +-- export_cmd.py       # CPA export command
-|
-+-- data/                       # Import staging (not git-tracked)
-|   +-- inbox/                  # Incoming bank CSVs, receipts
-|   +-- processed/              # Archived after import
-|
-+-- tests/
-|   +-- test_payroll.py
-|   +-- test_cca.py
-|   +-- test_gst_qst.py
-|   +-- test_importers.py
-|
-+-- pyproject.toml
+1. Fava loads ledger --> after_load_file() on each extension
+2. Extension computes data (e.g., payroll_summary() returns list[dict])
+3. User navigates to extension page
+4. Fava renders Jinja2 template, calling extension.method() for data
+5. Template outputs HTML with .cqc-* classes
+6. Fava inserts HTML into <article> via innerHTML
+7. ThemeQCExtension.js onPageLoad() fires:
+   - Attaches tooltips to .cqc-table th elements
+   - Injects report intro header based on URL path
+   - Re-styles any Fava native components
 ```
 
-### Structure Rationale
+## New Components for v1.1
 
-- **ledger/:** Beancount data separated from code. Monthly files keep individual files small and git diffs readable. The `main.beancount` includes everything via Beancount's `include` directive.
-- **src/ingestion/:** Isolated import pipeline. Importers follow beangulp's protocol so they work with both CLI and Fava's import UI.
-- **src/quebec/:** Pure Python modules with no Beancount dependency. Testable in isolation. Contain the formulas for payroll, CCA, GST/QST. Updated annually when rates change.
-- **src/plugins/:** Thin wrappers that call into `src/quebec/` modules within Beancount's plugin pipeline. Keeps domain logic separate from Beancount integration.
-- **src/mcp/:** Custom MCP server. Each tool is a separate module for maintainability. The server orchestrates reads/writes to the ledger.
-- **src/fava_ext/:** Fava extensions for the approval workflow and CPA export. Uses Fava's extension API (subclass `FavaExtensionBase`, register endpoints and JS modules).
-- **data/:** Ephemeral staging area for imports. Not version-controlled (financial CSVs should not be in git; the resulting beancount entries are).
+### Component 1: Chart.js Loading (in ThemeQCExtension.js)
 
-## Architectural Patterns
+**What:** Load Chart.js library dynamically from CDN, expose it for chart rendering.
 
-### Pattern 1: Rules-First, LLM-for-Edge-Cases Categorization
+**Why in ThemeQCExtension.js:** Chart.js needs to load once and persist across SPA navigations. The theme module's `init()` is the only code that runs on first page load. Loading it per-page would cause flicker and re-downloads.
 
-**What:** A tiered categorization pipeline where deterministic rules handle the majority of transactions, smart_importer handles pattern-matched predictions, and the LLM (via MCP) handles only what the first two tiers cannot.
+**Pattern:**
+```javascript
+// In ThemeQCExtension.js
 
-**When to use:** Every transaction import.
+let chartJsLoaded = false;
+let chartJsPromise = null;
 
-**Trade-offs:** More initial setup (writing rules) but dramatically lower error rates and API costs ($2-3/month vs unlimited). The 8.33% accuracy of pure-LLM approaches is unacceptable for accounting.
+function loadChartJs() {
+  if (chartJsLoaded) return Promise.resolve();
+  if (chartJsPromise) return chartJsPromise;
 
-**Example:**
+  chartJsPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js';
+    script.onload = () => { chartJsLoaded = true; resolve(); };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+  return chartJsPromise;
+}
+```
+
+**Confidence:** HIGH -- the existing pattern of injecting `<link>` for Google Fonts (line 1061-1067 of ThemeQCExtension.js) proves this approach works within Fava. Chart.js UMD build exposes `window.Chart` globally.
+
+### Component 2: Dashboard Extension (New Python Extension)
+
+**What:** A new `TableauBordExtension` (FavaExtensionBase subclass) that serves as the homepage dashboard with KPI cards and Chart.js visualizations.
+
+**Why a new extension:** The dashboard needs its own report page, its own data aggregation (revenue trends, expense breakdowns, cash flow), and its own template. It does not fit into any existing extension.
+
+**Pattern:**
 ```python
-def categorize_transaction(txn: Transaction) -> CategorizedTransaction:
-    # Tier 1: Exact rules (handles ~60-70%)
-    result = rules_engine.match(txn)
-    if result and result.confidence >= 0.95:
-        return result
+class TableauBordExtension(FavaExtensionBase):
+    report_title = "Tableau de bord"
 
-    # Tier 2: ML prediction from smart_importer (handles ~20-25%)
-    result = ml_predictor.predict(txn)
-    if result and result.confidence >= 0.80:
-        return result
+    def after_load_file(self):
+        # Aggregate: monthly revenue, expense by category, cash balance
+        self._kpis = self._compute_kpis()
+        self._monthly_data = self._compute_monthly_series()
 
-    # Tier 3: LLM via MCP (handles ~5-10%)
-    result = llm_categorize(txn, chart_of_accounts)
-    if result and result.confidence >= 0.70:
-        result.needs_review = True  # Always flag LLM results
-        return result
+    def kpis(self) -> dict:
+        return self._kpis
 
-    # Tier 4: Human review required
-    return CategorizedTransaction(txn, account=None, needs_review=True)
+    def chart_data_json(self) -> str:
+        """Return JSON string for Chart.js consumption."""
+        import json
+        return json.dumps(self._monthly_data)
 ```
 
-### Pattern 2: Staging-then-Commit Approval Workflow
+**Template data bridge -- the critical pattern:**
+```html
+<!-- TableauBordExtension.html -->
+{% set kpis = extension.kpis() %}
+{% set chart_json = extension.chart_data_json() %}
 
-**What:** New transactions are written to a staging file (e.g., `pending.beancount`) with a `#pending` tag. The review UI shows these. On approval, entries move to the appropriate monthly file and the tag is removed.
+<div class="cqc-kpi-row">
+  <!-- KPI cards as usual -->
+</div>
 
-**When to use:** All AI-categorized transactions before they become part of the official ledger.
+<!-- Chart containers with data attributes for JS pickup -->
+<div class="cqc-chart-container" id="cqc-revenue-chart"
+     data-chart-type="line"
+     data-chart='{{ chart_json }}'>
+  <canvas></canvas>
+</div>
+```
 
-**Trade-offs:** Adds a step before data is "real," but prevents unchecked AI errors from polluting the ledger. The CPA never sees pending entries.
+**Why data attributes:** Since `<script>` tags in templates do not execute during SPA navigation, the template cannot call `new Chart()` directly. Instead, it embeds JSON data in `data-chart` attributes on container elements. The JS module's `onPageLoad()` scans for these containers and initializes charts.
+
+**Confidence:** HIGH -- this is the standard pattern for Fava extensions that need JS interactivity. The existing `ApprobationExtension` uses inline `<script>` only for the trivial `toggleAll()` function, which works because it defines a global function that onclick handlers call synchronously (not via SPA re-navigation triggering script tags).
+
+### Component 3: Chart Rendering Engine (in ThemeQCExtension.js)
+
+**What:** A `renderCharts()` function called from `onPageLoad()` that discovers `[data-chart]` containers in the current `<article>` and renders Chart.js charts.
+
+**Pattern:**
+```javascript
+async function renderCharts() {
+  const containers = document.querySelectorAll('.cqc-chart-container[data-chart]');
+  if (containers.length === 0) return;
+
+  await loadChartJs();
+
+  containers.forEach(container => {
+    const canvas = container.querySelector('canvas');
+    if (!canvas) return;
+
+    // Destroy previous chart instance if exists (SPA re-navigation)
+    if (canvas._cqcChart) {
+      canvas._cqcChart.destroy();
+    }
+
+    const chartData = JSON.parse(container.dataset.chart);
+    const chartType = container.dataset.chartType || 'bar';
+
+    canvas._cqcChart = new Chart(canvas, {
+      type: chartType,
+      data: chartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { font: { family: "'Inter', sans-serif" } } }
+        },
+        // Use Quebec palette
+        ...getChartThemeOptions()
+      }
+    });
+  });
+}
+
+// Updated module export
+export default {
+  init() {
+    injectStyle();
+    loadChartJs(); // Pre-load on first page (non-blocking)
+  },
+  onPageLoad() {
+    injectStyle();
+    initTooltipPopup();
+    injectBrand();
+    reorganizeSidebar();
+    injectReportHeader();
+    attachTooltips();
+    renderCharts(); // NEW: render any charts on the page
+  },
+};
+```
+
+**Why destroy + recreate:** Fava replaces `<article>` innerHTML on each navigation. When a user leaves the dashboard and comes back, the canvas elements are new DOM nodes. Any previous Chart.js instances are orphaned. The `canvas._cqcChart` reference lets us clean up properly if the same page is revisited without full innerHTML replacement (edge case).
+
+**Confidence:** HIGH for the approach. Chart.js v4 UMD build exposes `window.Chart` which is accessible to the ES module.
+
+### Component 4: Page Transition System (in ThemeQCExtension.js)
+
+**What:** CSS-based fade transitions when Fava replaces `<article>` content during SPA navigation.
+
+**Why CSS + JS class toggle:** Fava's navigation is not hookable before it happens -- `onPageLoad()` fires after content is already replaced. We cannot intercept the "leaving" moment. The best approach is a CSS animation on the incoming content, triggered via JS.
+
+**Pattern:**
+```javascript
+function animatePageEntry() {
+  const article = document.querySelector('article');
+  if (!article) return;
+  article.classList.remove('cqc-page-entering');
+  // Force reflow to restart animation
+  void article.offsetWidth;
+  article.classList.add('cqc-page-entering');
+}
+```
+
+```css
+@keyframes cqc-page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cqc-page-entering {
+  animation: cqc-page-enter 200ms ease-out;
+}
+```
+
+**Why this works:** Fava replaces `<article>` innerHTML, not the `<article>` element itself. The class toggle + reflow trick restarts the animation on every navigation. The animation is subtle (200ms, 6px vertical shift) -- enough to feel polished without being distracting.
+
+**Confidence:** MEDIUM -- depends on exact Fava behavior regarding `<article>` element replacement vs innerHTML replacement. The JS-triggered class approach with forced reflow is the most reliable pattern. Needs testing to confirm.
+
+### Component 5: KPI Count-Up Animation (in ThemeQCExtension.js)
+
+**What:** Animated number count-up for `.cqc-kpi-value` elements when they appear.
+
+**Pattern:**
+```javascript
+function animateKPIs() {
+  const kpis = document.querySelectorAll('.cqc-kpi-value[data-value]');
+  kpis.forEach(el => {
+    const target = parseFloat(el.dataset.value);
+    const duration = 600; // ms
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+      el.textContent = new Intl.NumberFormat('fr-CA', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(current) + ' $';
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  });
+}
+```
+
+**Template change:** KPI elements need `data-value` attributes:
+```html
+<div class="cqc-kpi-value" data-value="{{ totaux.salaire_brut_ytd }}">
+  {{ "{:,.2f}".format(totaux.salaire_brut_ytd) }} $
+</div>
+```
+
+The text content is the fallback (shown before JS runs or if JS fails). JS replaces it with the animated version.
+
+**Confidence:** HIGH -- pure DOM manipulation, no Fava-specific constraints.
+
+### Component 6: Enhanced Receipt Upload (Modify RecusExtension)
+
+**What:** Progress bar, file preview thumbnails, animated drag-and-drop state.
+
+**Current state:** The existing `RecusExtension.html` has basic drag-and-drop via inline event handlers that immediately submit the form. No progress indication, no preview.
+
+**Architecture change:** The upload form should use `XMLHttpRequest` (not fetch -- fetch does not support upload progress) with progress tracking. The response handling moves into ThemeQCExtension.js.
+
+**Pattern:** Add a `handleReceiptUpload()` function to ThemeQCExtension.js that:
+1. Detects the `#upload-form` on RecusExtension pages via `onPageLoad()`
+2. Intercepts form submission
+3. Shows file preview (if image) or filename+icon (if PDF)
+4. Uses XHR with `upload.onprogress` to show `.cqc-progress-bar` animation
+5. On success, injects the new row into the recent uploads table without page reload
+
+**Endpoint change required:** The Flask `@extension_endpoint("upload")` currently returns a redirect. It needs to return JSON when the request includes `Accept: application/json` or `X-Requested-With: XMLHttpRequest` header.
+
+**Confidence:** MEDIUM -- the XHR approach works, but requires modifying the Python endpoint to support JSON responses alongside the existing redirect behavior.
+
+## Component Boundaries
+
+| Component | Location | Responsibility | Communicates With |
+|-----------|----------|---------------|-------------------|
+| ThemeQCExtension.js | JS module (persists across pages) | CSS injection, Chart.js loading, chart rendering, page transitions, KPI animations, tooltip system, receipt upload UX | All templates via DOM discovery (`[data-chart]`, `[data-value]`, `#upload-form`) |
+| TableauBordExtension | New Python ext + template | Dashboard data aggregation, KPI computation, chart data serialization to JSON | Beancount ledger (read), template (render), JS module (via data attributes on DOM) |
+| Chart.js | CDN library loaded into `window.Chart` | Canvas-based chart rendering | ThemeQCExtension.js (caller), `<canvas>` elements (render target) |
+| Existing 8 extensions | Python + Jinja2 templates | Domain-specific data and presentation | ThemeQCExtension.js (styling, tooltips, animations), Beancount ledger (data source) |
+
+## Data Flow for Charts
+
+```
+Beancount Ledger
+    |
+    v
+TableauBordExtension.after_load_file()
+    |  Queries all_entries, computes monthly aggregates
+    v
+extension.chart_data_json() -> JSON string
+    |  Returns Chart.js-compatible {labels:[], datasets:[]}
+    v
+Jinja2 template embeds JSON in data-chart attribute
+    |  <div class="cqc-chart-container" data-chart='{{ chart_json }}'>
+    v
+Fava inserts HTML into <article> via innerHTML
+    |
+    v
+ThemeQCExtension.js onPageLoad() -> renderCharts()
+    |  Discovers [data-chart] containers
+    |  Loads Chart.js via CDN (if not already loaded)
+    |  Parses JSON from data attribute
+    v
+Chart.js renders canvas with Quebec-themed colors
+```
+
+## Data Flow for KPI Animations
+
+```
+Extension.method() returns Decimal values
+    |
+    v
+Jinja2 template renders value in text + data-value attribute
+    |  <div class="cqc-kpi-value" data-value="12345.67">12,345.67 $</div>
+    v
+ThemeQCExtension.js onPageLoad() -> animateKPIs()
+    |  Reads data-value, starts requestAnimationFrame loop
+    |  Replaces text content with animated counting value
+    v
+User sees number counting up from 0 to final value (600ms ease-out)
+```
+
+## Patterns to Follow
+
+### Pattern 1: Data Attributes as Template-to-JS Bridge
+
+**What:** Templates embed structured data in HTML `data-*` attributes; the JS module discovers and processes them on `onPageLoad()`.
+
+**When:** Any time a template needs to pass data to JS for interactive rendering (charts, animations, dynamic behavior).
+
+**Why:** `<script>` tags in Fava extension templates do not execute during SPA navigation. Data attributes are the only reliable bridge between server-rendered HTML and client-side JS.
 
 **Example:**
-```beancount
-; In pending.beancount (staging)
-2026-02-15 * "AMZN Mktp CA" "Amazon purchase" #pending
-  confidence: "0.85"
-  ai-source: "smart_importer"
-  Expenses:Office:Supplies    45.99 CAD
-  Liabilities:CreditCard:RBC
-
-; After approval, moved to 2026/02-feb.beancount without #pending tag
-2026-02-15 * "AMZN Mktp CA" "Amazon - Office supplies"
-  Expenses:Office:Supplies    45.99 CAD
-  Liabilities:CreditCard:RBC
+```html
+<!-- Template -->
+<div class="cqc-chart-container" data-chart='{"labels":["Jan","Fev"],"datasets":[{"data":[1000,2000]}]}'>
+  <canvas></canvas>
+</div>
+```
+```javascript
+// ThemeQCExtension.js onPageLoad()
+document.querySelectorAll('[data-chart]').forEach(el => {
+  const config = JSON.parse(el.dataset.chart);
+  // render chart...
+});
 ```
 
-### Pattern 3: Quebec Domain Modules as Pure Functions
+### Pattern 2: Idempotent onPageLoad Functions
 
-**What:** All Quebec-specific calculations (payroll, CCA, GST/QST) are implemented as pure Python functions that take inputs and return results, with no side effects or Beancount dependencies. Thin Beancount plugin wrappers call these functions and generate entries.
+**What:** Every function called from `onPageLoad()` must be safe to call multiple times on the same page and must clean up previous state.
 
-**When to use:** All domain logic.
+**When:** Always. Fava may call `onPageLoad()` when navigating away and back to the same page, or when the ledger file is modified and Fava re-renders.
 
-**Trade-offs:** More files (module + plugin wrapper) but testable without Beancount, reusable from CLI/MCP/API, and rates can be updated in a single `rates.py` file.
+**Why:** The ThemeQCExtension.js module persists -- it is not re-created on each navigation. Functions that append DOM elements without cleanup will create duplicates.
 
-**Example:**
-```python
-# src/quebec/payroll.py -- pure function, no Beancount dependency
-from dataclasses import dataclass
-from decimal import Decimal
-
-@dataclass
-class PayrollResult:
-    gross_salary: Decimal
-    federal_tax: Decimal
-    quebec_tax: Decimal
-    qpp_employee: Decimal
-    qpp_employer: Decimal
-    rqap_employee: Decimal
-    rqap_employer: Decimal
-    ei_employee: Decimal
-    ei_employer: Decimal
-    fss: Decimal
-    cnesst: Decimal
-    net_pay: Decimal
-
-def calculate_payroll(
-    gross_salary: Decimal,
-    year: int = 2026,
-    pay_period: str = "monthly",
-    ytd_gross: Decimal = Decimal("0"),
-) -> PayrollResult:
-    rates = get_rates(year)
-    # ... pure calculation logic ...
-    return PayrollResult(...)
-
-# src/plugins/payroll_plugin.py -- thin Beancount wrapper
-def generate_payroll_entries(date, gross_salary, year):
-    result = calculate_payroll(gross_salary, year)
-    # Generate Beancount Transaction objects from PayrollResult
-    return entries
+**Existing example:**
+```javascript
+function attachTooltips() {
+  // 1. Idempotent cleanup: remove ALL existing tooltips
+  document.querySelectorAll("[data-tooltip]").forEach((el) => {
+    el.removeAttribute("data-tooltip");
+    el.removeAttribute("tabindex");
+  });
+  // 2. Re-attach fresh tooltips
+  // ...
+}
 ```
 
-## Data Flow
+### Pattern 3: Lazy CDN Loading with Promise Caching
 
-### Transaction Import Flow
+**What:** External libraries loaded via `<script>` injection with a cached Promise to prevent duplicate loads.
 
-```
-[RBC CSV/OFX file]
-      |
-      v
-[Ingestion Layer: rbc_csv.py]
-      | parse, normalize
-      v
-[Rule Engine: rules.py]
-      | Tier 1: exact match rules
-      v
-[smart_importer]
-      | Tier 2: ML prediction
-      v
-[MCP -> Claude LLM]
-      | Tier 3: edge cases only
-      v
-[pending.beancount]  <-- staged with #pending tag + confidence metadata
-      |
-      v
-[Fava UI / MCP approval tool]
-      | human review
-      v
-[2026/MM-month.beancount]  <-- committed to ledger
-      |
-      v
-[Beancount plugin pipeline]
-      | validation, GST/QST checks, CCA checks
-      v
-[bean-check passes] = source of truth
-```
+**When:** Loading Chart.js or any future CDN dependency.
 
-### Reporting / CPA Export Flow
+**Why:** The `init()` function can pre-load the library (non-blocking), and `onPageLoad()` can `await` it before rendering. The Promise ensures only one `<script>` tag is ever created regardless of how many times the function is called.
 
-```
-[.beancount files]
-      |
-      v
-[Beancount loader + plugins]
-      | loads all entries, runs plugin pipeline
-      v
-[BQL queries / Fava API]
-      | trial_balance, income_statement, balance_sheet
-      v
-[Quebec Modules]
-      | payroll summary, CCA schedule, GST/QST summary
-      v
-[CPA Export Extension]
-      | generates CSV + PDF package
-      v
-[CPA receives: trial balance, P&L, balance sheet,
- payroll schedule, CCA schedule, GST/QST schedule,
- shareholder loan summary, linked source documents]
-```
+### Pattern 4: Extension Methods Return Serializable Data
 
-### MCP Interaction Flow
+**What:** Python extension methods called from templates should return simple types (dict, list, Decimal, str) that Jinja2 can render directly or serialize to JSON.
 
-```
-[Claude Desktop / Claude Code]
-      |
-      | MCP protocol (stdio or streamable HTTP)
-      v
-[MCP Server: server.py]
-      |
-      +-- tool: categorize_transaction
-      |     reads pending.beancount
-      |     returns proposed categorization
-      |
-      +-- tool: query_ledger
-      |     runs BQL against Beancount
-      |     returns structured results
-      |
-      +-- tool: generate_report
-      |     calls Fava API or bean-query
-      |     returns formatted report
-      |
-      +-- tool: approve_transaction
-      |     moves entry from pending to committed
-      |
-      +-- tool: run_payroll
-      |     calls quebec/payroll.py
-      |     writes entries to payroll.beancount
-      |
-      +-- tool: calculate_gst_qst
-            calls quebec/gst_qst.py
-            returns ITC/ITR summary
-```
+**When:** Designing new extension methods, especially for chart data.
 
-## Scaling Considerations
+**Why:** Templates cannot import Python modules or run complex logic. The extension is the computation layer; the template is the presentation layer. For Chart.js, the extension must pre-serialize data to a JSON string that Jinja2 can embed as an attribute value.
 
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| Year 1 (single corp, ~500 txns/year) | Monolith is perfect. Single .beancount file set, single Fava instance, single MCP server. |
-| Year 2-3 (add Enact revenue, credit card, ~1500 txns/year) | Split ledger includes by source (rbc-checking, rbc-cc, stripe). Add Stripe importer. Still single Beancount instance. |
-| Multi-entity (consulting + product corp) | Separate ledger directories per entity. MCP server handles routing to correct entity. Fava supports multiple ledgers via separate instances or Fava's multi-file support. |
+## Anti-Patterns to Avoid
 
-### Scaling Priorities
+### Anti-Pattern 1: Script Tags in Extension Templates
 
-1. **First bottleneck: Import volume** -- As transaction count grows, batch import performance matters. Beancount handles 100K+ transactions in ~2 seconds, so this is a non-issue for years.
-2. **Second bottleneck: Rule maintenance** -- As more vendors and transaction types appear, the rule engine needs to stay manageable. Use a YAML/TOML rule file rather than hardcoded Python so rules can be edited without code changes.
+**What:** Putting `<script>` blocks in Jinja2 templates for non-trivial logic.
 
-## Anti-Patterns
+**Why bad:** Scripts inserted via innerHTML do not execute during Fava SPA navigation. The code will work on direct URL access (full page load) but silently fail when navigating via sidebar links. This creates inconsistent behavior that is extremely hard to debug.
 
-### Anti-Pattern 1: LLM as Calculator
+**Instead:** Use data attributes in templates + logic in ThemeQCExtension.js `onPageLoad()`.
 
-**What people do:** Ask Claude to compute payroll deductions, CCA amounts, or GST/QST owing.
-**Why it's wrong:** LLMs hallucinate numbers. Even small errors in tax calculations have legal consequences. The hledger-mcp community explicitly notes: "The LLM doesn't perform calculations directly. It utilizes hledger to manage all mathematical functions."
-**Do this instead:** Quebec modules compute all numbers deterministically. The LLM triggers calculations and formats results but never invents a number.
+**Exception:** Tiny inline event handlers (like `onclick="toggleAll(true)"` in ApprobationExtension.html) work because they are attribute-based, not script-block-based. The function they call must already exist in the global scope (defined by a global function declaration or exposed by the JS module).
 
-### Anti-Pattern 2: Direct Ledger Writes from AI
+### Anti-Pattern 2: Multiple has_js_module Extensions
 
-**What people do:** Let the AI write directly to the production ledger without review.
-**Why it's wrong:** Even at 95% categorization accuracy, 5% errors compound over a fiscal year (~25 wrong entries out of 500). These are hard to find retroactively.
-**Do this instead:** All AI-generated entries go through the staging/approval workflow. The #pending tag makes unapproved entries visible but excluded from reports.
+**What:** Creating separate JS modules for each extension that needs interactivity (e.g., a DashboardExtension.js alongside ThemeQCExtension.js).
 
-### Anti-Pattern 3: Monolithic Quebec Logic
+**Why bad:** Fava loads all extension JS modules on every page. Multiple modules competing to modify the DOM creates ordering issues, race conditions, and duplicated CDN loads. The ThemeQCExtension.js is already the "single orchestrator" for all client-side behavior.
 
-**What people do:** Embed payroll formulas, CCA rules, and GST/QST logic directly in Beancount plugins or importers.
-**Why it's wrong:** Annual rate changes (QPP ceiling changes every year, EI rates change, etc.) become a hunt through multiple files. Testing requires loading Beancount.
-**Do this instead:** Pure Python modules in `src/quebec/` with a centralized `rates.py`. Beancount plugins are thin wrappers. CLI, MCP, and tests all call the same functions.
+**Instead:** Keep all JS in ThemeQCExtension.js. If it grows past ~3,000 lines, split into sub-modules using dynamic `import()` (which works because the module is loaded as an ES module by Fava, not via innerHTML).
 
-### Anti-Pattern 4: Building a Custom Web Dashboard from Scratch
+### Anti-Pattern 3: Relying on Chart State Across Navigations
 
-**What people do:** Ignore Fava and build a React/Vue dashboard from scratch to display accounting data.
-**Why it's wrong:** Fava already provides trial balance, income statement, balance sheet, journal, BQL query interface, document management, and import UI. Rebuilding this is months of wasted effort.
-**Do this instead:** Extend Fava via its extension API (`FavaExtensionBase`). Add custom views for the approval workflow and CPA export. Use Fava's existing REST API for the MCP server to query data.
+**What:** Keeping Chart.js instances alive across SPA page changes and trying to update them in-place.
 
-## Integration Points
+**Why bad:** Fava destroys and recreates `<article>` content on each navigation. The canvas elements are gone. Chart.js instances pointing to destroyed canvases will leak memory and throw errors.
 
-### External Services
+**Instead:** Destroy charts implicitly (they are garbage collected when the canvas is removed from DOM) and recreate from data attributes when arriving on a chart page. Charts are cheap to create; the data is already computed server-side.
 
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| RBC Bank (CSV/OFX) | File-based import via beangulp importer | Manual download for v1. No Plaid. OFX preferred over CSV for richer data. |
-| Claude API (LLM) | MCP protocol (stdio for Claude Desktop, streamable HTTP for programmatic) | Only used for Tier 3 categorization edge cases + natural language queries. ~200-300 calls/month. |
-| Receipt/invoice PDFs | Local OCR/extraction (pdf-extract, tesseract, or Claude vision via MCP) | Store originals in `ledger/documents/`, link via Beancount `document` directive. |
-| CPA tools | CSV/Excel export from Fava extension | CPA imports into their tax software. Format TBD based on CPA preference. |
+### Anti-Pattern 4: Global CSS Animations Without Scoping
 
-### Internal Boundaries
+**What:** Applying complex animations to generic selectors like `article *` or `table`.
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| Ingestion -> Ledger | File write (`.beancount`) | Importers write to `pending.beancount`. Never modify committed files. |
-| MCP Server -> Beancount | Python API (`beancount.loader.load_file`) + file write | Reads via loader, writes by appending to `.beancount` files. |
-| MCP Server -> Fava | HTTP API (`/api/query`, `/api/ledger_data`, etc.) | Fava runs as a separate process. MCP server calls its REST API for reports. |
-| Quebec Modules -> Beancount Plugins | Python function calls | Plugins import from `src/quebec/` and call pure functions. No reverse dependency. |
-| Fava Extensions -> Quebec Modules | Python imports | Extensions can call Quebec modules directly for rendering report data. |
-| CLI -> Everything | Python imports | CLI commands import from ingestion, quebec, and mcp modules as needed. |
+**Why bad:** Fava's native Svelte components also render within `<article>`. Unscoped animations will affect the Income Statement tree, Balance Sheet, Journal -- native Fava pages that should not have the same visual treatment as CompteQC extensions.
 
-## Build Order (Dependencies)
+**Instead:** Scope animations to `.cqc-*` prefixed classes only. The page-enter animation on `article` itself is acceptable because it is a simple fade that benefits all page transitions uniformly.
 
-The components have clear dependency chains that dictate build order:
+## Existing File Modifications Required
 
-```
-Phase 1: Foundation (no dependencies)
-  +-- Beancount ledger setup (chart of accounts, main.beancount)
-  +-- Quebec rates module (rates.py -- pure data, no dependencies)
-  +-- RBC CSV importer (beangulp protocol)
+| File | Change | Reason |
+|------|--------|--------|
+| `ThemeQCExtension.js` | Add `loadChartJs()`, `renderCharts()`, `animateKPIs()`, `animatePageEntry()` functions | Core UI/UX engine additions |
+| `ThemeQCExtension.js` | Add chart-specific CSS to THEME_CSS constant | `.cqc-chart-container` sizing, responsive rules, chart card styling |
+| `ThemeQCExtension.js` | Update `export default` to call new functions in `onPageLoad()` | Hook new features into Fava lifecycle |
+| `ThemeQCExtension.js` | Update `SIDEBAR_GROUPS` to add "Tableau de bord" at top | Dashboard navigation priority |
+| `ThemeQCExtension.js` | Add `TOOLTIPS` entries for new dashboard KPIs | Pedagogical tooltips for new elements |
+| `RecusExtension.html` | Replace inline `onchange` submit with data attributes for JS-driven upload | Animated upload UX |
+| `RecusExtension/__init__.py` | Add JSON response mode to upload endpoint | XHR upload support (return JSON when Accept header requests it) |
+| `ApprobationExtension.html` | Rework table row structure for better visual hierarchy | Approval queue polish |
+| `PaieQCExtension.html` | Add `data-value` to `.cqc-kpi-value` elements | KPI count-up animation |
+| `TaxesQCExtension.html` | Add `data-value` to `.cqc-kpi-value` elements | KPI count-up animation |
+| `PretActionnaireExtension.html` | Add `data-value` to `.cqc-kpi-value` elements (if it has them) | KPI count-up animation |
+| `EcheancesExtension.html` | Add `data-value` to `.cqc-kpi-value` elements (if it has them) | KPI count-up animation |
 
-Phase 2: Core Engine (depends on Phase 1)
-  +-- Rule-based categorization engine
-  +-- GST/QST module (depends on rates.py)
-  +-- Payroll calculation engine (depends on rates.py)
-  +-- CCA calculator (depends on rates.py)
+## New Files Required
 
-Phase 3: AI Layer (depends on Phase 1-2)
-  +-- MCP server skeleton (tool definitions)
-  +-- Categorization tool (uses rules from Phase 2)
-  +-- smart_importer integration
-  +-- LLM fallback for edge cases
-  +-- Staging/approval workflow (pending.beancount)
+| File | Purpose |
+|------|---------|
+| `src/compteqc/fava_ext/tableau_bord/__init__.py` | Dashboard extension Python class -- aggregates KPIs, monthly revenue/expense series, pending count |
+| `src/compteqc/fava_ext/tableau_bord/templates/TableauBordExtension.html` | Dashboard template with KPI cards, chart containers with `data-chart` JSON attributes |
 
-Phase 4: Web Dashboard (depends on Phase 1-3)
-  +-- Fava setup + configuration
-  +-- Approval extension (review pending transactions)
-  +-- Quebec report extensions (payroll, CCA, GST/QST views)
-  +-- CPA export extension
+## Suggested Build Order
 
-Phase 5: Polish + Automation (depends on Phase 1-4)
-  +-- CLI commands (batch import, payroll run, export)
-  +-- PDF/receipt ingestion
-  +-- Shareholder loan tracking
-  +-- Invoice generation
-```
+The order is dictated by Fava's constraints: JS module changes must be tested across the SPA lifecycle (sidebar navigation, not just direct URL), and each phase should produce visible, testable results.
 
-**Rationale:**
-- Phase 1 must come first because everything reads/writes `.beancount` files and uses Quebec rates.
-- Phase 2 builds the domain logic that the AI layer and dashboard will expose.
-- Phase 3 adds the AI categorization, which requires the rule engine and chart of accounts to exist.
-- Phase 4 builds the UI on top of working data and calculations.
-- Phase 5 adds convenience features that depend on all prior layers.
+### Phase 1: Foundation (Chart.js + Page Transitions + Design System)
+1. **Chart.js lazy loader** in ThemeQCExtension.js -- `loadChartJs()` with Promise caching and CDN script injection. Test: verify `window.Chart` available after `await loadChartJs()`.
+2. **Chart rendering engine** (`renderCharts()`) with Quebec color palette defaults and `getChartThemeOptions()` helper. Test: hardcode a `[data-chart]` div in any existing template, verify chart renders on both direct URL and sidebar navigation.
+3. **Page entry animation** (CSS keyframes + JS class toggle in `onPageLoad()`). Test: navigate between pages via sidebar, verify subtle fade-in on each transition.
+4. **KPI count-up animation** (`animateKPIs()`). Test: add `data-value` to one KPI in PaieQCExtension.html, verify count-up on navigation.
+5. **Design system CSS additions** to THEME_CSS: `.cqc-chart-container`, enhanced table hover states, refined shadow/spacing tokens.
 
-Each phase produces a usable vertical slice:
-- After Phase 1: You can manually import and categorize RBC transactions.
-- After Phase 2: Payroll and GST/QST calculations work via Python scripts.
-- After Phase 3: Claude can categorize transactions and query the ledger.
-- After Phase 4: Full review workflow in a browser.
-- After Phase 5: Mostly hands-off operation.
+### Phase 2: Dashboard Extension
+6. **TableauBordExtension Python class** -- compute revenue YTD, expenses YTD, net income, cash position, pending approval count. Compute monthly series for chart data. Return chart-ready JSON via `chart_data_json()`.
+7. **Dashboard template** -- KPI cards (revenue YTD, expenses YTD, net income, pending approvals) with `data-value` for count-up + chart containers with `data-chart` JSON.
+8. **Three chart types**: line chart (monthly revenue trend), doughnut (expense category breakdown), bar (monthly cash flow). All use Quebec blue palette.
+9. **Sidebar update** -- add "Tableau de bord" to `SIDEBAR_GROUPS` at top position, default open.
+10. **Dashboard tooltips** -- add entries to `TOOLTIPS` dict for new KPI labels.
+
+### Phase 3: Existing Extension Polish
+11. **Add `data-value` to all KPI templates** across PaieQC, TaxesQC, PretActionnaire, Echeances. All extensions get count-up animations automatically.
+12. **Table styling refinement** -- enhanced `.cqc-table tr:hover` with smoother transitions, slight background shift, better row spacing.
+13. **Approval queue redesign** -- better visual hierarchy for confidence badges, scannable layout improvements, smoother bulk action flow.
+14. **Consistent card and section styling** across all extension templates.
+
+### Phase 4: Receipt Upload Animation
+15. **Modify RecusExtension endpoint** (`@extension_endpoint("upload")`) to return JSON when `Accept: application/json` is present, while keeping redirect for non-JS fallback.
+16. **Build upload UX in ThemeQCExtension.js** -- `handleReceiptUpload()` function: file preview (image thumbnail or PDF icon), XHR with `upload.onprogress` for progress bar, success/error animation, dynamic table row insertion.
+17. **Drag-and-drop visual enhancement** -- animated dropzone border pulse, file type icon display, size/name preview before upload.
+
+### Phase 5: Final Polish and Cross-Browser
+18. **Typography scale audit** -- ensure Inter font weights (400/500/600/700) and sizes are consistent across all extensions and native Fava pages.
+19. **Shadow and spacing audit** -- verify card elevation, section spacing, KPI row gaps, responsive breakpoints (768px and 480px).
+20. **Cross-browser testing** -- verify Chart.js, CSS animations, custom properties, and `requestAnimationFrame` count-up work in Safari, Chrome, Firefox.
+
+### Build Order Rationale
+
+- **Phase 1 first** because every subsequent phase depends on Chart.js loading, the chart renderer, and animation utilities being functional and tested across Fava's SPA lifecycle.
+- **Phase 2 before Phase 3** because the dashboard is the new "homepage" and the most visible addition. It also validates that the entire data flow (Python -> JSON -> data attribute -> Chart.js) works end-to-end.
+- **Phase 3 before Phase 4** because KPI animations and table polish are lower-risk changes to existing templates (adding a `data-value` attribute is minimal change, high visual impact).
+- **Phase 4 last among features** because receipt upload animation requires both Python endpoint changes and complex JS (XHR progress tracking), making it the highest-effort single feature.
+- **Phase 5 last** because polish passes should happen after all features are in place.
+
+## Scalability Considerations
+
+| Concern | Now (8 extensions + dashboard) | At 15 extensions | At 30+ extensions |
+|---------|-------------------------------|-------------------|---------------------|
+| ThemeQCExtension.js size | 1,769 lines, will grow to ~2,500 | ~3,500 lines -- consider splitting with dynamic `import()` | Split into `cqc-theme.js`, `cqc-charts.js`, `cqc-animations.js` |
+| Chart.js bundle size | 67KB gzipped from CDN -- cached by browser | Same | Same |
+| `onPageLoad()` cost | ~5ms DOM queries | ~10ms with more containers to scan | Profile; add URL-based early-return (skip chart rendering on non-chart pages) |
+| Template data size | Small JSON payloads (~2KB for 12 months of chart data) | Moderate | Cap chart datasets to last 24 months; paginate if needed |
+| CSS specificity | `.cqc-*` prefix avoids conflicts with Fava/Svelte | Same -- prefix is good insurance | Same |
 
 ## Sources
 
-- [Beancount documentation -- plugin architecture, importer protocol](https://beancount.github.io/docs/) -- HIGH confidence (Context7 + official docs)
-- [Fava REST API and extension system](https://github.com/beancount/fava) -- HIGH confidence (Context7 verified)
-- [hledger-mcp server](https://github.com/iiAtlas/hledger-mcp) -- HIGH confidence (npm published, community-validated)
-- [Beancount smart_importer](https://github.com/beancount/smart_importer) -- MEDIUM confidence (community reports of 95% accuracy, but depends on training data quality)
-- [Beancount vs hledger vs Ledger comparison](https://beancount.io/forum/t/plain-text-accounting-showdown-2025-beancount-v3-hledger-or-ledger/42) -- MEDIUM confidence (community forum, multiple perspectives)
-- [LLM accuracy for accounting (8.33% without prompting)](https://beancount.io/docs/Solutions/using-llms-to-automate-and-enhance-bookkeeping-with-beancount) -- MEDIUM confidence (FinNLP 2025 research cited)
-- [Hybrid rules+LLM achieving 95% accuracy](https://beancount.io/forum/t/finally-got-95-automated-expense-categorization-working-with-beancount-llms/93) -- MEDIUM confidence (single user report, methodology documented)
-- [MCP protocol -- streamable HTTP transport (March 2025)](https://www.anthropic.com/news/model-context-protocol) -- HIGH confidence (official Anthropic)
-- [beangulp importer framework](https://github.com/beancount/beangulp) -- HIGH confidence (Context7 verified, official Beancount project)
-
----
-*Architecture research for: AI-assisted accounting system (Quebec CCPC IT consultant)*
-*Researched: 2026-02-18*
+- [Fava Extension API docs](https://beancount.github.io/fava/api/fava.ext.html) -- FavaExtensionBase class, has_js_module, extension_endpoint decorator
+- [Fava Extension Help page](https://fava.pythonanywhere.com/example-beancount-file/help/extensions) -- JS module lifecycle: `init()`, `onPageLoad()`, `onExtensionPageLoad()`
+- [Fava GitHub Issue #1175](https://github.com/beancount/fava/issues/1175) -- SPA navigation and innerHTML script execution limitation (critical architectural constraint)
+- [Chart.js Integration docs](https://www.chartjs.org/docs/latest/getting-started/integration.html) -- UMD build for no-build-step usage
+- [Chart.js CDN on jsDelivr](https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js) -- recommended CDN URL for script injection
+- Existing codebase: `ThemeQCExtension.js` lines 1757-1769 (module export with `init`/`onPageLoad`), lines 1055-1073 (style and font injection pattern), lines 1596-1654 (idempotent tooltip system)

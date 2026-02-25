@@ -1,245 +1,187 @@
-# Feature Research
+# Feature Landscape: Production UI/UX for CompteQC v1.1
 
-**Domain:** AI-assisted accounting system for a solo Quebec IT consultant (CCPC)
-**Researched:** 2026-02-18
-**Confidence:** HIGH (domain well-understood, user context is specific, features derived from real-world tools and community patterns)
+**Domain:** Accounting dashboard UI/UX (fintech-grade polish for Fava-based app)
+**Researched:** 2026-02-25
+**Confidence:** MEDIUM (UI patterns well-established across industry; Fava-specific implementation constraints need validation during build)
 
-## Feature Landscape
+---
 
-### Table Stakes (Users Expect These)
+## Context
 
-Features the system is useless without. If any of these are missing, the tool does not fulfil its core purpose of "every dollar correctly categorized, traceable, CPA-ready."
+CompteQC v1.0 is functionally complete: import, categorize, review, payroll, CCA, GST/QST, CPA export all work. The UI uses Fava extensions with a custom Quebec blue theme (`ThemeQCExtension.js` injecting ~1,200 lines of CSS), Jinja2 templates, and vanilla JS. The existing design system includes `cqc-kpi`, `cqc-table`, `cqc-card`, `cqc-badge`, `cqc-btn`, and `cqc-dropzone` component classes.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Transaction import (CSV/OFX)** | Without import, you are doing manual data entry — the thing the system exists to eliminate | LOW | RBC CSV/OFX only for v1. Parser is straightforward; format rarely changes. Normalize dates, amounts, descriptions. |
-| **Quebec chart of accounts** | Double-entry requires a COA. IT-consultant-specific COA already designed (1000-6999). Without it, every categorization is meaningless. | LOW | Already researched. Load from config file. Must map to CRA/RQ categories for CPA export. |
-| **Double-entry ledger with audit trail** | The accounting engine. Without proper debits/credits that balance, this is a spreadsheet not an accounting system. | HIGH | Core architectural decision (HLedger vs Beancount vs PyLedger vs custom). Every entry must reference source document. Immutable append-only log. |
-| **Rule-based transaction categorization** | Handles 60-70% of transactions deterministically. Rules are transparent, auditable, and do not hallucinate. | MEDIUM | Pattern matching on payee/description/amount. e.g., "PROCOM" -> 4000 Consulting Revenue. Configurable rules file. Must run before LLM. |
-| **LLM-assisted categorization (edge cases)** | Handles the 30-40% that rules miss. Community-proven hybrid approach achieves 95% accuracy vs 8% LLM-only. | MEDIUM | Claude API for ambiguous transactions. Must constrain to existing COA (no invented accounts). Confidence scoring mandatory. |
-| **Confidence scoring + human review workflow** | Without human verification of AI decisions, you cannot trust the data. CPA will not accept unreviewed AI output. | MEDIUM | Flag anything below 80% confidence. Batch review interface. Approve/reject/recategorize. Corrections feed back into rules. |
-| **GST (5%) / QST (9.975%) tracking** | Legal obligation. ~$230K revenue = mandatory registration. Every business expense needs ITC/ITR calculated. | MEDIUM | Separate GST/QST accounts for collected and paid. Net calculation per filing period. Must handle exempt items (e.g., financial services, basic groceries). |
-| **CPA export package** | The entire point: "CPA reviews in <1 hour." Without clean exports, the system fails its core mission. | MEDIUM | Trial balance, P&L, balance sheet, GL detail, GST/QST summary, payroll summary, CCA schedule. CSV + PDF. Must match what CPAs expect. |
-| **Payroll calculation engine** | Solo owner-employee must calculate correct source deductions every pay period. QPP, RQAP, EI, FSS, CNESST, labour standards, federal+Quebec income tax. | HIGH | All formulas already documented with 2026 rates. Must handle annual maximums, QPP exemption, Quebec-specific EI rate, FSS thresholds. Rates change annually — config-driven. |
-| **CCA tracking (capital cost allowance)** | Assets over $500 must be capitalized, not expensed. Half-year rule, declining balance, class-specific rates. | MEDIUM | Classes 8, 10, 12, 50, 54 relevant for IT consultant. Track UCC per class. Half-year rule in acquisition year. Handle disposals. |
-| **Shareholder loan account tracking** | CRA aggressively audits this. Personal expenses through corp = loan to shareholder. Must repay within deadline or it becomes taxable income. | LOW | Dedicated account (1800). Flag when balance > $0 approaching year-end. Simple but critical — missing this causes real tax pain. |
-| **CLI interface** | Developer-friendly means CLI-first. Batch imports, quick queries, automation scripts. | LOW | Wraps core library. Commands: import, categorize, review, report, export. Scriptable for cron jobs. |
+v1.1 focuses exclusively on making it look and feel like a real fintech product -- competing with QuickBooks/Xero on visual polish while staying within Fava's extension architecture (no custom frontend framework).
 
-### Differentiators (Competitive Advantage)
+---
 
-Features that make this system worth building instead of using Wave/QuickBooks. These align with the core value of developer-friendliness and Quebec-specific automation.
+## Table Stakes
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **MCP server for Claude interaction** | The killer feature. Claude can query balances, add transactions, generate reports, answer questions about your books — conversationally. No commercial tool offers this. | MEDIUM | Expose ledger operations as MCP tools. Read-only mode for safety. hledger-mcp proves this works. Must scope carefully — Claude should query and propose, not write directly without approval. |
-| **Receipt/invoice parsing (PDF/image)** | Eliminates manual receipt data entry. AI extracts vendor, date, amount, tax breakdown from photos/PDFs. | MEDIUM | LLM-based extraction (Claude vision or dedicated OCR). TaxHacker proves the pattern. Must validate extracted amounts against bank transactions for reconciliation. |
-| **Invoice generation** | Generate professional invoices for Procom and training clients. Auto-calculate GST/QST. Track payment status. | LOW | Simple template engine. Procom likely has their own format requirements. Training gigs need standard invoices. Link invoices to receivables. |
-| **OPEX vs CAPEX auto-classification** | $500 threshold detection. Items above $500 flagged as potential capital assets, assigned CCA class. Saves time and prevents common errors. | LOW | Rule: amount > $500 + category match -> flag for CAPEX review. Suggest CCA class based on description (computer -> Class 50, furniture -> Class 8). |
-| **Web dashboard** | Visual transaction review, report viewing, invoice management. Not everyone wants CLI all the time. | HIGH | Full web app (likely separate phase). Transaction list with filters, approval workflow, charts, report viewer. Could be simple — hledger-web or Fava prove a basic web UI adds huge value. |
-| **Correction feedback loop** | When you fix an AI miscategorization, the correction improves future accuracy. Rules auto-generate from repeated corrections. | MEDIUM | Store corrections. After N identical corrections, propose a new rule. RAG index for LLM context. Community reports this is what pushes accuracy from 85% to 95%. |
-| **Filing deadline alerts** | Calendar of obligations (T4/RL-1 by Feb 28, GST/QST by Mar 31, T2/CO-17 by Jun 30, etc.) with reminders. | LOW | Static calendar already documented. Generate alerts based on fiscal year-end. Low effort, high value — missing a deadline means penalties. |
-| **Payroll remittance tracking** | Track what has been remitted to CRA/Revenu Quebec vs what is owed. Flag upcoming remittance deadlines. | LOW | Sum liability accounts (2200-2270) vs payments. Regular remitter = 15th of following month. Simple balance check. |
-| **Year-end checklist automation** | Guided workflow: verify shareholder loan, confirm CCA schedule, reconcile GST/QST, generate all CPA deliverables. | LOW | Scripted checklist that queries the ledger and flags issues. "Shareholder loan balance: $X — must repay by [date]." Huge time saver at year-end. |
-| **Self-hosted / local data** | Financial data never leaves your machine. No cloud dependency. No subscription. Full control. | LOW | Architecture decision, not a feature to build. But it is a differentiator vs QuickBooks/Xero/Wave. Impacts technology choices. |
-| **Git-versioned data** | Every change to the ledger is a git commit. Full history, rollback, diff. Audit trail built into the tool developers already use. | LOW | Plain-text ledger formats (HLedger/Beancount) naturally support this. Just init a git repo and auto-commit on changes. |
+Features users expect from any modern accounting dashboard. Missing = the product feels like a developer prototype, not a real tool.
 
-### Anti-Features (Commonly Requested, Often Problematic)
+| Feature | Why Expected | Complexity | Fava Dependency | Notes |
+|---------|--------------|------------|-----------------|-------|
+| **Dashboard homepage with KPI summary** | QuickBooks, Xero, FreshBooks, Wave all open to a financial snapshot. The landing page IS the product's first impression. The "5-second rule": glance and know your financial state. | Medium | New Fava extension (`TableauBordExtension`) with Python backend to query Beancount balances | Must show: YTD revenue, YTD expenses, net income, cash position (bank balance), pending approvals count. Top of page, above the fold. |
+| **KPI cards with semantic coloring** | Every accounting SaaS uses colored metric cards (green=positive, red=negative, amber=warning). Their absence signals prototype-grade tool. | Low | Extend existing `cqc-kpi` classes in ThemeQCExtension | Already partially implemented in TaxesQC and PaieQC. Need consistency: same card dimensions, same label/value/trend layout across ALL extensions. |
+| **Revenue trend line chart** | The single most common dashboard visualization across QuickBooks, Xero, and Wave. Monthly revenue over time is the metric every business owner checks first. | Medium | Chart.js line chart injected via JS module (decision already pending in PROJECT.md) | Monthly granularity. 12-month rolling window. Use `--qc-blue` for the line. Area fill with low opacity for visual weight. |
+| **Expense breakdown chart** | Donut/pie showing where money goes by category. Present in every competitor dashboard. Answers "what am I spending on?" at a glance. | Medium | Chart.js doughnut chart | Donut preferred over pie (cleaner look, allows center label showing total). Top 6 categories + "Autres" bucket. Use semantic colors from the palette. |
+| **Table hover states** | Modern tables highlight rows on hover. Without this, data tables feel dead and static. Every SaaS product does this. | Low | CSS addition to `cqc-table` in ThemeQCExtension | Already have `--qc-transition: 180ms` variable. Add `tbody tr:hover { background: var(--qc-blue-lighter); }`. Trivial but visually impactful. |
+| **Consistent spacing and typography hierarchy** | Inconsistent padding, font sizes, or whitespace between extensions breaks the "single product" illusion. Users notice rhythm even subconsciously. | Low | Audit and normalize ThemeQCExtension CSS | Check all 8 extensions use the same spacing tokens. Ensure `cqc-page-header`, `cqc-section-title`, `cqc-card` have identical margins everywhere. |
+| **Loading and empty states** | Pages with no data that show nothing (or flash unstyled) feel broken. Every polished app has thoughtful empty states. | Low | Per-extension template updates | Already have `cqc-empty` class. Ensure ALL extensions use it. Add skeleton placeholder for charts while Chart.js loads. |
+| **Responsive table containers** | Tables that overflow and break layout on narrower viewports look unprofessional. TaxesQC has 8 columns -- this will break on < 1200px. | Low | CSS `overflow-x: auto` wrapper | Wrap all `cqc-table` in a scrollable container. Don't hide columns -- horizontal scroll is acceptable for data-dense tables. |
+| **Confidence badges with visual urgency** | The 3-tier badge system (Elevee/Moderee/Revision) exists but "Revision" items need more visual weight to draw the eye. Urgent items should look urgent. | Low | CSS refinement in ApprobationExtension | Make "Revision" badge use `--qc-error` with subtle pulse or larger size. "Elevee" can be muted. Visual weight should scale inversely with confidence. |
 
-Features that seem good but create problems. Deliberately excluded.
+## Differentiators
 
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| **Tax return filing (T2, CO-17, T4, RL-1)** | "Automate everything end-to-end" | Tax filing has legal liability. CRA/RQ XML schemas change annually. T2/CO-17 complexity is enormous. One error = penalties + interest. CPA handles this for ~$1,500-2,000/year — worth every dollar. | Produce a clean CPA export package. Let CPA file. |
-| **Tax advice / salary vs dividend optimization** | "Tell me the optimal split" | Legal and professional liability. Tax optimization depends on personal circumstances (RRSP room, spousal income, TFSA, future plans). AI recommending tax strategy is dangerous. | Surface the data (total salary, total dividends, corp tax rate, personal marginal rate). Let CPA advise. |
-| **Real-time bank sync (Plaid/Flinks)** | "Auto-import like QuickBooks" | Plaid/Flinks require ongoing subscription, break frequently, create security surface area (OAuth tokens to bank). For 1 bank with ~20-30 transactions/month, CSV import weekly is sufficient. | CSV/OFX import on demand. Takes 2 minutes. |
-| **Multi-currency support** | "What if I get USD clients?" | Adds FX tracking, unrealized gains/losses, and reporting complexity. Not needed when all clients pay CAD through Procom. | Defer entirely. If USD revenue appears, add as a future milestone. |
-| **Mobile app** | "Review transactions on my phone" | Separate codebase, app store deployment, responsive web is sufficient for occasional mobile use. Solo consultant is at a desk 95% of the time. | Web dashboard with responsive design. |
-| **AI-generated financial reports / commentary** | "Claude writes my financial summary" | LLMs hallucinate numbers. Financial reports must be mathematically exact. AI commentary on reports could mislead. | Let the ledger engine generate exact reports. Use MCP to let Claude explain them conversationally, but never generate the numbers themselves. |
-| **Multi-user / role-based access** | "What about my CPA login?" | Solo system. Adding auth, permissions, and user management is pure overhead. CPA gets a PDF/CSV export, not a login. | Export package for CPA. Read-only MCP mode if CPA wants to query. |
-| **Automated payment / bank transfer** | "Pay invoices automatically" | Initiating bank transactions programmatically requires bank API access, creates massive security risk, and is unnecessary for ~5 payments/month. | Track what is owed. Pay manually via RBC online banking. Mark as paid in system. |
-| **Inventory / project costing** | "Track cost per project" | IT consulting is a service business with near-zero COGS. Project costing adds complexity for no value when you have 1-2 clients. | Tag transactions by client if needed. Simple. |
-| **PSB risk assessment tool** | "Tell me if I'm at PSB risk" | Legal determination. False reassurance is dangerous. Factors are qualitative (degree of control, ownership of tools, chance of profit/loss). | Surface PSB-relevant indicators (single client %, own tools Y/N, number of clients) without making a determination. Flag for CPA discussion. |
+Features that elevate CompteQC from "functional tool" to "polished fintech product." Not expected by default, but create delight and signal quality.
+
+| Feature | Value Proposition | Complexity | Fava Dependency | Notes |
+|---------|-------------------|------------|-----------------|-------|
+| **KPI count-up animation** | Numbers animate from 0 to final value on page load (~800ms). Used by Stripe Dashboard, Mercury, and modern fintech apps. Creates immediate sense of dynamism and polish. | Low | JS in ThemeQCExtension or per-extension `<script>` | `requestAnimationFrame` with ease-out curve. Only on initial render. Format with `toLocaleString('fr-CA')` for proper number formatting. Target all `.cqc-kpi-value` elements. |
+| **Cash flow bar chart (inflows vs outflows)** | Stacked bar chart showing monthly revenue (green) vs expenses (red). More insightful than separate numbers. QuickBooks Advanced has this; most small-biz tools don't. | Medium | Chart.js stacked bar chart | Monthly bars with positive (revenue) stacked above zero, negative (expenses) below. Optional net line overlay. Provides the "trajectory" view that line charts alone miss. |
+| **Upload progress animation + file preview** | Animated progress bar during receipt upload, with image thumbnail or PDF icon preview. Current upload is fire-and-forget with no visual feedback. | Medium | JS enhancement to RecusExtension form handler | Use `FileReader` API for instant image preview. CSS-animated progress bar (even simulated for fast local uploads -- the animation IS the feedback). Show file type icon for non-image files. |
+| **Bulk approval with keyboard shortcuts** | Power-user feature: Shift+click for range selection, Enter to approve, Space to toggle rows. Current bulk action is mouse-click-only. | Medium | JS enhancement to ApprobationExtension | Shift+click range select is the key unlock. Also: up/down arrow navigation with visual focus indicator. Power users will process 50 transactions in seconds. |
+| **Transaction row expansion (inline detail)** | Click a row to expand and see: AI reasoning, source file link, confidence breakdown, account suggestion rationale. No page navigation needed. | High | JS accordion + template changes in ApprobationExtension | Valuable for the approval workflow -- see why AI chose a category without leaving the queue. Uses `<tr class="detail-row">` inserted after each data row, toggled on click. |
+| **Smooth page transitions** | CSS fade-in when switching between Fava extensions. Content slides or fades in rather than hard-cutting. | Low | CSS `@keyframes` in ThemeQCExtension | `animation: fadeIn 200ms ease-out` on main content container. Subtle but makes navigation feel cohesive rather than page-reload-y. |
+| **Period selector for dashboard** | Button group (MTD / QTD / YTD / 12M) to switch dashboard timeframe. | Medium | Dashboard extension JS + Python backend date filtering | Requires backend to accept date range params and filter balance queries. Start with YTD as default. MTD useful for monthly monitoring. |
+| **Sidebar notification badge** | Red badge with pending approval count on the "Approbation" sidebar link. Draws attention to items needing action without visiting the page. | Low | ThemeQCExtension.js DOM manipulation of Fava sidebar | Inject a `<span class="cqc-badge-nav">N</span>` into the sidebar link. Fetch count via a lightweight API call or embed in page data. |
+| **Contextual French tooltips** | Hover over accounting jargon (CTI, RTI, DPA, UCC, etc.) to see a plain-French explanation. Pedagogical feature already planned in PROJECT.md. | Low | CSS-only tooltips using `[data-tooltip]::after` | No JS library needed. Pure CSS hover tooltips. Add `data-tooltip="Credit de taxe sur les intrants..."` to abbreviations. Builds the "teaching tool" identity. |
+| **GST/QST period status stepper** | Horizontal progress bar showing which filing periods are complete, current, or upcoming. Visual timeline instead of just a table. | Medium | TaxesQC template enhancement | Stepper UI with checkmarks for filed periods, highlighted current period, grey future. Adds "am I on track?" context that the raw table doesn't provide. |
+
+## Anti-Features
+
+Features to explicitly NOT build. Each adds complexity disproportionate to value for a self-hosted, solo-user accounting tool.
+
+| Anti-Feature | Why Avoid | What to Do Instead |
+|--------------|-----------|-------------------|
+| **Customizable dashboard layout (drag-to-rearrange widgets)** | Grid-based dashboard builders (Grafana-style) are enormously complex. Solo user has one workflow. The time spent building a widget system exceeds the time spent using it. | Fixed, opinionated layout. One dashboard that works well. Change it in code when needed -- you are the only user. |
+| **Dark mode toggle** | Building a proper dark mode for all custom CSS across 8 extensions is significant maintenance burden. Fava has its own partial dark mode that conflicts. The dark sidebar already provides visual contrast. | Keep the Quebec blue light theme. Dark sidebar is enough contrast. |
+| **Animated chart transitions on every data change** | Gratuitous animation slows perceived performance and annoys power users doing rapid comparisons. Charts should update instantly when data changes. | Animate only on initial page load. Subsequent data updates (period changes, filters) should render instantly. |
+| **Mobile-responsive full redesign** | PROJECT.md says web-first, desktop access. Responsive grid layout across 8 extensions is high effort for a tool used at a desk. | Ensure nothing breaks catastrophically below 1024px. Don't optimize for phone. Scrollable tables are sufficient. |
+| **AI-generated dashboard commentary** | PROJECT.md explicitly excludes this. "Revenue is trending up 12% -- great job!" is either obvious or hallucinatory. Numbers speak for themselves. | Show numbers clearly with semantic coloring. Let the human interpret. Tooltips educate, AI doesn't narrate. |
+| **Multi-language toggle (EN/FR)** | User is francophone. Building i18n infrastructure (message catalogs, language switching, RTL concerns) for one person is pure waste. | Everything in French. English technical terms in code are fine. |
+| **Infinite scroll or virtualized tables** | Data volume is tiny: ~30 transactions/month, ~12 payroll entries/year, ~4 tax periods. Pagination or virtual scroll adds complexity solving a problem that doesn't exist. | Render full tables. Filter by period if needed. |
+| **Real-time WebSocket updates** | Solo user. No concurrent editors. No live bank feed. Real-time infrastructure (WebSocket server, reconnection logic, state sync) solves nothing. | Standard page load. Refresh to see updates. |
+| **Custom charting library** | Chart.js handles line, bar, doughnut, and area charts. Building custom SVG visualizations or adopting D3.js adds massive complexity for marginal visual improvement. | Chart.js with thoughtful configuration. Use its built-in animations and responsive sizing. |
 
 ## Feature Dependencies
 
 ```
-[Transaction Import (CSV/OFX)]
-    +--requires--> [Chart of Accounts]
-    +--requires--> [Double-Entry Ledger]
+FOUNDATION LAYER (must complete first):
+  Theme CSS audit (spacing, typography, shadows)
+    --> Table hover states (CSS)
+    --> Consistent card sizing
+    --> Badge refinement
+    --> All other visual features inherit these styles
 
-[Rule-Based Categorization]
-    +--requires--> [Transaction Import]
-    +--requires--> [Chart of Accounts]
+DASHBOARD LAYER (highest impact, depends on foundation):
+  Dashboard homepage extension (Python + HTML)
+    --> KPI cards (revenue, expenses, net income, cash, pending count)
+    --> Chart.js setup (CDN or vendored JS)
+        --> Revenue trend line chart
+        --> Expense breakdown donut chart
+        --> Cash flow bar chart (can defer)
+    --> KPI count-up animation (JS on top of cards)
+    --> Period selector (JS + Python date filtering)
 
-[LLM Categorization]
-    +--requires--> [Rule-Based Categorization] (runs after rules, on uncategorized remainder)
-    +--requires--> [Chart of Accounts] (constrains LLM output)
+EXTENSION POLISH LAYER (independent of dashboard):
+  Receipt upload animation + preview
+    --> Depends on: existing RecusExtension dropzone
+  Approval queue keyboard shortcuts
+    --> Depends on: existing ApprobationExtension table
+  Transaction row expansion
+    --> Depends on: table hover states + ApprobationExtension
+  Sidebar notification badge
+    --> Depends on: ThemeQCExtension sidebar DOM access
 
-[Confidence Scoring + Human Review]
-    +--requires--> [LLM Categorization]
-
-[Correction Feedback Loop]
-    +--requires--> [Confidence Scoring + Human Review]
-    +--enhances--> [Rule-Based Categorization] (auto-generates new rules)
-    +--enhances--> [LLM Categorization] (RAG context)
-
-[GST/QST Tracking]
-    +--requires--> [Double-Entry Ledger]
-    +--requires--> [Chart of Accounts] (tax accounts)
-
-[CCA Tracking]
-    +--requires--> [Double-Entry Ledger]
-    +--requires--> [OPEX vs CAPEX Classification]
-
-[OPEX vs CAPEX Classification]
-    +--requires--> [Rule-Based Categorization]
-
-[Payroll Engine]
-    +--requires--> [Double-Entry Ledger]
-    +--independent-- (can be built in parallel with import pipeline)
-
-[Invoice Generation]
-    +--requires--> [Double-Entry Ledger] (records receivable)
-    +--requires--> [GST/QST Tracking] (calculates taxes on invoice)
-
-[Receipt Parsing]
-    +--requires--> [Double-Entry Ledger] (stores extracted data)
-    +--enhances--> [Transaction Import] (reconciles parsed receipts against bank transactions)
-
-[CPA Export]
-    +--requires--> [Double-Entry Ledger]
-    +--requires--> [GST/QST Tracking]
-    +--requires--> [CCA Tracking]
-    +--requires--> [Payroll Engine]
-    +--requires--> [Shareholder Loan Tracking]
-
-[MCP Server]
-    +--requires--> [Double-Entry Ledger]
-    +--enhances--> [all query/report features]
-
-[Web Dashboard]
-    +--requires--> [Double-Entry Ledger]
-    +--requires--> [Confidence Scoring + Human Review]
-    +--enhances--> [all features via visual interface]
-
-[CLI]
-    +--requires--> [Double-Entry Ledger]
-    +--wraps--> [all core operations]
+FINISHING LAYER (after all above):
+  Page transitions (CSS animation)
+  Contextual French tooltips (data-tooltip attributes)
+  GST/QST period stepper (TaxesQC template)
 ```
 
-### Dependency Notes
+## MVP Recommendation
 
-- **Everything requires the Double-Entry Ledger:** This is the foundation. Pick the ledger engine first (HLedger/Beancount/PyLedger), then build everything on top.
-- **Categorization is a pipeline:** Import -> Rules -> LLM -> Confidence Score -> Human Review -> Feedback. Each stage depends on the previous one.
-- **CPA Export requires all financial features:** It is the capstone. Cannot produce a complete package without GST/QST, CCA, payroll, and shareholder loan data all flowing into the ledger.
-- **MCP Server and Web Dashboard are presentation layers:** They expose the same underlying data through different interfaces. Build the core first, then add interfaces.
-- **Payroll is independent of the import pipeline:** It can be built in parallel. Owner inputs salary amount, system calculates deductions and generates journal entries.
-- **Receipt Parsing enhances but does not block:** The system works without it (manual receipt tracking). It makes life easier by auto-extracting data from documents.
+### Priority 1 -- Foundation (everything depends on this)
 
-## MVP Definition
+1. **Theme CSS audit and refinement** -- Normalize spacing, typography scale, shadow usage, and card dimensions across all 8 extensions. This is the invisible work that makes everything else look coherent. Estimated: 1 plan.
+2. **Table hover states and row styling** -- Add hover backgrounds, improve column alignment, ensure `.montant` columns right-align consistently. Estimated: part of plan 1.
+3. **Loading/empty states audit** -- Verify all extensions handle zero-data gracefully. Estimated: part of plan 1.
 
-### Launch With (v1)
+### Priority 2 -- Dashboard (highest visible impact)
 
-Minimum viable product: import bank transactions, categorize them, produce a trial balance for the CPA.
+4. **Dashboard homepage extension** -- New `TableauBordExtension` with Python backend querying Beancount for KPI values. KPI cards row at top. Estimated: 1 plan.
+5. **Revenue trend line chart** -- Chart.js line chart, monthly, 12-month rolling. Estimated: part of dashboard plan.
+6. **Expense breakdown donut chart** -- Chart.js doughnut, top 6 categories. Estimated: part of dashboard plan.
 
-- [ ] **Double-entry ledger engine** — the accounting foundation; all other features build on this
-- [ ] **Chart of accounts (Quebec IT consultant)** — load the already-designed 1000-6999 COA
-- [ ] **RBC CSV/OFX import** — get bank transactions into the system
-- [ ] **Rule-based categorization** — deterministic rules handle the predictable 60-70%
-- [ ] **LLM categorization with confidence scoring** — Claude API handles ambiguous transactions
-- [ ] **Human review workflow (CLI)** — approve/reject/recategorize flagged items
-- [ ] **GST/QST tracking** — separate ITC/ITR calculation on all categorized expenses
-- [ ] **Basic reporting** — trial balance, P&L, balance sheet in CSV format
-- [ ] **CLI interface** — import, categorize, review, report commands
-- [ ] **Shareholder loan tracking** — dedicated account with year-end balance alert
+### Priority 3 -- Micro-interactions (the polish that signals quality)
 
-### Add After Validation (v1.x)
+7. **KPI count-up animation** -- JS `requestAnimationFrame` on `.cqc-kpi-value`. Estimated: small task within a plan.
+8. **Page transitions** -- CSS `fadeIn` animation on content load. Estimated: small task.
+9. **Sidebar notification badge** -- Pending approval count on nav link. Estimated: small task.
 
-Features to add once the core import-categorize-report pipeline is working and trusted.
+### Priority 4 -- Extension-specific upgrades
 
-- [ ] **Payroll calculation engine** — triggered when you start paying yourself salary (may be needed for first payroll run, could be v1 if timing demands it)
-- [ ] **CCA tracking** — needed before first year-end if capital assets were acquired
-- [ ] **OPEX vs CAPEX auto-classification** — enhances categorization pipeline
-- [ ] **CPA export package** — full structured export (trial balance + all schedules)
-- [ ] **Correction feedback loop** — auto-generate rules from repeated corrections
-- [ ] **MCP server** — let Claude query and interact with the ledger conversationally
-- [ ] **Invoice generation** — generate invoices for training clients (Procom may not need invoices from you)
-- [ ] **Filing deadline alerts** — static calendar with reminders
+10. **Receipt upload animation + file preview** -- Progress bar, image thumbnail, file type icon. Estimated: 1 plan.
+11. **Approval queue UX** -- Keyboard shortcuts, range selection, improved visual scanning. Estimated: 1 plan.
+12. **Contextual French tooltips** -- `data-tooltip` on accounting jargon across all extensions. Estimated: part of a plan.
 
-### Future Consideration (v2+)
+### Defer
 
-Features to defer until the core system is proven and stable.
+- **Cash flow waterfall chart** -- Revenue trend + expense donut cover 80% of insight. Add later.
+- **Transaction row expansion** -- High complexity. Current detail workflow (view in Fava journal) works. Revisit if approval queue becomes bottleneck.
+- **Period selector** -- Start with YTD fixed view. Add switching only after dashboard proves its value.
+- **GST/QST period stepper** -- Current table view works. Visual sugar, not a functional improvement.
 
-- [ ] **Web dashboard** — full web UI for visual transaction review and reporting (HIGH complexity, defer until CLI workflow is solid)
-- [ ] **Receipt/invoice parsing** — PDF/image AI extraction (valuable but not blocking; keep physical receipts organized meanwhile)
-- [ ] **Payroll remittance tracking** — track amounts owed vs remitted to CRA/RQ
-- [ ] **Year-end checklist automation** — guided workflow for annual close
-- [ ] **Git-versioned data** — auto-commit ledger changes (trivial if using plain-text format, but formalize later)
+## Competitor Pattern Reference
 
-## Feature Prioritization Matrix
+### QuickBooks Online
+- **Dashboard:** KPI cards at top (income, expenses, profit/loss) with trend arrows. Below: income vs expenses bar chart, expense breakdown pie, recent transactions.
+- **Tables:** Clean with subtle alternating row shading, hover highlights, inline action buttons on hover.
+- **Navigation:** Left sidebar with icon + text. Active item highlighted with colored left border.
+- **Pattern to adopt:** KPI cards as first thing visible. Big number + small label above + trend indicator (arrow + percentage) below. This is the target layout for CompteQC dashboard cards.
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Double-entry ledger engine | HIGH | HIGH | P1 |
-| Chart of accounts | HIGH | LOW | P1 |
-| Transaction import (CSV/OFX) | HIGH | LOW | P1 |
-| Rule-based categorization | HIGH | MEDIUM | P1 |
-| LLM categorization + confidence | HIGH | MEDIUM | P1 |
-| Human review workflow | HIGH | MEDIUM | P1 |
-| GST/QST tracking | HIGH | MEDIUM | P1 |
-| Shareholder loan tracking | HIGH | LOW | P1 |
-| CLI interface | HIGH | LOW | P1 |
-| Basic reporting | HIGH | MEDIUM | P1 |
-| Payroll calculation engine | HIGH | HIGH | P1/P2 (timing-dependent) |
-| CCA tracking | HIGH | MEDIUM | P2 |
-| CPA export package | HIGH | MEDIUM | P2 |
-| OPEX vs CAPEX classification | MEDIUM | LOW | P2 |
-| Correction feedback loop | MEDIUM | MEDIUM | P2 |
-| MCP server | HIGH | MEDIUM | P2 |
-| Invoice generation | MEDIUM | LOW | P2 |
-| Filing deadline alerts | MEDIUM | LOW | P2 |
-| Web dashboard | MEDIUM | HIGH | P3 |
-| Receipt/invoice parsing | MEDIUM | MEDIUM | P3 |
-| Payroll remittance tracking | LOW | LOW | P3 |
-| Year-end checklist | MEDIUM | LOW | P3 |
+### Xero
+- **Dashboard:** Cash flow front and center. Outstanding invoices and bills as separate summary sections. Bank account reconciliation status prominent.
+- **Tables:** Minimal decoration, generous whitespace. Click-to-expand for row details.
+- **Pattern to adopt:** "X transactions to review" as a prominent call-to-action card on the dashboard, linking to the approval queue.
 
-**Priority key:**
-- P1: Must have for launch — system is broken without it
-- P2: Should have — add as soon as core is stable, before first year-end
-- P3: Nice to have — defer to v2+
+### FreshBooks
+- **Dashboard:** Revenue summary (outstanding, overdue, in draft). Profit/loss bar chart. Recent activity sidebar.
+- **Pattern to adopt:** Outstanding amounts with status breakdown (not just a total, but how much is overdue vs current). Activity feed concept could work for recent AI categorizations.
 
-## Competitor Feature Analysis
+### Wave
+- **Dashboard:** Simple P&L chart, cash flow chart, minimal widgets. Clean and uncluttered.
+- **Pattern to adopt:** Restraint. Wave proves 3-4 well-chosen visualizations beat 20 widgets. CompteQC should have exactly the right amount of information, no more.
 
-| Feature | QuickBooks Online | Wave | Akaunting (self-hosted) | HLedger + MCP | Our Approach |
-|---------|-------------------|------|------------------------|---------------|--------------|
-| Transaction import | Auto-sync (Plaid) | Auto-sync | CSV import | CSV import | CSV/OFX import (RBC) |
-| Categorization | Rule-based + ML | Rule-based | Manual | Manual + MCP/AI | Rules-first + LLM + human review |
-| GST/QST | Yes (Canadian ed.) | Yes (basic) | Plugin | Manual journal entries | Automated ITC/ITR calculation |
-| Payroll (Quebec) | Add-on ($) | No | No | No | Built-in with all QC formulas |
-| CCA tracking | No (manual) | No | No | No | Automated by class with half-year rule |
-| Receipt parsing | Yes (mobile app) | Yes (basic) | Plugin | No | LLM-based extraction |
-| Invoice generation | Yes | Yes | Yes | No | Template-based with GST/QST |
-| MCP / AI assistant | No | No | No | Yes (hledger-mcp) | Native MCP server |
-| Self-hosted | No (cloud only) | No (cloud only) | Yes | Yes | Yes (local data) |
-| CPA export | Yes (accountant access) | Yes (accountant access) | Export | CLI reports | Structured package |
-| Quebec-specific | Partial | Minimal | No | No | Full (payroll, taxes, CCA, SBD awareness) |
-| Developer-friendly | No | No | Somewhat | Yes (CLI, plain text) | Yes (CLI, MCP, scriptable, git-versioned) |
+### Stripe Dashboard (aspirational target for fintech polish)
+- **KPI cards:** Large bold numbers with sparkline trends inline. Semantic coloring (green for growth).
+- **Micro-interactions:** Count-up on page load. Hover reveals exact values on chart data points. Smooth transitions between views.
+- **Pattern to adopt:** The count-up animation, the sparkline-in-card concept, and the "calm confidence" of the visual design. This is what "fintech polish" means in practice.
 
-**Key insight:** No existing tool combines Quebec-specific payroll/tax automation with MCP/AI integration and self-hosted local data. QuickBooks comes closest on features but fails on self-hosting, developer UX, and deep Quebec payroll automation. HLedger + MCP is the closest in spirit but requires building all Quebec specifics from scratch.
+## Complexity Summary
+
+| Feature Category | Count | Avg Complexity | Estimated Plans |
+|-----------------|-------|----------------|-----------------|
+| Table Stakes | 9 | Low-Medium | 2-3 |
+| Differentiators (selected) | 6-8 | Low-Medium | 2-3 |
+| Anti-Features (avoided) | 9 | -- | 0 (saved effort) |
+| **Total estimated** | | | **4-6 plans** |
 
 ## Sources
 
-- Beancount community: 95% automated categorization with hybrid rules + LLM approach ([beancount.io forum](https://beancount.io/forum/t/finally-got-95-automated-expense-categorization-working-with-beancount-llms/93))
-- FinNLP 2025 research: LLMs produce 8.33% fully correct entries without careful prompting ([beancount.io docs](https://beancount.io/docs/Solutions/using-llms-to-automate-and-enhance-bookkeeping-with-beancount))
-- hledger-mcp: production MCP server for accounting ([GitHub - iiAtlas/hledger-mcp](https://github.com/iiAtlas/hledger-mcp))
-- TaxHacker: self-hosted AI receipt parsing ([GitHub - vas3k/TaxHacker](https://github.com/vas3k/TaxHacker))
-- PyLedger: Python accounting with built-in MCP ([GitHub - dickhfchan/pyledger](https://github.com/dickhfchan/pyledger))
-- hledger features: ([hledger.org/features](https://hledger.org/features.html))
-- Plain text accounting overview: ([plaintextaccounting.org](https://plaintextaccounting.org/))
-- AI in Accounting 2026: ([DualEntry guide](https://www.dualentry.com/blog/ai-in-accounting))
-- Existing project research: `/Users/philippebeliveau/Desktop/Notebook/comptabilite/research/AI Accounting Automation Research.md`
-- Quebec tax reference: `/Users/philippebeliveau/Desktop/Notebook/comptabilite/research/quebec_incorporation_reference.md`
+- [Fintech UX Best Practices 2026 - Eleken](https://www.eleken.co/blog-posts/fintech-ux-best-practices)
+- [7 Fintech UX Design Trends 2025 - Design Studio](https://www.designstudiouiux.com/blog/fintech-ux-design-trends/)
+- [Top 10 Fintech UX Design Practices 2026 - Onething](https://www.onething.design/post/top-10-fintech-ux-design-practices-2026)
+- [Complex Approvals App Design - UXPin](https://www.uxpin.com/studio/blog/complex-approvals-app-design/)
+- [12 Financial Dashboard Examples - Qlik](https://www.qlik.com/us/dashboard-examples/financial-dashboards)
+- [26 Financial Dashboard Examples - Coupler.io](https://blog.coupler.io/financial-dashboards/)
+- [Building Modern Drag-and-Drop Upload UI 2025 - Filestack](https://blog.filestack.com/building-modern-drag-and-drop-upload-ui/)
+- [File Uploader UX Best Practices - Uploadcare](https://uploadcare.com/blog/file-uploader-ux-best-practices/)
+- [QuickBooks Dashboard KPIs - Klipfolio](https://www.klipfolio.com/resources/dashboard-examples/executive/quickbooks-accounting-dashboard)
+- [Chart.js Official Documentation and Samples](https://www.chartjs.org/docs/latest/samples/)
+- [Fintech UX Design Complete Guide - Webstacks](https://www.webstacks.com/blog/fintech-ux-design)
+- [Fintech UX Design Best Practices for Financial Dashboards - Wildnet](https://www.wildnetedge.com/blogs/fintech-ux-design-best-practices-for-financial-dashboards)
 
 ---
-*Feature research for: AI-assisted accounting, solo Quebec IT consultant (CCPC)*
-*Researched: 2026-02-18*
+*Feature research for: CompteQC v1.1 Production UI/UX milestone*
+*Researched: 2026-02-25*

@@ -1,185 +1,192 @@
 # Project Research Summary
 
-**Project:** CompteQC -- AI-Assisted Accounting System
-**Domain:** Financial automation / plain-text accounting for Quebec CCPC (IT consultant)
-**Researched:** 2026-02-18
-**Confidence:** MEDIUM-HIGH
+**Project:** CompteQC v1.1 -- Production UI/UX Polish
+**Domain:** Fintech-grade UI polish for a Fava/Beancount accounting extension system
+**Researched:** 2026-02-25
+**Confidence:** HIGH
 
 ## Executive Summary
 
-This project is a self-hosted, AI-assisted double-entry accounting system for a solo Quebec IT consultant operating through a CCPC. The expert consensus is clear: use **Beancount v3** as the ledger engine with a **tiered categorization pipeline** (deterministic rules first, ML second, LLM last). Pure-LLM categorization achieves only 8.33% accuracy for double-entry; the hybrid rules+ML+LLM approach reaches 95%. Every serious practitioner in the plain-text accounting community follows this pattern. The system exposes ledger operations via a custom MCP server for Claude interaction, uses Fava for web-based ledger exploration, and builds a lightweight FastAPI+HTMX layer for the approval workflow and CPA export.
+CompteQC v1.0 is functionally complete (import, categorize, payroll, CCA, GST/QST, CPA export), but the UI remains developer-grade. v1.1 is a pure visual polish milestone that must work entirely within Fava's extension architecture -- no build step, no custom frontend framework, no npm. The research confirms this is achievable with only two new JS dependencies (Chart.js 4.4.8 at 204 KB and CountUp.js 2.9.0 at 8 KB), both loaded as UMD bundles via dynamic script injection. Everything else -- animations, table styling, page transitions, hover states -- is pure CSS injected through the existing ThemeQCExtension.js pattern.
 
-The recommended approach is **Beancount + custom Python orchestration**. Beancount provides 10+ years of battle-tested double-entry validation, plain-text auditability, and a Python-native plugin system that lets Quebec-specific modules (payroll, GST/QST, CCA, shareholder loan) hook directly into the ledger processing pipeline. Alternatives were evaluated and rejected: HLedger requires Haskell for plugins (impractical for tax modules), PyLedger is too young with no community, and building a custom ledger engine wastes months on solved problems. The stack is pure Python with no JS build toolchain -- HTMX handles frontend interactivity.
+The recommended approach treats ThemeQCExtension.js as the single client-side orchestrator for all UI behavior across all extensions. A new `TableauBordExtension` provides the dashboard homepage (the highest-impact addition), while existing extensions receive incremental polish through data attributes that the theme module discovers and processes on `onPageLoad()`. The critical architectural pattern is the "data attribute bridge": templates embed JSON in `data-chart` and `data-value` attributes, and the JS module renders charts and animations after each SPA navigation. This bypasses Fava's limitation where `<script>` tags inserted via innerHTML do not execute.
 
-The critical risks are: (1) floating-point currency storage causing silent drift in tax calculations, (2) incorrect GST/QST calculation order (Quebec requires independent rounding, not combined rates), (3) LLM hallucinating account codes outside the valid chart of accounts, and (4) dual CRA/Revenu Quebec filing mismatches now that both agencies cross-match with AI. All four are preventable with correct upfront design -- but retrofitting any of them is expensive. The chart of accounts must be GIFI-mapped from day one, monetary amounts must use `Decimal` (Beancount handles this natively), and all AI categorizations must be constrained to a closed account list with mandatory human review.
+The top risks are Chart.js memory leaks from missing cleanup on SPA navigation (solved with a chart registry and destroy-on-load pattern), CSS `!important` escalation (91 existing uses that should migrate to Fava's CSS variable system), and DOM mutations lost during navigation (solved by replacing boolean flags with DOM presence checks). All three have clear, validated prevention strategies. The receipt upload endpoint also needs conversion from HTML redirects to JSON responses before any upload UX polish can proceed.
 
 ## Key Findings
 
 ### Recommended Stack
 
-Beancount v3 is the foundation: plain-text ledger files that are git-diffable, with Python plugins for validation and domain logic. The MCP Python SDK (v1.26.x) bridges Claude to the accounting system. FastAPI serves the approval dashboard and REST API. SQLite stores metadata (import batches, approval status, confidence scores) -- it is NOT the ledger. uv manages the entire Python toolchain.
+The existing stack (Python 3.12, Beancount v3, Fava, ThemeQCExtension.js with CSS-in-JS, Inter font) remains unchanged. Two libraries are added.
 
-**Core technologies:**
-- **Beancount v3:** Double-entry ledger engine -- Python-native plugins, strict validation, 10-year track record
-- **MCP Python SDK 1.26.x:** Claude integration -- official Anthropic SDK, supports tools/resources/prompts
-- **FastAPI + HTMX + Jinja2:** Approval dashboard -- server-rendered, no JS build step, lightweight
-- **Fava 1.30.x:** Ledger exploration UI -- production-quality charts, reports, BQL queries out of the box
-- **beangulp + smart_importer:** Import pipeline -- beangulp for parsing RBC CSV/OFX, smart_importer for ML categorization
-- **SQLite:** Metadata store -- approval queue, audit trail, classification logs (not the ledger)
-- **uv:** Package management -- 10-100x faster than pip, handles Python versions and lockfiles
-- **Typer + Rich:** CLI framework -- type-hint-driven commands with polished terminal output
+**New dependencies:**
+- **Chart.js 4.4.8 (UMD):** Dashboard charts (line, doughnut, bar) -- 204 KB, loaded via CDN or vendored Flask route. Chosen over ECharts (5x smaller) and D3 (too low-level). Must use UMD format because Chart.js ESM has a known bare specifier issue (`@kurkle/color`) that cannot be resolved without import maps.
+- **CountUp.js 2.9.0 (UMD):** KPI number animation -- 8 KB, small enough to inline in the JS module. Handles French-Canadian number formatting (space as thousand separator, comma as decimal). Could be replaced by a custom `requestAnimationFrame` implementation if the dependency is unwanted.
+- **Pure CSS animations:** All transitions, hover states, page-entry effects, and staggered card entrances use CSS `@keyframes` and existing `--qc-transition` custom properties. No animation library needed (Animate.css at 80 KB and GSAP at 120 KB both rejected as overkill).
+
+**Critical constraint:** Fava only auto-serves one JS file per extension (matching the class name). External libraries must load via dynamic `<script>` injection or a Flask route. No build step, no npm, no import maps.
+
+**Total additional payload:** ~212 KB JS (loaded on demand, browser-cached). 0 KB additional CSS (injected via existing JS pattern).
 
 ### Expected Features
 
 **Must have (table stakes):**
-- Double-entry ledger with audit trail (Beancount)
-- RBC CSV/OFX transaction import (beangulp)
-- Quebec chart of accounts with GIFI mapping (1000-6999)
-- Tiered categorization: rules (60-70%) -> ML (20-25%) -> LLM (5-10%) -> human review
-- Confidence scoring with human review workflow
-- GST (5%) / QST (9.975%) tracking with separate ITC/ITR
-- Payroll calculation engine (QPP, RQAP, EI, FSS, CNESST, federal+Quebec tax)
-- CCA tracking with half-year rule
-- Shareholder loan tracking with repayment deadline alerts
-- Basic reporting (trial balance, P&L, balance sheet)
-- CLI interface
+- Dashboard homepage with KPI summary (revenue, expenses, net income, cash, pending approvals)
+- KPI cards with semantic coloring (green/red/amber) and consistent dimensions across all extensions
+- Revenue trend line chart (monthly, 12-month rolling)
+- Expense breakdown doughnut chart (top 6 categories + "Autres")
+- Table hover states and consistent row styling with `tabular-nums` for money columns
+- Consistent spacing and typography hierarchy across all 8 extensions
+- Loading and empty states for all data views
+- Responsive table containers (horizontal scroll on narrow viewports)
+- Confidence badges with visual urgency scaling
 
 **Should have (differentiators):**
-- MCP server for conversational Claude interaction with the ledger
-- CPA export package (6 components: trial balance, GIFI financials, bank rec, shareholder loan schedule, CCA schedule, GST/QST reconciliation)
-- Correction feedback loop (human corrections auto-generate rules)
-- Receipt/invoice parsing via Claude Vision
-- Invoice generation with GST/QST
-- Filing deadline alerts
-- OPEX vs CAPEX auto-classification ($500 threshold)
+- KPI count-up animation (numbers animate from 0 to value, 600ms ease-out)
+- Cash flow bar chart (monthly inflows vs outflows)
+- Smooth page transitions (CSS fade-in on SPA navigation)
+- Sidebar notification badge (pending approval count)
+- Contextual French tooltips on accounting jargon (CTI, RTI, DPA, UCC)
+- Upload progress animation with file preview (image thumbnail or PDF icon)
+- Bulk approval keyboard shortcuts (Shift+click range select, Enter to approve)
 
 **Defer (v2+):**
-- Full web dashboard (Fava covers ledger exploration; custom UI only for approval)
-- Payroll remittance tracking
-- Year-end checklist automation
-- Multi-currency support
-- Real-time bank sync (Plaid/Flinks)
-- Tax return filing (CPA handles this)
-- Mobile app
+- Cash flow waterfall chart -- revenue trend + expense donut cover 80% of insight
+- Transaction row expansion (inline detail accordion) -- high complexity, current Fava journal view works
+- Period selector for dashboard -- start with YTD fixed view
+- GST/QST period status stepper -- current table view is functional
+- Customizable dashboard layout, dark mode, mobile-responsive redesign, multi-language toggle, real-time WebSocket updates, infinite scroll
 
 ### Architecture Approach
 
-The system follows a layered architecture: Beancount files are the single source of truth, Quebec domain modules are pure Python functions with no Beancount dependency (testable in isolation), thin Beancount plugins wrap these modules for ledger integration, and presentation layers (MCP server, Fava extensions, CLI) all consume the same core logic. A staging-then-commit pattern ensures AI-categorized transactions live in `pending.beancount` with a `#pending` tag until human-approved, preventing unchecked errors from reaching the official ledger.
+All client-side behavior lives in ThemeQCExtension.js, the single JS module that persists across Fava's SPA navigations. Templates pass data to JS via `data-*` attributes (the "data attribute bridge" pattern). Chart.js is loaded lazily with a cached Promise to prevent duplicate script injections. Every function called from `onPageLoad()` must be idempotent -- safe to call multiple times, cleaning up previous state before re-creating.
 
 **Major components:**
-1. **Ingestion Layer** -- Parses RBC CSV/OFX, applies rule+ML+LLM categorization pipeline, writes to staging
-2. **Beancount Core** -- Source of truth for all financial data; validates integrity, runs plugins, executes BQL queries
-3. **Quebec Modules** (`src/quebec/`) -- Pure Python: payroll, GST/QST, CCA, shareholder loan calculations with centralized `rates.py`
-4. **Beancount Plugins** (`src/plugins/`) -- Thin wrappers calling Quebec modules within Beancount's plugin pipeline
-5. **MCP Server** (`src/mcp/`) -- Exposes tools for categorization, querying, reporting, approval workflow to Claude
-6. **Fava + Extensions** -- Ledger exploration via Fava; custom extensions for approval UI and CPA export
+1. **ThemeQCExtension.js** -- CSS injection, Chart.js loading, chart rendering engine (`renderCharts()` scanning for `[data-chart]` containers), page transitions, KPI animations (`animateKPIs()` scanning for `[data-value]` elements), tooltip system, receipt upload UX. Single orchestrator for all client-side behavior.
+2. **TableauBordExtension** -- New Python extension (FavaExtensionBase subclass) computing KPIs and monthly data series from Beancount entries. Exposes `kpis()` returning dict and `chart_data_json()` returning Chart.js-compatible JSON string. Template embeds JSON in data attributes for JS pickup.
+3. **Chart.js (CDN/vendored)** -- Canvas-based chart rendering via `window.Chart` global. Three chart types: line (revenue trend), doughnut (expense breakdown), bar (cash flow). Instances stored in module-level registry for destroy-on-load cleanup.
+4. **Existing 8 extensions** -- Receive incremental polish: `data-value` attributes on KPI elements for count-up, refined CSS classes, improved template structure. No Python logic changes needed for most extensions.
+
+**Key patterns:**
+- Data attributes as template-to-JS bridge (because `<script>` in innerHTML does not execute)
+- Idempotent `onPageLoad()` functions (because the JS module persists but DOM is replaced)
+- Lazy CDN loading with Promise caching (load once, use everywhere)
+- Chart destroy-before-create (prevent memory leaks on SPA navigation)
+
+**Anti-patterns to avoid:**
+- `<script>` blocks in Jinja2 templates for non-trivial logic
+- Multiple `has_js_module` extensions competing to modify DOM
+- Relying on Chart.js instance state across SPA navigations
+- Global CSS animations on unscoped selectors (must use `.cqc-*` prefix)
 
 ### Critical Pitfalls
 
-1. **Floating-point currency storage** -- Use `Decimal` everywhere (Beancount does this natively); never `float`. A Montreal business accumulated $3,400 in QST errors from rounding drift. Must be correct from Phase 1.
-2. **GST/QST calculation order** -- Calculate GST and QST separately on pre-tax amount, each rounded independently per line item. `round(amount * 0.05, 2) + round(amount * 0.09975, 2)` -- never a combined `0.14975` rate. Must be correct from Phase 1.
-3. **LLM hallucinating account codes** -- Constrain LLM output to a closed enumerated list of valid accounts. Every LLM categorization gets confidence scoring and human review. Pin model versions; run drift detection monthly.
-4. **Dual CRA/ARQ filing mismatch** -- Both agencies now cross-match with AI. Generate GST and QST amounts from a single calculation pass, stored together at the transaction level. Automated reconciliation before filing.
-5. **Shareholder loan repayment deadline** -- CRA has a specific audit initiative for s.15(2). Track every debit balance with a computed inclusion date; alert at 9, 11, and 12.5 months. Detect circular borrow/repay patterns.
+1. **Chart.js memory leak on SPA navigation** -- Chart instances accumulate because Fava has no `onPageUnload` callback. Store instances in a module-level `Map<string, Chart>` registry; destroy all at the top of every `onPageLoad()` before creating new ones. Detect with Chrome DevTools heap snapshots or `Chart.getChart(canvas)`.
+
+2. **CSS `!important` escalation** -- 91 existing `!important` declarations vs. Fava's 0 (Fava uses 40+ CSS custom properties as the intended theming mechanism). Audit all uses; migrate to overriding `:root` variables. Reserve `!important` only for Svelte-scoped inline styles that cannot be overridden otherwise.
+
+3. **DOM mutations lost on navigation** -- Boolean flags in JS module scope say "already injected" but the DOM element was destroyed by innerHTML replacement. Replace all boolean flags with `document.querySelector()` checks for actual DOM presence.
+
+4. **Upload breaks SPA context** -- RecusExtension endpoint returns raw HTML strings and performs full-page redirect via form POST. Convert to AJAX with JSON responses before adding any upload UX polish. Use XHR (not fetch) for upload progress tracking.
+
+5. **Accessibility regressions from visual polish** -- Adding animations without `prefers-reduced-motion` guards, removing focus outlines, relying on color alone for badges. Add `@media (prefers-reduced-motion: no-preference)` wrapper to all animation/transition rules from day one. Current tooltip system already handles keyboard focus (good).
 
 ## Implications for Roadmap
 
 Based on research, suggested phase structure:
 
-### Phase 1: Foundation -- Ledger, COA, and Import Pipeline
-**Rationale:** Everything depends on the double-entry ledger and chart of accounts. The architecture research confirms "everything requires the Double-Entry Ledger" as the universal dependency. Getting the data model right prevents the costliest pitfalls (floating-point, GST/QST calculation order, mutable entries, GIFI mapping).
-**Delivers:** Working Beancount ledger with Quebec COA (GIFI-mapped), RBC CSV/OFX importer, rule-based categorization engine, basic CLI for import and query.
-**Addresses:** Double-entry ledger, COA, transaction import, rule-based categorization, CLI interface
-**Avoids:** Floating-point currency (Beancount uses Decimal natively), mutable ledger entries (Beancount files are append-only), GIFI mapping errors (enforce at account creation)
+### Phase 1: Foundation -- Chart.js Infrastructure and Design System Hardening
 
-### Phase 2: Quebec Domain Logic
-**Rationale:** Payroll, GST/QST, CCA, and shareholder loan are independent of the AI layer and can be built once the ledger exists. These are HIGH complexity, custom-build-required modules with no existing libraries. Building them early allows testing against known CRA/RQ published tables before layering AI on top.
-**Delivers:** Payroll engine with all Quebec deductions, GST/QST ITC/ITR module, CCA calculator with half-year rule, shareholder loan tracker with deadline alerts.
-**Uses:** Python `Decimal` math, centralized `rates.py`, pure-function architecture pattern
-**Implements:** Quebec Modules component, Beancount Plugins component
-**Avoids:** GST/QST calculation order errors (tested against RQ examples), CCA class misassignment (deterministic rules, not LLM), shareholder loan deadline misses (computed inclusion dates)
+**Rationale:** Every subsequent phase depends on Chart.js loading, the chart rendering engine, animation utilities, and a cleaned-up CSS foundation. The three critical pitfalls (#1 chart leak, #2 `!important` war, #3 DOM flag bug) must be solved here before any visual work begins. Self-hosting the Inter font eliminates the Google Fonts external dependency.
+**Delivers:** Chart.js lazy loader with destroy-on-load registry, `renderCharts()` engine with Quebec color palette, `animateKPIs()` with `requestAnimationFrame`, page-entry CSS animation, `!important` audit and CSS variable migration, self-hosted Inter font, `prefers-reduced-motion` guard on all animations, enhanced table hover states, consistent spacing/typography tokens, loading/empty state audit, responsive table containers.
+**Addresses features:** Table hover states, consistent spacing/typography, loading/empty states, responsive tables, confidence badges, page transitions.
+**Avoids pitfalls:** Chart.js memory leak (#1), CSS `!important` war (#2), DOM mutation loss (#3), FOUC (#5), accessibility regression (#7), offline font failure (#8).
 
-### Phase 3: AI Categorization Layer
-**Rationale:** Requires the rule engine from Phase 1 and chart of accounts to constrain LLM output. The tiered pipeline (rules -> smart_importer -> LLM -> human review) depends on all previous components. This is where the MCP server skeleton is introduced.
-**Delivers:** smart_importer ML integration, LLM categorization via MCP with confidence scoring, staging/approval workflow (`pending.beancount` with `#pending` tag), MCP server with core tools (categorize, query, approve).
-**Addresses:** LLM categorization, confidence scoring, human review workflow, MCP server
-**Avoids:** LLM hallucinated accounts (closed account list), direct AI writes to ledger (staging pattern), prompt injection (sanitized descriptions, structured prompts)
+### Phase 2: Dashboard Homepage
 
-### Phase 4: Reporting and CPA Export
-**Rationale:** CPA export is the capstone -- it requires all financial features (GST/QST, CCA, payroll, shareholder loan) to be flowing into the ledger. Cannot produce a complete package without Phase 2 data. Also includes dual-filing reconciliation checks.
-**Delivers:** Full CPA export package (6 components), Fava setup with custom extensions, Quebec report views, automated GST/QST reconciliation (CRA vs ARQ alignment), period-end checklist.
-**Addresses:** CPA export, basic reporting upgrade, filing deadline alerts, Fava integration
-**Avoids:** Dual filing mismatch (single-pass tax calculation, automated reconciliation), GIFI export errors (Schedule 100 balance validation before export), incomplete CPA package (checklist validation)
+**Rationale:** The dashboard is the highest-impact visual addition and the primary showcase for Chart.js. It validates the entire data flow (Python -> JSON -> data attribute -> Chart.js) end-to-end. Must come before extension polish because it introduces the data attribute bridge pattern that other extensions will adopt for KPI animations.
+**Delivers:** New `TableauBordExtension` with KPI cards (revenue YTD, expenses YTD, net income, cash position, pending approval count), revenue trend line chart (12-month rolling), expense breakdown doughnut chart (top 6 + Autres), cash flow bar chart (monthly). Sidebar updated with "Tableau de bord" at top position.
+**Uses:** Chart.js 4.4.8 UMD, CountUp.js 2.9.0 (or custom implementation), data attribute bridge pattern.
+**Implements:** TableauBordExtension component, chart data flow architecture, KPI count-up animation on dashboard.
 
-### Phase 5: Polish, Automation, and Enhancements
-**Rationale:** Convenience features that depend on all prior layers being stable. Receipt parsing, invoice generation, and the correction feedback loop add value but are not blocking.
-**Delivers:** Receipt/invoice parsing (Claude Vision), invoice generation with GST/QST, correction feedback loop (auto-generate rules from repeated corrections), payroll remittance tracking, year-end checklist automation, expanded MCP tools.
-**Addresses:** Receipt parsing, invoice generation, correction feedback loop, OPEX/CAPEX auto-classification
+### Phase 3: Existing Extension Polish
+
+**Rationale:** With foundation and dashboard complete, proven patterns (data-value attributes, refined CSS) are applied incrementally across all 8 existing extensions. Low risk: adding a `data-value` attribute to a template is minimal change with high visual impact. Extensions can be polished independently.
+**Delivers:** KPI count-up animations across PaieQC, TaxesQC, PretActionnaire, Echeances. Enhanced table row styling. Approval queue visual hierarchy improvements and keyboard shortcuts (Shift+click, Enter, Space). Consistent card/section styling. Sidebar notification badge for pending approvals. Contextual French tooltips on accounting jargon.
+**Addresses features:** KPI card consistency, count-up animation, sidebar badge, tooltips, keyboard shortcuts, confidence badge urgency.
+
+### Phase 4: Receipt Upload UX
+
+**Rationale:** Isolated as its own phase because it requires both Python endpoint changes (JSON response mode) and complex JS (XHR with upload.onprogress). Has a clear prerequisite: the endpoint must return JSON before any UX polish is possible. Separating it prevents it from blocking other polish work.
+**Delivers:** AJAX-based file upload via XHR, progress bar animation, image thumbnail preview (FileReader API), PDF/file type icon display, client-side validation (size limit, file type, duplicate detection via SHA-256 hash), animated drag-and-drop states, inline error handling with retry.
+**Avoids pitfalls:** Upload breaks SPA context (#6).
+
+### Phase 5: Final Polish and Validation
+
+**Rationale:** Typography audit, shadow/spacing consistency check, cross-browser testing, and accessibility validation must happen after all features are in place. This is the "sand and varnish" phase.
+**Delivers:** Typography scale audit (Inter font weights 400/500/600/700, consistent sizes), shadow and spacing audit across all extensions and Fava native pages, cross-browser verification (Safari, Chrome, Firefox), accessibility audit (keyboard navigation, screen reader, WCAG contrast ratios, `prefers-reduced-motion` verification).
+**Avoids pitfalls:** Animation jank on large tables (#4), accessibility regression (#7), mobile layout issues (#9).
 
 ### Phase Ordering Rationale
 
-- **Phase 1 before everything:** The ledger is the universal dependency. Every researcher independently confirmed this. Getting Decimal math, GIFI mapping, and append-only patterns right here prevents the three highest-recovery-cost pitfalls.
-- **Phase 2 before Phase 3:** Quebec domain logic is deterministic and testable against published government tables. It must exist before the AI layer so the categorization pipeline can trigger tax calculations and the LLM is constrained to valid accounts.
-- **Phase 3 before Phase 4:** The approval workflow must be in place before producing reports -- otherwise reports include unreviewed AI categorizations. The MCP server enables Claude to participate in the review process.
-- **Phase 4 after domain logic:** CPA export requires all financial modules to be complete. This is the "capstone" phase that integrates everything.
-- **Phase 5 last:** Enhancement features that improve efficiency but do not affect correctness.
+- Phase 1 before everything because Chart.js lifecycle management, CSS variable migration, and animation guards are safety nets that prevent bugs in all subsequent phases.
+- Phase 2 before Phase 3 because the dashboard validates the data attribute bridge pattern end-to-end; if it works for charts, the simpler KPI count-up pattern is guaranteed to work across other extensions.
+- Phase 3 before Phase 4 because extension polish is lower-risk (adding attributes to templates) and delivers broad visual improvement across the entire app, while upload UX is high-effort for a single extension.
+- Phase 4 is isolated because it requires Python endpoint changes, making it architecturally distinct from CSS/JS-only work in other phases.
+- Phase 5 last because polish audits only make sense after all features exist.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 2 (Quebec Domain Logic):** Payroll calculation is HIGH complexity with 7+ deduction types, annual maximums, and Quebec-specific rates. The formulas are documented but subtle (QPP exemption amount, RQAP vs EI interaction, FSS threshold tiers). Needs `/gsd:research-phase` with CRA T4032-QC tables and RQ TP-1015.TR.
-- **Phase 3 (AI Categorization):** smart_importer compatibility with Beancount v3 needs verification. The beangulp adapter pattern may require investigation. MCP server tool design (what to expose, safety boundaries) benefits from research.
-- **Phase 4 (CPA Export):** The exact format CPAs expect varies. TaxCycle GIFI import format and Caseware XML need investigation. Recommend consulting the actual CPA early.
+- **Phase 2 (Dashboard):** The `TableauBordExtension` Python backend needs to query Beancount for monthly aggregates. Validate the exact API for querying entries by date range within a Fava extension against existing codebase patterns (e.g., how PaieQCExtension queries payroll data).
+- **Phase 4 (Upload UX):** The RecusExtension endpoint modification (JSON response mode alongside existing redirect) needs careful testing for backward compatibility. XHR upload progress with Flask needs validation.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Foundation):** Beancount setup, beangulp importers, and rule engines are extremely well-documented with official examples and Context7 snippets.
-- **Phase 5 (Polish):** Receipt parsing via Claude Vision and invoice templating are straightforward integration patterns.
+- **Phase 1 (Foundation):** All patterns are well-documented CSS and JS. Chart.js UMD loading proven by fava-dashboards project. CSS variable override is Fava's intended extension mechanism.
+- **Phase 3 (Extension Polish):** Adding `data-value` attributes and CSS refinements follows established patterns already working in the codebase.
+- **Phase 5 (Final Polish):** Standard cross-browser and accessibility testing procedures.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Beancount, FastAPI, MCP SDK all verified via Context7 + PyPI with active maintainers. Version compatibility confirmed. |
-| Features | HIGH | Domain is specific and well-understood (solo Quebec IT consultant CCPC). Feature list derived from real-world tools and Quebec tax obligations. |
-| Architecture | MEDIUM-HIGH | Beancount plugin system and Fava extension API verified via official docs. smart_importer's Beancount v3 compatibility is the main uncertainty. |
-| Pitfalls | MEDIUM-HIGH | Tax/compliance pitfalls from official CRA/RQ sources (HIGH). Architecture pitfalls from practitioner reports (MEDIUM). Recovery costs are estimates. |
+| Stack | HIGH | Only 2 new dependencies, both battle-tested UMD libraries. Loading pattern proven by fava-dashboards. CDN URLs and sizes verified. |
+| Features | MEDIUM | Feature list well-defined from competitor analysis (QuickBooks, Xero, Stripe). Fava-specific implementation of some features (period selector, inline row expansion) needs build-time validation. |
+| Architecture | HIGH | Data attribute bridge, single JS module orchestrator, and lazy CDN loading all verified against Fava source code and existing CompteQC patterns. Anti-patterns documented with root causes. |
+| Pitfalls | HIGH | All pitfalls verified against actual source code: 91 `!important` counted, no `onPageUnload` confirmed in Fava source, raw HTML upload responses confirmed, boolean flag pattern identified. |
 
-**Overall confidence:** MEDIUM-HIGH
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **smart_importer + Beancount v3 compatibility:** Verify that smart_importer decorators work with beangulp importers in v3. May need an adapter. Test early in Phase 3.
-- **Fava extension API stability:** Fava's `FavaExtensionBase` is not formally documented as a stable API. Extensions may break on Fava upgrades. Pin Fava version.
-- **CPA export format:** The exact format the CPA prefers (TaxCycle, Caseware, plain CSV) is unknown. Consult CPA before building Phase 4.
-- **Docling vs Claude Vision for receipts:** Docling is newer with heavy dependencies (torch). Claude Vision is simpler for low-volume use. Defer decision to Phase 5.
-- **MCP SDK v2 breaking changes:** MCP SDK v2 is expected Q1 2026 with breaking changes. Pin `mcp>=1.25,<2` and plan migration when v2 stabilizes.
-- **Quebec Law 25 compliance:** Sending financial data to cloud LLM API may violate Quebec privacy law if personal info is included. Need to establish a redaction strategy before Phase 3 LLM integration.
+- **Fava Flask route for vendored libraries:** The pattern of adding a custom Flask route inside a Fava extension (`_init_app` hook) to serve vendor files is untested. Start with CDN; validate vendoring only if offline operation becomes a requirement.
+- **Fava `<article>` replacement behavior:** Page transition animation assumes Fava replaces `<article>` innerHTML (not the element itself). Needs runtime confirmation in Phase 1 before relying on the CSS class toggle + forced reflow trick.
+- **Chart.js canvas sizing within Fava layout:** Chart.js responsive mode needs a container with explicit height. Fava's article area has variable height. May need explicit `height` or `aspect-ratio` CSS on `.cqc-chart-container` -- validate during Phase 2.
+- **CountUp.js vs custom implementation:** The custom `requestAnimationFrame` approach in ARCHITECTURE.md handles French-Canadian formatting via `Intl.NumberFormat`. If it works correctly, CountUp.js dependency can be skipped entirely. Decide during Phase 1 implementation.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Beancount official docs (Context7, 1910 snippets) -- plugin system, importer protocol, ledger format
-- MCP Python SDK (Context7, 330 snippets) -- server creation patterns, tool definitions
-- Fava (Context7, 131 snippets) -- REST API, extension system
-- CRA T4032-QC 2026 payroll tables -- QPP/EI rates, federal deduction tables
-- Revenu Quebec 2026 Employer's Kit -- RQAP/FSS/CNESST rates, Quebec deduction tables
-- CRA GIFI documentation (RC4088) -- financial statement mapping codes
-- CRA Income Tax Folio S3-F1-C1 -- shareholder loan rules
-- Modern Treasury -- integer-cents storage best practice
+- [Fava Extension API docs](https://beancount.github.io/fava/api/fava.ext.html) -- FavaExtensionBase, has_js_module, extension_endpoint
+- [Fava Extension Help](https://fava.pythonanywhere.com/example-beancount-file/help/extensions) -- JS module lifecycle (init, onPageLoad, onExtensionPageLoad)
+- [Fava GitHub Issue #1175](https://github.com/beancount/fava/issues/1175) -- SPA innerHTML script execution limitation (critical architectural constraint)
+- [Chart.js Installation/Integration Docs](https://www.chartjs.org/docs/latest/getting-started/installation.html) -- UMD build, CDN options, no-build-step usage
+- [Chart.js GitHub Issues #462, #7931, #11299](https://github.com/chartjs/Chart.js/issues/462) -- Memory leak patterns and destroy() requirement in SPAs
+- [Chart.js ESM CDN Issue #11592](https://github.com/chartjs/Chart.js/issues/11592) -- Bare specifier problem confirms UMD is the right format
+- [CountUp.js GitHub](https://github.com/inorganik/countUp.js) -- v2.9.0, UMD build, MIT license, 8 KB
+- [MDN: CSS/JS animation performance](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance) -- Compositor-layer properties (transform, opacity)
+- Fava source code: `/fava/ext/__init__.py` (verified no onPageUnload callback), `/fava/static/app.css` (verified 0 `!important`, 40+ CSS custom properties)
+- CompteQC source: `ThemeQCExtension.js` (1,769 lines, 91 `!important`, boolean flag pattern), 8 extension templates, RecusExtension upload endpoint
 
 ### Secondary (MEDIUM confidence)
-- hledger-mcp (npm/GitHub) -- MCP server patterns for accounting
-- Beancount smart_importer (PyPI/GitHub) -- ML categorization decorator
-- Beancount community forum -- hybrid rules+LLM achieving 95% accuracy
-- FinNLP 2025 research -- LLM-only 8.33% accuracy baseline
-- Mackisen CPA Montreal -- GST/QST filing mistakes
-- TideSpark -- GIFI code mapping guide
-- hledger vs Beancount vs Ledger comparison (community forum)
+- [fava-dashboards (GitHub)](https://github.com/andreasgerstmayr/fava-dashboards) -- Proves external library loading works in Fava extensions (uses ECharts)
+- Fintech UX references: [Eleken](https://www.eleken.co/blog-posts/fintech-ux-best-practices), [Onething](https://www.onething.design/post/top-10-fintech-ux-design-practices-2026), [UXPin](https://www.uxpin.com/studio/blog/complex-approvals-app-design/), [Qlik](https://www.qlik.com/us/dashboard-examples/financial-dashboards)
+- Competitor dashboard analysis: QuickBooks, Xero, FreshBooks, Wave, Stripe Dashboard
 
 ### Tertiary (LOW confidence)
-- Docling (PyPI) -- AI-powered document extraction; evaluate before committing
-- PyLedger (GitHub) -- Python accounting with MCP; rejected but informed analysis
+- Flask `_init_app` route for vendored files inside Fava extension -- pattern inferred from Flask docs, not tested in Fava context
+- Fava `<article>` element vs innerHTML replacement behavior -- needs runtime validation
 
 ---
-*Research completed: 2026-02-18*
+*Research completed: 2026-02-25*
 *Ready for roadmap: yes*

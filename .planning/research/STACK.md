@@ -1,198 +1,404 @@
-# Stack Research
+# Technology Stack: v1.1 Production UI/UX Polish
 
-**Domain:** AI-assisted accounting/bookkeeping system for Quebec IT consultant (CCPC)
-**Researched:** 2026-02-18
-**Confidence:** MEDIUM-HIGH
+**Project:** CompteQC
+**Researched:** 2026-02-25
+**Scope:** New libraries/techniques for UI polish within Fava's extension architecture (no build step)
 
-## Core Architecture Decision: Beancount + Custom Python Layer
+## Existing Stack (DO NOT CHANGE)
 
-**Recommendation:** Use **Beancount v3** as the accounting engine with a **custom Python orchestration layer** that provides MCP server, web dashboard, CLI, and Quebec-specific modules.
+| Technology | Role | Notes |
+|------------|------|-------|
+| Python 3.12 | Backend | Fava extensions are Python classes |
+| Beancount v3 + Fava | Ledger + Web UI | All UI lives inside Fava |
+| ThemeQCExtension.js | 1,769-line CSS-in-JS | Injects CSS via `<style>`, manages branding, tooltips, sidebar |
+| `has_js_module = True` | Fava JS module API | ES module exports: `init()`, `onPageLoad()`, `onExtensionPageLoad()` |
+| Inter font family | Typography | Already loaded, supports `font-variant-numeric: tabular-nums` |
+| CSS custom properties | Design tokens | `--qc-blue`, `--qc-shadow-*`, `--qc-radius-*`, `--qc-transition` |
+| 8 Fava extensions | HTML templates | Jinja2 server-rendered, `.cqc-table` / `.cqc-card` / `.cqc-badge` classes |
 
-**Why not HLedger:** HLedger is excellent CLI software, but building Quebec tax modules in Haskell is impractical for a solo developer. The hledger-mcp npm package (by iiAtlas) is TypeScript-only and read-heavy -- it wraps CLI commands rather than providing programmatic access to the ledger internals. You would be shelling out to `hledger` for every operation, parsing text output, and maintaining two language ecosystems (Haskell/Node for hledger, Python for ML/tax/MCP). [MEDIUM confidence -- hledger-mcp verified on npm and GitHub]
+## How Fava Extension JS Works (Critical Context)
 
-**Why not PyLedger:** PyLedger (dickhfchan/pyledger) is a young project with built-in MCP+REST+CLI, SQLite backend, and GAAP compliance claims. However: no community, no ecosystem, no plugins, unknown bus factor, and you inherit someone else's schema with no migration path. Its MCP server is a thin wrapper. Building on it means betting on one developer's continued maintenance. [MEDIUM confidence -- verified on GitHub, features confirmed]
+Fava loads extension JS as ES modules when `has_js_module = True`. The file must match the class name (e.g., `ThemeQCExtension.js` for class `ThemeQCExtension`). The module exports:
 
-**Why not custom ledger engine:** Double-entry accounting has subtle invariants (balanced transactions, multi-currency cost basis, lot tracking). Beancount has 10+ years of battle-testing. Building from scratch wastes months on solved problems.
+```javascript
+export default {
+  init() { /* called once on first load */ },
+  onPageLoad() { /* called on every navigation (Fava uses AJAX page loads) */ },
+  onExtensionPageLoad() { /* called when THIS extension's page loads */ },
+};
+```
 
-**Why Beancount:** Plain-text files (auditable, diffable, versionable), Python-native (plugins are Python functions), large community, Fava web UI for browsing, beangulp import framework, smart_importer ML categorization, and a plugin system that lets you add Quebec tax validation without forking. Beancount v3 made the architecture more modular (beanquery, beangulp are now separate packages). [HIGH confidence -- verified via Context7, PyPI, official docs]
+**Key constraint:** Fava replaces `article` content via `innerHTML` on navigation. Script tags in HTML templates do NOT execute. All JS must go through the module system or be dynamically injected.
 
-## Recommended Stack
+**Key constraint:** Fava only auto-serves the `ClassName.js` file from the extension directory. It does NOT serve arbitrary files from subdirectories. To serve vendored libraries, you must either: (a) inject them via dynamic `<script>` creation pointing to an external URL, (b) add a Flask route to serve vendor files, or (c) inline the library source into the module.
 
-### Core Technologies
+---
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| **Python** | 3.12+ | Runtime | Required by MCP SDK; type hints, performance improvements, match statements. 3.13 for optional free-threading. [HIGH] |
-| **Beancount** | 3.x (latest on PyPI) | Double-entry ledger engine | Plain-text, Python-native plugins, 10+ year track record, active maintainer (Martin Blais). v3 is modular: core is lean, imports/queries are separate packages. [HIGH] |
-| **Fava** | 1.30.x | Web interface for ledger browsing | Production-quality Beancount web UI with filtering, charts, editor. Not the approval dashboard -- use for ledger exploration. [HIGH] |
-| **MCP Python SDK** | 1.26.x (`mcp` on PyPI) | MCP server for Claude integration | Official Anthropic SDK. FastMCP included. Supports tools, resources, prompts, streamable-http transport. Pin to `>=1.25,<2` until v2 stabilizes. [HIGH] |
-| **FastAPI** | 0.129.x | REST API + web dashboard backend | Async, Pydantic v2 validation, auto-generated OpenAPI docs, HTMX-friendly. De facto standard for Python APIs. [HIGH] |
-| **SQLite** | 3.x (stdlib) | Metadata store, cache, approval queue | For storing: import batches, approval status, classification confidence, audit trail. NOT for the ledger itself (Beancount files are the source of truth). [HIGH] |
-| **uv** | 0.10.x | Package/project management | 10-100x faster than pip. Handles Python version management, lockfiles, virtual envs. Replaces pip, pip-tools, pyenv, poetry. [HIGH] |
+## Recommended New Stack Additions
 
-### Supporting Libraries
+### 1. Chart.js 4.4.8 -- Data Visualization
 
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| **beangulp** | latest | Beancount import framework | Replaces old `beancount.ingest`. Write importers for RBC CSV/OFX. Modular, testable. [HIGH] |
-| **beanquery** | latest | SQL-like query engine for Beancount | `SELECT account, sum(amount) WHERE ...` on your ledger. Separated from core in v3. [HIGH] |
-| **smart_importer** | latest | ML-based transaction categorization | Decorator for beangulp importers. Trains on historical data, predicts accounts. Use as first-pass; LLM handles edge cases. [MEDIUM -- verified on PyPI/GitHub] |
-| **ofxtools** | 0.8.22 | OFX/QFX file parsing | Pure Python, no external deps, handles OFXv1 (SGML) and v2 (XML). Better maintained than ofxparse. For RBC OFX downloads. [MEDIUM] |
-| **Typer** | 0.15.x | CLI framework | Built on Click, uses type hints for auto-CLI. Cleaner than raw Click for new projects. Rich terminal output. [HIGH] |
-| **Rich** | latest | Terminal formatting | Tables, progress bars, syntax highlighting for CLI output. Pairs with Typer. [HIGH] |
-| **Pydantic** | 2.x | Data validation/serialization | Already a FastAPI dependency. Use for all internal data models: transactions, tax calculations, payroll records. [HIGH] |
-| **HTMX** | 2.x | Frontend interactivity | 14KB JS library. Server returns HTML fragments. No React/Vue/build step needed. Perfect for approval dashboard. [MEDIUM -- pattern verified, no version pinning needed] |
-| **Jinja2** | 3.x | HTML templating | FastAPI native support. Server-side renders dashboard pages for HTMX. [HIGH] |
-| **Tailwind CSS** | 4.x | Styling | Utility-first CSS. Use with DaisyUI for pre-built components. No custom CSS maintenance. [MEDIUM] |
-| **DaisyUI** | 5.x | UI component library | Tailwind plugin. Buttons, tables, modals, alerts out of the box. [MEDIUM] |
-| **sse-starlette** | latest | Server-Sent Events | Real-time dashboard updates (import progress, approval notifications). Lighter than WebSockets. [MEDIUM] |
-| **Docling** | 2.70+ | Document/receipt OCR | AI-powered PDF/image parsing. Better than raw Tesseract for structured extraction from receipts/invoices. Requires Python 3.10+. [LOW -- newer tool, evaluate vs pytesseract+Claude Vision] |
+| Property | Value |
+|----------|-------|
+| **Version** | 4.4.8 (pin exact; 4.5.1 is latest but 4.4.x is battle-tested) |
+| **Format** | UMD build (`chart.umd.min.js`) |
+| **Size** | ~204 KB uncompressed, ~70 KB gzipped |
+| **License** | MIT |
+| **CDN URL** | `https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js` |
 
-### Development Tools
+**Why Chart.js:** Lightweight canvas-based charting that covers the three chart types needed (line for revenue trend, doughnut for expense breakdown, bar for cash flow). Already identified as pending decision in PROJECT.md. UMD build exposes `window.Chart` -- no bundler, no import maps, works with dynamic script injection.
 
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| **uv** | Package management, virtual envs, Python versions | `uv init`, `uv add`, `uv run`. Replaces entire pip/poetry/pyenv toolchain. |
-| **Ruff** | Linting + formatting | Replaces Black, isort, flake8. Single tool, Rust-speed. |
-| **pytest** | Testing | With `pytest-asyncio` for async tests, `pytest-cov` for coverage. |
-| **pre-commit** | Git hooks | Ruff + type checking on commit. |
-| **mypy** or **pyright** | Type checking | Pyright is faster; mypy has broader ecosystem. Pick one. |
+**Why NOT ECharts:** fava-dashboards uses ECharts but it is ~1 MB. Overkill for 3 fixed chart types. Chart.js is 5x smaller.
 
-## Quebec-Specific Modules (Custom Build Required)
+**Why NOT D3.js:** Too low-level. Would require building bar/line/doughnut abstractions from scratch. Chart.js provides these as primitives.
 
-**No existing library covers Quebec payroll/tax. This is all custom code.**
+**Loading strategy -- Dynamic script injection from extension JS module:**
 
-| Module | What It Calculates | Data Source | Update Frequency |
-|--------|-------------------|-------------|------------------|
-| **qc_payroll** | QPP (4% + 1% additional), RQAP/QPIP (0.494% employee), EI QC rate (1.31%), FSS (1.25-4.26%), CNESST | CRA T4032-QC tables, Revenu Quebec TP-1015.TR | Annual (Jan 1) |
-| **gst_qst** | GST (5%) + QST (9.975%) dual tracking, ITCs, ITRs, net tax calculation | CRA/RQ rates | Rarely changes |
-| **cca_engine** | Capital Cost Allowance with half-year rule, class tracking, UCC schedules | CRA T2S(8) | Annual class rate updates |
-| **shareholder_loan** | S15(2) tracking, prescribed interest rate, repayment within deadline | CRA quarterly prescribed rate | Quarterly |
+```javascript
+function loadChartJs() {
+  return new Promise((resolve, reject) => {
+    if (window.Chart) { resolve(window.Chart); return; }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js';
+    script.onload = () => resolve(window.Chart);
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+```
 
-**Architecture for tax modules:** Implement as Beancount plugins where possible (validation, auto-tagging), with standalone Python modules for calculation logic. This lets you validate ledger data at parse time AND use the same logic from CLI/API/MCP.
+**IMPORTANT -- CDN vs Vendoring decision:**
 
-## Alternatives Considered
+The project constraint says "all financial data stays local." However, loading a charting library from a CDN does NOT transmit financial data -- it only downloads a JS file. CDN loading is acceptable here because:
+1. The library is public open-source code, not user data
+2. It loads once and is browser-cached indefinitely
+3. The self-hosted constraint applies to financial data, not to static asset delivery
 
-| Recommended | Alternative | Why Not |
-|-------------|-------------|---------|
-| Beancount v3 | HLedger 1.51 | Haskell ecosystem friction. Cannot write Quebec tax plugins in Python. hledger-mcp is read-only TypeScript wrapper. Two-language maintenance burden. |
-| Beancount v3 | PyLedger | Single-developer project, no community, unknown stability. No migration path if abandoned. SQLite schema is opaque vs. plain-text. |
-| Beancount v3 | Custom ledger engine | 3-6 months of work to replicate what Beancount does. Multi-currency, cost basis, lot matching are hard. |
-| Beancount v3 | GnuCash | Desktop GUI app, not headless. XML/SQLite storage, no plain-text. No MCP path. Python bindings are fragile. |
-| FastAPI + HTMX | React/Next.js | Overkill for approval dashboard. Adds Node.js build toolchain. HTMX achieves same UX for this use case with zero JS build step. |
-| FastAPI + HTMX | Django | Django's ORM/admin are wasted -- ledger data lives in Beancount files, not Django models. FastAPI is lighter, async-native. |
-| MCP Python SDK | hledger-mcp (npm) | TypeScript, shells out to hledger CLI, read-focused. Python SDK gives native access to Beancount data structures. |
-| SQLite (metadata) | PostgreSQL | Solo user, local deployment. SQLite handles the metadata/queue workload. Zero ops burden. |
-| uv | Poetry / pip-tools | uv is 10-100x faster, handles Python versions, and is becoming the standard. Poetry's resolver is slow and its lock format is non-standard. |
-| Typer | Click | Typer is built on Click but cleaner API via type hints. For new projects in 2026, Typer is the better starting point. |
-| ofxtools | ofxparse | ofxtools is actively maintained, handles both OFXv1/v2, no external dependencies. ofxparse has stale maintenance. |
+If strict air-gap operation is needed, vendor the file by adding a Flask route:
 
-## What NOT to Use
+```python
+# In DashboardExtension.__init__.py
+from pathlib import Path
+from flask import send_from_directory
 
-| Avoid | Why | Use Instead |
-|-------|-----|-------------|
-| **Ledger-CLI (C++)** | Fewer features than hledger, harder to extend, no Python integration | Beancount (Python-native) |
-| **Django** | ORM-centric framework when your data source is plain-text files | FastAPI (lightweight, async) |
-| **React/Vue/Angular** | Massive JS toolchain for what amounts to a table of transactions with approve/reject buttons | HTMX + Jinja2 (server-rendered) |
-| **MongoDB/PostgreSQL** | Over-provisioned for solo-user metadata storage | SQLite (zero-ops) |
-| **pandas** | Tempting for financial data manipulation but wrong abstraction for double-entry | Beancount's native data structures + beanquery |
-| **Celery** | Task queue is overkill for single-user batch imports | Python `asyncio` or simple background threads |
-| **Docker (for dev)** | Adds complexity for a single-machine Python app | `uv` manages environments directly |
-| **pytesseract (alone)** | ~80% accuracy on real receipts. Needs heavy preprocessing | Docling or Claude Vision API for receipt parsing |
-| **Poetry** | Slow resolver, non-standard lock format, losing mindshare to uv | uv |
+class DashboardExtension(FavaExtensionBase):
+    has_js_module = True
 
-## Stack Patterns by Variant
+    def _init_app(self, app):
+        vendor_dir = Path(__file__).parent / 'vendor'
+        @app.route('/compteqc/vendor/<path:filename>')
+        def compteqc_vendor(filename):
+            return send_from_directory(str(vendor_dir), filename)
+```
 
-**If Claude Vision API is available for receipt parsing:**
-- Skip Docling/Tesseract entirely
-- Send receipt images directly to Claude via MCP
-- Claude extracts structured data (date, vendor, amount, tax breakdown)
-- Cheaper and more accurate for low-volume solo use
+**Recommendation:** Start with CDN for development speed. Switch to vendored Flask route if offline operation becomes a requirement.
 
-**If you want to keep Fava as the primary dashboard:**
-- Skip the custom HTMX dashboard for ledger browsing
-- Build only the approval/review UI in FastAPI+HTMX
-- Fava handles exploration, reports, charts
-- Custom dashboard handles: import queue, AI classification review, payroll runs
+**Chart.js configuration pattern for CompteQC:**
 
-**If offline/air-gapped operation is required:**
-- smart_importer (local ML) handles categorization instead of LLM
-- Docling for local OCR instead of Claude Vision
-- MCP server still works (Claude Desktop connects locally)
+```javascript
+const revenueChart = new Chart(ctx, {
+  type: 'line',
+  data: { /* from Fava extension template */ },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      y: {
+        ticks: {
+          callback: (v) => '$' + v.toLocaleString('fr-CA'),
+        },
+      },
+    },
+    elements: {
+      line: { tension: 0.3, borderColor: '#003DA5', borderWidth: 2 },
+      point: { radius: 0, hoverRadius: 6 },
+    },
+  },
+});
+```
 
-## Version Compatibility
+**Confidence:** HIGH for Chart.js UMD via script injection. MEDIUM for Fava Flask route vendoring (untested pattern, needs validation).
 
-| Package | Compatible With | Notes |
-|---------|-----------------|-------|
-| Beancount 3.x | Python 3.12+ | v3 dropped some v2 APIs. Use beangulp for imports (not beancount.ingest). |
-| Fava 1.30.x | Beancount 3.x | Ensure latest Fava for v3 compatibility. |
-| smart_importer | Beancount 3.x | Verify compatibility -- some decorators may need beangulp adapter. |
-| MCP SDK 1.26.x | Python 3.12+ | Pin `mcp>=1.25,<2`. v2 coming Q1 2026 with breaking changes. |
-| FastAPI 0.129.x | Pydantic 2.x, Starlette 0.40+ | Supports both Pydantic v1 and v2 models simultaneously. |
-| Docling 2.70+ | Python 3.10+ | Dropped 3.9 support. Heavy dependencies (torch). Consider optional. |
+---
+
+### 2. CountUp.js 2.9.0 -- KPI Number Animation
+
+| Property | Value |
+|----------|-------|
+| **Version** | 2.9.0 |
+| **Format** | UMD build (`countUp.umd.js`) |
+| **Size** | ~8 KB |
+| **License** | MIT |
+| **CDN URL** | `https://cdn.jsdelivr.net/npm/countup.js@2.9.0/dist/countUp.umd.js` |
+
+**Why CountUp.js:** Purpose-built for animated number displays. Handles currency formatting (dollar sign, thousand separators, decimals), configurable duration, easing curves. 8 KB is trivial.
+
+**Why NOT pure CSS `@property` counter:** CSS counters display integers only. KPI cards need `$230,000` with dollar signs, thousand separators, and decimal formatting. CSS cannot do this. The `@property` trick also has incomplete browser support.
+
+**Why NOT custom JS:** CountUp.js is 8 KB, handles edge cases (rapid re-render, Intersection Observer trigger, easing), and has been stable for years. Writing equivalent code from scratch is not worth the time.
+
+**At 8 KB, can be inlined directly into the extension JS module** -- no separate script tag needed:
+
+```javascript
+// Option A: Inline (recommended for 8 KB)
+// Paste countUp.umd.js contents into a function wrapper in the extension module
+
+// Option B: Dynamic script load (same pattern as Chart.js)
+function loadCountUp() {
+  return new Promise((resolve, reject) => {
+    if (window.countUp) { resolve(window.countUp); return; }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/countup.js@2.9.0/dist/countUp.umd.js';
+    script.onload = () => resolve(window.countUp);
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+```
+
+**Usage pattern:**
+
+```javascript
+const counter = new countUp.CountUp('revenue-value', 230000, {
+  prefix: '$ ',
+  separator: ' ',       // French Canadian: space as thousand separator
+  decimal: ',',          // French Canadian: comma as decimal
+  decimalPlaces: 0,
+  duration: 1.5,
+  useGrouping: true,
+});
+if (!counter.error) counter.start();
+```
+
+**Confidence:** HIGH -- tiny library, UMD, no dependencies, well-tested.
+
+---
+
+### 3. CSS Animations -- NO External Library
+
+| Property | Value |
+|----------|-------|
+| **Approach** | Pure CSS `@keyframes` + existing `--qc-transition` custom properties |
+| **Additional size** | 0 KB |
+
+**Why NO animation library:** The existing ThemeQCExtension.js already defines transition timings (`--qc-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1)` and `--qc-transition-slow: 300ms`). All needed animations are simple transforms and opacity changes. Adding Animate.css (80 KB) or GSAP (120 KB) for 5 transition effects is waste.
+
+**Animations to implement with pure CSS:**
+
+```css
+/* === Card and content entrance === */
+@keyframes cqc-fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* === Page transition (article content swap) === */
+@keyframes cqc-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* === KPI card staggered entrance === */
+.cqc-kpi-card:nth-child(1) { animation: cqc-fadeSlideUp 400ms ease-out 0ms both; }
+.cqc-kpi-card:nth-child(2) { animation: cqc-fadeSlideUp 400ms ease-out 80ms both; }
+.cqc-kpi-card:nth-child(3) { animation: cqc-fadeSlideUp 400ms ease-out 160ms both; }
+.cqc-kpi-card:nth-child(4) { animation: cqc-fadeSlideUp 400ms ease-out 240ms both; }
+
+/* === Table row hover === */
+.cqc-table tbody tr {
+  transition: background-color var(--qc-transition);
+}
+.cqc-table tbody tr:hover {
+  background-color: var(--qc-blue-lighter);
+}
+
+/* === Progress bar fill === */
+.cqc-progress-fill {
+  transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === Badge pulse on new items === */
+@keyframes cqc-badgePulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+```
+
+**Page transition technique for Fava's AJAX navigation:**
+
+Fava replaces `article` content on navigation. Inject the fade-in in `onPageLoad()`:
+
+```javascript
+onPageLoad() {
+  const article = document.querySelector('article');
+  if (article) {
+    article.style.animation = 'none';
+    // Force reflow
+    article.offsetHeight;
+    article.style.animation = 'cqc-fadeIn 200ms ease-out';
+  }
+}
+```
+
+**Confidence:** HIGH -- standard CSS, no dependencies, already partially implemented.
+
+---
+
+### 4. Modern Table Styling -- CSS Only
+
+| Property | Value |
+|----------|-------|
+| **Approach** | Extend existing `.cqc-table` styles |
+| **Additional size** | 0 KB |
+| **Font for numbers** | Inter with `font-variant-numeric: tabular-nums` (already loaded) |
+
+**Why NO table library:** Tables are server-rendered Jinja2 HTML. Adding AG Grid, TanStack Table, or DataTables would require restructuring all 8 extension templates. The tables are simple -- no virtual scrolling, no column reorder, no inline editing. Fintech-quality appearance is achievable with CSS alone.
+
+**Key fintech table patterns:**
+
+```css
+.cqc-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--qc-border);
+  border-radius: var(--qc-radius-sm);
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Uppercase, small, muted headers (Mercury/Stripe style) */
+.cqc-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--qc-blue-lighter);
+  font-weight: 600;
+  font-size: 0.6875rem;  /* 11px */
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--qc-text-secondary);
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--qc-border);
+  white-space: nowrap;
+}
+
+/* Compact, well-spaced rows */
+.cqc-table tbody td {
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--qc-border-light);
+  color: var(--qc-text);
+}
+
+/* Last row: no bottom border (container border handles it) */
+.cqc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Tabular numbers for money columns */
+.cqc-table .montant {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Negative amounts in red */
+.cqc-table .montant-negatif {
+  color: var(--qc-error);
+}
+
+/* Zebra striping (subtle) */
+.cqc-table tbody tr:nth-child(even) {
+  background-color: rgba(0, 61, 165, 0.015);
+}
+```
+
+**Confidence:** HIGH -- pure CSS, no dependencies.
+
+---
+
+## What NOT to Add
+
+| Technology | Why Not |
+|------------|---------|
+| **React / Vue / Svelte / Angular** | Requires build step. Fava uses Svelte internally but extensions cannot access it. Would need a complete frontend rewrite. |
+| **Tailwind CSS** | Requires PostCSS build step. The existing CSS custom properties system provides equivalent capability for a single-developer project. |
+| **Animate.css** | 80 KB for 5 animations that take 20 lines of CSS to write. |
+| **GSAP** | 120 KB, commercial license concerns, overkill for fade/slide transitions. |
+| **Motion One** | Requires npm/build step for full functionality. |
+| **AG Grid / TanStack Table / DataTables** | Would require restructuring all 8 Jinja2 templates. Tables are simple enough for CSS-only styling. |
+| **ECharts** | ~1 MB. fava-dashboards uses it for user-defined arbitrary charts. CompteQC has 3 fixed chart types -- Chart.js at 204 KB is sufficient. |
+| **Bootstrap / Material UI** | Conflicts with existing design system. Already have a comprehensive CSS variable palette. |
+| **Sass / Less / PostCSS** | Requires build step. CSS custom properties handle theming natively. |
+| **Import maps** | Would require modifying Fava's HTML `<head>`, which extensions cannot do. |
+| **Chart.js ESM from CDN** | Known issue: bare specifier `@kurkle/color` cannot be resolved without import maps. UMD build avoids this entirely. |
+
+---
+
+## Summary: Total New Dependencies
+
+| Library | Version | Size | Format | Loading Method | Purpose |
+|---------|---------|------|--------|----------------|---------|
+| Chart.js | 4.4.8 | 204 KB | UMD | Dynamic `<script>` (CDN or vendored) | Dashboard charts |
+| CountUp.js | 2.9.0 | 8 KB | UMD | Inline in module or dynamic `<script>` | KPI count-up animation |
+
+**Total additional JS payload:** ~212 KB (loaded on demand, browser-cached)
+**Total additional CSS:** 0 KB (all animations are pure CSS added to ThemeQCExtension.js)
+**Build step required:** None
+**npm required:** No
+
+Everything else (animations, table styling, page transitions, hover states, micro-interactions) is pure CSS injected through the existing ThemeQCExtension.js pattern or added to new extension JS modules.
+
+---
 
 ## Installation
 
 ```bash
-# Initialize project with uv
-uv init comptabilite
-cd comptabilite
+# No npm install. No package.json. No build step.
 
-# Set Python version
-uv python install 3.12
-uv python pin 3.12
+# For vendored approach (optional, only if offline operation needed):
+mkdir -p src/compteqc/fava_ext/dashboard/vendor
 
-# Core: Ledger engine
-uv add beancount fava beangulp beanquery
+curl -o src/compteqc/fava_ext/dashboard/vendor/chart.umd.min.js \
+  "https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"
 
-# Core: MCP server
-uv add "mcp>=1.25,<2"
-
-# Core: Web dashboard + API
-uv add fastapi uvicorn[standard] jinja2 sse-starlette python-multipart
-
-# Core: CLI
-uv add typer rich
-
-# Import/parsing
-uv add ofxtools smart-importer
-
-# Data validation
-uv add pydantic
-
-# Dev dependencies
-uv add --dev pytest pytest-asyncio pytest-cov ruff mypy pre-commit httpx
+curl -o src/compteqc/fava_ext/dashboard/vendor/countUp.umd.js \
+  "https://cdn.jsdelivr.net/npm/countup.js@2.9.0/dist/countUp.umd.js"
 ```
 
-```bash
-# Frontend (no npm needed for HTMX -- use CDN or vendor)
-# In templates:
-# <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-# <link href="https://cdn.jsdelivr.net/npm/daisyui@5/dist/full.min.css" rel="stylesheet">
-# <script src="https://cdn.tailwindcss.com"></script>
+---
 
-# For production, vendor these files locally.
-```
+## Alternatives Considered
+
+| Category | Recommended | Alternative | Why Not |
+|----------|-------------|-------------|---------|
+| Charts | Chart.js 4.4.8 UMD | ECharts | 5x larger, overkill for 3 chart types |
+| Charts | Chart.js 4.4.8 UMD | D3.js | Too low-level, no chart primitives |
+| Charts | Chart.js 4.4.8 UMD | Chart.js ESM | Bare specifier issue from CDN; requires import maps |
+| KPI animation | CountUp.js 2.9.0 | CSS `@property` counter | Cannot format currency (no $, no separators, integers only) |
+| KPI animation | CountUp.js 2.9.0 | Custom JS | 8 KB library handles edge cases; not worth reimplementing |
+| CSS animation | Pure CSS `@keyframes` | Animate.css | 80 KB overhead for 5 transitions |
+| CSS animation | Pure CSS `@keyframes` | GSAP | 120 KB, commercial license, overkill |
+| Table styling | Pure CSS | DataTables | Requires restructuring Jinja2 templates |
+| Table styling | Pure CSS | AG Grid | Massive JS library for simple read-only tables |
+
+---
 
 ## Sources
 
-- `/simonmichael/hledger` (Context7, 5647 snippets, High reputation) -- hledger CSV import, journal format
-- `/websites/beancount_github_io_index` (Context7, 1910 snippets, High reputation, benchmark 86.7) -- Beancount plugin system, importing
-- `/modelcontextprotocol/python-sdk` (Context7, 330 snippets, High reputation, benchmark 86.8) -- MCP server creation patterns
-- `/beancount/smart_importer` (Context7, 26 snippets, Medium reputation, benchmark 84.9) -- ML categorization
-- `/beancount/fava` (Context7, 131 snippets, Medium reputation) -- Fava web UI
-- [hledger-mcp npm package](https://www.npmjs.com/package/@iiatlas/hledger-mcp) -- iiAtlas MCP server [MEDIUM]
-- [PyLedger GitHub](https://github.com/dickhfchan/pyledger) -- Python accounting with MCP [MEDIUM]
-- [MCP Python SDK on PyPI](https://pypi.org/project/mcp/) -- v1.26.0 current [HIGH]
-- [FastAPI on PyPI](https://pypi.org/project/fastapi/) -- v0.129.0 current [HIGH]
-- [hledger releases](https://github.com/simonmichael/hledger/releases) -- v1.51.2 current [HIGH]
-- [Fava on PyPI](https://pypi.org/project/fava/) -- v1.30.11 current [HIGH]
-- [ofxtools docs](https://ofxtools.readthedocs.io/en/latest/) -- v0.8.22 [MEDIUM]
-- [CRA T4032-QC](https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4032-payroll-deductions-tables/t4032qc-jan.html) -- 2026 payroll tables [HIGH]
-- [Revenu Quebec 2026 changes](https://www.revenuquebec.ca/en/businesses/source-deductions-and-employer-contributions/employers-kit/principal-changes-for-2026-employers-kit/) -- QPP/RQAP/FSS rates [HIGH]
-- [Docling on PyPI](https://pypi.org/project/docling/) -- v2.70+ [LOW -- evaluate before committing]
-- [uv on PyPI](https://pypi.org/project/uv/) -- v0.10.4 current [HIGH]
+- [Chart.js Installation Docs](https://www.chartjs.org/docs/latest/getting-started/installation.html) -- CDN options, UMD vs ESM formats
+- [Chart.js jsDelivr CDN file listing](https://cdn.jsdelivr.net/npm/chart.js@latest/dist/) -- Confirms 4.5.1 latest, UMD at 204 KB
+- [Chart.js ESM CDN Issue #11592](https://github.com/chartjs/Chart.js/issues/11592) -- Documents bare specifier problem with ESM from CDN
+- [Chart.js Integration Guide](https://www.chartjs.org/docs/latest/getting-started/integration.html) -- Module format guidance
+- [Fava Extension Script Issue #1175](https://github.com/beancount/fava/issues/1175) -- innerHTML does not execute scripts; JS module pattern is the solution
+- [Fava Extension API Help](https://fava.pythonanywhere.com/example-beancount-file/help/extensions) -- `has_js_module`, `onPageLoad()`, `onExtensionPageLoad()` API
+- [CountUp.js GitHub](https://github.com/inorganik/countUp.js) -- v2.9.0, UMD build, MIT license, 8 KB
+- [CSS @property Counter Animation (CSS-Tricks)](https://css-tricks.com/animating-number-counters/) -- Pure CSS approach limitations
+- [fava-dashboards (GitHub)](https://github.com/andreasgerstmayr/fava-dashboards) -- Uses ECharts (~1 MB), confirms external lib loading works in Fava
 
 ---
-*Stack research for: AI-assisted accounting system (Quebec CCPC)*
-*Researched: 2026-02-18*
+*Stack research for: v1.1 Production UI/UX Polish*
+*Researched: 2026-02-25*
