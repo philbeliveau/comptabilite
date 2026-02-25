@@ -34,7 +34,18 @@ Every dollar that flows through the corporation is correctly categorized, tracea
 
 <!-- Current scope. Building toward these. -->
 
-(None yet — define in next milestone)
+## Current Milestone: v1.1 Production UI/UX
+
+**Goal:** Transform CompteQC from functional to fintech-polished — competing with QuickBooks on look, feel, and usability while staying within Fava's extension architecture.
+
+**Target features:**
+- Dashboard homepage with KPI cards and Chart.js visualizations (revenue trend, expense breakdown, cash flow)
+- Sleek table redesign across all extensions (hover states, spacing, visual hierarchy)
+- Animated receipt upload with progress bar, file previews, and polished drag-and-drop
+- Approval queue UX overhaul (scannable layout, refined confidence badges, smooth bulk actions)
+- Design system refinement: Quebec blue palette, typography scale, spacing, shadows
+- Micro-interactions: KPI count-up animation, table row hover, page transitions
+- All extensions restyled to consistent production quality
 
 ### Out of Scope
 
@@ -109,6 +120,9 @@ Every dollar that flows through the corporation is correctly categorized, tracea
 | Per-deduction-type sub-accounts | Trivial YTD queries from ledger, no separate state tracking | Good |
 | CCA '!' flag for discretionary review | CPA decides on CCA claims, not auto-posted | Good |
 | FIFO repayment for s.15(2) | Per-advance deadline tracking, matches CRA interpretation | Good |
+| Stay within Fava for v1.1 UI | Max polish via CSS/JS injection, avoid custom frontend build cost | — Pending |
+| Chart.js for data viz | Lightweight, no build step, injects into Fava via JS module | — Pending |
+| Keep Quebec blue identity | Refine #003DA5 palette rather than rebrand | — Pending |
 
 ---
-*Last updated: 2026-02-25 after v1.0 milestone*
+*Last updated: 2026-02-25 after v1.1 milestone started*

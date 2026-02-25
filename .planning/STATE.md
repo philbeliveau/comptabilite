@@ -5,49 +5,32 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Planning next milestone
+**Current focus:** Milestone v1.1 — Production UI/UX
 
 ## Current Position
 
-Phase: v1.0 complete (6/6 phases, 23/23 plans)
-Plan: All plans complete
-Status: Milestone v1.0 shipped 2026-02-25
-Last activity: 2026-02-25 - Completed milestone v1.0
-
-Progress: [██████████████████████] 100% (23/23 plans)
-
-## Performance Metrics
-
-**Velocity:**
-- Total plans completed: 23
-- Average duration: 4.7 min
-- Total execution time: 1.75 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 01 | 3 | 19 min | 6.3 min |
-| 02 | 5 | 23 min | 4.6 min |
-| 03 | 3 | 17 min | 5.7 min |
-| 04 | 5 | 26 min | 5.2 min |
-| 05 | 5 | ~25 min | ~5.0 min |
-| 06 | 2 | ~5 min | ~2.5 min |
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-25 — Milestone v1.1 started
 
 ## Accumulated Context
 
 ### Decisions
 
 All v1.0 decisions logged in PROJECT.md Key Decisions table (14 entries).
+v1.1 decisions: Stay within Fava, Chart.js for viz, keep Quebec blue.
 
 ### Roadmap Evolution
 
 - v1.0 MVP completed and archived (6 phases, 23 plans, 10 quick tasks)
+- v1.1 Production UI/UX started 2026-02-25
 
 ### Blockers/Concerns
 
 - CPA export format preference unknown (consult CPA before next milestone)
 - Quebec Law 25 compliance for sending financial data to cloud LLM
+- Fava CSS injection limitations may constrain some UI patterns
 
 ### Quick Tasks Completed (v1.0)
 
@@ -67,5 +50,5 @@ All v1.0 decisions logged in PROJECT.md Key Decisions table (14 entries).
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Milestone v1.0 completed and archived
-Resume file: .planning/MILESTONES.md
+Stopped at: Defining v1.1 requirements
+Resume file: .planning/PROJECT.md
