@@ -6,12 +6,13 @@ Stocke les factures dans un fichier YAML avec numerotation sequentielle.
 from __future__ import annotations
 
 import datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Optional
 
 import yaml
 
-from compteqc.factures.modeles import Facture, InvoiceStatus
+from compteqc.factures.modeles import Facture, InvoiceStatus, determiner_statut
 
 
 class RegistreFactures:
@@ -74,6 +75,36 @@ class RegistreFactures:
                 self._sauvegarder()
                 return self._factures[i]
         raise ValueError(f"Facture {numero} introuvable")
+
+    def enregistrer_paiement(
+        self,
+        numero: str,
+        montant: Decimal,
+        date_paiement: datetime.date | None = None,
+    ) -> Facture:
+        """Enregistre un paiement (partiel ou complet) sur une facture.
+
+        Ajoute le montant au montant_paye existant et recalcule le statut.
+        Leve ValueError si la facture n'est pas trouvee.
+        """
+        for i, f in enumerate(self._factures):
+            if f.numero == numero:
+                donnees = f.model_dump()
+                nouveau_paye = f.montant_paye + montant
+                donnees["montant_paye"] = str(nouveau_paye)
+                if date_paiement is not None:
+                    donnees["date_paiement"] = date_paiement
+                updated = Facture.model_validate(donnees)
+                updated_statut = determiner_statut(updated)
+                donnees["statut"] = updated_statut
+                self._factures[i] = Facture.model_validate(donnees)
+                self._sauvegarder()
+                return self._factures[i]
+        raise ValueError(f"Facture {numero} introuvable")
+
+    def lister_impayees(self) -> list[Facture]:
+        """Liste les factures avec un solde impaye (solde > 0)."""
+        return [f for f in self._factures if f.solde > 0]
 
     def prochain_numero(self, annee: int) -> str:
         """Genere le prochain numero de facture pour l'annee donnee.

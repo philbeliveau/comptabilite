@@ -26,6 +26,7 @@ class InvoiceStatus(str, Enum):
 
     DRAFT = "draft"
     SENT = "sent"
+    PARTIAL = "partial"
     PAID = "paid"
     OVERDUE = "overdue"
 
@@ -38,6 +39,7 @@ class LigneFacture(BaseModel):
     prix_unitaire: Decimal
     tps_applicable: bool = True
     tvq_applicable: bool = True
+    compte_revenu: str = "Revenus:Consultation"
 
     @field_validator("quantite", "prix_unitaire", mode="before")
     @classmethod
@@ -65,7 +67,25 @@ class Facture(BaseModel):
     lignes: list[LigneFacture]
     statut: InvoiceStatus = InvoiceStatus.DRAFT
     date_paiement: Optional[datetime.date] = None
+    montant_paye: Decimal = Decimal("0")
     notes: str = ""
+
+    @field_validator("montant_paye", mode="before")
+    @classmethod
+    def _coerce_decimal(cls, v: object) -> Decimal:
+        if isinstance(v, float):
+            return Decimal(str(v))
+        return Decimal(v) if not isinstance(v, Decimal) else v
+
+    @property
+    def solde(self) -> Decimal:
+        """Solde restant (total - montant paye)."""
+        return self.total - self.montant_paye
+
+    @property
+    def est_paye_integralement(self) -> bool:
+        """Vrai si le solde est nul ou negatif."""
+        return self.solde <= 0
 
     @property
     def sous_total(self) -> Decimal:
@@ -107,3 +127,39 @@ class ConfigFacturation(BaseModel):
     couleur_primaire: str = "#1a365d"
     courriel: str = ""
     telephone: str = ""
+
+
+def determiner_statut(
+    facture: Facture, date_reference: datetime.date | None = None
+) -> InvoiceStatus:
+    """Derive le statut d'une facture selon l'etat de paiement et la date d'echeance.
+
+    Logique:
+    - Paye integralement -> PAID
+    - Partiellement paye ET en retard -> OVERDUE
+    - Partiellement paye -> PARTIAL
+    - En retard (aucun paiement) -> OVERDUE
+    - Brouillon -> DRAFT
+    - Sinon -> SENT
+    """
+    if date_reference is None:
+        date_reference = datetime.date.today()
+
+    if facture.est_paye_integralement:
+        return InvoiceStatus.PAID
+
+    past_due = date_reference > facture.date_echeance
+
+    if facture.montant_paye > 0 and past_due:
+        return InvoiceStatus.OVERDUE
+
+    if facture.montant_paye > 0:
+        return InvoiceStatus.PARTIAL
+
+    if past_due:
+        return InvoiceStatus.OVERDUE
+
+    if facture.statut == InvoiceStatus.DRAFT:
+        return InvoiceStatus.DRAFT
+
+    return InvoiceStatus.SENT
