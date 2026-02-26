@@ -230,3 +230,131 @@ def ap_pay(
         "nouveau_solde": formater_montant(nouveau_solde),
         "statut": nouveau_statut.value,
     }
+
+
+@mcp.tool()
+def ar_aging(
+    date_reference: str | None = None,
+    ctx: Context[ServerSession, AppContext] = None,
+) -> dict:
+    """Generer le rapport de vieillissement des comptes clients (AR).
+
+    Montre les factures impayees groupees par tranches d'age:
+    0-30 jours, 31-60, 61-90, et 91+ jours passes la date d'echeance.
+
+    Args:
+        date_reference: Date de reference (format AAAA-MM-JJ, defaut: aujourd'hui).
+    """
+    from compteqc.factures.registre import RegistreFactures
+    from compteqc.vieillissement import calculer_vieillissement_ar
+
+    ref_date = datetime.date.fromisoformat(date_reference) if date_reference else datetime.date.today()
+    registre = RegistreFactures()
+    factures = registre.lister()
+    resume = calculer_vieillissement_ar(factures, date_reference=ref_date)
+
+    return {
+        "date_reference": ref_date.isoformat(),
+        "type": "AR",
+        "tranches": {
+            "0-30": formater_montant(resume.totaux_par_tranche["0-30"]),
+            "31-60": formater_montant(resume.totaux_par_tranche["31-60"]),
+            "61-90": formater_montant(resume.totaux_par_tranche["61-90"]),
+            "91+": formater_montant(resume.totaux_par_tranche["91+"]),
+        },
+        "total": formater_montant(resume.total_impaye),
+        "nb_factures_impayees": resume.nombre_total,
+    }
+
+
+@mcp.tool()
+def ap_aging(
+    date_reference: str | None = None,
+    ctx: Context[ServerSession, AppContext] = None,
+) -> dict:
+    """Generer le rapport de vieillissement des comptes fournisseurs (AP).
+
+    Montre les factures fournisseurs impayees groupees par tranches d'age:
+    0-30 jours, 31-60, 61-90, et 91+ jours passes la date d'echeance.
+
+    Args:
+        date_reference: Date de reference (format AAAA-MM-JJ, defaut: aujourd'hui).
+    """
+    from compteqc.fournisseurs.registre import RegistreFournisseurs
+    from compteqc.vieillissement import calculer_vieillissement_ap
+
+    ref_date = datetime.date.fromisoformat(date_reference) if date_reference else datetime.date.today()
+    registre = RegistreFournisseurs()
+    factures = registre.lister()
+    resume = calculer_vieillissement_ap(factures, date_reference=ref_date)
+
+    return {
+        "date_reference": ref_date.isoformat(),
+        "type": "AP",
+        "tranches": {
+            "0-30": formater_montant(resume.totaux_par_tranche["0-30"]),
+            "31-60": formater_montant(resume.totaux_par_tranche["31-60"]),
+            "61-90": formater_montant(resume.totaux_par_tranche["61-90"]),
+            "91+": formater_montant(resume.totaux_par_tranche["91+"]),
+        },
+        "total": formater_montant(resume.total_impaye),
+        "nb_factures_impayees": resume.nombre_total,
+    }
+
+
+@mcp.tool()
+def apar_summary(
+    date_reference: str | None = None,
+    ctx: Context[ServerSession, AppContext] = None,
+) -> dict:
+    """Afficher la position combinee AR/AP avec l'impact cash.
+
+    Montre le total des comptes clients (AR), le total des comptes
+    fournisseurs (AP), la position nette, et l'impact cash prevu
+    dans les 30 prochains jours.
+
+    Args:
+        date_reference: Date de reference (format AAAA-MM-JJ, defaut: aujourd'hui).
+    """
+    from compteqc.factures.registre import RegistreFactures
+    from compteqc.fournisseurs.registre import RegistreFournisseurs
+
+    ref_date = datetime.date.fromisoformat(date_reference) if date_reference else datetime.date.today()
+    dans_30_jours = ref_date + datetime.timedelta(days=30)
+
+    registre_ar = RegistreFactures()
+    registre_ap = RegistreFournisseurs()
+
+    ar_impayees = [f for f in registre_ar.lister() if f.solde > 0]
+    ap_impayees = registre_ap.lister_impayees()
+
+    ar_total = sum((f.solde for f in ar_impayees), Decimal("0"))
+    ap_total = sum((f.solde for f in ap_impayees), Decimal("0"))
+
+    # Cash impact next 30 days
+    ar_30j = sum((f.solde for f in ar_impayees if f.date_echeance <= dans_30_jours), Decimal("0"))
+    ap_30j = sum((f.solde for f in ap_impayees if f.date_echeance <= dans_30_jours), Decimal("0"))
+
+    # Overdue
+    ar_en_retard = sum((f.solde for f in ar_impayees if ref_date > f.date_echeance), Decimal("0"))
+    ap_en_retard = sum((f.solde for f in ap_impayees if ref_date > f.date_echeance), Decimal("0"))
+
+    return {
+        "date_reference": ref_date.isoformat(),
+        "ar": {
+            "total": formater_montant(ar_total),
+            "nb_factures": len(ar_impayees),
+            "en_retard": formater_montant(ar_en_retard),
+        },
+        "ap": {
+            "total": formater_montant(ap_total),
+            "nb_factures": len(ap_impayees),
+            "en_retard": formater_montant(ap_en_retard),
+        },
+        "position_nette": formater_montant(ar_total - ap_total),
+        "impact_cash_30j": {
+            "encaissements_prevus": formater_montant(ar_30j),
+            "paiements_prevus": formater_montant(ap_30j),
+            "flux_net": formater_montant(ar_30j - ap_30j),
+        },
+    }
