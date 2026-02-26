@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 Phase: 10 of 10 (Cross-Cutting Polish and Validation)
 Plan: 2 of 2 in current phase (10-02 complete)
 Status: Phase 10 COMPLETE -- v1.1 milestone complete
-Last activity: 2026-02-26 - Completed quick task 12: Research RBC bank connection options and security
+Last activity: 2026-02-26 - Completed quick task 13: Surface double-entry validation on dashboard
 
 Progress: [####################] 75% (33/44 total plans -- 23 v1.0 complete, 10/10 v1.1)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23 (v1.0) + 11 quick tasks
+- Total plans completed: 23 (v1.0) + 12 quick tasks
 - Average duration: ~45 min (v1.0)
 - Total execution time: ~17 hours (v1.0)
 
@@ -78,6 +78,7 @@ v1.1 decisions confirmed:
 - ARIA role=meter for confidence bars (semantic percentage indicator, not progressbar)
 - aria-live=polite (not assertive) on sidebar badge to avoid interrupting screen reader flow
 - Keyboard shortcuts kept as-is per research (no scoping change unless screen reader usage confirmed)
+- Compute balance health from soldes dict (reuse calculer_soldes) rather than importing BalanceVerification -- simpler, avoids GIFI dependency
 
 ### Pending Todos
 
@@ -95,9 +96,10 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 11 | Fix dark mode compatibility, sidebar darkness, and header filter box colors on Fava built-in pages | 2026-02-26 | fa6e36d | [11-fix-font-and-color-issues-on-fava-built-](./quick/11-fix-font-and-color-issues-on-fava-built-/) |
 | 12 | Research RBC bank connection options and security | 2026-02-26 | 258d79c | [12-research-rbc-bank-connection-options-sec](./quick/12-research-rbc-bank-connection-options-sec/) |
+| 13 | Surface double-entry validation on dashboard | 2026-02-26 | 26ac262 | [13-document-and-surface-double-entry-valida](./quick/13-document-and-surface-double-entry-valida/) |
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed quick task 12 -- RBC bank connection options research
+Stopped at: Completed quick task 13 -- Surface double-entry validation on dashboard
 Resume file: N/A
