@@ -69,10 +69,10 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 
 ### MCP Server (MCAP)
 
-- [ ] **MCAP-01**: Claude can list and query AP bills via `ap_list` tool
-- [ ] **MCAP-02**: Claude can create AP bills via `ap_add` tool
-- [ ] **MCAP-03**: Claude can record AP payments via `ap_pay` tool
-- [ ] **MCAP-04**: Claude can generate aging reports via `ar_aging`, `ap_aging`, `apar_summary` tools
+- [x] **MCAP-01**: Claude can list and query AP bills via `ap_list` tool
+- [x] **MCAP-02**: Claude can create AP bills via `ap_add` tool
+- [x] **MCAP-03**: Claude can record AP payments via `ap_pay` tool
+- [x] **MCAP-04**: Claude can generate aging reports via `ar_aging`, `ap_aging`, `apar_summary` tools
 
 ## Future Requirements
 
@@ -136,10 +136,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FVAP-04 | Phase 14 | Pending |
 | FVAP-05 | Phase 14 | Pending |
 | FVAP-06 | Phase 14 | Complete |
-| MCAP-01 | Phase 14 | Pending |
-| MCAP-02 | Phase 14 | Pending |
-| MCAP-03 | Phase 14 | Pending |
-| MCAP-04 | Phase 14 | Pending |
+| MCAP-01 | Phase 14 | Complete |
+| MCAP-02 | Phase 14 | Complete |
+| MCAP-03 | Phase 14 | Complete |
+| MCAP-04 | Phase 14 | Complete |
 | RCAP-01 | Phase 15 | Pending |
 | RCAP-02 | Phase 15 | Pending |
 | RCAP-03 | Phase 15 | Pending |

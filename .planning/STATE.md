@@ -8,7 +8,7 @@ progress:
   total_phases: 13
   completed_phases: 9
   total_plans: 23
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 14 of 15 (Fava Extension Tab & MCP)
-Plan: 1 of 3 in current phase (Plan 01 complete)
-Status: Plan 14-01 complete -- ready for Plan 14-02
-Last activity: 2026-02-26 - Completed Plan 14-01: ComptesFournisseursExtension
+Plan: 3 of 3 in current phase (Plan 03 complete)
+Status: Phase 14 complete -- all 3 plans done
+Last activity: 2026-02-26 - Completed Plan 14-03: AP/AR MCP Tools
 
-Progress: [##############      ] 70% (v1.2 phases 11-15)
+Progress: [################    ] 80% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -53,7 +53,7 @@ Progress: [##############      ] 70% (v1.2 phases 11-15)
 | 11. AP Foundation | 2/2 | 5min | 2.5 min |
 | 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
 | 13. Recurring Invoices | 2/2 | 9min | 4.5 min |
-| 14. Fava Extension Tab | 1/3 | 3min | 3 min |
+| 14. Fava Extension Tab | 3/3 | 8min | 2.7 min |
 
 ## Accumulated Context
 
@@ -86,6 +86,8 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Registry path injection in _afficher_rapprochements for testability
 - Chart.js callbacks as JSON placeholders for data-chart pattern compatibility
 - Aging classification uses days past due threshold (30/60/90) with CSS class mapping
+- MCP aging tools use list-based vieillissement API (ResumeVieillissement) not registry-based
+- Local imports in MCP tool functions for lazy loading, patched via __init__/methods in tests
 
 ### Pending Todos
 
@@ -111,5 +113,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 14-01-PLAN.md
+Stopped at: Completed 14-03-PLAN.md -- Phase 14 complete, ready for Phase 15
 Resume file: None

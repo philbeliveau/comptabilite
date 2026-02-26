@@ -223,5 +223,5 @@ v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 | 11. AP Foundation | 2/2 | Complete    | 2026-02-26 | - |
 | 12. Aging, AR Enhancements & CLI | 2/2 | Complete    | 2026-02-26 | - |
 | 13. Recurring Invoices & Auto-matching | 2/2 | Complete    | 2026-02-26 | - |
-| 14. Fava Extension Tab & MCP | 1/3 | In Progress|  | - |
+| 14. Fava Extension Tab & MCP | 2/3 | In Progress|  | - |
 | 15. Receipt-to-AP Pipeline & Auto-matching UX | v1.2 | 0/0 | Not started | - |
