@@ -28,7 +28,7 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 
 - [x] **AREN-01**: User can record partial payments on existing invoices with running balance
 - [x] **AREN-02**: System derives invoice status from payment state (draft/sent/partial/paid/overdue)
-- [ ] **AREN-03**: User can list unpaid invoices filtered by status
+- [x] **AREN-03**: User can list unpaid invoices filtered by status
 - [x] **AREN-04**: Revenue account is configurable per invoice line (not hardcoded to Revenus:Consultation)
 
 ### Aging Reports (AGNG)
@@ -36,13 +36,13 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 - [x] **AGNG-01**: System calculates aging buckets (0-30, 30-60, 60-90, 90+ days) for AR invoices
 - [x] **AGNG-02**: System calculates aging buckets for AP bills
 - [x] **AGNG-03**: User can view combined AP/AR position summary with net cash impact
-- [ ] **AGNG-04**: User can run aging reports via CLI (`cqc aging ar`, `cqc aging ap`, `cqc aging summary`)
+- [x] **AGNG-04**: User can run aging reports via CLI (`cqc aging ar`, `cqc aging ap`, `cqc aging summary`)
 
 ### CLI Commands (CLAP)
 
-- [ ] **CLAP-01**: User can create vendor bills interactively via `cqc fournisseur add`
-- [ ] **CLAP-02**: User can list vendor bills via `cqc fournisseur list` with status filter
-- [ ] **CLAP-03**: User can record bill payment via `cqc fournisseur pay` (full or partial amount)
+- [x] **CLAP-01**: User can create vendor bills interactively via `cqc fournisseur add`
+- [x] **CLAP-02**: User can list vendor bills via `cqc fournisseur list` with status filter
+- [x] **CLAP-03**: User can record bill payment via `cqc fournisseur pay` (full or partial amount)
 
 ### Recurring & Matching (RECM)
 
@@ -117,15 +117,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | APFN-05 | Phase 11 | Complete |
 | AREN-01 | Phase 12 | Complete |
 | AREN-02 | Phase 12 | Complete |
-| AREN-03 | Phase 12 | Pending |
+| AREN-03 | Phase 12 | Complete |
 | AREN-04 | Phase 12 | Complete |
 | AGNG-01 | Phase 12 | Complete |
 | AGNG-02 | Phase 12 | Complete |
 | AGNG-03 | Phase 12 | Complete |
-| AGNG-04 | Phase 12 | Pending |
-| CLAP-01 | Phase 12 | Pending |
-| CLAP-02 | Phase 12 | Pending |
-| CLAP-03 | Phase 12 | Pending |
+| AGNG-04 | Phase 12 | Complete |
+| CLAP-01 | Phase 12 | Complete |
+| CLAP-02 | Phase 12 | Complete |
+| CLAP-03 | Phase 12 | Complete |
 | RECM-01 | Phase 13 | Pending |
 | RECM-02 | Phase 13 | Pending |
 | RECM-03 | Phase 13 | Pending |

@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 12 of 15 (Aging AR/CLI)
-Plan: 1 of 2 in current phase (Plan 01 complete)
-Status: Plan 12-01 complete -- ready for Plan 12-02
-Last activity: 2026-02-26 - Completed Plan 12-01: AR/AP Aging Domain Logic
+Phase: 12 of 15 (Aging AR/CLI) -- COMPLETE
+Plan: 2 of 2 in current phase (Plan 02 complete)
+Status: Phase 12 complete -- ready for Phase 14
+Last activity: 2026-02-26 - Completed Plan 12-02: AP/AR CLI Commands
 
-Progress: [######              ] 30% (v1.2 phases 11-15)
+Progress: [########            ] 40% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -51,7 +51,7 @@ Progress: [######              ] 30% (v1.2 phases 11-15)
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 11. AP Foundation | 2/2 | 5min | 2.5 min |
-| 12. Aging AR/CLI | 1/2 | 4min | 4 min |
+| 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
 
 *v1.1/v1.2 metrics will populate as plans execute*
 
@@ -75,6 +75,9 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Aging module accepts model lists (not registries) -- pure functions with no I/O for testability
 - Status derivation as standalone function (determiner_statut) not model method
 - Revenue grouping uses defaultdict to consolidate multi-line same-account debits in AR journal entries
+- Payment recording via mettre_a_jour_statut with montant_paye param (reuse existing registry API)
+- AP aging table includes vendor reference number column for cross-referencing
+- Solde column in AR invoice list only shows value when different from total (cleaner display)
 
 ### Pending Todos
 
@@ -100,5 +103,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 12-01-PLAN.md -- Plan 01 complete, ready for Plan 12-02
+Stopped at: Completed 12-02-PLAN.md -- Phase 12 complete, ready for Phase 14
 Resume file: None
