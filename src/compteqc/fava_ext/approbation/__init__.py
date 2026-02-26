@@ -76,6 +76,12 @@ class ApprobationExtension(FavaExtensionBase):
         """Retourne la liste des transactions en attente."""
         return self._pending
 
+    @extension_endpoint("count", ["GET"])
+    def pending_count(self):
+        """Retourne le nombre de transactions en attente (JSON)."""
+        from flask import jsonify
+        return jsonify({"count": len(self._pending)})
+
     @extension_endpoint("approuver", ["POST"])
     def approuver(self) -> str:
         """Endpoint POST pour approuver des transactions par lots."""

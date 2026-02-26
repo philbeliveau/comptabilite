@@ -21,6 +21,9 @@
       Confirmer les montants &gt; 2 000 $
     </label>
   </div>
+  <p class="cqc-keyboard-hint">
+    Raccourcis : <kbd>j</kbd>/<kbd>k</kbd> naviguer, <kbd>Espace</kbd> selectionner, <kbd>a</kbd> approuver
+  </p>
 
   <div class="cqc-card-flush">
     <table class="cqc-table">
@@ -37,7 +40,7 @@
       </thead>
       <tbody>
         {% for txn in pending %}
-        <tr>
+        <tr data-row-index="{{ loop.index0 }}"{% if txn.confiance >= 0.95 %} class="cqc-row-high-confidence"{% elif txn.confiance < 0.7 %} class="cqc-row-low-confidence"{% endif %}>
           <td><input type="checkbox" name="ids" value="{{ loop.index0 }}"></td>
           <td>{{ txn.date }}</td>
           <td>{{ txn.payee }}</td>
@@ -45,13 +48,12 @@
           <td class="montant {{ 'cqc-gros-montant' if txn.gros_montant else '' }}">{{ "{:,.2f}".format(txn.montant) }} $</td>
           <td>{{ txn.get("compte_propose", "-") }}</td>
           <td>
-            {% if txn.niveau == "elevee" %}
-              <span class="cqc-badge cqc-badge-success">Élevée</span>
-            {% elif txn.niveau == "moderee" %}
-              <span class="cqc-badge cqc-badge-warning">Modérée</span>
-            {% else %}
-              <span class="cqc-badge cqc-badge-error">Révision</span>
-            {% endif %}
+            <div class="cqc-confidence cqc-confidence-{{ 'high' if txn.confiance >= 0.95 else ('medium' if txn.confiance >= 0.7 else 'low') }}">
+              <div class="cqc-confidence-bar">
+                <div class="cqc-confidence-bar-fill" style="width: {{ (txn.confiance * 100)|round|int }}%"></div>
+              </div>
+              <span class="cqc-confidence-pct">{{ (txn.confiance * 100)|round|int }}%</span>
+            </div>
             <span class="cqc-source-tag">{{ txn.source }}</span>
           </td>
         </tr>
