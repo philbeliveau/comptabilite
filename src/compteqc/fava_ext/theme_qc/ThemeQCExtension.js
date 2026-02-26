@@ -1753,10 +1753,152 @@ function injectReportHeader() {
   article.prepend(div);
 }
 
+// ===== Chart.js Infrastructure =====
+
+/** @type {Promise<void>|null} */
+let chartJsPromise = null;
+
+/** @type {Map<string, object>} Chart.js instances keyed by container/canvas ID */
+const chartRegistry = new Map();
+
+/**
+ * Lazy-load Chart.js 4.4.8 UMD from CDN.
+ * Returns a cached Promise so the script is only injected once.
+ * @returns {Promise<void>}
+ */
+function loadChartJs() {
+  if (window.Chart) return Promise.resolve();
+  if (chartJsPromise) return chartJsPromise;
+
+  chartJsPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js';
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Chart.js from CDN'));
+    document.head.appendChild(script);
+  });
+
+  return chartJsPromise;
+}
+
+/**
+ * Destroy all tracked Chart.js instances and clear the registry.
+ * Called at the top of every SPA navigation to prevent canvas reuse errors.
+ */
+function destroyAllCharts() {
+  chartRegistry.forEach((chart) => {
+    try { chart.destroy(); } catch (_) { /* already destroyed */ }
+  });
+  chartRegistry.clear();
+}
+
+/**
+ * Return Quebec-palette default options for a given chart type.
+ * @param {string} type - Chart type ('line', 'bar', 'doughnut', etc.)
+ * @returns {object}
+ */
+function getChartThemeOptions(type) {
+  const qcBlue = '#003DA5';
+  const qcBlueAlpha = 'rgba(0,61,165,0.7)';
+  const gridColor = 'rgba(0,61,165,0.08)';
+  const frCACallback = (v) => v.toLocaleString('fr-CA') + ' $';
+
+  switch (type) {
+    case 'line':
+      return {
+        elements: {
+          line: { tension: 0.3, borderColor: qcBlue, borderWidth: 2 },
+          point: { radius: 0, hoverRadius: 6, backgroundColor: qcBlue },
+        },
+        scales: {
+          y: { ticks: { callback: frCACallback }, grid: { color: gridColor } },
+          x: { grid: { display: false } },
+        },
+      };
+    case 'bar':
+      return {
+        elements: {
+          bar: { backgroundColor: qcBlueAlpha, borderRadius: 4 },
+        },
+        scales: {
+          y: { ticks: { callback: frCACallback }, grid: { color: gridColor } },
+          x: { grid: { display: false } },
+        },
+      };
+    case 'doughnut':
+      return {
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { padding: 16, usePointStyle: true },
+          },
+        },
+        backgroundColor: [
+          qcBlue, '#1A5BBF', '#4A7FD4', '#7AA3E5', '#A6C4F0',
+          '#16A34A', '#EA580C', '#D97706', '#DC2626', '#64748B',
+        ],
+      };
+    default:
+      return {};
+  }
+}
+
+/**
+ * Discover all [data-chart] containers in the page, load Chart.js on demand,
+ * and create Chart instances with Quebec-themed defaults.
+ * Fire-and-forget safe -- errors are logged, never thrown.
+ */
+async function renderCharts() {
+  destroyAllCharts();
+
+  const containers = document.querySelectorAll('.cqc-chart-container[data-chart]');
+  if (containers.length === 0) return;
+
+  await loadChartJs();
+
+  containers.forEach((container, index) => {
+    try {
+      const canvas = container.querySelector('canvas');
+      if (!canvas) return;
+
+      const data = JSON.parse(container.dataset.chart);
+      const type = container.dataset.chartType || 'bar';
+
+      let customOptions = {};
+      if (container.dataset.chartOptions) {
+        try { customOptions = JSON.parse(container.dataset.chartOptions); } catch (_) { /* ignore bad JSON */ }
+      }
+
+      const chartInstance = new window.Chart(canvas, {
+        type,
+        data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                font: { family: "'Inter', sans-serif" },
+              },
+            },
+          },
+          ...getChartThemeOptions(type),
+          ...customOptions,
+        },
+      });
+
+      chartRegistry.set(container.id || canvas.id || 'chart-' + index, chartInstance);
+    } catch (err) {
+      console.error('[CompteQC] Chart render error:', err);
+    }
+  });
+}
+
 /** @type import("fava").ExtensionModule */
 export default {
   init() {
     injectStyle();
+    loadChartJs(); // Non-blocking pre-load
   },
   onPageLoad() {
     injectStyle();
@@ -1765,5 +1907,6 @@ export default {
     reorganizeSidebar();
     injectReportHeader();
     attachTooltips();
+    renderCharts();
   },
 };
