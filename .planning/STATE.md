@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 11 - AP Foundation (v1.2 AP/AR & Financial Operations)
+**Current focus:** Phase 12 - Aging, AR Enhancements & CLI (v1.2 AP/AR & Financial Operations)
 
 ## Current Position
 
-Phase: 11 of 15 (AP Foundation)
-Plan: 0 of 0 in current phase (plans TBD)
-Status: Ready to plan
-Last activity: 2026-02-26 -- v1.2 roadmap created with 5 phases (11-15), 30 requirements mapped
+Phase: 12 of 15 (Aging, AR Enhancements & CLI)
+Plan: 0 of 2 in current phase
+Status: Planned -- ready to execute
+Last activity: 2026-02-26 -- Phase 12 planned with 2 plans (TDD + execute)
 
 Progress: [                    ] 0% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23 (v1.0) + 15 quick tasks
+- Total plans completed: 23 (v1.0) + 16 quick tasks
 - Average duration: ~45 min (v1.0)
 - Total execution time: ~17 hours (v1.0)
 
@@ -68,9 +68,10 @@ None yet.
 | 15 | Design AP/AR system for Quebec IT consulting | 2026-02-26 | 851fdc4 | [15-design-accounts-payable-and-accounts-rec](./quick/15-design-accounts-payable-and-accounts-rec/) |
 | 16 | Design chat tab integration for discussions with Claude | 2026-02-26 | 9ca2b0b | [16-design-chat-tab-integration-for-discussi](./quick/16-design-chat-tab-integration-for-discussi/) |
 | 17 | Add UI/UX design section to AP/AR design document | 2026-02-26 | 33fd206 | [17-add-ui-ux-design-section-to-ap-ar-design](./quick/17-add-ui-ux-design-section-to-ap-ar-design/) |
+| 18 | Make ApprobationExtension table responsive with horizontal scroll | 2026-02-26 | 57430ec | [18-make-approbationextension-table-responsi](./quick/18-make-approbationextension-table-responsi/) |
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: v1.2 roadmap created -- ready to plan Phase 11 (AP Foundation)
+Stopped at: Completed quick-18 (responsive table scroll)
 Resume file: None
