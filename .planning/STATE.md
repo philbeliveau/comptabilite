@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: AP/AR & Financial Operations
 status: unknown
-last_updated: "2026-02-26T16:15:03.709Z"
+last_updated: "2026-02-26T16:30:17.660Z"
 progress:
   total_phases: 13
   completed_phases: 9
   total_plans: 23
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 13 - Recurring Invoices & Auto-Matching (v1.2 AP/AR & Financial Operations)
+**Current focus:** Phase 14 - Fava Extension Tab & MCP (v1.2 AP/AR & Financial Operations)
 
 ## Current Position
 
-Phase: 13 of 15 (Recurring Invoices & Auto-Matching) -- COMPLETE
-Plan: 2 of 2 in current phase (Plan 02 complete)
-Status: Phase 13 complete -- ready for Phase 14
-Last activity: 2026-02-26 - Completed Plan 13-02: Auto-Matching Engine
+Phase: 14 of 15 (Fava Extension Tab & MCP)
+Plan: 1 of 3 in current phase (Plan 01 complete)
+Status: Plan 14-01 complete -- ready for Plan 14-02
+Last activity: 2026-02-26 - Completed Plan 14-01: ComptesFournisseursExtension
 
-Progress: [############        ] 60% (v1.2 phases 11-15)
+Progress: [##############      ] 70% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -53,8 +53,7 @@ Progress: [############        ] 60% (v1.2 phases 11-15)
 | 11. AP Foundation | 2/2 | 5min | 2.5 min |
 | 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
 | 13. Recurring Invoices | 2/2 | 9min | 4.5 min |
-
-*v1.1/v1.2 metrics will populate as plans execute*
+| 14. Fava Extension Tab | 1/3 | 3min | 3 min |
 
 ## Accumulated Context
 
@@ -85,6 +84,8 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Protocol pattern (FactureOuverte) for forward-compatible auto-matching interface
 - Shared _calculer_score() eliminates AR/AP duplication in matching engine
 - Registry path injection in _afficher_rapprochements for testability
+- Chart.js callbacks as JSON placeholders for data-chart pattern compatibility
+- Aging classification uses days past due threshold (30/60/90) with CSS class mapping
 
 ### Pending Todos
 
@@ -110,5 +111,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 13-02-PLAN.md -- Phase 13 complete, ready for Phase 14
+Stopped at: Completed 14-01-PLAN.md
 Resume file: None
