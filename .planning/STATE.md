@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 
 ## Current Position
 
-Phase: 8 of 10 (Table and Extension Polish)
-Plan: 1 of 2 in current phase (08-01 complete)
-Status: Executing Phase 8
-Last activity: 2026-02-25 -- Completed 08-01 (Table hover, headers, template cleanup)
+Phase: 8 of 10 (Table and Extension Polish) -- COMPLETE
+Plan: 2 of 2 in current phase (08-02 complete)
+Status: Phase 8 complete, ready for Phase 9
+Last activity: 2026-02-25 -- Completed 08-02 (Approval queue UX: confidence bars, keyboard shortcuts, sidebar badge)
 
-Progress: [##############......] 64% (28/44 total plans -- 23 v1.0 complete, 5/9 v1.1)
+Progress: [###############.....] 66% (29/44 total plans -- 23 v1.0 complete, 6/9 v1.1)
 
 ## Performance Metrics
 
@@ -36,6 +36,7 @@ Progress: [##############......] 64% (28/44 total plans -- 23 v1.0 complete, 5/9
 *v1.1 metrics will populate as plans execute*
 | Phase 07 P02 | 1min | 2 tasks | 2 files |
 | Phase 08 P01 | 3min | 2 tasks | 5 files |
+| Phase 08 P02 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -58,6 +59,9 @@ v1.1 decisions confirmed:
 - Server-rendered formatted values as no-JS fallback inside data-value elements
 - Contextual CSS (.cqc-card-flush > .cqc-section-title) over wrapper div classes for template cleanliness
 - Utility CSS classes (cqc-text-muted, cqc-cell-flex, cqc-col-checkbox) for template standardization
+- AbortController pattern for SPA keyboard listener cleanup in ThemeQCExtension.js
+- JSON endpoints on Fava extensions via @extension_endpoint for lightweight data APIs
+- Sidebar badge with bfileSlug-relative URL for Fava multi-file routing
 
 ### Pending Todos
 
@@ -72,5 +76,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 08-01-PLAN.md (Table hover, headers, template cleanup)
-Resume file: .planning/phases/08-table-and-extension-polish/08-02-PLAN.md
+Stopped at: Completed 08-02-PLAN.md (Approval queue UX: confidence bars, keyboard shortcuts, sidebar badge)
+Resume file: .planning/phases/09-upload-ux-and-feedback/09-01-PLAN.md

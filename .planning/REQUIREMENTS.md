@@ -24,9 +24,9 @@ Requirements for production UI/UX milestone. Each maps to roadmap phases.
 ### Tables & Extensions (TBLX)
 
 - [x] **TBLX-01**: All 8 extension tables have hover states, consistent padding, and visual header hierarchy
-- [ ] **TBLX-02**: Approval queue has redesigned confidence badges, keyboard shortcuts (approve/reject), and scannable layout
+- [x] **TBLX-02**: Approval queue has redesigned confidence badges, keyboard shortcuts (approve/reject), and scannable layout
 - [x] **TBLX-03**: Page entrance animations (fade + slide) on extension navigation
-- [ ] **TBLX-04**: Sidebar shows pending approval count badge on Approbation link
+- [x] **TBLX-04**: Sidebar shows pending approval count badge on Approbation link
 
 ### Receipt Upload (RCPT)
 
@@ -81,9 +81,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-03 | Phase 7 | Complete |
 | DASH-04 | Phase 7 | Complete |
 | TBLX-01 | Phase 8 | Complete |
-| TBLX-02 | Phase 8 | Pending |
+| TBLX-02 | Phase 8 | Complete |
 | TBLX-03 | Phase 8 | Complete |
-| TBLX-04 | Phase 8 | Pending |
+| TBLX-04 | Phase 8 | Complete |
 | RCPT-01 | Phase 9 | Pending |
 | RCPT-02 | Phase 9 | Pending |
 | RCPT-03 | Phase 9 | Pending |
