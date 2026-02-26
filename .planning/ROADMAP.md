@@ -100,10 +100,11 @@ Plans:
   2. All interactive elements (buttons, links, badges, chart segments) work correctly in Safari, Chrome, and Firefox on macOS
   3. Keyboard-only navigation reaches every interactive element across all extensions without traps, and screen readers announce meaningful labels
   4. No visual regressions from v1.0 functionality -- all existing features (import, categorize, payroll, reports, export) remain fully operational
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 10-01: Typography/spacing audit, cross-browser testing, accessibility verification, and regression check
+- [ ] 10-01-PLAN.md — Typography token migration, font-weight normalization, cross-browser CSS fixes (Firefox scrollbar, focus-visible, backdrop-filter)
+- [ ] 10-02-PLAN.md — Accessibility remediation (ARIA across all templates, sidebar badge aria-live) and cross-browser/regression verification checkpoint
 
 ## Progress
 
@@ -121,4 +122,4 @@ Phases execute in numeric order: 6 -> 7 -> 8 -> 9 -> 10
 | 7. Dashboard Homepage | v1.1 | 0/2 | Planned | - |
 | 8. Table and Extension Polish | v1.1 | 0/2 | Not started | - |
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
-| 10. Cross-Cutting Polish and Validation | v1.1 | 0/1 | Not started | - |
+| 10. Cross-Cutting Polish and Validation | v1.1 | 0/2 | Not started | - |
