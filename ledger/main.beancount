@@ -8,11 +8,33 @@ option "name_expenses" "Depenses"
 
 include "comptes.beancount"
 
-; Solde d'ouverture du compte cheques
-; TODO: ajouter le solde d'ouverture reel avant la premiere transaction
-; Exemple une fois le solde connu:
+; ============================================================
+; BALANCE ASSERTIONS (double-entry validation)
+; ============================================================
+; Beancount verifies balance assertions at load time.
+; If the asserted amount does not match the computed balance,
+; Beancount raises an error -- this is the primary mechanism
+; for catching data entry mistakes and import errors.
+;
+; How it works:
+;   YYYY-MM-DD balance Account:Name  AMOUNT CURRENCY
+;   Beancount checks that on YYYY-MM-DD, Account:Name has
+;   exactly AMOUNT. If not, it flags an error.
+;
+; pad + balance pair:
+;   YYYY-MM-DD pad Account:Name  Equity:Opening
+;   YYYY-MM-DD+1 balance Account:Name  AMOUNT CURRENCY
+;   "pad" auto-generates a transaction to make the balance match.
+;   Use this for opening balances.
+;
+; Recommended: Add a balance assertion after each bank statement
+; reconciliation, e.g.:
+;   2026-02-01 balance Actifs:Banque:RBC:Cheques  12345.67 CAD
+;
+; TODO: Add real opening balance once known:
 ;   2025-11-04 pad Actifs:Banque:RBC:Cheques Capital:Ouverture
 ;   2025-11-05 balance Actifs:Banque:RBC:Cheques XXXXX.XX CAD
+; ============================================================
 
 ; Les fichiers mensuels seront ajoutes dynamiquement
 
