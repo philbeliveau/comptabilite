@@ -389,6 +389,14 @@ article .headerline {
   letter-spacing: -0.01em;
 }
 
+/* Section title inside card-flush: add top/side padding */
+.cqc-card-flush > .cqc-section-title {
+  padding: 16px 24px 0;
+  font-weight: 600;
+  border-left: none;
+  margin-bottom: 0;
+}
+
 /* ===== Page Header ===== */
 .cqc-page-header {
   margin-bottom: 28px;
@@ -477,16 +485,19 @@ article .headerline {
   border-spacing: 0;
 }
 
-.cqc-table th {
-  background-color: var(--qc-surface);
-  color: var(--qc-text-secondary);
-  font-weight: var(--cqc-weight-semibold);
-  font-size: var(--cqc-font-xs);
+.cqc-table thead th {
+  background-color: var(--qc-blue-lighter);
+  color: var(--qc-blue-dark);
+  font-weight: 700;
+  font-size: 0.76em;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 10px 16px;
+  padding: 12px 16px;
   text-align: left;
-  border-bottom: 2px solid var(--qc-border);
+  border-bottom: 2px solid var(--qc-blue);
+  position: sticky;
+  top: 0;
+  z-index: 1;
   white-space: nowrap;
 }
 
@@ -498,6 +509,7 @@ article .headerline {
   font-size: var(--cqc-font-base);
   line-height: var(--cqc-leading-normal);
   color: var(--qc-text);
+  vertical-align: middle;
   transition: background-color var(--qc-transition);
 }
 
@@ -508,6 +520,11 @@ article .headerline {
 
 .cqc-table tbody tr:hover {
   background-color: var(--qc-blue-lighter);
+}
+
+.cqc-table tbody tr:hover td {
+  background-color: var(--qc-blue-lighter) !important;
+  transition: background-color 150ms ease;
 }
 
 /* Subtle zebra striping */
@@ -546,10 +563,36 @@ article .headerline {
 }
 
 .cqc-table .sommaire-row td {
+  font-weight: 700;
   border-top: 2px solid var(--qc-blue);
+  background-color: var(--qc-blue-lighter) !important;
   color: var(--qc-text);
   padding-top: 14px;
   padding-bottom: 14px;
+}
+
+/* Focused row for keyboard navigation (prep for 08-02) */
+.cqc-table tbody tr.cqc-row-focused td {
+  background-color: rgba(0, 61, 165, 0.08) !important;
+  outline: 2px solid var(--qc-blue);
+  outline-offset: -2px;
+}
+
+/* ===== Table Utility Classes ===== */
+.cqc-text-muted {
+  font-size: 0.85em;
+  color: var(--qc-muted, #64748B);
+}
+
+.cqc-cell-flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cqc-table .cqc-col-checkbox {
+  width: 40px;
+  text-align: center;
 }
 
 /* ===== Badges ===== */
