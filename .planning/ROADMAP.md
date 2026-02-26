@@ -70,11 +70,11 @@ Plans:
   2. Approval queue shows redesigned confidence badges with color-coded urgency, supports keyboard shortcuts (approve/reject without mouse), and presents a scannable layout where high-confidence items are visually distinct from low-confidence ones
   3. Navigating between extensions triggers a subtle entrance animation (fade + slide) that masks the SPA content swap
   4. Sidebar "Approbation" link shows a count badge with the number of pending approvals, updating on each page load
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: Table styling overhaul and page transition animations across all extensions
-- [ ] 08-02: Approval queue redesign with keyboard shortcuts and sidebar notification badge
+- [ ] 08-01-PLAN.md — Table hover fix, header hierarchy, consistent padding, inline style cleanup, page transitions
+- [ ] 08-02-PLAN.md — Approval queue confidence bars, keyboard shortcuts, sidebar pending count badge
 
 ### Phase 9: Receipt Upload UX
 **Goal**: Uploading receipts feels modern and responsive -- drag a file, see it upload with a progress bar, and get a thumbnail preview confirming what was received
