@@ -5,7 +5,7 @@
 const THEME_CSS = `
 /* ===== Quebec Color Palette (flag-coherent) ===== */
 :root {
-  /* Core Quebec blue from the fleurdelisé */
+  /* Core Quebec blue from the fleurdelise */
   --qc-blue: #003DA5;
   --qc-blue-light: #1A5BBF;
   --qc-blue-lighter: #EDF2FB;
@@ -51,16 +51,28 @@ const THEME_CSS = `
   --qc-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
   --qc-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Override Fava variables */
+  /* === Fava CSS Custom Property Overrides === */
+  /* These replace ~80% of forced-priority declarations by reassigning Fava's own variables */
   --header-background: var(--qc-blue);
   --header-color: var(--qc-white);
   --link-color: var(--qc-blue);
+  --link-hover-color: var(--qc-blue-light);
   --sidebar-background: var(--qc-surface-sidebar);
+  --sidebar-text: rgba(255, 255, 255, 1);
   --sidebar-border: transparent;
+  --background: var(--qc-surface);
+  --text-color: var(--qc-text);
+  --secondary-text: var(--qc-text-secondary);
+  --heading-color: var(--qc-blue);
+  --border: var(--qc-border);
   --table-header-background: var(--qc-blue-lighter);
   --table-header-text: var(--qc-blue-dark);
+  --table-border: var(--qc-border-light);
   --button-background: var(--qc-blue);
   --button-color: var(--qc-white);
+  --button-hover-background: var(--qc-blue-light);
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-size: 14px;
 }
 
 /* ===== Global Reset ===== */
@@ -71,73 +83,75 @@ table, th, td, tr,
 input, select, textarea, button,
 label, legend, fieldset,
 h1, h2, h3, h4, h5, h6 {
+  /* OVERRIDE: Global font -- Fava has no --font-family variable on all elements */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 article {
-  background: var(--qc-surface) !important;
+  background: var(--qc-surface);
 }
 
 /* ===== Fava Header ===== */
 header {
-  background: var(--qc-blue) !important;
-  box-shadow: 0 2px 8px rgba(0, 61, 165, 0.25) !important;
+  background: var(--header-background);
+  box-shadow: 0 2px 8px rgba(0, 61, 165, 0.25);
   position: relative;
   z-index: 100;
 }
 
 /* Quebec flag logo in header */
 header img#cqc-header-logo {
-  height: 28px !important;
-  width: auto !important;
+  height: 28px;
+  width: auto;
   border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   object-fit: contain;
 }
 
 header a, header .links a {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: rgba(255, 255, 255, 0.9);
   transition: color var(--qc-transition);
 }
 
 header a:hover, header .links a:hover {
-  color: #FFFFFF !important;
+  color: #FFFFFF;
 }
 
 header h1 {
-  font-weight: 600 !important;
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 
 header h1 strong {
-  font-weight: 700 !important;
+  font-weight: 700;
 }
 
 /* Header filter inputs */
 header input, header select {
-  border-radius: var(--qc-radius-sm) !important;
-  border: 1px solid rgba(255,255,255,0.2) !important;
-  background: rgba(255,255,255,0.1) !important;
-  color: white !important;
+  border-radius: var(--qc-radius-sm);
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
   backdrop-filter: blur(4px);
   transition: all var(--qc-transition);
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Inter', sans-serif;
 }
 
 header input:focus, header select:focus {
-  background: rgba(255,255,255,0.18) !important;
-  border-color: rgba(255,255,255,0.4) !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.1) !important;
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.4);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
 }
 
 header input::placeholder {
-  color: rgba(255,255,255,0.5) !important;
+  color: rgba(255,255,255,0.5);
 }
 
 /* ===== CompteQC Brand Strip ===== */
+/* OVERRIDE: Svelte-scoped -- brand strip hidden by default, shown by JS injection */
 #cqc-brand-strip { display: none !important; }
 #cqc-brand-strip {
   background: linear-gradient(180deg, rgba(0,61,165,0.6) 0%, var(--qc-surface-sidebar) 100%);
@@ -185,127 +199,129 @@ header input::placeholder {
 }
 
 /* ===== Footer ===== */
+/* OVERRIDE: Svelte-scoped -- Fava footer hidden to match CompteQC branding */
 footer { display: none !important; }
 
 /* ===== Dark Sidebar ===== */
+/* OVERRIDE: Svelte-scoped -- sidebar has Fava inline styles that must be overridden */
 aside {
   background: var(--qc-surface-sidebar) !important;
-  border-right: none !important;
-  box-shadow: 1px 0 0 rgba(255,255,255,0.04) !important;
-  padding-top: 8px !important;
+  border-right: none;
+  box-shadow: 1px 0 0 rgba(255,255,255,0.04);
+  padding-top: 8px;
   width: 310px !important;
   min-width: 310px !important;
 }
 
 aside ul {
-  padding: 4px 8px !important;
+  padding: 4px 8px;
 }
 
 aside li {
-  margin: 1px 0 !important;
+  margin: 1px 0;
 }
 
 aside a {
-  color: rgba(255, 255, 255, 1) !important;
-  font-size: 0.88em !important;
-  font-weight: 450 !important;
-  padding: 7px 12px !important;
-  border-radius: var(--qc-radius-sm) !important;
-  display: block !important;
-  transition: all var(--qc-transition) !important;
-  text-decoration: none !important;
+  color: var(--sidebar-text, rgba(255, 255, 255, 1));
+  font-size: 0.88em;
+  font-weight: 450;
+  padding: 7px 12px;
+  border-radius: var(--qc-radius-sm);
+  display: block;
+  transition: all var(--qc-transition);
+  text-decoration: none;
   letter-spacing: 0.01em;
 }
 
 aside a:hover {
-  color: rgba(255, 255, 255, 0.95) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* Active sidebar link — Fava uses class or aria */
+/* Active sidebar link -- Fava uses class or aria */
 aside li.selected a,
 aside a[aria-current],
 aside a.selected {
-  color: #FFFFFF !important;
-  background: rgba(0, 61, 165, 0.5) !important;
-  font-weight: 600 !important;
+  color: #FFFFFF;
+  background: rgba(0, 61, 165, 0.5);
+  font-weight: 600;
 }
 
 /* Sidebar section separators */
 aside ul + ul {
-  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-  margin-top: 6px !important;
-  padding-top: 6px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 6px;
+  padding-top: 6px;
 }
 
 /* Sidebar inputs */
 aside input, aside select {
-  background: rgba(255,255,255,0.06) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  color: rgba(255,255,255,0.7) !important;
-  border-radius: var(--qc-radius-sm) !important;
-  font-size: 0.85em !important;
-  padding: 6px 10px !important;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  border-radius: var(--qc-radius-sm);
+  font-size: 0.85em;
+  padding: 6px 10px;
   transition: all var(--qc-transition);
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Inter', sans-serif;
 }
 
 aside input:focus, aside select:focus {
-  background: rgba(255,255,255,0.1) !important;
-  border-color: rgba(0, 61, 165, 0.6) !important;
-  outline: none !important;
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(0, 61, 165, 0.6);
+  outline: none;
 }
 
 aside input::placeholder {
-  color: rgba(255,255,255,0.3) !important;
+  color: rgba(255,255,255,0.3);
 }
 
 /* ===== Main Content Area ===== */
 article {
-  padding: 28px 32px !important;
+  padding: 28px 32px;
 }
 
-/* Fava native tables — give them the modern treatment */
+/* Fava native tables -- give them the modern treatment */
 article table {
-  border-collapse: separate !important;
-  border-spacing: 0 !important;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.9em;
 }
 
 article table th {
-  font-family: 'Inter', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 0.78em !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.04em !important;
-  color: var(--qc-text-secondary) !important;
-  background: var(--qc-surface) !important;
-  padding: 10px 14px !important;
-  border-bottom: 2px solid var(--qc-border) !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--qc-text-secondary);
+  background: var(--table-header-background);
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--qc-border);
 }
 
 article table td {
-  padding: 10px 14px !important;
-  border-bottom: 1px solid var(--qc-border-light) !important;
-  background: var(--qc-surface-raised) !important;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--table-border);
+  background: var(--qc-surface-raised);
   color: var(--qc-text);
   transition: background var(--qc-transition);
 }
 
 article table tbody tr:hover td {
-  background: var(--qc-blue-lighter) !important;
+  background: var(--qc-blue-lighter);
 }
 
 /* Fava links in content */
 article a {
-  color: var(--qc-blue) !important;
-  text-decoration: none !important;
+  color: var(--link-color);
+  text-decoration: none;
   font-weight: 500;
   transition: color var(--qc-transition);
 }
 
 article a:hover {
-  color: var(--qc-blue-light) !important;
+  color: var(--link-hover-color);
 }
 
 /* Fava chart toggles / buttons row */
@@ -481,7 +497,7 @@ article .headerline {
 
 .cqc-table .sommaire-row {
   font-weight: 700;
-  background-color: var(--qc-surface) !important;
+  background-color: var(--qc-surface);
 }
 
 .cqc-table .sommaire-row td {
@@ -886,32 +902,35 @@ aside::-webkit-scrollbar-thumb:hover {
 }
 
 /* ===== Fava overrides for native components ===== */
-/* Fava uses svelte components — style their containers */
+/* Fava uses svelte components -- style their containers */
 
 /* Tree table / flex-table (income_statement, balance_sheet, trial_balance) */
 /* Fava 1.30+ uses ol.flex-table.tree-table-new, NOT <table> */
 article .tree-table td {
-  font-size: 0.9em !important;
+  font-size: 0.9em;
 }
 
-/* Override Svelte-scoped rgb(64,64,64) with our design system text color */
+/* OVERRIDE: Svelte-scoped -- overrides Svelte-injected rgb(64,64,64) inline color */
 article .flex-table {
   color: var(--qc-text) !important;
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Inter', sans-serif;
 }
 
+/* OVERRIDE: Svelte-scoped -- Svelte injects inline color on .num spans */
 article .flex-table .num {
   color: var(--qc-text) !important;
   font-variant-numeric: tabular-nums;
 }
 
-/* Dimmed = propagated sums — still readable but clearly secondary */
+/* Dimmed = propagated sums -- still readable but clearly secondary */
+/* OVERRIDE: Svelte-scoped -- Svelte sets inline color and opacity on dimmed elements */
 article .flex-table .num.dimmed {
   color: var(--qc-text-secondary) !important;
   opacity: 1 !important;
 }
 
 /* Account name links in flex-table */
+/* OVERRIDE: Svelte-scoped -- Svelte injects inline color on links */
 article .flex-table a {
   color: var(--qc-blue) !important;
   font-weight: 500;
@@ -919,13 +938,13 @@ article .flex-table a {
 
 /* Row hover highlight for flex-table rows */
 article .flex-table li:hover > p {
-  background: var(--qc-blue-lighter) !important;
+  background: var(--qc-blue-lighter);
   border-radius: var(--qc-radius-sm);
 }
 
 /* Column header row (CAD / Other) */
 article .flex-table li:first-child .num {
-  color: var(--qc-blue-dark) !important;
+  color: var(--qc-blue-dark);
   font-weight: 600;
   font-size: 0.78em;
   text-transform: uppercase;
@@ -934,9 +953,9 @@ article .flex-table li:first-child .num {
 
 /* Fava buttons in toolbar */
 article button, article .button {
-  font-family: 'Inter', sans-serif !important;
-  border-radius: var(--qc-radius-sm) !important;
-  transition: all var(--qc-transition) !important;
+  font-family: 'Inter', sans-serif;
+  border-radius: var(--qc-radius-sm);
+  transition: all var(--qc-transition);
 }
 
 /* Fava chart container */
@@ -954,7 +973,7 @@ article svg {
     align-items: stretch;
   }
   article {
-    padding: 20px 16px !important;
+    padding: 20px 16px;
   }
 }
 
@@ -993,6 +1012,7 @@ article svg {
   transform: rotate(90deg);
 }
 /* Remove old ul+ul separator since groups handle visual separation */
+/* OVERRIDE: Svelte-scoped -- Fava sidebar navigation has inline border styles */
 .cqc-sidebar-group ul.navigation { border-top: none !important; margin-top: 0 !important; padding-top: 0 !important; }
 
 /* ===== Report intro blocks ===== */
@@ -1055,6 +1075,7 @@ article svg {
   height: 300px;
   padding: 16px;
 }
+/* OVERRIDE: Chart.js canvas -- Chart.js sets inline width/height that must be overridden for responsive sizing */
 .cqc-chart-container canvas {
   width: 100% !important;
   height: 100% !important;
@@ -1076,6 +1097,7 @@ article svg {
 }
 
 /* === Reduced motion safety net === */
+/* OVERRIDE: Accessibility -- must override all animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
