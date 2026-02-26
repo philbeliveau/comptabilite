@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 6 of 10 (Design System Foundation)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-02-25 -- Roadmap created for v1.1
+Plan: 1 of 2 in current phase
+Status: Executing
+Last activity: 2026-02-25 -- Completed 06-01 (Chart.js infrastructure and animation engine)
 
-Progress: [##########..........] 52% (23/44 total plans -- 23 v1.0 complete, 0/9 v1.1)
+Progress: [###########.........] 55% (24/44 total plans -- 23 v1.0 complete, 1/9 v1.1)
 
 ## Performance Metrics
 
@@ -40,10 +40,12 @@ Progress: [##########..........] 52% (23/44 total plans -- 23 v1.0 complete, 0/9
 ### Decisions
 
 All v1.0 decisions logged in PROJECT.md Key Decisions table (14 entries).
-v1.1 decisions pending confirmation:
+v1.1 decisions confirmed:
 - Stay within Fava extension architecture (no custom frontend)
-- Chart.js 4.4.8 UMD for data visualization
+- Chart.js 4.4.8 UMD for data visualization (CDN lazy-loading, not bundled)
 - Keep Quebec blue identity (#003DA5 palette)
+- Custom rAF animation instead of CountUp.js (zero dependencies, native Intl.NumberFormat fr-CA)
+- Chart registry Map with destroy-on-navigate lifecycle for SPA safety
 
 ### Pending Todos
 
@@ -52,12 +54,11 @@ None yet.
 ### Blockers/Concerns
 
 - Fava `<article>` replacement behavior needs runtime confirmation in Phase 6
-- Chart.js canvas sizing within Fava layout may need explicit height constraints
-- CountUp.js vs custom requestAnimationFrame -- decide during Phase 6 implementation
+- Chart.js canvas sizing resolved with .cqc-chart-container CSS (300px height, responsive canvas)
 - Upload endpoint returns raw HTML -- must convert to JSON before any upload UX work (Phase 9 prereq)
 
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Roadmap created for v1.1 Production UI/UX
-Resume file: None -- ready for `/gsd:plan-phase 6`
+Stopped at: Completed 06-01-PLAN.md (Chart.js infrastructure and animation engine)
+Resume file: .planning/phases/06-design-system-foundation/06-02-PLAN.md

@@ -10,8 +10,8 @@ Requirements for production UI/UX milestone. Each maps to roadmap phases.
 ### Design System (DSYS)
 
 - [ ] **DSYS-01**: CSS variable migration -- replace `!important` overrides with Fava CSS custom property theming
-- [ ] **DSYS-02**: Chart.js CDN loader with chart registry for SPA lifecycle (create/destroy on navigation)
-- [ ] **DSYS-03**: Animation safety nets -- `prefers-reduced-motion` guard and `requestAnimationFrame` wrapper
+- [x] **DSYS-02**: Chart.js CDN loader with chart registry for SPA lifecycle (create/destroy on navigation)
+- [x] **DSYS-03**: Animation safety nets -- `prefers-reduced-motion` guard and `requestAnimationFrame` wrapper
 - [ ] **DSYS-04**: Typography refinement -- tabular nums for amounts, tighter font-size scale, refined Inter weights
 
 ### Dashboard (DASH)
@@ -73,8 +73,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | DSYS-01 | Phase 6 | Pending |
-| DSYS-02 | Phase 6 | Pending |
-| DSYS-03 | Phase 6 | Pending |
+| DSYS-02 | Phase 6 | Complete |
+| DSYS-03 | Phase 6 | Complete |
 | DSYS-04 | Phase 6 | Pending |
 | DASH-01 | Phase 7 | Pending |
 | DASH-02 | Phase 7 | Pending |
