@@ -10,10 +10,16 @@ import datetime
 import json
 import logging
 from decimal import Decimal
+from pathlib import Path
+
+from flask import request
+from werkzeug.utils import redirect
 
 from fava.core import FavaLedger
-from fava.ext import FavaExtensionBase
+from fava.ext import FavaExtensionBase, extension_endpoint
 
+from compteqc.factures.modeles import Facture, LigneFacture, InvoiceStatus
+from compteqc.factures.journal import generer_ecriture_facture
 from compteqc.factures.registre import RegistreFactures
 from compteqc.fournisseurs.registre import RegistreFournisseurs
 from compteqc.vieillissement import (
@@ -221,3 +227,78 @@ class ComptesFournisseursExtension(FavaExtensionBase):
         if not self._registre_ap:
             return []
         return sorted(set(f.fournisseur for f in self._registre_ap.lister() if f.fournisseur))
+
+    def today_str(self) -> str:
+        """Today's date as ISO string for form defaults."""
+        return datetime.date.today().isoformat()
+
+    def echeance_default_str(self) -> str:
+        """Default due date (today + 30 days) as ISO string."""
+        return (datetime.date.today() + datetime.timedelta(days=30)).isoformat()
+
+    # ------------------------------------------------------------------
+    # POST endpoints for invoice/bill creation
+    # ------------------------------------------------------------------
+
+    @extension_endpoint("creer_facture", ["POST"])
+    def creer_facture(self):
+        """POST: Create a new AR invoice from form data."""
+        form = request.form
+
+        # Parse client info
+        nom_client = form.get("nom_client", "").strip()
+        date_str = form.get("date", "")
+        echeance_str = form.get("date_echeance", "")
+        notes = form.get("notes", "")
+
+        date_facture = datetime.date.fromisoformat(date_str)
+        date_echeance = datetime.date.fromisoformat(echeance_str)
+
+        # Parse dynamic line items (indexed: description_0, quantite_0, prix_unitaire_0, tps_0, tvq_0, ...)
+        lignes: list[LigneFacture] = []
+        i = 0
+        while f"description_{i}" in form:
+            desc = form.get(f"description_{i}", "").strip()
+            qte = int(form.get(f"quantite_{i}", "1"))
+            prix = Decimal(form.get(f"prix_unitaire_{i}", "0"))
+            tps = f"tps_{i}" in form  # Checkbox: present = checked
+            tvq = f"tvq_{i}" in form
+            if desc and prix > 0:
+                lignes.append(LigneFacture(
+                    description=desc,
+                    quantite=qte,
+                    prix_unitaire=prix,
+                    tps_applicable=tps,
+                    tvq_applicable=tvq,
+                ))
+            i += 1
+
+        if not lignes or not nom_client:
+            return redirect(request.referrer or "/")
+
+        # Create invoice
+        registre = RegistreFactures()
+        numero = registre.prochain_numero(date_facture.year)
+        facture = Facture(
+            numero=numero,
+            nom_client=nom_client,
+            date=date_facture,
+            date_echeance=date_echeance,
+            lignes=lignes,
+            statut=InvoiceStatus.DRAFT,
+            notes=notes,
+        )
+        registre.ajouter(facture)
+
+        # Generate and append Beancount journal entry
+        ecriture = generer_ecriture_facture(facture)
+        ledger_path = Path(self.ledger.beancount_file_path)
+        journal_path = ledger_path.parent / "factures" / "journal.beancount"
+        journal_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(journal_path, "a", encoding="utf-8") as f:
+            f.write("\n" + ecriture + "\n")
+
+        # Reload ledger to pick up new entry
+        self.ledger.load_file()
+
+        return redirect(request.referrer or "/")
