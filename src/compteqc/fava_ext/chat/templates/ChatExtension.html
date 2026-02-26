@@ -1,0 +1,513 @@
+{% set page_title = "Chat" %}
+
+{% block content %}
+
+<style>
+  .cqc-chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 240px);
+    min-height: 400px;
+  }
+
+  .cqc-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+  }
+
+  .cqc-chat-msg {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: var(--cqc-font-base);
+    line-height: var(--cqc-leading-normal);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .cqc-chat-msg-user {
+    align-self: flex-end;
+    background: var(--qc-blue, #003DA5);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+
+  .cqc-chat-msg-assistant {
+    align-self: flex-start;
+    background: var(--qc-surface-raised, #f8f9fa);
+    color: var(--qc-text, #1a1a2e);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--qc-border-light, #e8e8e8);
+  }
+
+  .cqc-chat-msg-assistant strong {
+    font-weight: var(--cqc-weight-semibold);
+  }
+
+  .cqc-chat-msg-assistant code {
+    background: var(--qc-surface, #eef0f4);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: var(--cqc-font-sm);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  .cqc-chat-msg-assistant pre {
+    background: var(--qc-surface, #1a1a2e);
+    color: var(--qc-text-inverse, #e8e8e8);
+    padding: 12px 14px;
+    border-radius: var(--qc-radius-sm, 6px);
+    overflow-x: auto;
+    margin: 8px 0;
+    font-size: var(--cqc-font-sm);
+    line-height: 1.5;
+  }
+
+  .cqc-chat-msg-assistant pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+
+  .cqc-chat-tools {
+    margin-top: 8px;
+    font-size: var(--cqc-font-xs);
+    color: var(--qc-text-secondary, #6b7280);
+  }
+
+  .cqc-chat-tools summary {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .cqc-chat-tools-list {
+    margin-top: 4px;
+    padding-left: 16px;
+  }
+
+  .cqc-chat-tool-badge {
+    display: inline-block;
+    background: var(--qc-blue-light, #e8f0fe);
+    color: var(--qc-blue, #003DA5);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: var(--cqc-font-xs);
+    font-weight: var(--cqc-weight-medium);
+    margin: 2px 4px 2px 0;
+  }
+
+  .cqc-chat-input-area {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--qc-border-light, #e8e8e8);
+    background: var(--qc-surface, #fff);
+    align-items: flex-end;
+  }
+
+  .cqc-chat-textarea {
+    flex: 1;
+    resize: none;
+    border: 1px solid var(--qc-border, #ccc);
+    border-radius: var(--qc-radius-sm, 6px);
+    padding: 10px 14px;
+    font-size: var(--cqc-font-base);
+    font-family: 'Inter', sans-serif;
+    line-height: var(--cqc-leading-normal);
+    background: var(--qc-surface-raised, #fff);
+    color: var(--qc-text, #1a1a2e);
+    min-height: 44px;
+    max-height: 150px;
+    overflow-y: auto;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .cqc-chat-textarea:focus {
+    outline: none;
+    border-color: var(--qc-blue, #003DA5);
+    box-shadow: 0 0 0 3px rgba(0, 61, 165, 0.12);
+  }
+
+  .cqc-chat-textarea:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .cqc-chat-send {
+    flex-shrink: 0;
+    min-width: 90px;
+    height: 44px;
+  }
+
+  /* Loading animation */
+  .cqc-chat-loading {
+    display: none;
+    align-self: flex-start;
+    padding: 12px 16px;
+    background: var(--qc-surface-raised, #f8f9fa);
+    border: 1px solid var(--qc-border-light, #e8e8e8);
+    border-radius: 12px;
+    border-bottom-left-radius: 4px;
+    color: var(--qc-text-secondary, #6b7280);
+    font-size: var(--cqc-font-sm);
+  }
+
+  .cqc-chat-loading.active {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .cqc-chat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--qc-blue, #003DA5);
+    animation: cqc-dot-pulse 1.4s infinite ease-in-out;
+    opacity: 0.4;
+  }
+
+  .cqc-chat-dot:nth-child(2) { animation-delay: 0.2s; }
+  .cqc-chat-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes cqc-dot-pulse {
+    0%, 80%, 100% { opacity: 0.4; transform: scale(1); }
+    40% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Welcome message */
+  .cqc-chat-welcome {
+    align-self: center;
+    text-align: center;
+    padding: 24px;
+    color: var(--qc-text-secondary, #6b7280);
+    font-size: var(--cqc-font-sm);
+    max-width: 500px;
+  }
+
+  .cqc-chat-welcome h3 {
+    margin: 0 0 8px 0;
+    color: var(--qc-text, #1a1a2e);
+    font-size: var(--cqc-font-md);
+    font-weight: var(--cqc-weight-semibold);
+  }
+
+  /* Error display */
+  .cqc-chat-error {
+    background: var(--qc-error-bg, #ffebee);
+    color: #B91C1C;
+    border-left: 4px solid var(--qc-error, #dc3545);
+    padding: 10px 14px;
+    border-radius: var(--qc-radius-sm, 4px);
+    font-size: var(--cqc-font-sm);
+    align-self: center;
+    max-width: 80%;
+  }
+
+  /* Hint text */
+  .cqc-chat-hint {
+    text-align: center;
+    font-size: var(--cqc-font-xs);
+    color: var(--qc-text-secondary, #999);
+    padding: 4px 0 0 0;
+  }
+</style>
+
+<div class="cqc-page-header">
+  <h2>Chat</h2>
+  <span class="cqc-subtitle">Discuter de vos finances avec Claude</span>
+</div>
+
+<div class="cqc-card cqc-chat-container">
+
+  <div id="chat-messages" class="cqc-chat-messages">
+    <div class="cqc-chat-welcome" id="chat-welcome">
+      <h3>Bonjour!</h3>
+      <p>
+        Je suis votre assistant financier. Je peux consulter vos comptes,
+        calculer la paie, verifier vos taxes TPS/TVQ, et bien plus.
+        Posez-moi une question!
+      </p>
+      <p style="margin-top: 12px; font-size: var(--cqc-font-xs);">
+        Exemples: "Quels sont mes soldes bancaires?" &middot;
+        "Montre-moi l'etat des resultats du Q4" &middot;
+        "Calcule ma paie pour 4 230,77 $"
+      </p>
+    </div>
+
+    <div id="chat-loading" class="cqc-chat-loading">
+      <span>Claude reflechit</span>
+      <span class="cqc-chat-dot"></span>
+      <span class="cqc-chat-dot"></span>
+      <span class="cqc-chat-dot"></span>
+    </div>
+  </div>
+
+  <div class="cqc-chat-input-area">
+    <textarea
+      id="chat-input"
+      class="cqc-chat-textarea"
+      placeholder="Posez une question sur vos finances..."
+      rows="1"
+      aria-label="Message pour Claude"
+    ></textarea>
+    <button
+      id="chat-send"
+      class="cqc-btn cqc-btn-primary cqc-chat-send"
+      type="button"
+      title="Envoyer le message (Enter)"
+    >Envoyer</button>
+  </div>
+
+  <div class="cqc-chat-hint">
+    Entrer pour envoyer &middot; Maj+Entrer pour un saut de ligne
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var SLUG = '{{ g.beancount_file_slug }}';
+  var CHAT_URL = '/' + SLUG + '/extension/ChatExtension/chat';
+  var SESSION_KEY = 'cqc-chat-messages';
+  var MAX_CONTEXT = 20;
+
+  // State
+  var conversationMessages = [];
+  var isLoading = false;
+
+  // DOM elements
+  var messagesEl = document.getElementById('chat-messages');
+  var loadingEl = document.getElementById('chat-loading');
+  var welcomeEl = document.getElementById('chat-welcome');
+  var inputEl = document.getElementById('chat-input');
+  var sendBtn = document.getElementById('chat-send');
+
+  // -----------------------------------------------------------------
+  // Restore session
+  // -----------------------------------------------------------------
+  try {
+    var saved = sessionStorage.getItem(SESSION_KEY);
+    if (saved) {
+      conversationMessages = JSON.parse(saved);
+      if (conversationMessages.length > 0) {
+        welcomeEl.style.display = 'none';
+        for (var i = 0; i < conversationMessages.length; i++) {
+          var msg = conversationMessages[i];
+          if (msg.role === 'user') {
+            appendUserBubble(msg.content);
+          } else if (msg.role === 'assistant') {
+            appendAssistantBubble(msg.content, msg.tools_used || []);
+          }
+        }
+        scrollToBottom();
+      }
+    }
+  } catch (e) { /* sessionStorage unavailable */ }
+
+  // -----------------------------------------------------------------
+  // HTML escaping and simple markdown
+  // -----------------------------------------------------------------
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  function renderMarkdown(text) {
+    // Escape HTML first
+    var html = escapeHtml(text);
+
+    // Code blocks: ```...```
+    html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, function(match, lang, code) {
+      return '<pre><code>' + code.trim() + '</code></pre>';
+    });
+
+    // Inline code: `...`
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Bold: **...**
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+    // Italic: *...*
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+    // Line breaks
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
+  }
+
+  // -----------------------------------------------------------------
+  // Message bubbles
+  // -----------------------------------------------------------------
+  function appendUserBubble(text) {
+    var el = document.createElement('div');
+    el.className = 'cqc-chat-msg cqc-chat-msg-user';
+    el.textContent = text;
+    messagesEl.insertBefore(el, loadingEl);
+  }
+
+  function appendAssistantBubble(text, toolsUsed) {
+    var wrapper = document.createElement('div');
+    wrapper.style.alignSelf = 'flex-start';
+    wrapper.style.maxWidth = '80%';
+
+    var el = document.createElement('div');
+    el.className = 'cqc-chat-msg cqc-chat-msg-assistant';
+    el.innerHTML = renderMarkdown(text);
+    wrapper.appendChild(el);
+
+    // Tool badges
+    if (toolsUsed && toolsUsed.length > 0) {
+      var details = document.createElement('details');
+      details.className = 'cqc-chat-tools';
+      var summary = document.createElement('summary');
+      summary.textContent = 'Outils utilises (' + toolsUsed.length + ')';
+      details.appendChild(summary);
+
+      var badgeContainer = document.createElement('div');
+      badgeContainer.className = 'cqc-chat-tools-list';
+      for (var i = 0; i < toolsUsed.length; i++) {
+        var badge = document.createElement('span');
+        badge.className = 'cqc-chat-tool-badge';
+        badge.textContent = toolsUsed[i];
+        badgeContainer.appendChild(badge);
+      }
+      details.appendChild(badgeContainer);
+      wrapper.appendChild(details);
+    }
+
+    messagesEl.insertBefore(wrapper, loadingEl);
+  }
+
+  function appendError(text) {
+    var el = document.createElement('div');
+    el.className = 'cqc-chat-error';
+    el.textContent = text;
+    messagesEl.insertBefore(el, loadingEl);
+  }
+
+  function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function saveSession() {
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(conversationMessages));
+    } catch (e) { /* quota exceeded -- ignore */ }
+  }
+
+  // -----------------------------------------------------------------
+  // Send message
+  // -----------------------------------------------------------------
+  function sendMessage() {
+    var text = inputEl.value.trim();
+    if (!text || isLoading) return;
+
+    // Hide welcome
+    if (welcomeEl.style.display !== 'none') {
+      welcomeEl.style.display = 'none';
+    }
+
+    // Add user message
+    conversationMessages.push({ role: 'user', content: text });
+    appendUserBubble(text);
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+
+    // Show loading
+    isLoading = true;
+    loadingEl.classList.add('active');
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+    sendBtn.textContent = '...';
+    scrollToBottom();
+
+    // Build request (send last N messages, only role+content for API)
+    var apiMessages = [];
+    for (var i = 0; i < conversationMessages.length; i++) {
+      var m = conversationMessages[i];
+      apiMessages.push({ role: m.role, content: m.content });
+    }
+    if (apiMessages.length > MAX_CONTEXT) {
+      apiMessages = apiMessages.slice(-MAX_CONTEXT);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      isLoading = false;
+      loadingEl.classList.remove('active');
+      inputEl.disabled = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Envoyer';
+      inputEl.focus();
+
+      try {
+        var data = JSON.parse(xhr.responseText);
+        var content = data.content || 'Reponse vide.';
+        var toolsUsed = data.tools_used || [];
+
+        conversationMessages.push({
+          role: 'assistant',
+          content: content,
+          tools_used: toolsUsed,
+        });
+
+        appendAssistantBubble(content, toolsUsed);
+        saveSession();
+        scrollToBottom();
+      } catch (err) {
+        appendError('Erreur de communication avec le serveur.');
+        scrollToBottom();
+      }
+    };
+
+    xhr.onerror = function() {
+      isLoading = false;
+      loadingEl.classList.remove('active');
+      inputEl.disabled = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Envoyer';
+      appendError('Erreur reseau. Verifiez que le serveur Fava est actif.');
+      scrollToBottom();
+    };
+
+    xhr.open('POST', CHAT_URL, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ messages: apiMessages }));
+  }
+
+  // -----------------------------------------------------------------
+  // Event listeners
+  // -----------------------------------------------------------------
+  sendBtn.addEventListener('click', sendMessage);
+
+  inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // Auto-resize textarea
+  inputEl.addEventListener('input', function() {
+    this.style.height = 'auto';
+    var newHeight = Math.min(this.scrollHeight, 150);
+    this.style.height = newHeight + 'px';
+  });
+
+  // Focus input on load
+  inputEl.focus();
+
+})();
+</script>
+
+{% endblock %}
