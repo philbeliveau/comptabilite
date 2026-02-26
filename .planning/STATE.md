@@ -8,7 +8,7 @@ progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 23
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 12 - Aging AR/CLI (v1.2 AP/AR & Financial Operations)
+**Current focus:** Phase 13 - Recurring Invoices & Auto-Matching (v1.2 AP/AR & Financial Operations)
 
 ## Current Position
 
-Phase: 12 of 15 (Aging AR/CLI) -- COMPLETE
-Plan: 2 of 2 in current phase (Plan 02 complete)
-Status: Phase 12 complete -- ready for Phase 14
-Last activity: 2026-02-26 - Completed Plan 12-02: AP/AR CLI Commands
+Phase: 13 of 15 (Recurring Invoices & Auto-Matching)
+Plan: 1 of 2 in current phase (Plan 01 complete)
+Status: Plan 13-01 complete -- ready for Plan 13-02
+Last activity: 2026-02-26 - Completed Plan 13-01: Recurring Invoice Templates
 
-Progress: [########            ] 40% (v1.2 phases 11-15)
+Progress: [##########          ] 50% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [########            ] 40% (v1.2 phases 11-15)
 |-------|-------|-------|----------|
 | 11. AP Foundation | 2/2 | 5min | 2.5 min |
 | 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
+| 13. Recurring Invoices | 1/2 | 4min | 4 min |
 
 *v1.1/v1.2 metrics will populate as plans execute*
 
@@ -78,6 +79,9 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Payment recording via mettre_a_jour_statut with montant_paye param (reuse existing registry API)
 - AP aging table includes vendor reference number column for cross-referencing
 - Solde column in AR invoice list only shows value when different from total (cleaner display)
+- RegistreRecurrents mirrors RegistreFactures YAML persistence pattern for recurring templates
+- avancer_date() uses relativedelta for months, timedelta for bimensuel (2 weeks)
+- Removed prompt on --frequence CLI option (default 'mensuel', prompt breaks non-interactive use)
 
 ### Pending Todos
 
@@ -103,5 +107,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 12-02-PLAN.md -- Phase 12 complete, ready for Phase 14
+Stopped at: Completed 13-01-PLAN.md -- Plan 01 complete, ready for Plan 13-02
 Resume file: None
