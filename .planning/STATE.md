@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: AP/AR & Financial Operations
-status: unknown
-last_updated: "2026-02-26T15:43:49.377Z"
+status: in-progress
+last_updated: "2026-02-26T15:49:33Z"
 progress:
   total_phases: 13
   completed_phases: 7
   total_plans: 21
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 11 - AP Foundation (v1.2 AP/AR & Financial Operations)
+**Current focus:** Phase 12 - Aging AR/CLI (v1.2 AP/AR & Financial Operations)
 
 ## Current Position
 
-Phase: 11 of 15 (AP Foundation) -- COMPLETE
-Plan: 2 of 2 in current phase (all plans complete)
-Status: Phase 11 complete -- ready for Phase 12
-Last activity: 2026-02-26 - Completed Plan 11-02: AP Journal Entry Generators
+Phase: 12 of 15 (Aging AR/CLI)
+Plan: 1 of 2 in current phase (Plan 01 complete)
+Status: Plan 12-01 complete -- ready for Plan 12-02
+Last activity: 2026-02-26 - Completed Plan 12-01: AR/AP Aging Domain Logic
 
-Progress: [####                ] 20% (v1.2 phases 11-15)
+Progress: [######              ] 30% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Progress: [####                ] 20% (v1.2 phases 11-15)
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 11. AP Foundation | 2/2 | 5min | 2.5 min |
+| 12. Aging AR/CLI | 1/2 | 4min | 4 min |
 
 *v1.1/v1.2 metrics will populate as plans execute*
 
@@ -71,6 +72,9 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - tps/tvq model properties compute full tax; partial ITC/ITR split deferred to journal entry generator (Plan 02)
 - AP credit computed as negative sum of all debit postings (guarantees exact balance, avoids rounding drift)
 - Postings accumulated via defaultdict(Decimal) to consolidate multi-line same-account debits
+- Aging module accepts model lists (not registries) -- pure functions with no I/O for testability
+- Status derivation as standalone function (determiner_statut) not model method
+- Revenue grouping uses defaultdict to consolidate multi-line same-account debits in AR journal entries
 
 ### Pending Todos
 
@@ -96,5 +100,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 11-02-PLAN.md -- Phase 11 complete, ready for Phase 12
+Stopped at: Completed 12-01-PLAN.md -- Plan 01 complete, ready for Plan 12-02
 Resume file: None

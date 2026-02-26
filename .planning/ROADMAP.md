@@ -181,7 +181,12 @@ Plans:
   4. User can create new AR invoices and AP bills via inline web forms without leaving the Fava interface
   5. Dashboard homepage displays a net AR/AP position KPI card alongside existing financial KPIs
   6. Claude can list AP bills, create new bills, record payments, and generate aging reports via MCP tools (`ap_list`, `ap_add`, `ap_pay`, `ar_aging`, `ap_aging`, `apar_summary`)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 14-01-PLAN.md -- Fava extension backend (ComptesFournisseursExtension), KPI row, AR/AP list tables with badges/aging colors, Chart.js aging chart, dashboard KPI, registration
+- [ ] 14-02-PLAN.md -- Inline AR invoice creation form and AP bill creation form with POST endpoints, dynamic line items, live tax calculation
+- [ ] 14-03-PLAN.md -- MCP tools: ap_list, ap_add, ap_pay, ar_aging, ap_aging, apar_summary with tests
 
 ### Phase 15: Receipt-to-AP Pipeline & Auto-matching UX
 **Goal**: Uploading a receipt can flow directly into AP bill creation, and bank transactions in the approval queue show match suggestions for linking to open AR/AP entries
@@ -216,7 +221,7 @@ v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
 | 10. Cross-Cutting Polish and Validation | v1.1 | 2/2 | Complete | 2026-02-25 |
 | 11. AP Foundation | 2/2 | Complete    | 2026-02-26 | - |
-| 12. Aging, AR Enhancements & CLI | v1.2 | 0/2 | Planned | - |
+| 12. Aging, AR Enhancements & CLI | 1/2 | In Progress|  | - |
 | 13. Recurring Invoices & Auto-matching | v1.2 | 0/0 | Not started | - |
-| 14. Fava Extension Tab & MCP | v1.2 | 0/0 | Not started | - |
+| 14. Fava Extension Tab & MCP | v1.2 | 0/3 | Planned | - |
 | 15. Receipt-to-AP Pipeline & Auto-matching UX | v1.2 | 0/0 | Not started | - |
