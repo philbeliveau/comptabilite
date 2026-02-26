@@ -1,43 +1,82 @@
-# Requirements: CompteQC v1.1 Production UI/UX
+# Requirements: CompteQC
 
 **Defined:** 2026-02-25
 **Core Value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
 
-## v1.1 Requirements
+## v1.1 Requirements (Complete)
 
-Requirements for production UI/UX milestone. Each maps to roadmap phases.
+All 16 requirements shipped. See [v1.1-REQUIREMENTS.md](milestones/v1.1-REQUIREMENTS.md) for details.
 
-### Design System (DSYS)
+- [x] DSYS-01 through DSYS-04 (Design System) -- Phase 6
+- [x] DASH-01 through DASH-04 (Dashboard) -- Phase 7
+- [x] TBLX-01 through TBLX-04 (Tables & Extensions) -- Phase 8
+- [x] RCPT-01 through RCPT-04 (Receipt Upload) -- Phase 9
 
-- [x] **DSYS-01**: CSS variable migration -- replace `!important` overrides with Fava CSS custom property theming
-- [x] **DSYS-02**: Chart.js CDN loader with chart registry for SPA lifecycle (create/destroy on navigation)
-- [x] **DSYS-03**: Animation safety nets -- `prefers-reduced-motion` guard and `requestAnimationFrame` wrapper
-- [x] **DSYS-04**: Typography refinement -- tabular nums for amounts, tighter font-size scale, refined Inter weights
+## v1.2 Requirements
 
-### Dashboard (DASH)
+Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap phases 11-15.
 
-- [x] **DASH-01**: User sees KPI cards on dashboard homepage (Revenue YTD, Expenses YTD, Net Income, Tax Owing, Pending Approvals) with count-up animation
-- [x] **DASH-02**: User sees monthly revenue trend as a Chart.js line chart on dashboard
-- [x] **DASH-03**: User sees expense category breakdown as a Chart.js doughnut chart on dashboard
-- [x] **DASH-04**: User sees last 10 transactions with status badges on dashboard
+### AP Foundation (APFN)
 
-### Tables & Extensions (TBLX)
+- [ ] **APFN-01**: `Passifs:ComptesFournisseurs` (GIFI 2010) account added to chart of accounts
+- [ ] **APFN-02**: User can create a vendor bill with line items, per-line expense category, and GST/QST flags
+- [ ] **APFN-03**: System generates correct Beancount journal entries for bill recording (debit expense + ITC/ITR, credit AP)
+- [ ] **APFN-04**: System generates correct Beancount journal entries for bill payment (debit AP, credit bank/credit card)
+- [ ] **APFN-05**: Vendor bills persist in YAML registry with sequential numbering (FOUR-YYYY-NNN)
 
-- [x] **TBLX-01**: All 8 extension tables have hover states, consistent padding, and visual header hierarchy
-- [x] **TBLX-02**: Approval queue has redesigned confidence badges, keyboard shortcuts (approve/reject), and scannable layout
-- [x] **TBLX-03**: Page entrance animations (fade + slide) on extension navigation
-- [x] **TBLX-04**: Sidebar shows pending approval count badge on Approbation link
+### AR Enhancements (AREN)
 
-### Receipt Upload (RCPT)
+- [ ] **AREN-01**: User can record partial payments on existing invoices with running balance
+- [ ] **AREN-02**: System derives invoice status from payment state (draft/sent/partial/paid/overdue)
+- [ ] **AREN-03**: User can list unpaid invoices filtered by status
+- [ ] **AREN-04**: Revenue account is configurable per invoice line (not hardcoded to Revenus:Consultation)
 
-- [x] **RCPT-01**: Upload endpoint converted from raw HTML to AJAX/JSON response
-- [x] **RCPT-02**: User sees animated progress bar during file upload with percentage
-- [x] **RCPT-03**: User sees file thumbnail preview after upload completes (PDF first page, image thumbnail)
-- [x] **RCPT-04**: Drag-and-drop zone has animated border, hover glow, and multi-file support
+### Aging Reports (AGNG)
+
+- [ ] **AGNG-01**: System calculates aging buckets (0-30, 30-60, 60-90, 90+ days) for AR invoices
+- [ ] **AGNG-02**: System calculates aging buckets for AP bills
+- [ ] **AGNG-03**: User can view combined AP/AR position summary with net cash impact
+- [ ] **AGNG-04**: User can run aging reports via CLI (`cqc aging ar`, `cqc aging ap`, `cqc aging summary`)
+
+### CLI Commands (CLAP)
+
+- [ ] **CLAP-01**: User can create vendor bills interactively via `cqc fournisseur add`
+- [ ] **CLAP-02**: User can list vendor bills via `cqc fournisseur list` with status filter
+- [ ] **CLAP-03**: User can record bill payment via `cqc fournisseur pay` (full or partial amount)
+
+### Recurring & Matching (RECM)
+
+- [ ] **RECM-01**: User can create recurring invoice templates with frequency and auto-generation date
+- [ ] **RECM-02**: System generates invoices from templates on schedule or via `cqc facture generate-recurring`
+- [ ] **RECM-03**: System auto-matches bank deposits against outstanding AR invoices by amount and description
+- [ ] **RECM-04**: System auto-matches bank withdrawals against outstanding AP bills by amount and vendor
+
+### Fava Extension (FVAP)
+
+- [ ] **FVAP-01**: User sees combined AP/AR tab with KPI row (AR total, AR overdue, AP total, net position)
+- [ ] **FVAP-02**: User can toggle between AR invoice list and AP bill list with status badges and aging colors
+- [ ] **FVAP-03**: User sees Chart.js horizontal stacked bar chart showing aging distribution
+- [ ] **FVAP-04**: User can create AR invoices via inline web form (bringing CLI to web)
+- [ ] **FVAP-05**: User can create AP bills via inline web form with expense category dropdown
+- [ ] **FVAP-06**: Dashboard homepage shows net AR/AP position KPI
+
+### Receipt-to-AP Pipeline (RCAP)
+
+- [ ] **RCAP-01**: After receipt upload and AI extraction, user sees "Create AP entry?" prompt
+- [ ] **RCAP-02**: Clicking the prompt navigates to AP form pre-filled with extracted vendor, amount, dates, taxes
+- [ ] **RCAP-03**: Approval queue shows match suggestions for bank transactions that correspond to open AR/AP entries
+- [ ] **RCAP-04**: User can link a bank transaction to an AR invoice or AP bill with one click ("Lier" button)
+
+### MCP Server (MCAP)
+
+- [ ] **MCAP-01**: Claude can list and query AP bills via `ap_list` tool
+- [ ] **MCAP-02**: Claude can create AP bills via `ap_add` tool
+- [ ] **MCAP-03**: Claude can record AP payments via `ap_pay` tool
+- [ ] **MCAP-04**: Claude can generate aging reports via `ar_aging`, `ap_aging`, `apar_summary` tools
 
 ## Future Requirements
 
-Deferred to v1.2+. Tracked but not in current roadmap.
+Deferred to v1.3+. Tracked but not in current roadmap.
 
 ### Data Visualization Enhancements
 
@@ -50,7 +89,6 @@ Deferred to v1.2+. Tracked but not in current roadmap.
 - **UX-01**: Customizable dashboard card layout (drag-and-drop reorder)
 - **UX-02**: Dark mode toggle
 - **UX-03**: Keyboard shortcut system across all extensions
-- **UX-04**: Batch receipt upload with AI auto-matching to transactions
 
 ## Out of Scope
 
@@ -58,13 +96,13 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Custom frontend (React/Next.js) | Staying within Fava for v1.1 -- lower risk, builds on what works |
-| Mobile-responsive redesign | Desktop-first solo tool; mobile adds significant complexity |
-| Dark mode | Nice-to-have, not core to production polish -- defer to v1.2 |
-| AI-generated chart commentary | LLMs hallucinate numbers; charts must show exact data only |
-| Real-time data refresh / WebSocket | Fava is request-based; real-time adds architectural complexity |
-| Customizable dashboard layout | Solo user -- fixed layout is simpler and sufficient |
-| Animation library (GSAP, Framer) | Pure CSS + CountUp.js covers all needed animations |
+| Multi-currency AP/AR | All business is CAD; add when USD invoices arise |
+| Vendor portal / self-service | Solo consultant; no vendor-facing UI needed |
+| Purchase orders | No inventory, no PO workflow needed |
+| Credit notes / debit memos | Low volume; handle manually if needed |
+| Automated payment execution | System tracks what's owed, not how to pay (manual bank payments) |
+| AP/AR forecasting / cash flow projection | Phase 1 is tracking actuals; forecasting is future |
+| Tax return filing | CPA handles T2, CO-17, GST/QST returns |
 
 ## Traceability
 
@@ -72,28 +110,46 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSYS-01 | Phase 6 | Complete |
-| DSYS-02 | Phase 6 | Complete |
-| DSYS-03 | Phase 6 | Complete |
-| DSYS-04 | Phase 6 | Complete |
-| DASH-01 | Phase 7 | Complete |
-| DASH-02 | Phase 7 | Complete |
-| DASH-03 | Phase 7 | Complete |
-| DASH-04 | Phase 7 | Complete |
-| TBLX-01 | Phase 8 | Complete |
-| TBLX-02 | Phase 8 | Complete |
-| TBLX-03 | Phase 8 | Complete |
-| TBLX-04 | Phase 8 | Complete |
-| RCPT-01 | Phase 9 | Complete |
-| RCPT-02 | Phase 9 | Complete |
-| RCPT-03 | Phase 9 | Complete |
-| RCPT-04 | Phase 9 | Complete |
+| APFN-01 | Phase 11 | Pending |
+| APFN-02 | Phase 11 | Pending |
+| APFN-03 | Phase 11 | Pending |
+| APFN-04 | Phase 11 | Pending |
+| APFN-05 | Phase 11 | Pending |
+| AREN-01 | Phase 12 | Pending |
+| AREN-02 | Phase 12 | Pending |
+| AREN-03 | Phase 12 | Pending |
+| AREN-04 | Phase 12 | Pending |
+| AGNG-01 | Phase 12 | Pending |
+| AGNG-02 | Phase 12 | Pending |
+| AGNG-03 | Phase 12 | Pending |
+| AGNG-04 | Phase 12 | Pending |
+| CLAP-01 | Phase 12 | Pending |
+| CLAP-02 | Phase 12 | Pending |
+| CLAP-03 | Phase 12 | Pending |
+| RECM-01 | Phase 13 | Pending |
+| RECM-02 | Phase 13 | Pending |
+| RECM-03 | Phase 13 | Pending |
+| RECM-04 | Phase 13 | Pending |
+| FVAP-01 | Phase 14 | Pending |
+| FVAP-02 | Phase 14 | Pending |
+| FVAP-03 | Phase 14 | Pending |
+| FVAP-04 | Phase 14 | Pending |
+| FVAP-05 | Phase 14 | Pending |
+| FVAP-06 | Phase 14 | Pending |
+| MCAP-01 | Phase 14 | Pending |
+| MCAP-02 | Phase 14 | Pending |
+| MCAP-03 | Phase 14 | Pending |
+| MCAP-04 | Phase 14 | Pending |
+| RCAP-01 | Phase 15 | Pending |
+| RCAP-02 | Phase 15 | Pending |
+| RCAP-03 | Phase 15 | Pending |
+| RCAP-04 | Phase 15 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 16 total
-- Mapped to phases: 16
+- v1.2 requirements: 30 total
+- Mapped to phases: 30
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after roadmap creation*
+*Requirements defined: 2026-02-26*
+*Last updated: 2026-02-26 after v1.2 milestone definition*
