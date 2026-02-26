@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 11 of 15 (AP Foundation)
-Plan: 0 of 2 in current phase
-Status: Planned -- ready to execute
-Last activity: 2026-02-26 - Completed quick task 18: Make ApprobationExtension table responsive for non-fullscreen browser windows
+Plan: 1 of 2 in current phase
+Status: In progress -- Plan 11-01 complete, Plan 11-02 next
+Last activity: 2026-02-26 - Completed Plan 11-01: AP Data Model and Registry
 
-Progress: [                    ] 0% (v1.2 phases 11-15)
+Progress: [##                  ] 10% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -33,6 +33,12 @@ Progress: [                    ] 0% (v1.2 phases 11-15)
 | 4. MCP + Dashboard | 5 | ~4h | ~48 min |
 | 5. Reports + Export | 5 | ~4h | ~48 min |
 
+**By Phase (v1.2):**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 11. AP Foundation | 1/2 | 3min | 3 min |
+
 *v1.1/v1.2 metrics will populate as plans execute*
 
 ## Accumulated Context
@@ -48,6 +54,8 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Receipt-to-AP pipeline via URL query parameters for stateless form pre-fill
 - cqc-tab-toggle pattern for sub-tab switching within a single Fava extension
 - Design doc: docs/design/accounts-payable-receivable.md (1671 lines) is the implementation reference
+- Reuse TAUX_TPS/TAUX_TVQ/QUANTIZE_CENT from factures.modeles for AP module (consistency)
+- tps/tvq model properties compute full tax; partial ITC/ITR split deferred to journal entry generator (Plan 02)
 
 ### Pending Todos
 
@@ -73,5 +81,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Phase 11 planned -- ready to execute Plan 11-01
+Stopped at: Completed 11-01-PLAN.md -- ready for Plan 11-02
 Resume file: None

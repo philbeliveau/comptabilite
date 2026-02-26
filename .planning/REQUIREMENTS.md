@@ -18,11 +18,11 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 
 ### AP Foundation (APFN)
 
-- [ ] **APFN-01**: `Passifs:ComptesFournisseurs` (GIFI 2010) account added to chart of accounts
-- [ ] **APFN-02**: User can create a vendor bill with line items, per-line expense category, and GST/QST flags
+- [x] **APFN-01**: `Passifs:ComptesFournisseurs` (GIFI 2010) account added to chart of accounts
+- [x] **APFN-02**: User can create a vendor bill with line items, per-line expense category, and GST/QST flags
 - [ ] **APFN-03**: System generates correct Beancount journal entries for bill recording (debit expense + ITC/ITR, credit AP)
 - [ ] **APFN-04**: System generates correct Beancount journal entries for bill payment (debit AP, credit bank/credit card)
-- [ ] **APFN-05**: Vendor bills persist in YAML registry with sequential numbering (FOUR-YYYY-NNN)
+- [x] **APFN-05**: Vendor bills persist in YAML registry with sequential numbering (FOUR-YYYY-NNN)
 
 ### AR Enhancements (AREN)
 
@@ -110,11 +110,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| APFN-01 | Phase 11 | Pending |
-| APFN-02 | Phase 11 | Pending |
+| APFN-01 | Phase 11 | Complete |
+| APFN-02 | Phase 11 | Complete |
 | APFN-03 | Phase 11 | Pending |
 | APFN-04 | Phase 11 | Pending |
-| APFN-05 | Phase 11 | Pending |
+| APFN-05 | Phase 11 | Complete |
 | AREN-01 | Phase 12 | Pending |
 | AREN-02 | Phase 12 | Pending |
 | AREN-03 | Phase 12 | Pending |

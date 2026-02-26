@@ -133,7 +133,11 @@ Plans:
   3. Recording a bill produces a balanced Beancount transaction (debit expense accounts + tax receivable, credit AP) that appears in the ledger
   4. Paying a bill produces a balanced Beancount transaction (debit AP, credit bank/credit card) and the bill status updates to paid
   5. Vendor bills persist in YAML with sequential FOUR-YYYY-NNN numbering and survive application restarts
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 11-01-PLAN.md -- Chart of accounts AP account, FactureFournisseur models, BillStatus enum, RegistreFournisseurs YAML registry, tests
+- [ ] 11-02-PLAN.md -- Journal entry generators for bill recording and payment, partial ITC/ITR, tests
 
 ### Phase 12: Aging, AR Enhancements & CLI
 **Goal**: User can track invoice and bill aging, handle partial payments on AR invoices, and operate the full AP/AR system from the command line
@@ -145,7 +149,11 @@ Plans:
   3. User can run `cqc aging summary` to see a combined AR/AP position with net cash impact (what is owed to us minus what we owe)
   4. User can create bills (`cqc fournisseur add`), list them with status filters (`cqc fournisseur list`), and record full or partial payments (`cqc fournisseur pay`) entirely from the CLI
   5. Revenue account is configurable per invoice line item, allowing training revenue and consulting revenue to post to different accounts
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 12-01-PLAN.md -- AR model enhancements (partial payments, status derivation, configurable revenue) + aging calculation module (AR/AP/combined)
+- [ ] 12-02-PLAN.md -- CLI commands: fournisseur add/list/voir/pay, aging ar/ap/summary, facture lister PARTIAL filter
 
 ### Phase 13: Recurring Invoices & Auto-matching
 **Goal**: User can set up recurring invoice templates that auto-generate on schedule, and the system intelligently matches bank transactions to outstanding invoices and bills
@@ -203,8 +211,8 @@ v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 | 8. Table and Extension Polish | v1.1 | 0/2 | Not started | - |
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
 | 10. Cross-Cutting Polish and Validation | v1.1 | 2/2 | Complete | 2026-02-25 |
-| 11. AP Foundation | v1.2 | 0/0 | Not started | - |
-| 12. Aging, AR Enhancements & CLI | v1.2 | 0/0 | Not started | - |
+| 11. AP Foundation | 1/2 | In Progress|  | - |
+| 12. Aging, AR Enhancements & CLI | v1.2 | 0/2 | Planned | - |
 | 13. Recurring Invoices & Auto-matching | v1.2 | 0/0 | Not started | - |
 | 14. Fava Extension Tab & MCP | v1.2 | 0/0 | Not started | - |
 | 15. Receipt-to-AP Pipeline & Auto-matching UX | v1.2 | 0/0 | Not started | - |
