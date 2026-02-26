@@ -36,15 +36,13 @@
            onchange="if(this.files.length > 0){ document.getElementById('upload-form').submit(); }">
   </form>
 
-  <p style="font-size: 0.85em; color: var(--qc-muted, #64748B); margin-top: 8px;">
+  <p class="cqc-text-muted" style="margin-top: 8px;">
     Formats acceptés : PDF, JPEG, PNG, HEIC
   </p>
 </div>
 
 <div class="cqc-card-flush">
-  <div style="padding: 16px 24px 0;">
-    <h3 class="cqc-section-title">Reçus récents</h3>
-  </div>
+  <h3 class="cqc-section-title">Reçus récents</h3>
   {% set recents = extension.recent_uploads() %}
   {% if recents %}
   <table class="cqc-table">
@@ -60,7 +58,7 @@
       <tr>
         <td>{{ doc.date }}</td>
         <td>{{ doc.filename }}</td>
-        <td style="font-size: 0.85em; color: var(--qc-muted, #64748B);">{{ doc.chemin }}</td>
+        <td class="cqc-text-muted">{{ doc.chemin }}</td>
       </tr>
       {% endfor %}
     </tbody>
