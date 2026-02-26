@@ -181,6 +181,14 @@ header input::placeholder {
   -webkit-text-fill-color: #64748B !important;
 }
 
+/* Header filter dropdowns -- prevent clipping past viewport right edge */
+header [role="listbox"] {
+  right: 0 !important;
+  left: auto !important;
+  max-width: 90vw !important;
+  min-width: 100% !important;
+}
+
 /* ===== CompteQC Brand Strip ===== */
 /* OVERRIDE: Svelte-scoped -- brand strip hidden by default, shown by JS injection */
 #cqc-brand-strip { display: none !important; }
