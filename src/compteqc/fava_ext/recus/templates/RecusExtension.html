@@ -1,5 +1,15 @@
 {% set page_title = "Reçus" %}
 
+<style>
+.cqc-receipt-to-ap {
+  border-left: 3px solid var(--cqc-blue-400, #60a5fa);
+  background: var(--cqc-blue-50, #eff6ff);
+}
+.cqc-receipt-to-ap-prompt {
+  padding: 4px 0;
+}
+</style>
+
 {% block content %}
 
 <div class="cqc-page-header">
@@ -299,6 +309,38 @@
       html += '</tbody></table></div>';
     } else if (data.extracted) {
       html += '<div class="cqc-card"><p>Aucune correspondance trouvee.</p></div>';
+    }
+
+    // Receipt-to-AP creation prompt
+    if (data.extracted) {
+      var ex = data.extracted;
+      // Build the AP form pre-fill URL with query parameters
+      var apBaseUrl = '{{ "/" ~ g.beancount_file_slug ~ "/extension/ComptesFournisseursExtension/" }}';
+      var apParams = new URLSearchParams();
+      apParams.set('prefill', '1');
+      apParams.set('tab', 'ap');
+      if (ex.fournisseur) apParams.set('fournisseur', ex.fournisseur);
+      if (ex.date && ex.date !== 'UNKNOWN') apParams.set('date', ex.date);
+      if (ex.sous_total) apParams.set('montant', ex.sous_total);
+      if (ex.montant_tps) apParams.set('tps', ex.montant_tps);
+      if (ex.montant_tvq) apParams.set('tvq', ex.montant_tvq);
+      if (ex.description) apParams.set('description', ex.description);
+      var apUrl = apBaseUrl + '?' + apParams.toString();
+
+      html += '<div class="cqc-card cqc-receipt-to-ap">';
+      html += '<div class="cqc-receipt-to-ap-prompt">';
+      html += '<strong>Creer une facture fournisseur a partir de ce recu?</strong>';
+      html += '<p class="cqc-text-muted" style="margin: 4px 0 8px 0;">';
+      html += escapeHtml(ex.fournisseur) + ' &mdash; ' + escapeHtml(ex.total) + ' $';
+      if (ex.date && ex.date !== 'UNKNOWN') {
+        html += ' &mdash; ' + escapeHtml(ex.date);
+      }
+      html += '</p>';
+      html += '<a href="' + escapeHtml(apUrl) + '" class="cqc-btn cqc-btn-primary">';
+      html += 'Creer facture fournisseur';
+      html += '</a>';
+      html += '</div>';
+      html += '</div>';
     }
 
     resultDiv.innerHTML = html;

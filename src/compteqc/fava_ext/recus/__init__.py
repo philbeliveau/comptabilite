@@ -162,6 +162,10 @@ class RecusExtension(FavaExtensionBase):
                     "fournisseur": str(donnees.fournisseur),
                     "date": str(donnees.date),
                     "total": str(donnees.total),
+                    "sous_total": str(donnees.sous_total),
+                    "montant_tps": str(donnees.montant_tps) if donnees.montant_tps is not None else None,
+                    "montant_tvq": str(donnees.montant_tvq) if donnees.montant_tvq is not None else None,
+                    "description": str(donnees.description) if donnees.description else "",
                     "confiance": round(float(getattr(donnees, "confiance", 0.0)), 4),
                 }
 
