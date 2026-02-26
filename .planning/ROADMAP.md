@@ -122,4 +122,4 @@ Phases execute in numeric order: 6 -> 7 -> 8 -> 9 -> 10
 | 7. Dashboard Homepage | v1.1 | 0/2 | Planned | - |
 | 8. Table and Extension Polish | v1.1 | 0/2 | Not started | - |
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
-| 10. Cross-Cutting Polish and Validation | v1.1 | 0/2 | Not started | - |
+| 10. Cross-Cutting Polish and Validation | 1/2 | In Progress|  | - |

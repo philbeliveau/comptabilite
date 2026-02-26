@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 9 complete, ready for Phase 10
+**Current focus:** Phase 10 in progress
 
 ## Current Position
 
-Phase: 9 of 10 (Receipt Upload UX) -- COMPLETE
-Plan: 2 of 2 in current phase (all complete)
-Status: Phase 9 complete, ready for Phase 10
-Last activity: 2026-02-25 -- Completed 09-02 (file previews and drag-drop animations)
+Phase: 10 of 10 (Cross-Cutting Polish and Validation)
+Plan: 1 of 2 in current phase (10-01 complete)
+Status: Phase 10 in progress
+Last activity: 2026-02-25 -- Completed 10-01 (typography token migration and cross-browser CSS)
 
-Progress: [#################...] 70% (31/44 total plans -- 23 v1.0 complete, 8/9 v1.1)
+Progress: [##################..] 73% (32/44 total plans -- 23 v1.0 complete, 9/10 v1.1)
 
 ## Performance Metrics
 
@@ -39,6 +39,7 @@ Progress: [#################...] 70% (31/44 total plans -- 23 v1.0 complete, 8/9
 | Phase 08 P02 | 3min | 2 tasks | 3 files |
 | Phase 09 P01 | 2min | 2 tasks | 3 files |
 | Phase 09 P02 | 2min | 2 tasks | 2 files |
+| Phase 10 P01 | 3min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,9 @@ v1.1 decisions confirmed:
 - Blue palette for dragover state (green reserved for completion)
 - HEIC treated as icon since browsers cannot render HEIC natively
 - Sequential upload loop (not parallel) for clear per-file progress
+- All font-size/font-weight values migrated to design system tokens (--cqc-font-*, --cqc-weight-*)
+- :focus-visible (not :focus) for keyboard-only focus rings on interactive elements
+- Firefox scrollbar-width: thin for sidebar, -webkit-backdrop-filter for Safari
 
 ### Pending Todos
 
@@ -84,5 +88,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 09-02-PLAN.md (file previews and drag-drop animations)
-Resume file: .planning/phases/10-settings-and-system-health/10-01-PLAN.md
+Stopped at: Completed 10-01-PLAN.md (typography token migration and cross-browser CSS)
+Resume file: .planning/phases/10-cross-cutting-polish-and-validation/10-02-PLAN.md
