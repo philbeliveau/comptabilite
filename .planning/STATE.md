@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 6 -- Design System Foundation (v1.1)
+**Current focus:** Phase 7 -- Dashboard Homepage (v1.1)
 
 ## Current Position
 
-Phase: 6 of 10 (Design System Foundation)
-Plan: 1 of 2 in current phase
-Status: Executing
-Last activity: 2026-02-25 -- Completed 06-01 (Chart.js infrastructure and animation engine)
+Phase: 7 of 10 (Dashboard Homepage)
+Plan: 0 of ? in current phase
+Status: Phase 6 complete, ready for Phase 7
+Last activity: 2026-02-25 -- Completed 06-02 (CSS variable migration and typography scale)
 
-Progress: [###########.........] 55% (24/44 total plans -- 23 v1.0 complete, 1/9 v1.1)
+Progress: [############........] 57% (25/44 total plans -- 23 v1.0 complete, 2/9 v1.1)
 
 ## Performance Metrics
 
@@ -46,6 +46,9 @@ v1.1 decisions confirmed:
 - Keep Quebec blue identity (#003DA5 palette)
 - Custom rAF animation instead of CountUp.js (zero dependencies, native Intl.NumberFormat fr-CA)
 - Chart registry Map with destroy-on-navigate lifecycle for SPA safety
+- Fava CSS variable overrides on :root instead of !important escalation (81% reduction)
+- Type scale based on 1.200 minor third ratio (--cqc-font-xs through --cqc-font-3xl)
+- tabular-nums on all financial data elements for aligned money columns
 
 ### Pending Todos
 
@@ -60,5 +63,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 06-01-PLAN.md (Chart.js infrastructure and animation engine)
-Resume file: .planning/phases/06-design-system-foundation/06-02-PLAN.md
+Stopped at: Completed 06-02-PLAN.md (CSS variable migration and typography scale) -- Phase 6 complete
+Resume file: .planning/phases/07-dashboard-homepage/07-01-PLAN.md
