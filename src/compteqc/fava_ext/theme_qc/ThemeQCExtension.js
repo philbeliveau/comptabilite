@@ -1047,6 +1047,46 @@ article svg {
   opacity: 1;
   visibility: visible;
 }
+
+/* === Chart containers === */
+.cqc-chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  padding: 16px;
+}
+.cqc-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* === Page entry animation === */
+@keyframes cqc-page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cqc-page-entering {
+  animation: cqc-page-enter 200ms ease-out;
+}
+
+/* === KPI card staggered entrance === */
+@keyframes cqc-fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Reduced motion safety net === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cqc-page-entering {
+    animation: none;
+  }
+}
 `;
 
 let styleInjected = false;
@@ -1894,6 +1934,84 @@ async function renderCharts() {
   });
 }
 
+// ===== Animation Infrastructure =====
+
+/** @type {MediaQueryList|null} */
+let reducedMotionQuery = null;
+
+/**
+ * Check if user prefers reduced motion (accessibility).
+ * Caches the MediaQueryList for reuse.
+ * @returns {boolean}
+ */
+function prefersReducedMotion() {
+  if (!reducedMotionQuery) {
+    reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  }
+  return reducedMotionQuery.matches;
+}
+
+/**
+ * Animate page entry: subtle fade + translateY on the article element.
+ * Suppressed when prefers-reduced-motion is enabled.
+ */
+function animatePageEntry() {
+  if (prefersReducedMotion()) return;
+
+  const article = document.querySelector('article');
+  if (!article) return;
+
+  article.classList.remove('cqc-page-entering');
+  void article.offsetWidth; // force reflow
+  article.classList.add('cqc-page-entering');
+}
+
+/**
+ * Animate KPI values from 0 to their target using requestAnimationFrame.
+ * Discovers [data-value] elements, formats with Intl.NumberFormat fr-CA.
+ * Suppressed when prefers-reduced-motion is enabled (leaves server-rendered text).
+ */
+function animateKPIs() {
+  const elements = document.querySelectorAll('.cqc-kpi-value[data-value]');
+  if (elements.length === 0) return;
+  if (prefersReducedMotion()) return;
+
+  elements.forEach((el) => {
+    const target = parseFloat(el.dataset.value);
+    if (isNaN(target)) return;
+
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix !== undefined ? el.dataset.suffix : ' $';
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const duration = 800;
+    const formatter = new Intl.NumberFormat('fr-CA', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+
+    const startTime = performance.now();
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+
+      if (progress >= 1) {
+        // Final exact value to avoid floating point drift
+        el.textContent = prefix + formatter.format(target) + suffix;
+        return;
+      }
+
+      el.textContent = prefix + formatter.format(current) + suffix;
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  });
+}
+
 /** @type import("fava").ExtensionModule */
 export default {
   init() {
@@ -1901,6 +2019,7 @@ export default {
     loadChartJs(); // Non-blocking pre-load
   },
   onPageLoad() {
+    animatePageEntry();
     injectStyle();
     initTooltipPopup();
     injectBrand();
@@ -1908,5 +2027,6 @@ export default {
     injectReportHeader();
     attachTooltips();
     renderCharts();
+    animateKPIs();
   },
 };
