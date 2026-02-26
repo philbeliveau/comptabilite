@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 7 of 10 (Dashboard Homepage)
-Plan: 0 of ? in current phase
-Status: Phase 6 complete, ready for Phase 7
-Last activity: 2026-02-25 -- Completed 06-02 (CSS variable migration and typography scale)
+Plan: 1 of 2 in current phase
+Status: Executing Phase 7
+Last activity: 2026-02-25 -- Completed 07-01 (Dashboard backend data layer)
 
-Progress: [############........] 57% (25/44 total plans -- 23 v1.0 complete, 2/9 v1.1)
+Progress: [############........] 59% (26/44 total plans -- 23 v1.0 complete, 3/9 v1.1)
 
 ## Performance Metrics
 
@@ -49,6 +49,9 @@ v1.1 decisions confirmed:
 - Fava CSS variable overrides on :root instead of !important escalation (81% reduction)
 - Type scale based on 1.200 minor third ratio (--cqc-font-xs through --cqc-font-3xl)
 - tabular-nums on all financial data elements for aligned money columns
+- fava.beans.funcs.hash_entry with beancount fallback for entry context linking
+- Revenue negation at computation time for clean data API
+- Top 6 + Autres bucket for expense category doughnut chart
 
 ### Pending Todos
 
@@ -63,5 +66,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 06-02-PLAN.md (CSS variable migration and typography scale) -- Phase 6 complete
-Resume file: .planning/phases/07-dashboard-homepage/07-01-PLAN.md
+Stopped at: Completed 07-01-PLAN.md (Dashboard backend data layer)
+Resume file: .planning/phases/07-dashboard-homepage/07-02-PLAN.md

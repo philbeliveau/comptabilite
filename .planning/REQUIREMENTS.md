@@ -16,10 +16,10 @@ Requirements for production UI/UX milestone. Each maps to roadmap phases.
 
 ### Dashboard (DASH)
 
-- [ ] **DASH-01**: User sees KPI cards on dashboard homepage (Revenue YTD, Expenses YTD, Net Income, Tax Owing, Pending Approvals) with count-up animation
-- [ ] **DASH-02**: User sees monthly revenue trend as a Chart.js line chart on dashboard
-- [ ] **DASH-03**: User sees expense category breakdown as a Chart.js doughnut chart on dashboard
-- [ ] **DASH-04**: User sees last 10 transactions with status badges on dashboard
+- [x] **DASH-01**: User sees KPI cards on dashboard homepage (Revenue YTD, Expenses YTD, Net Income, Tax Owing, Pending Approvals) with count-up animation
+- [x] **DASH-02**: User sees monthly revenue trend as a Chart.js line chart on dashboard
+- [x] **DASH-03**: User sees expense category breakdown as a Chart.js doughnut chart on dashboard
+- [x] **DASH-04**: User sees last 10 transactions with status badges on dashboard
 
 ### Tables & Extensions (TBLX)
 
@@ -76,10 +76,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSYS-02 | Phase 6 | Complete |
 | DSYS-03 | Phase 6 | Complete |
 | DSYS-04 | Phase 6 | Complete |
-| DASH-01 | Phase 7 | Pending |
-| DASH-02 | Phase 7 | Pending |
-| DASH-03 | Phase 7 | Pending |
-| DASH-04 | Phase 7 | Pending |
+| DASH-01 | Phase 7 | Complete |
+| DASH-02 | Phase 7 | Complete |
+| DASH-03 | Phase 7 | Complete |
+| DASH-04 | Phase 7 | Complete |
 | TBLX-01 | Phase 8 | Pending |
 | TBLX-02 | Phase 8 | Pending |
 | TBLX-03 | Phase 8 | Pending |
