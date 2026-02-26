@@ -69,6 +69,7 @@ def _statut_style(statut: InvoiceStatus) -> str:
     styles = {
         InvoiceStatus.DRAFT: "dim",
         InvoiceStatus.SENT: "yellow",
+        InvoiceStatus.PARTIAL: "cyan",
         InvoiceStatus.PAID: "green",
         InvoiceStatus.OVERDUE: "red bold",
     }
@@ -170,7 +171,7 @@ def creer(
 @facture_app.command(name="lister")
 def lister(
     statut: Optional[str] = typer.Option(
-        None, "--statut", "-s", help="Filtrer par statut (draft, sent, paid, overdue)"
+        None, "--statut", "-s", help="Filtrer par statut (draft, sent, partial, paid, overdue)"
     ),
 ) -> None:
     """Lister les factures."""
@@ -182,7 +183,7 @@ def lister(
             filtre_statut = InvoiceStatus(statut.lower())
         except ValueError:
             console.print(f"[red]Statut invalide: {statut}[/red]")
-            console.print("Statuts valides: draft, sent, paid, overdue")
+            console.print("Statuts valides: draft, sent, partial, paid, overdue")
             raise typer.Exit(1)
 
     factures = registre.lister(statut=filtre_statut)
@@ -197,16 +198,19 @@ def lister(
     tableau.add_column("Date")
     tableau.add_column("Echeance")
     tableau.add_column("Total", justify="right")
+    tableau.add_column("Solde", justify="right")
     tableau.add_column("Statut")
 
     for f in factures:
         style = _statut_style(f.statut)
+        solde_str = _formater_montant(f.solde) if f.solde != f.total else ""
         tableau.add_row(
             f.numero,
             f.nom_client,
             str(f.date),
             str(f.date_echeance),
             _formater_montant(f.total),
+            solde_str,
             f"[{style}]{f.statut.value.upper()}[/{style}]",
         )
 
