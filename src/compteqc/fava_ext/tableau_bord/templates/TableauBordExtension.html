@@ -55,6 +55,17 @@
       {{ kpis.pending_count }}
     </div>
   </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Equilibre comptable</div>
+    <span class="cqc-text-muted" style="font-size: var(--cqc-font-xs);">Debits = Credits</span>
+    <div class="cqc-kpi-value {{ 'cqc-success' if kpis.equilibre else 'cqc-error' }}">
+      {% if kpis.equilibre %}
+        Equilibre
+      {% else %}
+        Ecart: {{ "{:,.2f}".format(kpis.ecart) }} $
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 <div class="cqc-dashboard-charts">

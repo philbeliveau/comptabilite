@@ -59,7 +59,7 @@ class TableauBordExtension(FavaExtensionBase):
     # ------------------------------------------------------------------
 
     def _compute_kpis(self) -> None:
-        """Calcule les 5 KPIs: revenus, depenses, resultat net, taxes dues, pending."""
+        """Calcule les 6 KPIs: revenus, depenses, resultat net, taxes dues, pending, equilibre."""
         annee = datetime.date.today().year
         debut = datetime.date(annee, 1, 1)
         fin = datetime.date.today()
@@ -92,12 +92,44 @@ class TableauBordExtension(FavaExtensionBase):
         tvq_payee = soldes.get("Actifs:TVQ-Payee", Decimal("0"))
         taxes_dues = (tps_percue + tvq_percue) - (tps_payee + tvq_payee)
 
+        # Balance health: sum all account balances (must equal zero in double-entry)
+        equilibre, ecart = self._compute_balance_health(soldes)
+
         self._kpis = {
             "revenus_ytd": revenus,
             "depenses_ytd": depenses,
             "resultat_net": revenus - depenses,
             "taxes_dues": taxes_dues,
             "pending_count": len(pending),
+            "equilibre": equilibre,
+            "ecart": ecart,
+        }
+
+    def _compute_balance_health(self, soldes: dict[str, Decimal]) -> tuple[bool, Decimal]:
+        """Verifie l'equilibre comptable: la somme de tous les soldes doit etre zero.
+
+        In a correct double-entry system, Assets + Expenses = Liabilities + Equity + Revenue,
+        which means the algebraic sum of ALL account balances equals zero.
+
+        Returns:
+            Tuple of (equilibre: bool, ecart: Decimal).
+        """
+        total_debit = Decimal("0")
+        total_credit = Decimal("0")
+        for montant in soldes.values():
+            if montant > 0:
+                total_debit += montant
+            else:
+                total_credit += abs(montant)
+        ecart = total_debit - total_credit
+        equilibre = ecart == Decimal("0")
+        return equilibre, ecart
+
+    def balance_health(self) -> dict:
+        """Retourne l'etat de l'equilibre comptable."""
+        return {
+            "equilibre": self._kpis.get("equilibre", True),
+            "ecart": self._kpis.get("ecart", Decimal("0")),
         }
 
     def kpis(self) -> dict:
