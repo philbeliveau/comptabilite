@@ -407,7 +407,9 @@ article .headerline {
   border-radius: var(--qc-radius);
   margin-bottom: 20px;
   box-shadow: var(--qc-shadow);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   transition: box-shadow var(--qc-transition-slow);
 }
 
@@ -514,6 +516,76 @@ article .headerline {
 .cqc-kpi-value.cqc-success { color: var(--qc-success); }
 .cqc-kpi-value.cqc-error { color: var(--qc-error); }
 .cqc-kpi-value.cqc-warning { color: var(--qc-warning); }
+
+/* ===== Balance Detail Tooltip ===== */
+.cqc-kpi-equilibre {
+  position: relative;
+  cursor: help;
+  overflow: visible;
+  z-index: 10;
+}
+
+.cqc-balance-detail {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 280px;
+  z-index: 1000;
+  background: var(--qc-surface-raised);
+  border: 1px solid var(--qc-border-light);
+  border-radius: var(--qc-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 14px 16px;
+  margin-top: 4px;
+}
+
+.cqc-kpi-equilibre:hover .cqc-balance-detail {
+  display: block;
+}
+
+.cqc-balance-detail-title {
+  font-size: var(--cqc-font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--qc-text-secondary);
+  font-weight: var(--cqc-weight-medium);
+  margin-bottom: 8px;
+}
+
+.cqc-balance-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--cqc-font-sm);
+}
+
+.cqc-balance-detail-table td {
+  padding: 3px 0;
+  color: var(--qc-text);
+}
+
+.cqc-balance-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--cqc-weight-medium);
+}
+
+.cqc-balance-separator {
+  border-top: 1px solid var(--qc-border-light);
+}
+
+.cqc-balance-separator td {
+  padding-top: 6px;
+  font-weight: var(--cqc-weight-bold);
+}
+
+.cqc-balance-detail-footer {
+  margin-top: 10px;
+  font-size: var(--cqc-font-xs);
+  color: var(--qc-text-secondary);
+  text-align: center;
+}
 
 /* ===== Tables ===== */
 .cqc-table {
@@ -1233,11 +1305,30 @@ article svg {
   article {
     padding: 20px 16px;
   }
+  .cqc-table thead th {
+    padding: 8px 10px;
+    font-size: var(--cqc-font-sm, 0.875rem);
+  }
+  .cqc-table td {
+    padding: 8px 10px;
+    font-size: var(--cqc-font-sm, 0.875rem);
+  }
 }
 
 @media (max-width: 480px) {
   .cqc-kpi-row {
     grid-template-columns: 1fr;
+  }
+  .cqc-table thead th {
+    padding: 6px 8px;
+    font-size: var(--cqc-font-xs, 0.75rem);
+  }
+  .cqc-table td {
+    padding: 6px 8px;
+    font-size: var(--cqc-font-xs, 0.75rem);
+  }
+  .cqc-table .cqc-col-checkbox {
+    width: 32px;
   }
 }
 
