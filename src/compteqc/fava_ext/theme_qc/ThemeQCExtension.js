@@ -925,6 +925,48 @@ article .headerline {
   background: var(--qc-success);
 }
 
+/* ===== Upload Progress Bar ===== */
+.cqc-upload-progress {
+  width: 100%;
+  height: 28px;
+  background: var(--qc-surface);
+  border-radius: var(--qc-radius-sm);
+  overflow: hidden;
+  margin: 16px 0;
+  border: 1px solid var(--qc-border);
+}
+
+.cqc-upload-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--qc-blue), var(--qc-blue-light, #4a90d9));
+  border-radius: var(--qc-radius-sm);
+  transition: width 150ms ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cqc-upload-progress-text {
+  color: #fff;
+  font-size: var(--cqc-font-sm, 0.875rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cqc-upload-status {
+  text-align: center;
+  padding: 12px;
+  color: var(--qc-text-secondary);
+  font-size: var(--cqc-font-sm, 0.875rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cqc-upload-progress-bar {
+    transition: none;
+  }
+}
+
 /* ===== Forms ===== */
 .cqc-input {
   padding: 9px 14px;

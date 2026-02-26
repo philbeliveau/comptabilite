@@ -14,32 +14,31 @@
 {% endif %}
 
 <div class="cqc-card">
-  <form id="upload-form" method="POST"
-        action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/upload"
-        enctype="multipart/form-data">
-
-    <div id="dropzone" class="cqc-dropzone"
-         onclick="document.getElementById('fichier-input').click()"
-         ondragover="event.preventDefault(); event.stopPropagation(); this.classList.add('dragover')"
-         ondragleave="event.preventDefault(); event.stopPropagation(); this.classList.remove('dragover')"
-         ondrop="event.preventDefault(); event.stopPropagation(); this.classList.remove('dragover'); if(event.dataTransfer.files.length > 0){ document.getElementById('fichier-input').files = event.dataTransfer.files; document.getElementById('upload-form').submit(); }">
-      <div class="cqc-dropzone-text">
-        <span class="icone">&#128194;</span>
-        <strong>Glissez-déposez un fichier ici</strong><br>
-        ou cliquez pour sélectionner
-      </div>
+  <div id="dropzone" class="cqc-dropzone">
+    <div class="cqc-dropzone-text">
+      <span class="icone">&#128194;</span>
+      <strong>Glissez-déposez un fichier ici</strong><br>
+      ou cliquez pour sélectionner
     </div>
+  </div>
 
-    <input type="file" id="fichier-input" name="fichier"
-           accept=".pdf,.jpg,.jpeg,.png,.heic"
-           style="display: none;"
-           onchange="if(this.files.length > 0){ document.getElementById('upload-form').submit(); }">
-  </form>
+  <input type="file" id="fichier-input" name="fichier"
+         accept=".pdf,.jpg,.jpeg,.png,.heic"
+         style="display: none;">
+
+  <div id="upload-progress" class="cqc-upload-progress" style="display: none;">
+    <div class="cqc-upload-progress-bar" id="progress-bar">
+      <span class="cqc-upload-progress-text" id="progress-text">0%</span>
+    </div>
+  </div>
+  <div id="upload-status" class="cqc-upload-status" style="display: none;"></div>
 
   <p class="cqc-text-muted" style="margin-top: 8px;">
     Formats acceptés : PDF, JPEG, PNG, HEIC
   </p>
 </div>
+
+<div id="upload-result" style="display: none;"></div>
 
 <div class="cqc-card-flush">
   <h3 class="cqc-section-title">Reçus récents</h3>
@@ -68,5 +67,188 @@
   {% endif %}
 </div>
 
+<script>
+(function() {
+  'use strict';
+
+  var UPLOAD_URL = '{{ "/" ~ g.beancount_file_slug ~ "/extension/" ~ extension.name ~ "/upload" }}';
+  var LINK_URL = '{{ "/" ~ g.beancount_file_slug ~ "/extension/" ~ extension.name ~ "/link" }}';
+
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fichier-input');
+  var progressContainer = document.getElementById('upload-progress');
+  var progressBar = document.getElementById('progress-bar');
+  var progressText = document.getElementById('progress-text');
+  var statusDiv = document.getElementById('upload-status');
+  var resultDiv = document.getElementById('upload-result');
+
+  // -- Dropzone click -> open file picker
+  dropzone.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  // -- Drag and drop handlers
+  dropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      uploadFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  // -- File input change
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) {
+      uploadFile(fileInput.files[0]);
+    }
+  });
+
+  function updateProgressBar(pct) {
+    progressBar.style.width = pct + '%';
+    progressText.textContent = pct + '%';
+  }
+
+  function uploadFile(file) {
+    var formData = new FormData();
+    formData.append('fichier', file);
+
+    // Reset UI
+    progressContainer.style.display = '';
+    statusDiv.style.display = 'none';
+    statusDiv.textContent = '';
+    resultDiv.style.display = 'none';
+    resultDiv.innerHTML = '';
+    updateProgressBar(0);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.upload.onprogress = function(e) {
+      if (e.lengthComputable) {
+        var pct = Math.round(e.loaded / e.total * 100);
+        updateProgressBar(pct);
+        if (pct >= 100) {
+          statusDiv.style.display = '';
+          statusDiv.textContent = 'Traitement en cours\u2026';
+        }
+      }
+    };
+
+    xhr.onload = function() {
+      statusDiv.style.display = 'none';
+      progressContainer.style.display = 'none';
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if (data.status === 'ok') {
+          renderResult(data);
+        } else {
+          showError(data.message || 'Erreur inconnue.');
+        }
+      } catch (parseErr) {
+        showError('Erreur de communication avec le serveur.');
+      }
+      // Reset file input for next upload
+      fileInput.value = '';
+    };
+
+    xhr.onerror = function() {
+      statusDiv.style.display = 'none';
+      progressContainer.style.display = 'none';
+      showError('Erreur reseau. Veuillez reessayer.');
+      fileInput.value = '';
+    };
+
+    xhr.open('POST', UPLOAD_URL, true);
+    xhr.send(formData);
+  }
+
+  function showError(msg) {
+    resultDiv.style.display = '';
+    resultDiv.innerHTML = '<div class="cqc-alert cqc-alert-error">' + escapeHtml(msg) + '</div>';
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  function renderResult(data) {
+    resultDiv.style.display = '';
+    var html = '';
+
+    // Extraction summary card
+    if (data.extracted) {
+      var ex = data.extracted;
+      var confPct = Math.round((ex.confiance || 0) * 100);
+      html += '<div class="cqc-card">';
+      html += '<h3>Recu telecharge et analyse</h3>';
+      html += '<p><strong>Fichier :</strong> ' + escapeHtml(data.filename) + '</p>';
+      html += '<p><strong>Fournisseur :</strong> ' + escapeHtml(ex.fournisseur) + '</p>';
+      html += '<p><strong>Date :</strong> ' + escapeHtml(ex.date) + '</p>';
+      html += '<p><strong>Total :</strong> ' + escapeHtml(ex.total) + ' $</p>';
+      html += '<p><strong>Confiance :</strong> ' + confPct + ' %</p>';
+      html += '</div>';
+    } else {
+      html += '<div class="cqc-card">';
+      html += '<h3>Fichier enregistre</h3>';
+      html += '<p><strong>Fichier :</strong> ' + escapeHtml(data.filename) + '</p>';
+      if (data.error_extraction) {
+        html += '<p class="cqc-text-muted">Extraction echouee : ' + escapeHtml(data.error_extraction) + '</p>';
+      }
+      html += '</div>';
+    }
+
+    // Match table
+    if (data.correspondances && data.correspondances.length > 0) {
+      html += '<div class="cqc-card-flush">';
+      html += '<h3 class="cqc-section-title">Correspondances proposees</h3>';
+      html += '<table class="cqc-table">';
+      html += '<thead><tr>';
+      html += '<th>Date</th><th>Narration</th><th>Montant</th><th>Score</th><th>Action</th>';
+      html += '</tr></thead><tbody>';
+
+      for (var i = 0; i < data.correspondances.length; i++) {
+        var c = data.correspondances[i];
+        var scorePct = Math.round(c.score * 100) + '%';
+        html += '<tr>';
+        html += '<td>' + escapeHtml(c.date) + '</td>';
+        html += '<td>' + escapeHtml(c.narration) + '</td>';
+        html += '<td>' + escapeHtml(c.montant) + ' $</td>';
+        html += '<td>' + scorePct + '</td>';
+        html += '<td>';
+        html += '<form method="POST" action="' + escapeHtml(data.link_url || LINK_URL) + '" style="margin:0">';
+        html += '<input type="hidden" name="chemin_recu" value="' + escapeHtml(data.chemin_recu || '') + '">';
+        html += '<input type="hidden" name="entry_hash" value="' + escapeHtml(c.entry_hash) + '">';
+        html += '<input type="hidden" name="date_txn" value="' + escapeHtml(c.date) + '">';
+        html += '<input type="hidden" name="compte" value="' + escapeHtml(c.compte) + '">';
+        html += '<button type="submit" class="cqc-btn cqc-btn-sm">Lier</button>';
+        html += '</form>';
+        html += '</td>';
+        html += '</tr>';
+      }
+
+      html += '</tbody></table></div>';
+    } else if (data.extracted) {
+      html += '<div class="cqc-card"><p>Aucune correspondance trouvee.</p></div>';
+    }
+
+    resultDiv.innerHTML = html;
+  }
+
+})();
+</script>
 
 {% endblock %}
