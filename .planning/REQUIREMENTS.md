@@ -1,7 +1,7 @@
 # Requirements: CompteQC v1.1 Production UI/UX
 
 **Defined:** 2026-02-25
-**Core Value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review — without manual data entry.
+**Core Value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
 
 ## v1.1 Requirements
 
@@ -9,10 +9,10 @@ Requirements for production UI/UX milestone. Each maps to roadmap phases.
 
 ### Design System (DSYS)
 
-- [ ] **DSYS-01**: CSS variable migration — replace `!important` overrides with Fava CSS custom property theming
+- [ ] **DSYS-01**: CSS variable migration -- replace `!important` overrides with Fava CSS custom property theming
 - [ ] **DSYS-02**: Chart.js CDN loader with chart registry for SPA lifecycle (create/destroy on navigation)
-- [ ] **DSYS-03**: Animation safety nets — `prefers-reduced-motion` guard and `requestAnimationFrame` wrapper
-- [ ] **DSYS-04**: Typography refinement — tabular nums for amounts, tighter font-size scale, refined Inter weights
+- [ ] **DSYS-03**: Animation safety nets -- `prefers-reduced-motion` guard and `requestAnimationFrame` wrapper
+- [ ] **DSYS-04**: Typography refinement -- tabular nums for amounts, tighter font-size scale, refined Inter weights
 
 ### Dashboard (DASH)
 
@@ -58,12 +58,12 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Custom frontend (React/Next.js) | Staying within Fava for v1.1 — lower risk, builds on what works |
+| Custom frontend (React/Next.js) | Staying within Fava for v1.1 -- lower risk, builds on what works |
 | Mobile-responsive redesign | Desktop-first solo tool; mobile adds significant complexity |
-| Dark mode | Nice-to-have, not core to production polish — defer to v1.2 |
+| Dark mode | Nice-to-have, not core to production polish -- defer to v1.2 |
 | AI-generated chart commentary | LLMs hallucinate numbers; charts must show exact data only |
 | Real-time data refresh / WebSocket | Fava is request-based; real-time adds architectural complexity |
-| Customizable dashboard layout | Solo user — fixed layout is simpler and sufficient |
+| Customizable dashboard layout | Solo user -- fixed layout is simpler and sufficient |
 | Animation library (GSAP, Framer) | Pure CSS + CountUp.js covers all needed animations |
 
 ## Traceability
@@ -72,28 +72,28 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSYS-01 | — | Pending |
-| DSYS-02 | — | Pending |
-| DSYS-03 | — | Pending |
-| DSYS-04 | — | Pending |
-| DASH-01 | — | Pending |
-| DASH-02 | — | Pending |
-| DASH-03 | — | Pending |
-| DASH-04 | — | Pending |
-| TBLX-01 | — | Pending |
-| TBLX-02 | — | Pending |
-| TBLX-03 | — | Pending |
-| TBLX-04 | — | Pending |
-| RCPT-01 | — | Pending |
-| RCPT-02 | — | Pending |
-| RCPT-03 | — | Pending |
-| RCPT-04 | — | Pending |
+| DSYS-01 | Phase 6 | Pending |
+| DSYS-02 | Phase 6 | Pending |
+| DSYS-03 | Phase 6 | Pending |
+| DSYS-04 | Phase 6 | Pending |
+| DASH-01 | Phase 7 | Pending |
+| DASH-02 | Phase 7 | Pending |
+| DASH-03 | Phase 7 | Pending |
+| DASH-04 | Phase 7 | Pending |
+| TBLX-01 | Phase 8 | Pending |
+| TBLX-02 | Phase 8 | Pending |
+| TBLX-03 | Phase 8 | Pending |
+| TBLX-04 | Phase 8 | Pending |
+| RCPT-01 | Phase 9 | Pending |
+| RCPT-02 | Phase 9 | Pending |
+| RCPT-03 | Phase 9 | Pending |
+| RCPT-04 | Phase 9 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16 (awaiting roadmap)
+- Mapped to phases: 16
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after initial definition*
+*Last updated: 2026-02-25 after roadmap creation*
