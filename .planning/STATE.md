@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 11 of 15 (AP Foundation)
-Plan: 1 of 2 in current phase
-Status: In progress -- Plan 11-01 complete, Plan 11-02 next
-Last activity: 2026-02-26 - Completed Plan 11-01: AP Data Model and Registry
+Phase: 11 of 15 (AP Foundation) -- COMPLETE
+Plan: 2 of 2 in current phase (all plans complete)
+Status: Phase 11 complete -- ready for Phase 12
+Last activity: 2026-02-26 - Completed Plan 11-02: AP Journal Entry Generators
 
-Progress: [##                  ] 10% (v1.2 phases 11-15)
+Progress: [####                ] 20% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -37,7 +37,7 @@ Progress: [##                  ] 10% (v1.2 phases 11-15)
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 11. AP Foundation | 1/2 | 3min | 3 min |
+| 11. AP Foundation | 2/2 | 5min | 2.5 min |
 
 *v1.1/v1.2 metrics will populate as plans execute*
 
@@ -56,6 +56,8 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Design doc: docs/design/accounts-payable-receivable.md (1671 lines) is the implementation reference
 - Reuse TAUX_TPS/TAUX_TVQ/QUANTIZE_CENT from factures.modeles for AP module (consistency)
 - tps/tvq model properties compute full tax; partial ITC/ITR split deferred to journal entry generator (Plan 02)
+- AP credit computed as negative sum of all debit postings (guarantees exact balance, avoids rounding drift)
+- Postings accumulated via defaultdict(Decimal) to consolidate multi-line same-account debits
 
 ### Pending Todos
 
@@ -81,5 +83,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 11-01-PLAN.md -- ready for Plan 11-02
+Stopped at: Completed 11-02-PLAN.md -- Phase 11 complete, ready for Phase 12
 Resume file: None

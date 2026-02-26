@@ -34,7 +34,7 @@
 
 **Milestone Goal:** Implement a complete accounts payable and accounts receivable system -- track vendor bills, manage customer invoices, automate payment matching, and surface aging reports -- so the solo consultant's cash position is always clear and CPA-ready.
 
-- [ ] **Phase 11: AP Foundation** - Data model, YAML registry, Beancount journal entries for bill recording and payment
+- [x] **Phase 11: AP Foundation** - Data model, YAML registry, Beancount journal entries for bill recording and payment (completed 2026-02-26)
 - [ ] **Phase 12: Aging, AR Enhancements & CLI** - Aging buckets, partial payments, invoice status derivation, all CLI commands
 - [ ] **Phase 13: Recurring Invoices & Auto-matching** - Recurring invoice templates and bank transaction matching logic
 - [ ] **Phase 14: Fava Extension Tab & MCP** - Combined AP/AR web UI with charts and inline forms, plus MCP server tools
@@ -192,7 +192,11 @@ Plans:
   2. Clicking the prompt navigates to the AP bill form pre-filled with vendor name, amount, line items, dates, and tax flags from the receipt
   3. Bank transactions in the approval queue display match suggestions when they correspond to open AR invoices or AP bills, showing confidence and matched entry details
   4. User can link a bank transaction to an AR invoice or AP bill with a single "Lier" button click, which records the payment and updates the entry status
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 15-01-PLAN.md -- Receipt-to-AP creation prompt: enhance upload endpoint with tax breakdown, add "Creer facture fournisseur" button to RecusExtension with query parameter pre-fill
+- [ ] 15-02-PLAN.md -- Approval queue auto-matching UX: enrich pending transactions with AR/AP match suggestions, match suggestion rows with "Lier" button, lier_apar endpoint
 
 ## Progress
 
@@ -211,7 +215,7 @@ v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 | 8. Table and Extension Polish | v1.1 | 0/2 | Not started | - |
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
 | 10. Cross-Cutting Polish and Validation | v1.1 | 2/2 | Complete | 2026-02-25 |
-| 11. AP Foundation | 1/2 | In Progress|  | - |
+| 11. AP Foundation | 2/2 | Complete   | 2026-02-26 | - |
 | 12. Aging, AR Enhancements & CLI | v1.2 | 0/2 | Planned | - |
 | 13. Recurring Invoices & Auto-matching | v1.2 | 0/0 | Not started | - |
 | 14. Fava Extension Tab & MCP | v1.2 | 0/0 | Not started | - |
