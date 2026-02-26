@@ -32,8 +32,8 @@ Requirements for production UI/UX milestone. Each maps to roadmap phases.
 
 - [x] **RCPT-01**: Upload endpoint converted from raw HTML to AJAX/JSON response
 - [x] **RCPT-02**: User sees animated progress bar during file upload with percentage
-- [ ] **RCPT-03**: User sees file thumbnail preview after upload completes (PDF first page, image thumbnail)
-- [ ] **RCPT-04**: Drag-and-drop zone has animated border, hover glow, and multi-file support
+- [x] **RCPT-03**: User sees file thumbnail preview after upload completes (PDF first page, image thumbnail)
+- [x] **RCPT-04**: Drag-and-drop zone has animated border, hover glow, and multi-file support
 
 ## Future Requirements
 
@@ -86,8 +86,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TBLX-04 | Phase 8 | Complete |
 | RCPT-01 | Phase 9 | Complete |
 | RCPT-02 | Phase 9 | Complete |
-| RCPT-03 | Phase 9 | Pending |
-| RCPT-04 | Phase 9 | Pending |
+| RCPT-03 | Phase 9 | Complete |
+| RCPT-04 | Phase 9 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 16 total
