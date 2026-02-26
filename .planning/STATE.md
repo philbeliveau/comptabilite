@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: AP/AR & Financial Operations
 status: unknown
-last_updated: "2026-02-26T16:30:17.660Z"
+last_updated: "2026-02-26T16:39:56.525Z"
 progress:
   total_phases: 13
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 23
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # Project State
@@ -24,8 +24,8 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 Phase: 14 of 15 (Fava Extension Tab & MCP)
 Plan: 3 of 3 in current phase (Plan 03 complete)
-Status: Phase 14 complete -- all 3 plans done
-Last activity: 2026-02-26 - Completed Plan 14-03: AP/AR MCP Tools
+Status: Phase 14 complete -- all 3 plans done (14-02 filled in)
+Last activity: 2026-02-26 - Completed Plan 14-02: AR/AP Inline Creation Forms
 
 Progress: [################    ] 80% (v1.2 phases 11-15)
 
@@ -54,6 +54,7 @@ Progress: [################    ] 80% (v1.2 phases 11-15)
 | 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
 | 13. Recurring Invoices | 2/2 | 9min | 4.5 min |
 | 14. Fava Extension Tab | 3/3 | 8min | 2.7 min |
+| Phase 14 P02 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - Aging classification uses days past due threshold (30/60/90) with CSS class mapping
 - MCP aging tools use list-based vieillissement API (ResumeVieillissement) not registry-based
 - Local imports in MCP tool functions for lazy loading, patched via __init__/methods in tests
+- [Phase 14]: Form action URLs use /g.beancount_file_slug/extension/name/endpoint pattern for POST endpoints
+- [Phase 14]: Dynamic line items use indexed form fields (description_0, description_1...) parsed with while loop
+- [Phase 14]: URL query parameter prefill hook for stateless cross-extension form pre-population
 
 ### Pending Todos
 
@@ -113,5 +117,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 14-03-PLAN.md -- Phase 14 complete, ready for Phase 15
+Stopped at: Completed 14-02-PLAN.md -- AR/AP inline creation forms (Phase 14 all plans now complete)
 Resume file: None

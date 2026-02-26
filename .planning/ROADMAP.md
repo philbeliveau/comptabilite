@@ -37,7 +37,7 @@
 - [x] **Phase 11: AP Foundation** - Data model, YAML registry, Beancount journal entries for bill recording and payment (completed 2026-02-26)
 - [x] **Phase 12: Aging, AR Enhancements & CLI** - Aging buckets, partial payments, invoice status derivation, all CLI commands (completed 2026-02-26)
 - [x] **Phase 13: Recurring Invoices & Auto-matching** - Recurring invoice templates and bank transaction matching logic (completed 2026-02-26)
-- [ ] **Phase 14: Fava Extension Tab & MCP** - Combined AP/AR web UI with charts and inline forms, plus MCP server tools
+- [x] **Phase 14: Fava Extension Tab & MCP** - Combined AP/AR web UI with charts and inline forms, plus MCP server tools (completed 2026-02-26)
 - [ ] **Phase 15: Receipt-to-AP Pipeline & Auto-matching UX** - Receipt upload to AP creation flow, bank transaction linking
 
 ## Phase Details
@@ -223,5 +223,5 @@ v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 | 11. AP Foundation | 2/2 | Complete    | 2026-02-26 | - |
 | 12. Aging, AR Enhancements & CLI | 2/2 | Complete    | 2026-02-26 | - |
 | 13. Recurring Invoices & Auto-matching | 2/2 | Complete    | 2026-02-26 | - |
-| 14. Fava Extension Tab & MCP | 2/3 | In Progress|  | - |
+| 14. Fava Extension Tab & MCP | 3/3 | Complete   | 2026-02-26 | - |
 | 15. Receipt-to-AP Pipeline & Auto-matching UX | v1.2 | 0/0 | Not started | - |

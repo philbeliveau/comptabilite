@@ -56,8 +56,8 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 - [x] **FVAP-01**: User sees combined AP/AR tab with KPI row (AR total, AR overdue, AP total, net position)
 - [x] **FVAP-02**: User can toggle between AR invoice list and AP bill list with status badges and aging colors
 - [x] **FVAP-03**: User sees Chart.js horizontal stacked bar chart showing aging distribution
-- [ ] **FVAP-04**: User can create AR invoices via inline web form (bringing CLI to web)
-- [ ] **FVAP-05**: User can create AP bills via inline web form with expense category dropdown
+- [x] **FVAP-04**: User can create AR invoices via inline web form (bringing CLI to web)
+- [x] **FVAP-05**: User can create AP bills via inline web form with expense category dropdown
 - [x] **FVAP-06**: Dashboard homepage shows net AR/AP position KPI
 
 ### Receipt-to-AP Pipeline (RCAP)
@@ -133,8 +133,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FVAP-01 | Phase 14 | Complete |
 | FVAP-02 | Phase 14 | Complete |
 | FVAP-03 | Phase 14 | Complete |
-| FVAP-04 | Phase 14 | Pending |
-| FVAP-05 | Phase 14 | Pending |
+| FVAP-04 | Phase 14 | Complete |
+| FVAP-05 | Phase 14 | Complete |
 | FVAP-06 | Phase 14 | Complete |
 | MCAP-01 | Phase 14 | Complete |
 | MCAP-02 | Phase 14 | Complete |
