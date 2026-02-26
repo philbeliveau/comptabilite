@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 Phase: 10 of 10 (Cross-Cutting Polish and Validation)
 Plan: 2 of 2 in current phase (10-02 complete)
 Status: Phase 10 COMPLETE -- v1.1 milestone complete
-Last activity: 2026-02-25 -- Completed 10-02 (accessibility remediation and cross-browser verification)
+Last activity: 2026-02-26 - Completed quick task 11: Fix dark mode compatibility, sidebar darkness, and header filter box colors
 
 Progress: [####################] 75% (33/44 total plans -- 23 v1.0 complete, 10/10 v1.1)
 
@@ -89,8 +89,14 @@ None yet.
 - Chart.js canvas sizing resolved with .cqc-chart-container CSS (300px height, responsive canvas)
 - Upload endpoint returns raw HTML -- RESOLVED in 09-01: converted to JSON via jsonify()
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 11 | Fix dark mode compatibility, sidebar darkness, and header filter box colors on Fava built-in pages | 2026-02-26 | fa6e36d | [11-fix-font-and-color-issues-on-fava-built-](./quick/11-fix-font-and-color-issues-on-fava-built-/) |
+
 ## Session Continuity
 
-Last session: 2026-02-25
-Stopped at: Completed 10-02-PLAN.md (accessibility remediation and cross-browser verification) -- Phase 10 COMPLETE, v1.1 milestone COMPLETE
-Resume file: N/A -- all v1.1 plans executed
+Last session: 2026-02-26
+Stopped at: Completed quick task 11 -- dark mode fix, sidebar lightening, header filter contrast
+Resume file: N/A
