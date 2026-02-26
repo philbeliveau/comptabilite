@@ -45,7 +45,7 @@ class OperationsExtension(FavaExtensionBase):
             "export_cpa": f"/{slug}/extension/ExportCPAExtension/",
             "echeances": f"/{slug}/extension/EcheancesExtension/",
             "taxes_qc": f"/{slug}/extension/TaxesQCExtension/",
-            "dpa_qc": f"/{slug}/extension/DPAQCExtension/",
+            "dpa_qc": f"/{slug}/extension/DpaQCExtension/",
             "pret_actionnaire": f"/{slug}/extension/PretActionnaireExtension/",
             # Rapports Fava natifs
             "trial_balance": f"/{slug}/trial_balance/",

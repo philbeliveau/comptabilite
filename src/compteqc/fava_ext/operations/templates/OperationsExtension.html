@@ -1,0 +1,402 @@
+{% set page_title = "Operations" %}
+
+{% block content %}
+
+{% set urls = extension.tab_urls() %}
+
+<style>
+  .cqc-ops-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--cqc-space-6, 24px);
+    margin: var(--cqc-space-6, 24px) 0;
+  }
+  @media (max-width: 900px) {
+    .cqc-ops-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .cqc-ops-card h3 {
+    margin: 0 0 var(--cqc-space-3, 12px) 0;
+    font-size: var(--cqc-font-lg, 1.1rem);
+    font-weight: var(--cqc-weight-semibold, 600);
+  }
+  .cqc-ops-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cqc-space-2, 8px);
+  }
+  .cqc-ops-form-group {
+    margin-bottom: var(--cqc-space-3, 12px);
+  }
+  .cqc-ops-form-group label {
+    display: block;
+    font-size: var(--cqc-font-sm, 0.875rem);
+    font-weight: var(--cqc-weight-medium, 500);
+    margin-bottom: var(--cqc-space-1, 4px);
+  }
+  .cqc-ops-form-group select,
+  .cqc-ops-form-group input[type="file"] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--cqc-border, #ccc);
+    border-radius: 4px;
+    font-size: var(--cqc-font-sm, 0.875rem);
+    background: var(--cqc-surface, #fff);
+    color: var(--cqc-text, #1a1a2e);
+  }
+  .cqc-ops-result {
+    display: none;
+    margin-top: var(--cqc-space-3, 12px);
+    padding: var(--cqc-space-3, 12px);
+    border-radius: 6px;
+    font-size: var(--cqc-font-sm, 0.875rem);
+  }
+  .cqc-ops-result-ok {
+    background: var(--cqc-success-bg, #e8f5e9);
+    color: var(--cqc-success-text, #2e7d32);
+    border: 1px solid var(--cqc-success-border, #a5d6a7);
+  }
+  .cqc-ops-result-error {
+    background: var(--cqc-error-bg, #ffebee);
+    color: var(--cqc-error-text, #c62828);
+    border: 1px solid var(--cqc-error-border, #ef9a9a);
+  }
+  .cqc-ops-result-warning {
+    background: var(--cqc-warning-bg, #fff8e1);
+    color: var(--cqc-warning-text, #f57f17);
+    border: 1px solid var(--cqc-warning-border, #ffe082);
+  }
+  .cqc-ops-journal-container {
+    display: none;
+    margin-top: var(--cqc-space-3, 12px);
+  }
+  .cqc-ops-info {
+    font-size: var(--cqc-font-sm, 0.875rem);
+    padding: var(--cqc-space-2, 8px) 0;
+  }
+</style>
+
+<div class="cqc-page-header">
+  <h2>Centre d'operations</h2>
+  <span class="cqc-subtitle">Toutes les commandes CompteQC</span>
+</div>
+
+<div class="cqc-ops-grid">
+
+  {# ---- 1. Import ---- #}
+  <div class="cqc-card cqc-ops-card" title="Importer un fichier bancaire CSV/OFX dans le grand livre">
+    <h3>&#128228; Import</h3>
+    <form id="import-form" enctype="multipart/form-data">
+      <div class="cqc-ops-form-group">
+        <label for="import-file">Fichier bancaire</label>
+        <input type="file" id="import-file" name="fichier" accept=".csv,.ofx,.qfx" required>
+      </div>
+      <div class="cqc-ops-form-group">
+        <label for="import-compte">Compte</label>
+        <select id="import-compte" name="compte">
+          <option value="AUTO" selected>AUTO (detection automatique)</option>
+          <option value="CHEQUES">CHEQUES</option>
+          <option value="CARTE">CARTE</option>
+        </select>
+      </div>
+      <div class="cqc-ops-form-group">
+        <label for="import-source">Type de source</label>
+        <select id="import-source" name="source_type">
+          <option value="corporate" selected>Corporatif</option>
+          <option value="personal">Personnel</option>
+        </select>
+      </div>
+      <button type="submit" class="cqc-btn cqc-btn-success" title="Lancer l'import du fichier dans le ledger">
+        Importer
+      </button>
+    </form>
+    <div id="import-result" class="cqc-ops-result"></div>
+  </div>
+
+  {# ---- 2. Revision ---- #}
+  <div class="cqc-card cqc-ops-card" title="Reviser, approuver ou rejeter les transactions en attente">
+    <h3>&#128203; Revision</h3>
+    <div class="cqc-ops-links">
+      <a href="{{ urls.approbation }}" class="cqc-btn cqc-btn-outline"
+         title="Voir les transactions #pending a approuver/rejeter">
+        File d'approbation
+      </a>
+      <button type="button" id="btn-journal" class="cqc-btn cqc-btn-outline"
+              title="Afficher les transactions auto-approuvees avec confiance >= 95%">
+        Journal auto-approuve
+      </button>
+    </div>
+    <div id="journal-container" class="cqc-ops-journal-container"></div>
+  </div>
+
+  {# ---- 3. Rapports ---- #}
+  <div class="cqc-card cqc-ops-card" title="Rapports financiers et soldes comptables">
+    <h3>&#128202; Rapports</h3>
+    <div class="cqc-ops-links">
+      <a href="{{ urls.trial_balance }}" class="cqc-btn cqc-btn-outline"
+         title="Soldes de tous les comptes">
+        Soldes
+      </a>
+      <a href="{{ urls.trial_balance }}" class="cqc-btn cqc-btn-outline"
+         title="Balance de verification (debits = credits)">
+        Balance de verification
+      </a>
+      <a href="{{ urls.income_statement }}" class="cqc-btn cqc-btn-outline"
+         title="Revenus et depenses de l'exercice">
+        Etat des resultats
+      </a>
+      <a href="{{ urls.balance_sheet }}" class="cqc-btn cqc-btn-outline"
+         title="Actifs, passifs et capitaux propres">
+        Bilan
+      </a>
+    </div>
+  </div>
+
+  {# ---- 4. Paie ---- #}
+  <div class="cqc-card cqc-ops-card" title="Calculer et comptabiliser la paie">
+    <h3>&#128176; Paie</h3>
+    <div class="cqc-ops-links">
+      <a href="{{ urls.paie_qc }}" class="cqc-btn cqc-btn-outline"
+         title="Lancer le calcul de paie avec deductions Quebec">
+        Calculateur de paie
+      </a>
+    </div>
+  </div>
+
+  {# ---- 5. Factures ---- #}
+  <div class="cqc-card cqc-ops-card" title="Creer, lister et gerer les factures clients">
+    <h3>&#128196; Factures</h3>
+    <p class="cqc-text-muted cqc-ops-info">
+      Disponible via CLI :<br>
+      <code>cqc facture creer / lister / voir / pdf / envoyer / payer / relances</code>
+    </p>
+  </div>
+
+  {# ---- 6. Recus ---- #}
+  <div class="cqc-card cqc-ops-card" title="Telecharger et lier des recus aux transactions">
+    <h3>&#128247; Recus</h3>
+    <div class="cqc-ops-links">
+      <a href="{{ urls.recus }}" class="cqc-btn cqc-btn-outline"
+         title="Glisser-deposer des recus PDF/JPEG pour extraction IA">
+        Telecharger des recus
+      </a>
+    </div>
+  </div>
+
+  {# ---- 7. Export CPA ---- #}
+  <div class="cqc-card cqc-ops-card" title="Generer le package de fin d'annee pour le comptable">
+    <h3>&#128188; Export CPA</h3>
+    <div class="cqc-ops-links">
+      <a href="{{ urls.export_cpa }}" class="cqc-btn cqc-btn-outline"
+         title="Generer les rapports et schedules pour le comptable">
+        Exporter pour CPA
+      </a>
+    </div>
+  </div>
+
+  {# ---- 8. Echeances ---- #}
+  <div class="cqc-card cqc-ops-card" title="Calendrier des echeances fiscales et rappels">
+    <h3>&#128197; Echeances</h3>
+    <div class="cqc-ops-links">
+      <a href="{{ urls.echeances }}" class="cqc-btn cqc-btn-outline"
+         title="Voir les echeances fiscales et alertes de production">
+        Calendrier fiscal
+      </a>
+    </div>
+  </div>
+
+  {# ---- 9. ML / IA ---- #}
+  <div class="cqc-card cqc-ops-card" title="Re-entrainer le modele de categorisation automatique">
+    <h3>&#129504; ML / IA</h3>
+    <button type="button" id="btn-retrain" class="cqc-btn cqc-btn-success"
+            title="Entrainer le modele ML depuis les transactions approuvees du ledger">
+      Re-entrainer le modele ML
+    </button>
+    <div id="retrain-result" class="cqc-ops-result"></div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var SLUG = '{{ g.beancount_file_slug }}';
+  var BASE = '/' + SLUG + '/extension/OperationsExtension/';
+  var IMPORT_URL = BASE + 'import';
+  var RETRAIN_URL = BASE + 'retrain';
+  var JOURNAL_URL = BASE + 'journal';
+
+  // -- Helpers --
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  function showResult(el, cls, html) {
+    el.className = 'cqc-ops-result ' + cls;
+    el.innerHTML = html;
+    el.style.display = '';
+  }
+
+  // -- Import form (XHR with FormData) --
+  var importForm = document.getElementById('import-form');
+  var importResult = document.getElementById('import-result');
+
+  importForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    importResult.style.display = 'none';
+
+    var formData = new FormData(importForm);
+    var xhr = new XMLHttpRequest();
+
+    var submitBtn = importForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Import en cours\u2026';
+
+    xhr.onload = function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Importer';
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if (data.status === 'ok') {
+          showResult(importResult, 'cqc-ops-result-ok',
+            '<strong>' + data.importees + '</strong> transaction(s) importee(s)<br>' +
+            'Regles: ' + data.regles + ' | IA auto: ' + data.ia_auto + ' | En attente: ' + data.pending
+          );
+        } else {
+          showResult(importResult, 'cqc-ops-result-error',
+            escapeHtml(data.message || 'Erreur inconnue.')
+          );
+        }
+      } catch (err) {
+        showResult(importResult, 'cqc-ops-result-error', 'Erreur de communication.');
+      }
+    };
+
+    xhr.onerror = function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Importer';
+      showResult(importResult, 'cqc-ops-result-error', 'Erreur reseau.');
+    };
+
+    xhr.open('POST', IMPORT_URL, true);
+    xhr.send(formData);
+  });
+
+  // -- Retrain button --
+  var btnRetrain = document.getElementById('btn-retrain');
+  var retrainResult = document.getElementById('retrain-result');
+
+  btnRetrain.addEventListener('click', function() {
+    retrainResult.style.display = 'none';
+    btnRetrain.disabled = true;
+    btnRetrain.textContent = 'Entrainement en cours\u2026';
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      btnRetrain.disabled = false;
+      btnRetrain.textContent = 'Re-entrainer le modele ML';
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if (data.status === 'ok') {
+          showResult(retrainResult, 'cqc-ops-result-ok',
+            'Modele entraine sur <strong>' + data.transactions + '</strong> transactions, ' +
+            '<strong>' + data.comptes + '</strong> comptes distincts.'
+          );
+        } else if (data.status === 'warning') {
+          showResult(retrainResult, 'cqc-ops-result-warning', escapeHtml(data.message));
+        } else {
+          showResult(retrainResult, 'cqc-ops-result-error', escapeHtml(data.message || 'Erreur.'));
+        }
+      } catch (err) {
+        showResult(retrainResult, 'cqc-ops-result-error', 'Erreur de communication.');
+      }
+    };
+    xhr.onerror = function() {
+      btnRetrain.disabled = false;
+      btnRetrain.textContent = 'Re-entrainer le modele ML';
+      showResult(retrainResult, 'cqc-ops-result-error', 'Erreur reseau.');
+    };
+    xhr.open('POST', RETRAIN_URL, true);
+    xhr.send();
+  });
+
+  // -- Journal button (GET, renders table) --
+  var btnJournal = document.getElementById('btn-journal');
+  var journalContainer = document.getElementById('journal-container');
+  var journalOpen = false;
+
+  btnJournal.addEventListener('click', function() {
+    if (journalOpen) {
+      journalContainer.style.display = 'none';
+      journalContainer.innerHTML = '';
+      journalOpen = false;
+      return;
+    }
+
+    btnJournal.disabled = true;
+    btnJournal.textContent = 'Chargement\u2026';
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      btnJournal.disabled = false;
+      btnJournal.textContent = 'Journal auto-approuve';
+      try {
+        var entries = JSON.parse(xhr.responseText);
+        if (entries.status === 'error') {
+          journalContainer.innerHTML = '<div class="cqc-ops-result cqc-ops-result-error" style="display:block">' + escapeHtml(entries.message) + '</div>';
+          journalContainer.style.display = '';
+          journalOpen = true;
+          return;
+        }
+        if (!entries.length) {
+          journalContainer.innerHTML = '<div class="cqc-empty">Aucune transaction auto-approuvee.</div>';
+          journalContainer.style.display = '';
+          journalOpen = true;
+          return;
+        }
+        var html = '<table class="cqc-table"><thead><tr>';
+        html += '<th>Date</th><th>Beneficiaire</th><th>Narration</th>';
+        html += '<th class="montant">Montant</th><th>Compte</th><th>Confiance</th><th>Source</th>';
+        html += '</tr></thead><tbody>';
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          var confPct = Math.round(parseFloat(e.confiance) * 100);
+          html += '<tr>';
+          html += '<td>' + escapeHtml(e.date) + '</td>';
+          html += '<td>' + escapeHtml(e.payee) + '</td>';
+          html += '<td>' + escapeHtml(e.narration) + '</td>';
+          html += '<td class="montant">' + escapeHtml(e.montant) + ' $</td>';
+          html += '<td>' + escapeHtml(e.compte) + '</td>';
+          html += '<td>' + confPct + '%</td>';
+          html += '<td>' + escapeHtml(e.source) + '</td>';
+          html += '</tr>';
+        }
+        html += '</tbody></table>';
+        journalContainer.innerHTML = html;
+        journalContainer.style.display = '';
+        journalOpen = true;
+      } catch (err) {
+        journalContainer.innerHTML = '<div class="cqc-ops-result cqc-ops-result-error" style="display:block">Erreur de communication.</div>';
+        journalContainer.style.display = '';
+        journalOpen = true;
+      }
+    };
+    xhr.onerror = function() {
+      btnJournal.disabled = false;
+      btnJournal.textContent = 'Journal auto-approuve';
+      journalContainer.innerHTML = '<div class="cqc-ops-result cqc-ops-result-error" style="display:block">Erreur reseau.</div>';
+      journalContainer.style.display = '';
+      journalOpen = true;
+    };
+    xhr.open('GET', JOURNAL_URL, true);
+    xhr.send();
+  });
+
+})();
+</script>
+
+{% endblock %}
