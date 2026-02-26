@@ -150,26 +150,26 @@ header h1 strong {
   font-weight: var(--cqc-weight-bold);
 }
 
-/* Header filter inputs */
+/* Header filter inputs -- white boxes with dark text */
 header input, header select {
   border-radius: var(--qc-radius-sm);
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(26, 91, 191, 0.9);
-  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: #FFFFFF !important;
+  color: var(--qc-text) !important;
   transition: all var(--qc-transition);
   font-family: 'Inter', sans-serif;
   font-size: var(--cqc-font-sm);
 }
 
 header input:focus, header select:focus {
-  background: rgba(26, 91, 191, 1);
-  border-color: rgba(255,255,255,0.5);
+  background: #FFFFFF !important;
+  border-color: var(--qc-blue-light);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
 }
 
 header input::placeholder {
-  color: rgba(255,255,255,0.5);
+  color: var(--qc-muted);
 }
 
 /* ===== CompteQC Brand Strip ===== */
@@ -245,8 +245,9 @@ aside li {
   margin: 1px 0;
 }
 
+/* OVERRIDE: Svelte-scoped -- Fava injects inline color on sidebar links */
 aside a {
-  color: var(--sidebar-text, rgba(255, 255, 255, 1));
+  color: #FFFFFF !important;
   font-size: var(--cqc-font-base);
   font-weight: var(--cqc-weight-normal);
   padding: 7px 12px;
@@ -258,7 +259,7 @@ aside a {
 }
 
 aside a:hover {
-  color: rgba(255, 255, 255, 0.95);
+  color: #FFFFFF !important;
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -266,7 +267,7 @@ aside a:hover {
 aside li.selected a,
 aside a[aria-current],
 aside a.selected {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   background: rgba(0, 61, 165, 0.5);
   font-weight: var(--cqc-weight-semibold);
 }
