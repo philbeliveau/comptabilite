@@ -39,6 +39,7 @@
 </div>
 
 <div id="upload-result" style="display: none;"></div>
+<div id="preview-container" class="cqc-preview-grid"></div>
 
 <div class="cqc-card-flush">
   <h3 class="cqc-section-title">Reçus récents</h3>
@@ -299,6 +300,47 @@
     }
 
     resultDiv.innerHTML = html;
+  }
+
+  function renderPreview(file, data) {
+    var container = document.getElementById('preview-container');
+    if (!container) return;
+
+    var item = document.createElement('div');
+    item.className = 'cqc-preview-item';
+
+    var isImage = file.type.startsWith('image/') && !file.name.toLowerCase().endsWith('.heic');
+
+    if (isImage) {
+      var img = document.createElement('img');
+      img.className = 'cqc-preview-thumb';
+      img.src = URL.createObjectURL(file);
+      img.onload = function() {
+        URL.revokeObjectURL(img.src);
+      };
+      img.alt = file.name;
+      item.appendChild(img);
+    } else {
+      var icon = document.createElement('span');
+      icon.className = 'cqc-preview-icon';
+      icon.textContent = '\u{1F4C4}';
+      item.appendChild(icon);
+    }
+
+    var nameEl = document.createElement('span');
+    nameEl.className = 'cqc-preview-name';
+    nameEl.textContent = file.name;
+    nameEl.title = file.name;
+    item.appendChild(nameEl);
+
+    if (data && data.extracted && data.extracted.total) {
+      var badge = document.createElement('span');
+      badge.className = 'cqc-preview-badge';
+      badge.textContent = data.extracted.total + ' $';
+      item.appendChild(badge);
+    }
+
+    container.appendChild(item);
   }
 
 })();
