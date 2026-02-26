@@ -55,11 +55,11 @@ Plans:
   3. User sees a doughnut chart breaking down expenses by category (top categories plus "Autres"), with segments matching ledger data
   4. User sees the last 10 transactions with date, description, amount, and status badge -- each row links to the source entry
   5. Dashboard loads within 2 seconds on a cold navigation and Chart.js canvases resize correctly when the browser window changes size
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TableauBordExtension Python backend (KPI computation, monthly data series, chart data JSON)
-- [ ] 07-02: Dashboard template and Chart.js rendering (KPI cards, line chart, doughnut chart, recent transactions)
+- [ ] 07-01-PLAN.md — TableauBordExtension Python backend (KPI computation, monthly revenue series, expense categories, recent transactions, JSON helpers)
+- [ ] 07-02-PLAN.md — Dashboard HTML template (KPI cards with data-value, chart containers with data-chart, transactions table) and main.beancount registration
 
 ### Phase 8: Table and Extension Polish
 **Goal**: Every extension table looks production-grade with consistent styling, the approval queue is fast to scan and operate, and navigation between extensions feels smooth
@@ -118,7 +118,7 @@ Phases execute in numeric order: 6 -> 7 -> 8 -> 9 -> 10
 | 4. MCP Server and Web Dashboard | v1.0 | 5/5 | Complete | 2026-02-19 |
 | 5. Reporting, CPA Export, and Document Management | v1.0 | 5/5 | Complete | 2026-02-19 |
 | 6. Design System Foundation | v1.1 | 0/2 | Not started | - |
-| 7. Dashboard Homepage | v1.1 | 0/2 | Not started | - |
+| 7. Dashboard Homepage | v1.1 | 0/2 | Planned | - |
 | 8. Table and Extension Polish | v1.1 | 0/2 | Not started | - |
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
 | 10. Cross-Cutting Polish and Validation | v1.1 | 0/1 | Not started | - |
