@@ -1,0 +1,123 @@
+{% set page_title = "Tableau de bord" %}
+
+{% block content %}
+
+{% set kpis = extension.kpis() %}
+
+<style>
+  .cqc-dashboard-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 24px 0;
+  }
+  @media (max-width: 900px) {
+    .cqc-dashboard-charts {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="cqc-page-header">
+  <h2>Tableau de bord</h2>
+  <span class="cqc-subtitle">Apercu financier {{ extension.annee() }}</span>
+</div>
+
+<div class="cqc-kpi-row">
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Revenus YTD</div>
+    <div class="cqc-kpi-value" data-value="{{ kpis.revenus_ytd }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.revenus_ytd) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Depenses YTD</div>
+    <div class="cqc-kpi-value" data-value="{{ kpis.depenses_ytd }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.depenses_ytd) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Resultat net</div>
+    <div class="cqc-kpi-value {{ 'cqc-success' if kpis.resultat_net > 0 else 'cqc-error' if kpis.resultat_net < 0 else '' }}"
+         data-value="{{ kpis.resultat_net }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.resultat_net) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Taxes dues (TPS/TVQ)</div>
+    <div class="cqc-kpi-value" data-value="{{ kpis.taxes_dues }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.taxes_dues) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">En attente</div>
+    <div class="cqc-kpi-value" data-value="{{ kpis.pending_count }}" data-decimals="0">
+      {{ kpis.pending_count }}
+    </div>
+  </div>
+</div>
+
+<div class="cqc-dashboard-charts">
+  <div class="cqc-card">
+    <h3>Revenus mensuels {{ extension.annee() }}</h3>
+    <div class="cqc-chart-container"
+         id="chart-revenus-mensuels"
+         data-chart='{{ extension.revenus_mensuels_json() }}'
+         data-chart-type="line">
+      <canvas></canvas>
+    </div>
+  </div>
+  <div class="cqc-card">
+    <h3>Depenses par categorie</h3>
+    <div class="cqc-chart-container"
+         id="chart-depenses-categories"
+         data-chart='{{ extension.depenses_categories_json() }}'
+         data-chart-type="doughnut">
+      <canvas></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="cqc-card">
+  <h3>Transactions recentes</h3>
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th class="montant">Montant</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for txn in extension.transactions_recentes() %}
+      <tr>
+        <td>{{ txn.date }}</td>
+        <td>
+          <a href="{{ url_for('report', report_name='context', entry_hash=txn.entry_hash) }}"
+             title="Voir l'ecriture source">
+            {{ txn.payee }}{% if txn.narration %} &mdash; {{ txn.narration }}{% endif %}
+          </a>
+        </td>
+        <td class="montant">{{ "{:,.2f}".format(txn.montant) }} $</td>
+        <td>
+          {% if txn.statut == "pending" %}
+            <span class="cqc-badge cqc-badge-warning">En attente</span>
+          {% elif txn.statut == "attention" %}
+            <span class="cqc-badge cqc-badge-danger">Attention</span>
+          {% else %}
+            <span class="cqc-badge cqc-badge-ok">OK</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      {% if not extension.transactions_recentes() %}
+      <tr>
+        <td colspan="4" class="cqc-empty-state">Aucune transaction trouvee.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
