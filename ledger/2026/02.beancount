@@ -86,3 +86,93 @@ option "name_expenses" "Depenses"
   confiance: "1.0"
   Passifs:CartesCredit:RBC  -5.13 CAD
   Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-01 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "52"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-02 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "54"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.31 CAD
+  Passifs:Pret-Actionnaire   5.31 CAD
+
+2026-02-03 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "55"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-04 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "58"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-09 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "66"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-10 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "68"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.31 CAD
+  Passifs:Pret-Actionnaire   5.31 CAD
+
+2026-02-12 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "73"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Passifs:Pret-Actionnaire   4.88 CAD
+
+2026-02-16 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "84"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-17 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "88"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
+
+2026-02-18 ! "Mollo Cafe Montreal" "MOLLO CAFE MONTREAL"
+  source: "rbc-carte-csv"
+  categorisation: "regle"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "90"
+  confiance: "1.0"
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD

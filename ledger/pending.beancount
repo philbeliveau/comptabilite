@@ -1576,3 +1576,432 @@ option "name_expenses" "Depenses"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -84.28 CAD
   Passifs:Pret-Actionnaire   84.28 CAD
+
+2026-01-09 ! "Ls Philemon Bar Montreal" "LS Philemon Bar Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "3"
+  confiance: "0.75"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -42.5 CAD
+  Depenses:Repas-Representation   42.5 CAD
+
+2026-01-10 ! "Saq23132 Marche Atwater Montreal" "SAQ23132 MARCHE ATWATER MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "5"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -71.7 CAD
+  Passifs:Pret-Actionnaire   71.7 CAD
+
+2026-01-11 ! "Ls Muni Gc Montreal" "LS Muni GC Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "6"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Vehicule:Stationnement"
+  Passifs:CartesCredit:RBC         -58.19 CAD
+  Depenses:Vehicule:Stationnement   58.19 CAD
+
+2026-01-16 ! "Ls Le Cafe Bloom Montreal" "LS le cafe bloom Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "11"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -9.1 CAD
+  Passifs:Pret-Actionnaire   9.1 CAD
+
+2026-01-19 ! "Microsoft*Subscription Mississauga" "Microsoft*Subscription Mississauga" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "19"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
+  Passifs:CartesCredit:RBC               -2.3 CAD
+  Depenses:Bureau:Abonnements-Logiciels   2.3 CAD
+
+2026-01-23 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "27"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -29.04 CAD
+  Passifs:Pret-Actionnaire   29.04 CAD
+
+2026-01-24 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "28"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -31.98 CAD
+  Passifs:Pret-Actionnaire   31.98 CAD
+
+2026-01-24 ! "Brulerie Aux 4 Vents Montreal" "BRULERIE AUX 4 VENTS MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "29"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -2.0 CAD
+  Passifs:Pret-Actionnaire   2.0 CAD
+
+2026-01-24 ! "Boucherie Les 2 Freres Montreal" "BOUCHERIE LES 2 FRERES Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "31"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -16.0 CAD
+  Passifs:Pret-Actionnaire   16.0 CAD
+
+2026-01-24 ! "Fromagerie Hamel Montreal" "FROMAGERIE HAMEL MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "33"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -3.7 CAD
+  Passifs:Pret-Actionnaire   3.7 CAD
+
+2026-01-24 ! "Saq23132 Marche Atwater Montreal" "SAQ23132 MARCHE ATWATER MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "34"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -35.1 CAD
+  Passifs:Pret-Actionnaire   35.1 CAD
+
+2026-01-25 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "35"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -4.11 CAD
+  Passifs:Pret-Actionnaire   4.11 CAD
+
+2026-01-30 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "47"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -5.99 CAD
+  Passifs:Pret-Actionnaire   5.99 CAD
+
+2026-01-30 ! "Sq *F.C.E. Foundation Cul Montreal" "SQ *F.C.E. FOUNDATION CUL Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "48"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -20.0 CAD
+  Passifs:Pret-Actionnaire   20.0 CAD
+
+2026-01-31 ! "Mollo Boulangerie & Lab Montreal" "MOLLO BOULANGERIE & LAB MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "50"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -6.5 CAD
+  Passifs:Pret-Actionnaire   6.5 CAD
+
+2026-02-02 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "53"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -37.09 CAD
+  Passifs:Pret-Actionnaire   37.09 CAD
+
+2026-02-04 ! "Rwco 2499 Montreal" "RWCO 2499 Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "56"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC   36.15 CAD
+  Passifs:Pret-Actionnaire  -36.15 CAD
+
+2026-02-04 ! "Boucherie Les 2 Freres Montreal" "BOUCHERIE LES 2 FRERES Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "57"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -30.0 CAD
+  Passifs:Pret-Actionnaire   30.0 CAD
+
+2026-02-04 ! "Brulerie Aux 4 Vents Montreal" "BRULERIE AUX 4 VENTS MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "59"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -3.0 CAD
+  Passifs:Pret-Actionnaire   3.0 CAD
+
+2026-02-04 ! "Ls Lord William Pub Montreal" "LS Lord William Pub Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "61"
+  confiance: "0.8"
+  source_ia: "llm"
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -12.5 CAD
+  Depenses:Repas-Representation   12.5 CAD
+
+2026-02-05 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "62"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -22.8 CAD
+  Passifs:Pret-Actionnaire   22.8 CAD
+
+2026-02-08 ! "Couchetard #436 Otterburn Par" "COUCHETARD #436 OTTERBURN PAR" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "63"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -9.5 CAD
+  Passifs:Pret-Actionnaire   9.5 CAD
+
+2026-02-12 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "69"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -6.19 CAD
+  Passifs:Pret-Actionnaire   6.19 CAD
+
+2026-02-12 ! "Iga #8639 Montreal" "IGA #8639 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "70"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -15.68 CAD
+  Passifs:Pret-Actionnaire   15.68 CAD
+
+2026-02-12 ! "Sqdc77075 Mtl St-Henri Montreal" "SQDC77075 MTL ST-HENRI MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "72"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -25.2 CAD
+  Passifs:Pret-Actionnaire   25.2 CAD
+
+2026-02-12 ! "Le Paradis Du Fromage Montreal" "LE PARADIS DU FROMAGE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "77"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -25.0 CAD
+  Passifs:Pret-Actionnaire   25.0 CAD
+
+2026-02-14 ! "Savsav Saint-Henri" "SAVSAV SAINT-HENRI" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "81"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -7.8 CAD
+  Passifs:Pret-Actionnaire   7.8 CAD
+
+2026-02-18 ! "Boucherie Les 2 Freres Montreal" "BOUCHERIE LES 2 FRERES Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "89"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -15.0 CAD
+  Passifs:Pret-Actionnaire   15.0 CAD
+
+2026-02-18 ! "Boucherie Charcuterie Montreal" "BOUCHERIE CHARCUTERIE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "91"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -26.66 CAD
+  Passifs:Pret-Actionnaire   26.66 CAD
+
+2026-02-19 ! "Microsoft*Subscription Mississauga" "Microsoft*Subscription Mississauga" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "92"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
+  Passifs:CartesCredit:RBC               -2.3 CAD
+  Depenses:Bureau:Abonnements-Logiciels   2.3 CAD
+
+2026-02-19 ! "Boucherie Les 2 Freres Montreal" "BOUCHERIE LES 2 FRERES Montreal" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "93"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -19.6 CAD
+  Passifs:Pret-Actionnaire   19.6 CAD
+
+2026-02-19 ! "Terrines Et Pates 2024 Montreal" "TERRINES ET PATES 2024 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "94"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -6.6 CAD
+  Passifs:Pret-Actionnaire   6.6 CAD
+
+2026-02-20 ! "Mcdonald'S #26035 Montreal" "MCDONALD'S #26035 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "95"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -10.35 CAD
+  Passifs:Pret-Actionnaire   10.35 CAD
+
+2026-02-21 ! "Railway Railway.Com" "RAILWAY RAILWAY.COM 21.33 USD @ 1.405532" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "96"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
+  Passifs:CartesCredit:RBC               -29.98 CAD
+  Depenses:Bureau:Abonnements-Logiciels   29.98 CAD
+
+2026-02-21 ! "Allo Velo Montreal" "ALLO VELO MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "97"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Deplacement:Transport"
+  Passifs:CartesCredit:RBC        -2.88 CAD
+  Depenses:Deplacement:Transport   2.88 CAD
+
+2026-02-22 ! "Cafe De Mercanti Montreal" "CAFE DE MERCANTI MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "98"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -4.0 CAD
+  Passifs:Pret-Actionnaire   4.0 CAD
+
+2026-02-24 ! "Dollarama #1127 Montreal" "DOLLARAMA #1127 MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "99"
+  confiance: "0.75"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Fournitures"
+  Passifs:CartesCredit:RBC     -2.88 CAD
+  Depenses:Bureau:Fournitures   2.88 CAD
+
+2026-02-24 ! "Openrouter, Inc Openrouter.Ai" "OPENROUTER, INC OPENROUTER.AI 10.8 USD @ 1.404629" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "100"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
+  Passifs:CartesCredit:RBC               -15.17 CAD
+  Depenses:Bureau:Abonnements-Logiciels   15.17 CAD
+
+2026-02-24 ! "Le Paradis Du Fromage Montreal" "LE PARADIS DU FROMAGE MONTREAL" #pending
+  source: "rbc-carte-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-4.csv"
+  ligne: "101"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Passifs:CartesCredit:RBC  -18.0 CAD
+  Passifs:Pret-Actionnaire   18.0 CAD
