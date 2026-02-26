@@ -156,7 +156,11 @@ Plans:
   2. Running `cqc facture generate-recurring` creates invoices from all due templates, advancing each template's next date
   3. When importing bank transactions, the system suggests matches between deposits and open AR invoices based on amount and description similarity
   4. When importing bank transactions, the system suggests matches between withdrawals and open AP bills based on amount and vendor name
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 13-01-PLAN.md -- Recurring invoice templates: ModeleFactureRecurrente model, YAML registry, generation logic, CLI commands (template-add, template-list, generate-recurring)
+- [ ] 13-02-PLAN.md -- Auto-matching engine: bank deposit matching against AR invoices, withdrawal matching against AP bills, confidence scoring, import pipeline integration
 
 ### Phase 14: Fava Extension Tab & MCP
 **Goal**: User can manage AP/AR entirely from the Fava web interface with a dedicated tab, and Claude can query and mutate AP data via MCP tools
