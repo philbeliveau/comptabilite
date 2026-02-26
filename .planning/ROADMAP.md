@@ -4,6 +4,7 @@
 
 - **v1.0 MVP** -- Phases 1-5 (shipped 2026-02-25)
 - **v1.1 Production UI/UX** -- Phases 6-10 (in progress)
+- **v1.2 AP/AR & Financial Operations** -- Phases 11-15 (planned)
 
 ## Phases
 
@@ -18,9 +19,8 @@
 
 </details>
 
-### v1.1 Production UI/UX (In Progress)
-
-**Milestone Goal:** Transform CompteQC from functional to fintech-polished -- competing with QuickBooks on look, feel, and usability while staying within Fava's extension architecture.
+<details>
+<summary>v1.1 Production UI/UX (Phases 6-10)</summary>
 
 - [ ] **Phase 6: Design System Foundation** - Chart.js infrastructure, CSS variable migration, animation guards, typography refinement
 - [ ] **Phase 7: Dashboard Homepage** - KPI cards, revenue trend chart, expense breakdown chart, recent transactions
@@ -28,7 +28,22 @@
 - [ ] **Phase 9: Receipt Upload UX** - AJAX endpoint, progress bar, file previews, drag-and-drop animation
 - [ ] **Phase 10: Cross-Cutting Polish and Validation** - Typography audit, spacing consistency, cross-browser testing, accessibility verification
 
+</details>
+
+### v1.2 AP/AR & Financial Operations
+
+**Milestone Goal:** Implement a complete accounts payable and accounts receivable system -- track vendor bills, manage customer invoices, automate payment matching, and surface aging reports -- so the solo consultant's cash position is always clear and CPA-ready.
+
+- [ ] **Phase 11: AP Foundation** - Data model, YAML registry, Beancount journal entries for bill recording and payment
+- [ ] **Phase 12: Aging, AR Enhancements & CLI** - Aging buckets, partial payments, invoice status derivation, all CLI commands
+- [ ] **Phase 13: Recurring Invoices & Auto-matching** - Recurring invoice templates and bank transaction matching logic
+- [ ] **Phase 14: Fava Extension Tab & MCP** - Combined AP/AR web UI with charts and inline forms, plus MCP server tools
+- [ ] **Phase 15: Receipt-to-AP Pipeline & Auto-matching UX** - Receipt upload to AP creation flow, bank transaction linking
+
 ## Phase Details
+
+<details>
+<summary>v1.1 Phase Details (Phases 6-10)</summary>
 
 ### Phase 6: Design System Foundation
 **Goal**: Every UI component has a stable, performant foundation -- Chart.js loads and cleans up safely on SPA navigation, CSS theming uses Fava's variable system instead of brute-force overrides, and animations respect user preferences
@@ -106,10 +121,71 @@ Plans:
 - [ ] 10-01-PLAN.md — Typography token migration, font-weight normalization, cross-browser CSS fixes (Firefox scrollbar, focus-visible, backdrop-filter)
 - [ ] 10-02-PLAN.md — Accessibility remediation (ARIA across all templates, sidebar badge aria-live) and cross-browser/regression verification checkpoint
 
+</details>
+
+### Phase 11: AP Foundation
+**Goal**: User can create vendor bills, persist them in a registry, and generate correct Beancount journal entries for both bill recording and payment -- establishing the accounts payable data layer
+**Depends on**: Phase 10 (v1.1 complete)
+**Requirements**: APFN-01, APFN-02, APFN-03, APFN-04, APFN-05
+**Success Criteria** (what must be TRUE):
+  1. `Passifs:ComptesFournisseurs` (GIFI 2010) exists in the chart of accounts and Beancount validates without errors
+  2. User can create a vendor bill with multiple line items, each assigned to a specific expense account, with GST/QST flags generating ITC/ITR entries
+  3. Recording a bill produces a balanced Beancount transaction (debit expense accounts + tax receivable, credit AP) that appears in the ledger
+  4. Paying a bill produces a balanced Beancount transaction (debit AP, credit bank/credit card) and the bill status updates to paid
+  5. Vendor bills persist in YAML with sequential FOUR-YYYY-NNN numbering and survive application restarts
+**Plans**: TBD
+
+### Phase 12: Aging, AR Enhancements & CLI
+**Goal**: User can track invoice and bill aging, handle partial payments on AR invoices, and operate the full AP/AR system from the command line
+**Depends on**: Phase 11
+**Requirements**: AREN-01, AREN-02, AREN-03, AREN-04, AGNG-01, AGNG-02, AGNG-03, AGNG-04, CLAP-01, CLAP-02, CLAP-03
+**Success Criteria** (what must be TRUE):
+  1. User can record a partial payment on an invoice and see the running balance decrease accordingly, with invoice status automatically transitioning through draft/sent/partial/paid/overdue
+  2. User can run `cqc aging ar` and `cqc aging ap` to see invoices and bills grouped into 0-30, 30-60, 60-90, and 90+ day buckets with subtotals
+  3. User can run `cqc aging summary` to see a combined AR/AP position with net cash impact (what is owed to us minus what we owe)
+  4. User can create bills (`cqc fournisseur add`), list them with status filters (`cqc fournisseur list`), and record full or partial payments (`cqc fournisseur pay`) entirely from the CLI
+  5. Revenue account is configurable per invoice line item, allowing training revenue and consulting revenue to post to different accounts
+**Plans**: TBD
+
+### Phase 13: Recurring Invoices & Auto-matching
+**Goal**: User can set up recurring invoice templates that auto-generate on schedule, and the system intelligently matches bank transactions to outstanding invoices and bills
+**Depends on**: Phase 12
+**Requirements**: RECM-01, RECM-02, RECM-03, RECM-04
+**Success Criteria** (what must be TRUE):
+  1. User can create a recurring invoice template specifying client, amount, frequency (monthly/biweekly), and next generation date
+  2. Running `cqc facture generate-recurring` creates invoices from all due templates, advancing each template's next date
+  3. When importing bank transactions, the system suggests matches between deposits and open AR invoices based on amount and description similarity
+  4. When importing bank transactions, the system suggests matches between withdrawals and open AP bills based on amount and vendor name
+**Plans**: TBD
+
+### Phase 14: Fava Extension Tab & MCP
+**Goal**: User can manage AP/AR entirely from the Fava web interface with a dedicated tab, and Claude can query and mutate AP data via MCP tools
+**Depends on**: Phase 13
+**Requirements**: FVAP-01, FVAP-02, FVAP-03, FVAP-04, FVAP-05, FVAP-06, MCAP-01, MCAP-02, MCAP-03, MCAP-04
+**Success Criteria** (what must be TRUE):
+  1. User sees a combined AP/AR tab in Fava with a KPI row showing AR total, AR overdue, AP total, and net position -- all values matching ledger data
+  2. User can toggle between AR invoice list and AP bill list, with status badges (color-coded) and aging-based row coloring (green/yellow/red)
+  3. User sees a Chart.js horizontal stacked bar chart showing aging distribution across buckets for both AR and AP
+  4. User can create new AR invoices and AP bills via inline web forms without leaving the Fava interface
+  5. Dashboard homepage displays a net AR/AP position KPI card alongside existing financial KPIs
+  6. Claude can list AP bills, create new bills, record payments, and generate aging reports via MCP tools (`ap_list`, `ap_add`, `ap_pay`, `ar_aging`, `ap_aging`, `apar_summary`)
+**Plans**: TBD
+
+### Phase 15: Receipt-to-AP Pipeline & Auto-matching UX
+**Goal**: Uploading a receipt can flow directly into AP bill creation, and bank transactions in the approval queue show match suggestions for linking to open AR/AP entries
+**Depends on**: Phase 14
+**Requirements**: RCAP-01, RCAP-02, RCAP-03, RCAP-04
+**Success Criteria** (what must be TRUE):
+  1. After uploading a receipt and AI extraction completes, user sees a "Creer une facture fournisseur?" prompt with extracted data summary
+  2. Clicking the prompt navigates to the AP bill form pre-filled with vendor name, amount, line items, dates, and tax flags from the receipt
+  3. Bank transactions in the approval queue display match suggestions when they correspond to open AR invoices or AP bills, showing confidence and matched entry details
+  4. User can link a bank transaction to an AR invoice or AP bill with a single "Lier" button click, which records the payment and updates the entry status
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 6 -> 7 -> 8 -> 9 -> 10
+v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -123,3 +199,8 @@ Phases execute in numeric order: 6 -> 7 -> 8 -> 9 -> 10
 | 8. Table and Extension Polish | v1.1 | 0/2 | Not started | - |
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
 | 10. Cross-Cutting Polish and Validation | v1.1 | 2/2 | Complete | 2026-02-25 |
+| 11. AP Foundation | v1.2 | 0/0 | Not started | - |
+| 12. Aging, AR Enhancements & CLI | v1.2 | 0/0 | Not started | - |
+| 13. Recurring Invoices & Auto-matching | v1.2 | 0/0 | Not started | - |
+| 14. Fava Extension Tab & MCP | v1.2 | 0/0 | Not started | - |
+| 15. Receipt-to-AP Pipeline & Auto-matching UX | v1.2 | 0/0 | Not started | - |
