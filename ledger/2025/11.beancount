@@ -5,14 +5,3 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
-2025-11-10 * "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "4"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Entretien"
-  approuve: "oui"
-  Actifs:Banque:RBC:Cheques  -81.14 CAD
-  Depenses:Bureau:Entretien   81.14 CAD

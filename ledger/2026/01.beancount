@@ -5,14 +5,15 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
+
 2026-01-07 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
   categorisation: "regle"
   fichier_source: "csv4883.csv"
   ligne: "68"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -4.60 CAD
-  Passifs:Pret-Actionnaire     4.60 CAD
+  Passifs:CartesCredit:RBC  -4.60 CAD
+  Passifs:Pret-Actionnaire   4.60 CAD
 
 2026-01-13 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -20,8 +21,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "81"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -4.88 CAD
-  Passifs:Pret-Actionnaire     4.88 CAD
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Passifs:Pret-Actionnaire   4.88 CAD
 
 2026-01-13 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -29,8 +30,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "82"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -4.60 CAD
-  Passifs:Pret-Actionnaire     4.60 CAD
+  Passifs:CartesCredit:RBC  -4.60 CAD
+  Passifs:Pret-Actionnaire   4.60 CAD
 
 2026-01-20 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -38,8 +39,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "94"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -5.13 CAD
-  Passifs:Pret-Actionnaire     5.13 CAD
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
 
 2026-01-21 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -47,8 +48,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "97"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -5.13 CAD
-  Passifs:Pret-Actionnaire     5.13 CAD
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD
 
 2026-01-26 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -56,8 +57,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "112"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -5.08 CAD
-  Passifs:Pret-Actionnaire     5.08 CAD
+  Passifs:CartesCredit:RBC  -5.08 CAD
+  Passifs:Pret-Actionnaire   5.08 CAD
 
 2026-01-27 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -65,8 +66,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "113"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -4.88 CAD
-  Passifs:Pret-Actionnaire     4.88 CAD
+  Passifs:CartesCredit:RBC  -4.88 CAD
+  Passifs:Pret-Actionnaire   4.88 CAD
 
 2026-01-28 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -74,8 +75,8 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "116"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -5.31 CAD
-  Passifs:Pret-Actionnaire     5.31 CAD
+  Passifs:CartesCredit:RBC  -5.31 CAD
+  Passifs:Pret-Actionnaire   5.31 CAD
 
 2026-01-29 ! "Mollo Cafe Montreal Qc" "MOLLO CAFE MONTREAL QC"
   source: "rbc-carte-csv"
@@ -83,17 +84,5 @@ option "name_expenses" "Depenses"
   fichier_source: "csv4883.csv"
   ligne: "117"
   confiance: "1.0"
-  Passifs:CartesCredit:RBC    -5.13 CAD
-  Passifs:Pret-Actionnaire     5.13 CAD
-
-2026-01-07 * "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "37"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Entretien"
-  approuve: "oui"
-  Actifs:Banque:RBC:Cheques  -81.14 CAD
-  Depenses:Bureau:Entretien   81.14 CAD
+  Passifs:CartesCredit:RBC  -5.13 CAD
+  Passifs:Pret-Actionnaire   5.13 CAD

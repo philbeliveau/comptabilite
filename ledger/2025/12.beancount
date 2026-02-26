@@ -5,26 +5,3 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
-2025-12-08 * "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC"
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "17"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Entretien"
-  approuve: "oui"
-  Actifs:Banque:RBC:Cheques  -81.14 CAD
-  Depenses:Bureau:Entretien   81.14 CAD
-
-2025-12-01 * "Assurance Cie Belair" "ASSURANCE CIE BELAIR"
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "11"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Depenses:Assurances:Autres"
-  approuve: "oui"
-  Actifs:Banque:RBC:Cheques   -89.09 CAD
-  Depenses:Assurances:Autres   89.09 CAD

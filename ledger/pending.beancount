@@ -5,14 +5,15 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
+
 2025-11-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC" #pending
   source: "rbc-cheques-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "2"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
-  compte_propose: "Revenus:Autres"
+  compte_propose: "Passifs:Pret-Actionnaire"
   Actifs:Banque:RBC:Cheques   66.67 CAD
   Passifs:Pret-Actionnaire   -66.67 CAD
 
@@ -21,11 +22,23 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "3"
-  confiance: "0.7"
+  confiance: "0.6"
   source_ia: "llm"
-  compte_propose: "Depenses:Salaires:Brut"
+  compte_propose: "Passifs:Salaires-A-Payer"
+  capex: "oui"
   Actifs:Banque:RBC:Cheques   522.67 CAD
   Passifs:Salaires-A-Payer   -522.67 CAD
+
+2025-11-10 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "4"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Entretien"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Bureau:Entretien   81.14 CAD
 
 2025-11-13 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
   source: "rbc-cheques-csv"
@@ -43,9 +56,10 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "6"
-  confiance: "0.85"
+  confiance: "0.6"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
   Actifs:Banque:RBC:Cheques   2195.00 CAD
   Passifs:Pret-Actionnaire   -2195.00 CAD
 
@@ -65,9 +79,9 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "8"
-  confiance: "0.7"
+  confiance: "0.6"
   source_ia: "llm"
-  compte_propose: "Depenses:Salaires:Brut"
+  compte_propose: "Passifs:Salaires-A-Payer"
   Actifs:Banque:RBC:Cheques   329.90 CAD
   Passifs:Salaires-A-Payer   -329.90 CAD
 
@@ -79,6 +93,8 @@ option "name_expenses" "Depenses"
   confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Passifs:CartesCredit:RBC"
+  capex: "oui"
+  classe_dpa_suggeree: "10"
   Actifs:Banque:RBC:Cheques  -2237.84 CAD
   Passifs:CartesCredit:RBC    2237.84 CAD
 
@@ -89,9 +105,20 @@ option "name_expenses" "Depenses"
   ligne: "10"
   confiance: "0.85"
   source_ia: "llm"
+  compte_propose: "Depenses:Vehicule:Assurance"
+  Actifs:Banque:RBC:Cheques    -38.69 CAD
+  Depenses:Vehicule:Assurance   38.69 CAD
+
+2025-12-01 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "11"
+  confiance: "0.85"
+  source_ia: "llm"
   compte_propose: "Depenses:Assurances:Autres"
-  Actifs:Banque:RBC:Cheques   -38.69 CAD
-  Depenses:Assurances:Autres   38.69 CAD
+  Actifs:Banque:RBC:Cheques   -89.09 CAD
+  Depenses:Assurances:Autres   89.09 CAD
 
 2025-12-01 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
   source: "rbc-cheques-csv"
@@ -101,6 +128,7 @@ option "name_expenses" "Depenses"
   confiance: "0.9"
   source_ia: "llm"
   compte_propose: "Depenses:Bureau:Loyer"
+  capex: "oui"
   Actifs:Banque:RBC:Cheques  -1775.00 CAD
   Depenses:Bureau:Loyer       1775.00 CAD
 
@@ -120,9 +148,9 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "14"
-  confiance: "0.7"
+  confiance: "0.6"
   source_ia: "llm"
-  compte_propose: "Depenses:Salaires:Brut"
+  compte_propose: "Passifs:Salaires-A-Payer"
   Actifs:Banque:RBC:Cheques   34.37 CAD
   Passifs:Salaires-A-Payer   -34.37 CAD
 
@@ -133,20 +161,31 @@ option "name_expenses" "Depenses"
   ligne: "15"
   confiance: "0.85"
   source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -35.00 CAD
-  Passifs:Pret-Actionnaire    35.00 CAD
+  compte_propose: "Depenses:Vehicule:Stationnement"
+  Actifs:Banque:RBC:Cheques        -35.00 CAD
+  Depenses:Vehicule:Stationnement   35.00 CAD
 
 2025-12-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC" #pending
   source: "rbc-cheques-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "16"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
-  compte_propose: "Revenus:Autres"
+  compte_propose: "Passifs:Pret-Actionnaire"
   Actifs:Banque:RBC:Cheques   66.67 CAD
   Passifs:Pret-Actionnaire   -66.67 CAD
+
+2025-12-08 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "17"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Entretien"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Bureau:Entretien   81.14 CAD
 
 2025-12-15 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
   source: "rbc-cheques-csv"
@@ -175,9 +214,10 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "20"
-  confiance: "0.85"
+  confiance: "0.6"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
   Actifs:Banque:RBC:Cheques   500.00 CAD
   Passifs:Pret-Actionnaire   -500.00 CAD
 
@@ -191,15 +231,6 @@ option "name_expenses" "Depenses"
   compte_propose: "Passifs:Pret-Actionnaire"
   Actifs:Banque:RBC:Cheques   16.00 CAD
   Passifs:Pret-Actionnaire   -16.00 CAD
-
-2025-12-17 ! "Virement Recu" "VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "non-classe"
-  fichier_source: "csv4883.csv"
-  ligne: "22"
-  confiance: "0.0"
-  Actifs:Banque:RBC:Cheques   16.00 CAD
-  Depenses:Non-Classe        -16.00 CAD
 
 2025-12-22 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
   source: "rbc-cheques-csv"
@@ -231,6 +262,8 @@ option "name_expenses" "Depenses"
   confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Passifs:CartesCredit:RBC"
+  capex: "oui"
+  classe_dpa_suggeree: "10"
   Actifs:Banque:RBC:Cheques  -1642.70 CAD
   Passifs:CartesCredit:RBC    1642.70 CAD
 
@@ -239,9 +272,9 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "26"
-  confiance: "0.7"
+  confiance: "0.6"
   source_ia: "llm"
-  compte_propose: "Depenses:Salaires:Brut"
+  compte_propose: "Passifs:Salaires-A-Payer"
   Actifs:Banque:RBC:Cheques   60.15 CAD
   Passifs:Salaires-A-Payer   -60.15 CAD
 
@@ -250,9 +283,10 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "27"
-  confiance: "0.85"
+  confiance: "0.75"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
   Actifs:Banque:RBC:Cheques   700.00 CAD
   Passifs:Pret-Actionnaire   -700.00 CAD
 
@@ -263,9 +297,9 @@ option "name_expenses" "Depenses"
   ligne: "28"
   confiance: "0.85"
   source_ia: "llm"
-  compte_propose: "Depenses:Assurances:Autres"
-  Actifs:Banque:RBC:Cheques   -38.69 CAD
-  Depenses:Assurances:Autres   38.69 CAD
+  compte_propose: "Depenses:Vehicule:Assurance"
+  Actifs:Banque:RBC:Cheques    -38.69 CAD
+  Depenses:Vehicule:Assurance   38.69 CAD
 
 2026-01-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR" #pending
   source: "rbc-cheques-csv"
@@ -286,6 +320,7 @@ option "name_expenses" "Depenses"
   confiance: "0.9"
   source_ia: "llm"
   compte_propose: "Depenses:Bureau:Loyer"
+  capex: "oui"
   Actifs:Banque:RBC:Cheques  -1775.00 CAD
   Depenses:Bureau:Loyer       1775.00 CAD
 
@@ -305,7 +340,7 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "32"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
   Actifs:Banque:RBC:Cheques   11.00 CAD
@@ -316,9 +351,9 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "33"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
-  compte_propose: "Revenus:Autres"
+  compte_propose: "Passifs:Pret-Actionnaire"
   Actifs:Banque:RBC:Cheques   66.67 CAD
   Passifs:Pret-Actionnaire   -66.67 CAD
 
@@ -331,7 +366,7 @@ option "name_expenses" "Depenses"
   source_ia: "llm"
   compte_propose: "Depenses:TPS-Remise"
   Actifs:Banque:RBC:Cheques   89.56 CAD
-  Actifs:TPS-Payee           -89.56 CAD
+  Depenses:TPS-Remise        -89.56 CAD
 
 2026-01-05 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
   source: "rbc-cheques-csv"
@@ -355,6 +390,310 @@ option "name_expenses" "Depenses"
   Actifs:Banque:RBC:Cheques   12.00 CAD
   Passifs:Pret-Actionnaire   -12.00 CAD
 
+2026-01-07 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "37"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Entretien"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Bureau:Entretien   81.14 CAD
+
+2026-01-12 ! "Dep Tiers W3-3019" "DEP TIERS W3-3019" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "38"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   2250.00 CAD
+  Passifs:Pret-Actionnaire   -2250.00 CAD
+
+2026-01-12 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "39"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   180.00 CAD
+  Passifs:Pret-Actionnaire   -180.00 CAD
+
+2026-01-12 ! "Costco Wholesal Achat Pdi ---- 1384" "COSTCO WHOLESAL ACHAT PDI ---- 1384" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "40"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -210.66 CAD
+  Passifs:Pret-Actionnaire    210.66 CAD
+
+2026-01-19 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "41"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   11.00 CAD
+  Passifs:Pret-Actionnaire   -11.00 CAD
+
+2026-01-19 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "42"
+  confiance: "0.6"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   900.00 CAD
+  Passifs:Pret-Actionnaire   -900.00 CAD
+
+2026-01-19 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "43"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -8.00 CAD
+  Passifs:Pret-Actionnaire    8.00 CAD
+
+2026-01-21 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "44"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -40.00 CAD
+  Passifs:Pret-Actionnaire    40.00 CAD
+
+2026-01-26 ! "Achat Pdi-Sc---3874 Costco Wholesal" "ACHAT PDI-SC---3874 COSTCO WHOLESAL" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "45"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -240.53 CAD
+  Passifs:Pret-Actionnaire    240.53 CAD
+
+2026-01-27 ! "Paiement Divers Carte Rbc" "PAIEMENT DIVERS CARTE RBC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "46"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:CartesCredit:RBC"
+  capex: "oui"
+  classe_dpa_suggeree: "10"
+  Actifs:Banque:RBC:Cheques  -1973.69 CAD
+  Passifs:CartesCredit:RBC    1973.69 CAD
+
+2026-01-27 ! "Paiement Paiement W3 - 1426 Saaq-Immatric" "Paiement PAIEMENT W3 - 1426 SAAQ-IMMATRIC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "47"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Vehicule:Immatriculation"
+  Actifs:Banque:RBC:Cheques          -400.86 CAD
+  Depenses:Vehicule:Immatriculation   400.86 CAD
+
+2026-01-28 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "48"
+  confiance: "0.6"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   500.00 CAD
+  Passifs:Pret-Actionnaire   -500.00 CAD
+
+2026-01-29 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "49"
+  confiance: "0.6"
+  source_ia: "llm"
+  compte_propose: "Passifs:Salaires-A-Payer"
+  Actifs:Banque:RBC:Cheques   34.39 CAD
+  Passifs:Salaires-A-Payer   -34.39 CAD
+
+2026-02-02 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "50"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   321.00 CAD
+  Passifs:Pret-Actionnaire   -321.00 CAD
+
+2026-02-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "51"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Assurances:Autres"
+  Actifs:Banque:RBC:Cheques   -38.69 CAD
+  Depenses:Assurances:Autres   38.69 CAD
+
+2026-02-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "52"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Depenses:Assurances:Autres"
+  Actifs:Banque:RBC:Cheques   -89.09 CAD
+  Depenses:Assurances:Autres   89.09 CAD
+
+2026-02-02 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "53"
+  confiance: "0.9"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Loyer"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques  -1775.00 CAD
+  Depenses:Bureau:Loyer       1775.00 CAD
+
+2026-02-03 ! "Frais Mensuels" "FRAIS MENSUELS" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "54"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Frais-Bancaires"
+  Actifs:Banque:RBC:Cheques  -12.95 CAD
+  Depenses:Frais-Bancaires    12.95 CAD
+
+2026-02-05 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "55"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   40.00 CAD
+  Passifs:Pret-Actionnaire   -40.00 CAD
+
+2026-02-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "56"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   66.67 CAD
+  Passifs:Pret-Actionnaire   -66.67 CAD
+
+2026-02-05 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "57"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -35.00 CAD
+  Passifs:Pret-Actionnaire    35.00 CAD
+
+2026-02-10 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "58"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Depenses:Bureau:Entretien"
+  Actifs:Banque:RBC:Cheques  -81.14 CAD
+  Depenses:Bureau:Entretien   81.14 CAD
+
+2026-02-13 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "59"
+  confiance: "0.6"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   900.00 CAD
+  Passifs:Pret-Actionnaire   -900.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "60"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   18.00 CAD
+  Passifs:Pret-Actionnaire   -18.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "61"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   20.00 CAD
+  Passifs:Pret-Actionnaire   -20.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "62"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   150.00 CAD
+  Passifs:Pret-Actionnaire   -150.00 CAD
+
+2026-02-16 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "csv4883.csv"
+  ligne: "63"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -22.00 CAD
+  Passifs:Pret-Actionnaire    22.00 CAD
+
 2026-01-06 ! "Anthropic Anthropic.Comca" "ANTHROPIC ANTHROPIC.COMCA 11.50 USD @ 1.415600000000" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
@@ -373,9 +712,9 @@ option "name_expenses" "Depenses"
   ligne: "65"
   confiance: "0.85"
   source_ia: "llm"
-  compte_propose: "Depenses:Impots:Quebec"
-  Passifs:CartesCredit:RBC                   -41.00 CAD
-  Depenses:Honoraires-Professionnels:Autres   41.00 CAD
+  compte_propose: "Depenses:Frais-Bancaires"
+  Passifs:CartesCredit:RBC  -41.00 CAD
+  Depenses:Frais-Bancaires   41.00 CAD
 
 2026-01-06 ! "Familiprix 3002 Montreal Qc" "FAMILIPRIX 3002 MONTREAL QC" #pending
   source: "rbc-carte-csv"
@@ -426,7 +765,7 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "71"
-  confiance: "0.8"
+  confiance: "0.75"
   source_ia: "llm"
   compte_propose: "Depenses:Repas-Representation"
   Passifs:CartesCredit:RBC       -42.50 CAD
@@ -470,9 +809,9 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "75"
-  confiance: "0.6"
+  confiance: "0.95"
   source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Fournitures"
+  compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -22.99 CAD
   Passifs:Pret-Actionnaire   22.99 CAD
 
@@ -517,41 +856,8 @@ option "name_expenses" "Depenses"
   confiance: "0.85"
   source_ia: "llm"
   compte_propose: "Depenses:Vehicule:Stationnement"
-  Passifs:CartesCredit:RBC  -58.19 CAD
-  Passifs:Pret-Actionnaire   58.19 CAD
-
-2026-01-12 ! "Dep Tiers W3-3019" "DEP TIERS W3-3019" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "38"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Revenus:Consultation"
-  Actifs:Banque:RBC:Cheques   2250.00 CAD
-  Revenus:Consultation       -2250.00 CAD
-
-2026-01-12 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "39"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   180.00 CAD
-  Passifs:Pret-Actionnaire   -180.00 CAD
-
-2026-01-12 ! "Costco Wholesal Achat Pdi ---- 1384" "COSTCO WHOLESAL ACHAT PDI ---- 1384" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "40"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -210.66 CAD
-  Passifs:Pret-Actionnaire    210.66 CAD
+  Passifs:CartesCredit:RBC         -58.19 CAD
+  Depenses:Vehicule:Stationnement   58.19 CAD
 
 2026-01-12 ! "Anthropic Anthropic.Comca" "ANTHROPIC ANTHROPIC.COMCA 11.50 USD @ 1.426900000000" #pending
   source: "rbc-carte-csv"
@@ -591,7 +897,7 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "85"
-  confiance: "0.95"
+  confiance: "0.85"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -9.10 CAD
@@ -607,39 +913,6 @@ option "name_expenses" "Depenses"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -12.13 CAD
   Passifs:Pret-Actionnaire   12.13 CAD
-
-2026-01-19 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "41"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   11.00 CAD
-  Passifs:Pret-Actionnaire   -11.00 CAD
-
-2026-01-19 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "42"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   900.00 CAD
-  Passifs:Pret-Actionnaire   -900.00 CAD
-
-2026-01-19 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "43"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -8.00 CAD
-  Passifs:Pret-Actionnaire    8.00 CAD
 
 2026-01-19 ! "Microsoft*Subscription Mississauga On" "Microsoft*Subscription Mississauga ON" #pending
   source: "rbc-carte-csv"
@@ -690,18 +963,18 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "91"
-  confiance: "0.95"
+  confiance: "0.75"
   source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Passifs:CartesCredit:RBC  -12.25 CAD
-  Passifs:Pret-Actionnaire   12.25 CAD
+  compte_propose: "Depenses:Repas-Representation"
+  Passifs:CartesCredit:RBC       -12.25 CAD
+  Depenses:Repas-Representation   12.25 CAD
 
 2026-01-19 ! "Mckibbin'S Bishop Montreal Qc" "MCKIBBIN'S BISHOP MONTREAL QC" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "92"
-  confiance: "0.8"
+  confiance: "0.75"
   source_ia: "llm"
   compte_propose: "Depenses:Repas-Representation"
   Passifs:CartesCredit:RBC       -10.48 CAD
@@ -717,17 +990,6 @@ option "name_expenses" "Depenses"
   compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
   Passifs:CartesCredit:RBC               -32.82 CAD
   Depenses:Bureau:Abonnements-Logiciels   32.82 CAD
-
-2026-01-21 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "44"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -40.00 CAD
-  Passifs:Pret-Actionnaire    40.00 CAD
 
 2026-01-21 ! "Saq23132 Marche Atwater Montreal Qc" "SAQ23132 MARCHE ATWATER MONTREAL QC" #pending
   source: "rbc-carte-csv"
@@ -833,9 +1095,9 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "105"
-  confiance: "0.75"
+  confiance: "0.95"
   source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Fournitures"
+  compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -27.23 CAD
   Passifs:Pret-Actionnaire   27.23 CAD
 
@@ -844,7 +1106,7 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "106"
-  confiance: "0.95"
+  confiance: "0.85"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -2.00 CAD
@@ -883,16 +1145,18 @@ option "name_expenses" "Depenses"
   Passifs:CartesCredit:RBC  -4.11 CAD
   Passifs:Pret-Actionnaire   4.11 CAD
 
-2026-01-26 ! "Achat Pdi-Sc---3874 Costco Wholesal" "ACHAT PDI-SC---3874 COSTCO WHOLESAL" #pending
-  source: "rbc-cheques-csv"
+2026-01-26 ! "Paiement Automatise - Merci" "PAIEMENT AUTOMATISE - MERCI" #pending
+  source: "rbc-carte-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
-  ligne: "45"
-  confiance: "0.95"
+  ligne: "110"
+  confiance: "0.6"
   source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -240.53 CAD
-  Passifs:Pret-Actionnaire    240.53 CAD
+  compte_propose: "Passifs:Salaires-A-Payer"
+  capex: "oui"
+  classe_dpa_suggeree: "10"
+  Passifs:CartesCredit:RBC   1973.69 CAD
+  Passifs:Salaires-A-Payer  -1973.69 CAD
 
 2026-01-26 ! "Apple.Com/Bill 866-712-7753 On" "APPLE.COM/BILL 866-712-7753 ON" #pending
   source: "rbc-carte-csv"
@@ -902,30 +1166,9 @@ option "name_expenses" "Depenses"
   confiance: "0.85"
   source_ia: "llm"
   compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
+  capex: "oui"
   Passifs:CartesCredit:RBC               -1.48 CAD
   Depenses:Bureau:Abonnements-Logiciels   1.48 CAD
-
-2026-01-27 ! "Paiement Divers Carte Rbc" "PAIEMENT DIVERS CARTE RBC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "46"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:CartesCredit:RBC"
-  Actifs:Banque:RBC:Cheques  -1973.69 CAD
-  Passifs:CartesCredit:RBC    1973.69 CAD
-
-2026-01-27 ! "Paiement Paiement W3 - 1426 Saaq-Immatric" "Paiement PAIEMENT W3 - 1426 SAAQ-IMMATRIC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "47"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Vehicule:Assurance"
-  Actifs:Banque:RBC:Cheques          -400.86 CAD
-  Depenses:Vehicule:Immatriculation   400.86 CAD
 
 2026-01-27 ! "Iherb Iherb.Com Iherb.Com" "IHERB IHERB.COM iherb.com" #pending
   source: "rbc-carte-csv"
@@ -938,17 +1181,6 @@ option "name_expenses" "Depenses"
   Passifs:CartesCredit:RBC  -49.63 CAD
   Passifs:Pret-Actionnaire   49.63 CAD
 
-2026-01-28 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "48"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   500.00 CAD
-  Passifs:Pret-Actionnaire   -500.00 CAD
-
 2026-01-28 ! "Amzn Mktp Ca*Yc8609Tw3 866-216-1072 On" "AMZN Mktp CA*YC8609TW3 866-216-1072 ON" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
@@ -956,27 +1188,16 @@ option "name_expenses" "Depenses"
   ligne: "115"
   confiance: "0.75"
   source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Abonnements-Logiciels"
-  Passifs:CartesCredit:RBC               -31.68 CAD
-  Depenses:Bureau:Abonnements-Logiciels   31.68 CAD
-
-2026-01-29 ! "Depot De Paie Consultants En" "DEPOT DE PAIE CONSULTANTS EN" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "49"
-  confiance: "0.7"
-  source_ia: "llm"
-  compte_propose: "Depenses:Salaires:Brut"
-  Actifs:Banque:RBC:Cheques   34.39 CAD
-  Passifs:Salaires-A-Payer   -34.39 CAD
+  compte_propose: "Depenses:Bureau:Fournitures"
+  Passifs:CartesCredit:RBC     -31.68 CAD
+  Depenses:Bureau:Fournitures   31.68 CAD
 
 2026-01-29 ! "Fizz (Tx. Incl.) Montreal Qc" "FIZZ (TX. INCL.) MONTREAL QC" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "118"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Depenses:Bureau:Internet-Telecom"
   Passifs:CartesCredit:RBC          -25.93 CAD
@@ -987,7 +1208,7 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "119"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -20.00 CAD
@@ -1016,8 +1237,6 @@ option "name_expenses" "Depenses"
   Passifs:Pret-Actionnaire   5.99 CAD
 
 2026-01-31 ! "Claude.Ai Subscription Anthropic.Comca" "CLAUDE.AI SUBSCRIPTION ANTHROPIC.COMCA" #pending
-  document-2: "documents/2026/02/2026-01-31.anthropic-pbc.15.pdf"
-  document: "documents/2026/02/2026-01-31.anthropic-pbc.14.pdf"
   source: "rbc-carte-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
@@ -1044,55 +1263,11 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "125"
-  confiance: "0.95"
+  confiance: "0.85"
   source_ia: "llm"
   compte_propose: "Depenses:Vehicule:Carburant"
   Passifs:CartesCredit:RBC     -65.06 CAD
   Depenses:Vehicule:Carburant   65.06 CAD
-
-2026-02-02 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "50"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   321.00 CAD
-  Passifs:Pret-Actionnaire   -321.00 CAD
-
-2026-02-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "51"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Depenses:Vehicule:Assurance"
-  Actifs:Banque:RBC:Cheques    -38.69 CAD
-  Depenses:Vehicule:Assurance   38.69 CAD
-
-2026-02-02 ! "Assurance Cie Belair" "ASSURANCE CIE BELAIR" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "52"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Depenses:Assurances:Autres"
-  Actifs:Banque:RBC:Cheques   -89.09 CAD
-  Depenses:Assurances:Autres   89.09 CAD
-
-2026-02-02 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "53"
-  confiance: "0.9"
-  source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Loyer"
-  Actifs:Banque:RBC:Cheques  -1775.00 CAD
-  Depenses:Bureau:Loyer       1775.00 CAD
 
 2026-02-02 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC" #pending
   source: "rbc-carte-csv"
@@ -1105,23 +1280,12 @@ option "name_expenses" "Depenses"
   Passifs:CartesCredit:RBC  -37.09 CAD
   Passifs:Pret-Actionnaire   37.09 CAD
 
-2026-02-03 ! "Frais Mensuels" "FRAIS MENSUELS" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "54"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Frais-Bancaires"
-  Actifs:Banque:RBC:Cheques  -12.95 CAD
-  Depenses:Frais-Bancaires    12.95 CAD
-
 2026-02-04 ! "Ls Lord William Pub Montreal Qc" "LS Lord William Pub Montreal QC" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "129"
-  confiance: "0.75"
+  confiance: "0.8"
   source_ia: "llm"
   compte_propose: "Depenses:Repas-Representation"
   Passifs:CartesCredit:RBC       -12.50 CAD
@@ -1170,39 +1334,6 @@ option "name_expenses" "Depenses"
   compte_propose: "Depenses:Bureau:Internet-Telecom"
   Passifs:CartesCredit:RBC          -49.44 CAD
   Depenses:Bureau:Internet-Telecom   49.44 CAD
-
-2026-02-05 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "55"
-  confiance: "0.9"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   40.00 CAD
-  Passifs:Pret-Actionnaire   -40.00 CAD
-
-2026-02-05 ! "Impot Solidarite Gouv. Quebec" "IMPOT SOLIDARITE GOUV. QUEBEC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "56"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Revenus:Autres"
-  Actifs:Banque:RBC:Cheques   66.67 CAD
-  Passifs:Pret-Actionnaire   -66.67 CAD
-
-2026-02-05 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "57"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -35.00 CAD
-  Passifs:Pret-Actionnaire    35.00 CAD
 
 2026-02-05 ! "Iga #8639 Montreal Qc" "IGA #8639 MONTREAL QC" #pending
   source: "rbc-carte-csv"
@@ -1258,17 +1389,6 @@ option "name_expenses" "Depenses"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -244.53 CAD
   Passifs:Pret-Actionnaire   244.53 CAD
-
-2026-02-10 ! "Pmnt Fact Electr Hydro-Quebec" "PMNT FACT ELECTR HYDRO-QUEBEC" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "58"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Bureau:Entretien"
-  Actifs:Banque:RBC:Cheques  -81.14 CAD
-  Depenses:Bureau:Entretien   81.14 CAD
 
 2026-02-12 ! "Le Paradis Du Fromage Montreal Qc" "LE PARADIS DU FROMAGE MONTREAL QC" #pending
   source: "rbc-carte-csv"
@@ -1358,27 +1478,16 @@ option "name_expenses" "Depenses"
   Passifs:CartesCredit:RBC  -6.19 CAD
   Passifs:Pret-Actionnaire   6.19 CAD
 
-2026-02-13 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "59"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   900.00 CAD
-  Passifs:Pret-Actionnaire   -900.00 CAD
-
 2026-02-13 ! "Restaurant Grinder Montreal Qc" "RESTAURANT GRINDER MONTREAL QC" #pending
   source: "rbc-carte-csv"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "151"
-  confiance: "0.75"
+  confiance: "0.8"
   source_ia: "llm"
   compte_propose: "Depenses:Repas-Representation"
-  Passifs:CartesCredit:RBC  -323.64 CAD
-  Passifs:Pret-Actionnaire   323.64 CAD
+  Passifs:CartesCredit:RBC       -323.64 CAD
+  Depenses:Repas-Representation   323.64 CAD
 
 2026-02-14 ! "Savsav Saint-Henri Qc" "SAVSAV SAINT-HENRI QC" #pending
   source: "rbc-carte-csv"
@@ -1396,7 +1505,7 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "csv4883.csv"
   ligne: "153"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Depenses:Deplacement:Transport"
   Passifs:CartesCredit:RBC        -10.96 CAD
@@ -1434,50 +1543,6 @@ option "name_expenses" "Depenses"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -21.05 CAD
   Passifs:Pret-Actionnaire   21.05 CAD
-
-2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "60"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   18.00 CAD
-  Passifs:Pret-Actionnaire   -18.00 CAD
-
-2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "61"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   20.00 CAD
-  Passifs:Pret-Actionnaire   -20.00 CAD
-
-2026-02-16 ! "Vir Courriel Virement Recu" "Vir courriel VIREMENT RECU" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "62"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques   150.00 CAD
-  Passifs:Pret-Actionnaire   -150.00 CAD
-
-2026-02-16 ! "Vir Courriel Virement Envoye" "Vir courriel VIREMENT ENVOYE" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "csv4883.csv"
-  ligne: "63"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  Actifs:Banque:RBC:Cheques  -22.00 CAD
-  Passifs:Pret-Actionnaire    22.00 CAD
 
 2026-02-16 ! "Iherb Iherb.Com Iherb.Com" "IHERB IHERB.COM iherb.com" #pending
   source: "rbc-carte-csv"
