@@ -221,7 +221,7 @@ v1.2 phases execute in numeric order: 11 -> 12 -> 13 -> 14 -> 15
 | 9. Receipt Upload UX | v1.1 | 0/2 | Not started | - |
 | 10. Cross-Cutting Polish and Validation | v1.1 | 2/2 | Complete | 2026-02-25 |
 | 11. AP Foundation | 2/2 | Complete    | 2026-02-26 | - |
-| 12. Aging, AR Enhancements & CLI | 2/2 | Complete   | 2026-02-26 | - |
+| 12. Aging, AR Enhancements & CLI | 2/2 | Complete    | 2026-02-26 | - |
 | 13. Recurring Invoices & Auto-matching | v1.2 | 0/0 | Not started | - |
 | 14. Fava Extension Tab & MCP | v1.2 | 0/3 | Planned | - |
 | 15. Receipt-to-AP Pipeline & Auto-matching UX | v1.2 | 0/0 | Not started | - |
