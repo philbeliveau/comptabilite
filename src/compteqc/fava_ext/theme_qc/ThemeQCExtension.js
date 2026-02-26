@@ -1058,7 +1058,7 @@ article svg {
 }
 /* Remove old ul+ul separator since groups handle visual separation */
 /* OVERRIDE: Svelte-scoped -- Fava sidebar navigation has inline border styles */
-.cqc-sidebar-group ul.navigation { border-top: none !important; margin-top: 0 !important; padding-top: 0 !important; }
+.cqc-sidebar-group ul.navigation { border-top: none !important; margin-top: 0; padding-top: 0; }
 
 /* ===== Report intro blocks ===== */
 .cqc-report-intro {
