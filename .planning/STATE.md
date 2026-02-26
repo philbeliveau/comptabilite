@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 15 of 15 (Receipt-to-AP Pipeline)
-Plan: 1 of 2 in current phase (Plan 01 complete)
-Status: Plan 15-01 complete -- receipt-to-AP creation prompt
-Last activity: 2026-02-26 - Completed Plan 15-01: Receipt-to-AP Creation Prompt
+Plan: 2 of 2 in current phase (Plan 02 complete)
+Status: Phase 15 complete -- all 2 plans done
+Last activity: 2026-02-26 - Completed Plan 15-02: AR/AP Match Suggestions in Approval Queue
 
-Progress: [##################  ] 90% (v1.2 phases 11-15)
+Progress: [####################] 100% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -54,7 +54,7 @@ Progress: [##################  ] 90% (v1.2 phases 11-15)
 | 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
 | 13. Recurring Invoices | 2/2 | 9min | 4.5 min |
 | 14. Fava Extension Tab | 3/3 | 8min | 2.7 min |
-| Phase 14 P02 | 3min | 2 tasks | 2 files |
+| 15. Receipt-to-AP | 2/2 | 4min | 2 min |
 | 15. Receipt-to-AP | 1/2 | 1min | 1 min |
 
 ## Accumulated Context
@@ -93,6 +93,9 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - [Phase 14]: Form action URLs use /g.beancount_file_slug/extension/name/endpoint pattern for POST endpoints
 - [Phase 14]: Dynamic line items use indexed form fields (description_0, description_1...) parsed with while loop
 - [Phase 14]: URL query parameter prefill hook for stateless cross-extension form pre-population
+- [Phase 15]: Conditional imports for rapprochement/fournisseurs ensure graceful degradation in approval queue
+- [Phase 15]: Match suggestion rows as sibling <tr> elements (not modals) for AR/AP matches
+- [Phase 15]: lier_apar endpoint follows same redirect-back UX as approuver/rejeter
 - [Phase 15]: Stateless URL query parameter handoff between RecusExtension and ComptesFournisseursExtension
 - [Phase 15]: Forward-compatible AP link (404 acceptable if Phase 14 not yet deployed)
 
@@ -120,5 +123,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 15-01-PLAN.md -- Receipt-to-AP creation prompt (Plan 1 of 2 in Phase 15)
+Stopped at: Completed 15-02-PLAN.md -- AR/AP match suggestions in approval queue (Phase 15 all plans complete, v1.2 milestone complete)
 Resume file: None

@@ -64,8 +64,8 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 
 - [x] **RCAP-01**: After receipt upload and AI extraction, user sees "Create AP entry?" prompt
 - [x] **RCAP-02**: Clicking the prompt navigates to AP form pre-filled with extracted vendor, amount, dates, taxes
-- [ ] **RCAP-03**: Approval queue shows match suggestions for bank transactions that correspond to open AR/AP entries
-- [ ] **RCAP-04**: User can link a bank transaction to an AR invoice or AP bill with one click ("Lier" button)
+- [x] **RCAP-03**: Approval queue shows match suggestions for bank transactions that correspond to open AR/AP entries
+- [x] **RCAP-04**: User can link a bank transaction to an AR invoice or AP bill with one click ("Lier" button)
 
 ### MCP Server (MCAP)
 
@@ -142,8 +142,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MCAP-04 | Phase 14 | Complete |
 | RCAP-01 | Phase 15 | Complete |
 | RCAP-02 | Phase 15 | Complete |
-| RCAP-03 | Phase 15 | Pending |
-| RCAP-04 | Phase 15 | Pending |
+| RCAP-03 | Phase 15 | Complete |
+| RCAP-04 | Phase 15 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 30 total
