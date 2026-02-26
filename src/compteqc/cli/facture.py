@@ -18,6 +18,11 @@ from compteqc.factures.modeles import (
     InvoiceStatus,
     LigneFacture,
 )
+from compteqc.factures.recurrent import (
+    ModeleFactureRecurrente,
+    RegistreRecurrents,
+    generer_factures_recurrentes,
+)
 from compteqc.factures.registre import RegistreFactures
 
 facture_app = typer.Typer(no_args_is_help=True)
@@ -62,6 +67,14 @@ def _get_registre() -> RegistreFactures:
 
     chemin = get_ledger_path().parent / "factures" / "registre.yaml"
     return RegistreFactures(chemin=chemin)
+
+
+def _get_registre_recurrents() -> RegistreRecurrents:
+    """Retourne le registre des modeles de factures recurrentes."""
+    from compteqc.cli.app import get_ledger_path
+
+    chemin = get_ledger_path().parent / "factures" / "modeles-recurrents.yaml"
+    return RegistreRecurrents(chemin=chemin)
 
 
 def _statut_style(statut: InvoiceStatus) -> str:
@@ -363,5 +376,194 @@ def relances() -> None:
             str(jours),
             _formater_montant(f.total),
         )
+
+    console.print(tableau)
+
+
+# ─── Recurring templates ───────────────────────────────────────────
+
+
+FREQUENCES_VALIDES = ("mensuel", "bimensuel", "trimestriel", "annuel")
+
+
+@facture_app.command(name="template-add")
+def template_add(
+    identifiant: str = typer.Option(
+        ..., "--id", prompt="Identifiant du modele (ex: REC-ACME-MENSUEL)"
+    ),
+    client: str = typer.Option(..., "--client", "-c", prompt="Nom du client"),
+    adresse: str = typer.Option("", "--adresse", "-a"),
+    description: str = typer.Option(
+        ..., "--description", "-d", prompt="Description du service"
+    ),
+    quantite: str = typer.Option("1", "--quantite", "-q"),
+    prix: str = typer.Option(..., "--prix", "-p", prompt="Prix unitaire"),
+    frequence: str = typer.Option(
+        "mensuel",
+        "--frequence",
+        "-f",
+        help="Frequence (mensuel/bimensuel/trimestriel/annuel)",
+    ),
+    prochaine: str = typer.Option(
+        ..., "--prochaine", prompt="Prochaine generation (AAAA-MM-JJ)"
+    ),
+    echeance_jours: int = typer.Option(30, "--echeance", "-e", help="Jours avant echeance"),
+    notes: str = typer.Option("", "--notes", "-n", help="Notes"),
+) -> None:
+    """Creer un modele de facture recurrente."""
+    if frequence not in FREQUENCES_VALIDES:
+        console.print(
+            f"[red]Frequence invalide: {frequence}[/red]\n"
+            f"Valeurs acceptees: {', '.join(FREQUENCES_VALIDES)}"
+        )
+        raise typer.Exit(1)
+
+    try:
+        prix_decimal = Decimal(prix)
+        quantite_decimal = Decimal(quantite)
+    except InvalidOperation:
+        console.print("[red]Erreur: montant ou quantite invalide[/red]")
+        raise typer.Exit(1)
+
+    try:
+        date_prochaine = datetime.date.fromisoformat(prochaine)
+    except ValueError:
+        console.print("[red]Erreur: date invalide (format AAAA-MM-JJ)[/red]")
+        raise typer.Exit(1)
+
+    ligne = LigneFacture(
+        description=description,
+        quantite=quantite_decimal,
+        prix_unitaire=prix_decimal,
+    )
+
+    modele = ModeleFactureRecurrente(
+        identifiant=identifiant,
+        nom_client=client,
+        adresse_client=adresse,
+        lignes=[ligne],
+        frequence=frequence,
+        prochaine_generation=date_prochaine,
+        echeance_jours=echeance_jours,
+        notes=notes,
+    )
+
+    registre = _get_registre_recurrents()
+    registre.ajouter(modele)
+
+    console.print(f"\n[green]Modele '{identifiant}' cree[/green]")
+    console.print(f"  Client: {client}")
+    console.print(f"  Montant: {_formater_montant(ligne.sous_total)}")
+    console.print(f"  Frequence: {frequence}")
+    console.print(f"  Prochaine generation: {date_prochaine}")
+
+
+@facture_app.command(name="template-list")
+def template_list(
+    tous: bool = typer.Option(False, "--tous", "-t", help="Inclure les modeles inactifs"),
+) -> None:
+    """Lister les modeles de factures recurrentes."""
+    registre = _get_registre_recurrents()
+    modeles = registre.lister(actif_seulement=not tous)
+
+    if not modeles:
+        console.print("[yellow]Aucun modele recurrent trouve.[/yellow]")
+        return
+
+    tableau = Table(title="Modeles recurrents", show_header=True)
+    tableau.add_column("Identifiant", style="cyan")
+    tableau.add_column("Client")
+    tableau.add_column("Montant", justify="right")
+    tableau.add_column("Frequence")
+    tableau.add_column("Prochaine", style="yellow")
+    tableau.add_column("Actif")
+
+    for m in modeles:
+        montant = sum((l.sous_total for l in m.lignes), Decimal("0"))
+        tableau.add_row(
+            m.identifiant,
+            m.nom_client,
+            _formater_montant(montant),
+            m.frequence,
+            str(m.prochaine_generation),
+            "[green]Oui[/green]" if m.actif else "[red]Non[/red]",
+        )
+
+    console.print(tableau)
+
+
+@facture_app.command(name="generate-recurring")
+def generate_recurring(
+    date_ref: Optional[str] = typer.Option(
+        None, "--date", "-d", help="Date de reference (AAAA-MM-JJ, defaut: aujourd'hui)"
+    ),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Afficher sans creer"),
+) -> None:
+    """Generer les factures dues a partir des modeles recurrents."""
+    from compteqc.factures.journal import generer_ecriture_facture
+
+    if date_ref:
+        try:
+            date_reference = datetime.date.fromisoformat(date_ref)
+        except ValueError:
+            console.print("[red]Erreur: date invalide (format AAAA-MM-JJ)[/red]")
+            raise typer.Exit(1)
+    else:
+        date_reference = datetime.date.today()
+
+    reg_rec = _get_registre_recurrents()
+    reg_fac = _get_registre()
+
+    if dry_run:
+        # Dry run: show what would be generated without writing
+        modeles = reg_rec.lister(actif_seulement=True)
+        dues = [m for m in modeles if m.prochaine_generation <= date_reference]
+        if not dues:
+            console.print("[yellow]Aucune facture a generer.[/yellow]")
+            return
+
+        console.print(f"[bold]Mode dry-run -- {len(dues)} facture(s) seraient generees:[/bold]")
+        tableau = Table(show_header=True)
+        tableau.add_column("Modele", style="cyan")
+        tableau.add_column("Client")
+        tableau.add_column("Date")
+        tableau.add_column("Montant", justify="right")
+
+        for m in dues:
+            montant = sum((l.sous_total for l in m.lignes), Decimal("0"))
+            tableau.add_row(
+                m.identifiant,
+                m.nom_client,
+                str(m.prochaine_generation),
+                _formater_montant(montant),
+            )
+        console.print(tableau)
+        return
+
+    factures = generer_factures_recurrentes(reg_rec, reg_fac, date_reference)
+
+    if not factures:
+        console.print("[yellow]Aucune facture a generer.[/yellow]")
+        return
+
+    console.print(f"\n[green]{len(factures)} facture(s) generee(s):[/green]")
+    tableau = Table(show_header=True)
+    tableau.add_column("Numero", style="cyan")
+    tableau.add_column("Client")
+    tableau.add_column("Date")
+    tableau.add_column("Echeance")
+    tableau.add_column("Total", justify="right")
+
+    for f in factures:
+        tableau.add_row(
+            f.numero,
+            f.nom_client,
+            str(f.date),
+            str(f.date_echeance),
+            _formater_montant(f.total),
+        )
+        # Generate and append Beancount journal entry
+        ecriture = generer_ecriture_facture(f)
+        _appendice_beancount(ecriture)
 
     console.print(tableau)

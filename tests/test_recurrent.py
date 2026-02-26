@@ -172,3 +172,137 @@ class TestGeneration:
             reg_rec, reg_fac, date_reference=datetime.date(2026, 2, 1)
         )
         assert len(factures) == 0
+
+
+# ─── CLI Tests ─────────────────────────────────────────────────────
+
+
+import compteqc.cli.app as cli_app_mod
+from typer.testing import CliRunner
+
+from compteqc.cli.facture import facture_app
+
+runner = CliRunner()
+
+
+@pytest.fixture()
+def isolated_ledger(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Set up an isolated ledger directory for CLI tests."""
+    ledger_dir = tmp_path / "ledger"
+    ledger_dir.mkdir()
+    main_beancount = ledger_dir / "main.beancount"
+    main_beancount.write_text("; main\n", encoding="utf-8")
+    monkeypatch.setattr(cli_app_mod, "_ledger_path", main_beancount)
+    return ledger_dir
+
+
+class TestCLI:
+    def test_cli_template_add(self, isolated_ledger: Path) -> None:
+        result = runner.invoke(
+            facture_app,
+            [
+                "template-add",
+                "--id", "REC-TEST-MENSUEL",
+                "--client", "Test Client",
+                "--description", "Consultation mensuelle",
+                "--prix", "5000",
+                "--frequence", "mensuel",
+                "--prochaine", "2026-03-01",
+            ],
+        )
+        assert result.exit_code == 0
+        assert "REC-TEST-MENSUEL" in result.output
+        assert "cree" in result.output
+
+        # Verify template was persisted
+        reg = RegistreRecurrents(
+            chemin=isolated_ledger / "factures" / "modeles-recurrents.yaml"
+        )
+        modele = reg.obtenir("REC-TEST-MENSUEL")
+        assert modele is not None
+        assert modele.nom_client == "Test Client"
+
+    def test_cli_template_list(self, isolated_ledger: Path) -> None:
+        # Create a template first
+        runner.invoke(
+            facture_app,
+            [
+                "template-add",
+                "--id", "REC-LIST-TEST",
+                "--client", "List Client",
+                "--description", "Service",
+                "--prix", "3000",
+                "--prochaine", "2026-04-01",
+            ],
+        )
+
+        result = runner.invoke(facture_app, ["template-list"])
+        assert result.exit_code == 0
+        assert "REC-LIST-TEST" in result.output
+        assert "List Client" in result.output
+
+    def test_cli_generate_recurring(self, isolated_ledger: Path) -> None:
+        # Create a template with past date
+        runner.invoke(
+            facture_app,
+            [
+                "template-add",
+                "--id", "REC-GEN-TEST",
+                "--client", "Gen Client",
+                "--description", "Retainer",
+                "--prix", "8000",
+                "--prochaine", "2026-01-15",
+            ],
+        )
+
+        result = runner.invoke(
+            facture_app,
+            ["generate-recurring", "--date", "2026-02-01"],
+        )
+        assert result.exit_code == 0
+        assert "1 facture(s) generee(s)" in result.output
+        assert "FAC-2026-001" in result.output
+
+        # Verify facture was created in the registry
+        reg_fac = RegistreFactures(
+            chemin=isolated_ledger / "factures" / "registre.yaml"
+        )
+        facture = reg_fac.obtenir("FAC-2026-001")
+        assert facture is not None
+        assert facture.nom_client == "Gen Client"
+
+        # Verify Beancount entry was appended
+        beancount_files = list(isolated_ledger.glob("*.beancount"))
+        assert any(
+            "Facture FAC-2026-001" in f.read_text(encoding="utf-8")
+            for f in beancount_files
+            if f.name != "main.beancount"
+        )
+
+    def test_cli_generate_recurring_dry_run(self, isolated_ledger: Path) -> None:
+        # Create a template with past date
+        runner.invoke(
+            facture_app,
+            [
+                "template-add",
+                "--id", "REC-DRY-TEST",
+                "--client", "Dry Client",
+                "--description", "Service",
+                "--prix", "2000",
+                "--prochaine", "2026-01-01",
+            ],
+        )
+
+        result = runner.invoke(
+            facture_app,
+            ["generate-recurring", "--date", "2026-02-01", "--dry-run"],
+        )
+        assert result.exit_code == 0
+        assert "dry-run" in result.output
+        assert "REC-DRY-TEST" in result.output
+
+        # Verify NO facture was created
+        reg_fac = RegistreFactures(
+            chemin=isolated_ledger / "factures" / "registre.yaml"
+        )
+        assert len(reg_fac.lister()) == 0
