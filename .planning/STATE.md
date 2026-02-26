@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 8 (next v1.1 phase)
+**Current focus:** Phase 8 (Table and Extension Polish)
 
 ## Current Position
 
-Phase: 7 of 10 (Dashboard Homepage) -- COMPLETE
-Plan: 2 of 2 in current phase (all done)
-Status: Phase 7 complete
-Last activity: 2026-02-25 -- Completed 07-02 (Dashboard template and extension registration)
+Phase: 8 of 10 (Table and Extension Polish)
+Plan: 1 of 2 in current phase (08-01 complete)
+Status: Executing Phase 8
+Last activity: 2026-02-25 -- Completed 08-01 (Table hover, headers, template cleanup)
 
-Progress: [#############.......] 61% (27/44 total plans -- 23 v1.0 complete, 4/9 v1.1)
+Progress: [##############......] 64% (28/44 total plans -- 23 v1.0 complete, 5/9 v1.1)
 
 ## Performance Metrics
 
@@ -35,6 +35,7 @@ Progress: [#############.......] 61% (27/44 total plans -- 23 v1.0 complete, 4/9
 
 *v1.1 metrics will populate as plans execute*
 | Phase 07 P02 | 1min | 2 tasks | 2 files |
+| Phase 08 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -55,6 +56,8 @@ v1.1 decisions confirmed:
 - Top 6 + Autres bucket for expense category doughnut chart
 - Single-quote wrapping for data-chart JSON attributes to avoid double-quote escaping
 - Server-rendered formatted values as no-JS fallback inside data-value elements
+- Contextual CSS (.cqc-card-flush > .cqc-section-title) over wrapper div classes for template cleanliness
+- Utility CSS classes (cqc-text-muted, cqc-cell-flex, cqc-col-checkbox) for template standardization
 
 ### Pending Todos
 
@@ -69,5 +72,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 07-02-PLAN.md (Dashboard template and extension registration) -- Phase 7 complete
-Resume file: Next phase plan
+Stopped at: Completed 08-01-PLAN.md (Table hover, headers, template cleanup)
+Resume file: .planning/phases/08-table-and-extension-polish/08-02-PLAN.md
