@@ -85,11 +85,11 @@ Plans:
   2. User sees an animated progress bar with percentage during file upload that reflects actual upload progress (not fake/indeterminate)
   3. After upload completes, user sees a thumbnail preview of the uploaded file -- image files show a scaled thumbnail, PDF files show a document icon with filename
   4. Drag-and-drop zone has animated border on dragover, a glow effect on hover, and supports dropping multiple files in a single action
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: Convert upload endpoint to AJAX/JSON and implement XHR upload with progress tracking
-- [ ] 09-02: File preview rendering, drag-and-drop animation, and multi-file support
+- [ ] 09-01-PLAN.md — Convert upload endpoint to AJAX/JSON responses and implement XHR upload with real progress bar
+- [ ] 09-02-PLAN.md — File preview thumbnails, animated drag-and-drop border/glow, and multi-file sequential upload
 
 ### Phase 10: Cross-Cutting Polish and Validation
 **Goal**: The entire UI feels like one cohesive product -- consistent typography, spacing, shadows, and behavior across all pages, verified across browsers and accessibility standards
