@@ -2005,3 +2005,115 @@ option "name_expenses" "Depenses"
   compte_propose: "Passifs:Pret-Actionnaire"
   Passifs:CartesCredit:RBC  -18.0 CAD
   Passifs:Pret-Actionnaire   18.0 CAD
+
+2026-02-13 ! "Virement Reçu Anastasiia Subbotina Caqztxhr" "VIREMENT REÇU ANASTASIIA SUBBOTINA CAQZTXHR" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "2"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   900 CAD
+  Passifs:Pret-Actionnaire   -900 CAD
+
+2026-02-16 ! "Virement Reçu Anastasiia Subbotina Cajbzwez" "VIREMENT REÇU ANASTASIIA SUBBOTINA CAJBZWEZ" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "3"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   18 CAD
+  Passifs:Pret-Actionnaire   -18 CAD
+
+2026-02-16 ! "Virement Envoyé Patrick O'Neill Esktgj" "VIREMENT ENVOYÉ PATRICK O'NEILL ESKTGJ" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "4"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -22 CAD
+  Passifs:Pret-Actionnaire    22 CAD
+
+2026-02-16 ! "Virement Reçu Anastasiia Subbotina Ca2Hvrmc" "VIREMENT REÇU ANASTASIIA SUBBOTINA CA2HVRMC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "5"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   20 CAD
+  Passifs:Pret-Actionnaire   -20 CAD
+
+2026-02-16 ! "Virement Reçu Anastasiia Subbotina Cabpbjgc" "VIREMENT REÇU ANASTASIIA SUBBOTINA CABPBJGC" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "6"
+  confiance: "0.85"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques   150 CAD
+  Passifs:Pret-Actionnaire   -150 CAD
+
+2026-02-19 ! "Virement Envoyé Mursalem Zppfxl" "VIREMENT ENVOYÉ MURSALEM ZPPFXL" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "7"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -10 CAD
+  Passifs:Pret-Actionnaire    10 CAD
+
+2026-02-19 ! "Virement Envoyé Edouard René Ld43Pd" "VIREMENT ENVOYÉ EDOUARD RENÉ LD43PD" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "8"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -87.5 CAD
+  Passifs:Pret-Actionnaire    87.5 CAD
+
+2026-02-20 ! "Achat Interac Sans Contact - 6874 Costco Wholesal" "ACHAT INTERAC SANS CONTACT - 6874 COSTCO WHOLESAL" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "9"
+  confiance: "0.95"
+  source_ia: "llm"
+  compte_propose: "Passifs:Pret-Actionnaire"
+  Actifs:Banque:RBC:Cheques  -202.38 CAD
+  Passifs:Pret-Actionnaire    202.38 CAD
+
+2026-02-24 ! "Dépôt Online Transfer" "DÉPÔT ONLINE TRANSFER" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "10"
+  confiance: "0.6"
+  source_ia: "llm"
+  compte_propose: "Revenus:Autres"
+  capex: "oui"
+  Actifs:Banque:RBC:Cheques   1657.7 CAD
+  Revenus:Autres             -1657.7 CAD
+
+2026-02-26 ! "Dépôt De Paie" "DÉPÔT DE PAIE" #pending
+  source: "rbc-cheques-csv"
+  categorisation: "llm"
+  fichier_source: "download-transactions-5.csv"
+  ligne: "11"
+  confiance: "0.6"
+  source_ia: "llm"
+  compte_propose: "Passifs:Salaires-A-Payer"
+  Actifs:Banque:RBC:Cheques   235.85 CAD
+  Passifs:Salaires-A-Payer   -235.85 CAD
