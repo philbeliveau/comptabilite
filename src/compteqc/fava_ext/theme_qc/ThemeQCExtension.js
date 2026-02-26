@@ -140,12 +140,12 @@ header a:hover, header .links a:hover {
 }
 
 header h1 {
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
   letter-spacing: -0.01em;
 }
 
 header h1 strong {
-  font-weight: 700;
+  font-weight: var(--cqc-weight-bold);
 }
 
 /* Header filter inputs */
@@ -180,7 +180,7 @@ header input::placeholder {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.8em;
+  font-size: var(--cqc-font-sm);
   font-family: 'Inter', sans-serif;
   letter-spacing: 0.02em;
   border-bottom: 2px solid rgba(0, 61, 165, 0.3);
@@ -194,13 +194,13 @@ header input::placeholder {
 }
 
 #cqc-brand-strip .cqc-fleur {
-  font-size: 1.3em;
+  font-size: var(--cqc-font-md);
   color: #ffffff;
   opacity: 0.95;
 }
 
 #cqc-brand-strip .cqc-name {
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
   color: #ffffff;
   letter-spacing: 0.02em;
 }
@@ -213,8 +213,8 @@ header input::placeholder {
 
 #cqc-brand-strip .cqc-app {
   color: #ffffff;
-  font-size: 0.92em;
-  font-weight: 500;
+  font-size: var(--cqc-font-base);
+  font-weight: var(--cqc-weight-medium);
   opacity: 0.75;
 }
 
@@ -243,8 +243,8 @@ aside li {
 
 aside a {
   color: var(--sidebar-text, rgba(255, 255, 255, 1));
-  font-size: 0.88em;
-  font-weight: 450;
+  font-size: var(--cqc-font-base);
+  font-weight: var(--cqc-weight-normal);
   padding: 7px 12px;
   border-radius: var(--qc-radius-sm);
   display: block;
@@ -264,7 +264,7 @@ aside a[aria-current],
 aside a.selected {
   color: #FFFFFF;
   background: rgba(0, 61, 165, 0.5);
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
 }
 
 /* Sidebar section separators */
@@ -280,7 +280,7 @@ aside input, aside select {
   border: 1px solid rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.7);
   border-radius: var(--qc-radius-sm);
-  font-size: 0.85em;
+  font-size: var(--cqc-font-sm);
   padding: 6px 10px;
   transition: all var(--qc-transition);
   font-family: 'Inter', sans-serif;
@@ -305,13 +305,13 @@ article {
 article table {
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.9em;
+  font-size: var(--cqc-font-base);
 }
 
 article table th {
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.78em;
+  font-weight: var(--cqc-weight-semibold);
+  font-size: var(--cqc-font-xs);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--qc-text-secondary);
@@ -336,7 +336,7 @@ article table tbody tr:hover td {
 article a {
   color: var(--link-color);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--cqc-weight-medium);
   transition: color var(--qc-transition);
 }
 
@@ -392,7 +392,7 @@ article .headerline {
 /* Section title inside card-flush: add top/side padding */
 .cqc-card-flush > .cqc-section-title {
   padding: 16px 24px 0;
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
   border-left: none;
   margin-bottom: 0;
 }
@@ -412,8 +412,8 @@ article .headerline {
 
 .cqc-page-header .cqc-subtitle {
   color: var(--qc-text-secondary);
-  font-size: 0.9em;
-  font-weight: 450;
+  font-size: var(--cqc-font-base);
+  font-weight: var(--cqc-weight-normal);
 }
 
 /* ===== KPI Tiles ===== */
@@ -457,12 +457,12 @@ article .headerline {
 }
 
 .cqc-kpi-label {
-  font-size: 0.75em;
+  font-size: var(--cqc-font-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--qc-text-secondary);
   margin-bottom: 6px;
-  font-weight: 500;
+  font-weight: var(--cqc-weight-medium);
 }
 
 .cqc-kpi-value {
@@ -488,8 +488,8 @@ article .headerline {
 .cqc-table thead th {
   background-color: var(--qc-blue-lighter);
   color: var(--qc-blue-dark);
-  font-weight: 700;
-  font-size: 0.76em;
+  font-weight: var(--cqc-weight-bold);
+  font-size: var(--cqc-font-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 12px 16px;
@@ -558,12 +558,12 @@ article .headerline {
 }
 
 .cqc-table .sommaire-row {
-  font-weight: 700;
+  font-weight: var(--cqc-weight-bold);
   background-color: var(--qc-surface);
 }
 
 .cqc-table .sommaire-row td {
-  font-weight: 700;
+  font-weight: var(--cqc-weight-bold);
   border-top: 2px solid var(--qc-blue);
   background-color: var(--qc-blue-lighter) !important;
   color: var(--qc-text);
@@ -580,7 +580,7 @@ article .headerline {
 
 /* ===== Table Utility Classes ===== */
 .cqc-text-muted {
-  font-size: 0.85em;
+  font-size: var(--cqc-font-sm);
   color: var(--qc-muted, #64748B);
 }
 
@@ -602,8 +602,8 @@ article .headerline {
   gap: 4px;
   padding: 3px 10px;
   border-radius: 20px;
-  font-size: 0.78em;
-  font-weight: 600;
+  font-size: var(--cqc-font-xs);
+  font-weight: var(--cqc-weight-semibold);
   white-space: nowrap;
   letter-spacing: 0.01em;
   transition: all var(--qc-transition);
@@ -640,14 +640,14 @@ article .headerline {
   border-radius: var(--qc-radius);
   margin-bottom: 16px;
   border-left: 4px solid;
-  font-size: 0.9em;
+  font-size: var(--cqc-font-base);
   line-height: 1.5;
 }
 
 .cqc-alert strong {
   display: block;
   margin-bottom: 4px;
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
 }
 
 .cqc-alert-success {
@@ -687,8 +687,8 @@ article .headerline {
   gap: 6px;
   padding: 9px 20px;
   border-radius: var(--qc-radius-sm);
-  font-size: 0.88em;
-  font-weight: 600;
+  font-size: var(--cqc-font-base);
+  font-weight: var(--cqc-weight-semibold);
   cursor: pointer;
   border: 1px solid transparent;
   transition: all var(--qc-transition);
@@ -788,8 +788,8 @@ article .headerline {
 }
 
 .cqc-solde-montant {
-  font-size: 2.2em;
-  font-weight: 700;
+  font-size: var(--cqc-font-2xl);
+  font-weight: var(--cqc-weight-bold);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
@@ -797,8 +797,8 @@ article .headerline {
 .cqc-solde-direction {
   opacity: 0.8;
   margin-top: 6px;
-  font-size: 0.95em;
-  font-weight: 450;
+  font-size: var(--cqc-font-base);
+  font-weight: var(--cqc-weight-normal);
 }
 
 /* ===== Dropzone ===== */
@@ -838,11 +838,11 @@ article .headerline {
 .cqc-dropzone-text {
   text-align: center;
   color: var(--qc-text-secondary);
-  font-size: 1em;
+  font-size: var(--cqc-font-base);
 }
 
 .cqc-dropzone-text .icone {
-  font-size: 2.5em;
+  font-size: var(--cqc-font-3xl);
   display: block;
   margin-bottom: 10px;
   color: var(--qc-blue);
@@ -872,7 +872,7 @@ article .headerline {
 .cqc-placeholder li {
   margin: 6px 0;
   color: var(--qc-blue-dark);
-  font-size: 0.92em;
+  font-size: var(--cqc-font-base);
 }
 
 /* ===== Tags ===== */
@@ -884,22 +884,22 @@ article .headerline {
   border-radius: 20px;
   margin-right: 6px;
   color: var(--qc-blue);
-  font-size: 0.82em;
-  font-weight: 600;
+  font-size: var(--cqc-font-sm);
+  font-weight: var(--cqc-weight-semibold);
 }
 
 /* ===== Source Tag ===== */
 .cqc-source-tag {
   display: block;
-  font-size: 0.73em;
+  font-size: var(--cqc-font-xs);
   color: var(--qc-muted);
   margin-top: 2px;
-  font-weight: 450;
+  font-weight: var(--cqc-weight-normal);
 }
 
 /* ===== Gros montant ===== */
 .cqc-gros-montant {
-  font-weight: 700;
+  font-weight: var(--cqc-weight-bold);
   color: var(--qc-error);
 }
 
@@ -956,7 +956,7 @@ article .headerline {
 .cqc-upload-progress-text {
   color: #fff;
   font-size: var(--cqc-font-sm, 0.875rem);
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
   font-variant-numeric: tabular-nums;
 }
 
@@ -981,7 +981,7 @@ article .headerline {
   padding: 8px;
   color: var(--qc-text-secondary);
   font-size: var(--cqc-font-sm, 0.875rem);
-  font-weight: 500;
+  font-weight: var(--cqc-weight-medium);
 }
 
 /* ===== File Previews ===== */
@@ -1016,7 +1016,7 @@ article .headerline {
 }
 
 .cqc-preview-icon {
-  font-size: 3em;
+  font-size: 3em; /* intentional: not in type scale */
   display: block;
   margin-bottom: 8px;
   color: var(--qc-blue);
@@ -1041,7 +1041,7 @@ article .headerline {
   border-radius: 12px;
   font-size: var(--cqc-font-xs, 0.75rem);
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: var(--cqc-weight-semibold);
 }
 
 /* ===== Forms ===== */
@@ -1049,7 +1049,7 @@ article .headerline {
   padding: 9px 14px;
   border: 1px solid var(--qc-border);
   border-radius: var(--qc-radius-sm);
-  font-size: 0.9em;
+  font-size: var(--cqc-font-base);
   font-family: 'Inter', sans-serif;
   color: var(--qc-text);
   background: var(--qc-white);
@@ -1066,9 +1066,9 @@ article .headerline {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.88em;
+  font-size: var(--cqc-font-base);
   color: var(--qc-text-secondary);
-  font-weight: 500;
+  font-weight: var(--cqc-weight-medium);
 }
 
 /* ===== Empty State ===== */
@@ -1076,7 +1076,7 @@ article .headerline {
   text-align: center;
   padding: 40px 32px;
   color: var(--qc-muted);
-  font-size: 0.95em;
+  font-size: var(--cqc-font-base);
 }
 
 /* ===== Note CPA ===== */
@@ -1085,7 +1085,7 @@ article .headerline {
   background: var(--qc-amber-bg);
   border-left: 4px solid var(--qc-amber);
   border-radius: var(--qc-radius-sm);
-  font-size: 0.88em;
+  font-size: var(--cqc-font-base);
   color: #92400E;
   line-height: 1.5;
 }
@@ -1114,7 +1114,7 @@ aside::-webkit-scrollbar-thumb:hover {
 /* Tree table / flex-table (income_statement, balance_sheet, trial_balance) */
 /* Fava 1.30+ uses ol.flex-table.tree-table-new, NOT <table> */
 article .tree-table td {
-  font-size: 0.9em;
+  font-size: 0.9em; /* intentional: Fava override value */
 }
 
 /* OVERRIDE: Svelte-scoped -- overrides Svelte-injected rgb(64,64,64) inline color */
@@ -1140,7 +1140,7 @@ article .flex-table .num.dimmed {
 /* OVERRIDE: Svelte-scoped -- Svelte injects inline color on links */
 article .flex-table a {
   color: var(--qc-blue) !important;
-  font-weight: 500;
+  font-weight: var(--cqc-weight-medium);
 }
 
 /* Row hover highlight for flex-table rows */
@@ -1152,8 +1152,8 @@ article .flex-table li:hover > p {
 /* Column header row (CAD / Other) */
 article .flex-table li:first-child .num {
   color: var(--qc-blue-dark);
-  font-weight: 600;
-  font-size: 0.78em;
+  font-weight: var(--cqc-weight-semibold);
+  font-size: 0.78em; /* intentional: Fava override value */
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -1196,8 +1196,8 @@ article svg {
 .cqc-sidebar-group.open > .cqc-sidebar-group-body { display: block; }
 .cqc-sidebar-group-title {
   color: rgba(255,255,255,0.5);
-  font-size: 0.72em;
-  font-weight: 600;
+  font-size: 0.72em; /* intentional: Fava override value */
+  font-weight: var(--cqc-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 8px 12px 4px 12px;
@@ -1213,7 +1213,7 @@ article svg {
   content: "\\25B8";
   flex-shrink: 0;
   transition: transform var(--qc-transition);
-  font-size: 0.9em;
+  font-size: 0.9em; /* intentional: Fava override value */
 }
 .cqc-sidebar-group.open > .cqc-sidebar-group-title::before {
   transform: rotate(90deg);
@@ -1237,7 +1237,7 @@ article svg {
 .cqc-report-intro p {
   margin: 6px 0;
   color: var(--qc-text);
-  font-size: 0.9em;
+  font-size: 0.9em; /* intentional: Fava override value */
   line-height: 1.6;
 }
 
@@ -1255,8 +1255,8 @@ article svg {
   color: #fff;
   padding: 10px 14px;
   border-radius: var(--qc-radius-sm);
-  font-size: 0.82em;
-  font-weight: 400;
+  font-size: 0.82em; /* intentional: Fava override value */
+  font-weight: var(--cqc-weight-normal);
   line-height: 1.5;
   max-width: 320px;
   box-shadow: var(--qc-shadow-lg);
@@ -1322,8 +1322,8 @@ article svg {
   transition: width 300ms ease;
 }
 .cqc-confidence-pct {
-  font-size: 0.78em;
-  font-weight: 600;
+  font-size: 0.78em; /* intentional: Fava override value */
+  font-weight: var(--cqc-weight-semibold);
   font-variant-numeric: tabular-nums;
   min-width: 32px;
 }
@@ -1344,14 +1344,14 @@ article svg {
 
 /* Keyboard shortcut hint */
 .cqc-keyboard-hint {
-  font-size: 0.8em;
+  font-size: 0.8em; /* intentional: Fava override value */
   color: var(--qc-muted, #64748B);
   margin-top: 8px;
 }
 .cqc-keyboard-hint kbd {
   display: inline-block;
   padding: 2px 6px;
-  font-size: 0.85em;
+  font-size: 0.85em; /* intentional: Fava override value */
   font-family: 'Inter', monospace;
   background: var(--qc-surface-raised, #f8f9fa);
   border: 1px solid var(--qc-border, #d1d5db);
@@ -1370,8 +1370,8 @@ article svg {
   border-radius: 10px;
   background: var(--qc-error);
   color: #fff;
-  font-size: 0.72em;
-  font-weight: 700;
+  font-size: 0.72em; /* intentional: Fava override value */
+  font-weight: var(--cqc-weight-bold);
   margin-left: 8px;
   font-variant-numeric: tabular-nums;
 }
