@@ -5,215 +5,325 @@
 {% set urls = extension.tab_urls() %}
 
 <style>
-  .cqc-ops-grid {
+  .cqc-ops-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .cqc-ops-action-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--cqc-space-6, 24px);
-    margin: var(--cqc-space-6, 24px) 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 16px;
   }
   @media (max-width: 900px) {
-    .cqc-ops-grid {
+    .cqc-ops-action-grid {
       grid-template-columns: 1fr;
     }
   }
-  .cqc-ops-card h3 {
-    margin: 0 0 var(--cqc-space-3, 12px) 0;
-    font-size: var(--cqc-font-lg, 1.1rem);
-    font-weight: var(--cqc-weight-semibold, 600);
+  .cqc-ops-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
   }
-  .cqc-ops-links {
+  .cqc-ops-nav-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cqc-ops-nav-card h4 {
+    margin: 0;
+    font-size: var(--cqc-font-base);
+    font-weight: var(--cqc-weight-semibold);
+    color: var(--qc-text);
+  }
+  .cqc-ops-nav-card .cqc-text-muted {
+    margin: 0 0 4px 0;
+  }
+  .cqc-ops-nav-links {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--cqc-space-2, 8px);
+    gap: 8px;
   }
   .cqc-ops-form-group {
-    margin-bottom: var(--cqc-space-3, 12px);
+    margin-bottom: 14px;
   }
   .cqc-ops-form-group label {
     display: block;
-    font-size: var(--cqc-font-sm, 0.875rem);
-    font-weight: var(--cqc-weight-medium, 500);
-    margin-bottom: var(--cqc-space-1, 4px);
+    font-size: var(--cqc-font-xs);
+    font-weight: var(--cqc-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--qc-text-secondary);
+    margin-bottom: 6px;
   }
   .cqc-ops-form-group select,
   .cqc-ops-form-group input[type="file"] {
     width: 100%;
-    padding: 6px 8px;
-    border: 1px solid var(--cqc-border, #ccc);
-    border-radius: 4px;
-    font-size: var(--cqc-font-sm, 0.875rem);
-    background: var(--cqc-surface, #fff);
-    color: var(--cqc-text, #1a1a2e);
+    padding: 8px 10px;
+    border: 1px solid var(--qc-border, #ccc);
+    border-radius: var(--qc-radius-sm, 4px);
+    font-size: var(--cqc-font-base);
+    font-family: 'Inter', sans-serif;
+    background: var(--qc-surface-raised, #fff);
+    color: var(--qc-text, #1a1a2e);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  .cqc-ops-form-group select:focus,
+  .cqc-ops-form-group input[type="file"]:focus {
+    outline: none;
+    border-color: var(--qc-blue);
+    box-shadow: 0 0 0 3px rgba(0, 61, 165, 0.12);
   }
   .cqc-ops-result {
     display: none;
-    margin-top: var(--cqc-space-3, 12px);
-    padding: var(--cqc-space-3, 12px);
-    border-radius: 6px;
-    font-size: var(--cqc-font-sm, 0.875rem);
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: var(--qc-radius-sm, 4px);
+    font-size: var(--cqc-font-base);
+    line-height: var(--cqc-leading-normal);
   }
   .cqc-ops-result-ok {
-    background: var(--cqc-success-bg, #e8f5e9);
-    color: var(--cqc-success-text, #2e7d32);
-    border: 1px solid var(--cqc-success-border, #a5d6a7);
+    background: var(--qc-success-bg, #e8f5e9);
+    color: #15803D;
+    border-left: 4px solid var(--qc-success, #16a34a);
   }
   .cqc-ops-result-error {
-    background: var(--cqc-error-bg, #ffebee);
-    color: var(--cqc-error-text, #c62828);
-    border: 1px solid var(--cqc-error-border, #ef9a9a);
+    background: var(--qc-error-bg, #ffebee);
+    color: #B91C1C;
+    border-left: 4px solid var(--qc-error, #dc3545);
   }
   .cqc-ops-result-warning {
-    background: var(--cqc-warning-bg, #fff8e1);
-    color: var(--cqc-warning-text, #f57f17);
-    border: 1px solid var(--cqc-warning-border, #ffe082);
+    background: var(--qc-amber-bg, #fff8e1);
+    color: #92400E;
+    border-left: 4px solid var(--qc-amber, #d97706);
   }
   .cqc-ops-journal-container {
     display: none;
-    margin-top: var(--cqc-space-3, 12px);
-  }
-  .cqc-ops-info {
-    font-size: var(--cqc-font-sm, 0.875rem);
-    padding: var(--cqc-space-2, 8px) 0;
+    margin-top: 16px;
   }
 </style>
 
 <div class="cqc-page-header">
   <h2>Centre d'operations</h2>
-  <span class="cqc-subtitle">Toutes les commandes CompteQC</span>
+  <span class="cqc-subtitle">Toutes les commandes CompteQC accessibles depuis le navigateur</span>
 </div>
 
-<div class="cqc-ops-grid">
+<div class="cqc-ops-sections">
 
-  {# ---- 1. Import ---- #}
-  <div class="cqc-card cqc-ops-card" title="Importer un fichier bancaire CSV/OFX dans le grand livre">
-    <h3>&#128228; Import</h3>
-    <form id="import-form" enctype="multipart/form-data">
-      <div class="cqc-ops-form-group">
-        <label for="import-file">Fichier bancaire</label>
-        <input type="file" id="import-file" name="fichier" accept=".csv,.ofx,.qfx" required>
+  {# ================================================================ #}
+  {# SECTION 1 : Actions                                              #}
+  {# ================================================================ #}
+  <div>
+    <h3 class="cqc-section-title">Actions</h3>
+    <div class="cqc-ops-action-grid">
+
+      {# ---- Import de fichier bancaire ---- #}
+      <div class="cqc-card">
+        <h4 style="margin: 0 0 4px 0; font-size: var(--cqc-font-md); font-weight: var(--cqc-weight-semibold);">
+          Import de fichier bancaire
+        </h4>
+        <p class="cqc-text-muted" style="margin: 0 0 16px 0;">
+          Importer un fichier CSV ou OFX dans le grand livre. Detection automatique du type de compte.
+        </p>
+        <form id="import-form" enctype="multipart/form-data">
+          <div class="cqc-ops-form-group">
+            <label for="import-file">Fichier</label>
+            <input type="file" id="import-file" name="fichier" accept=".csv,.ofx,.qfx" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="cqc-ops-form-group">
+              <label for="import-compte">Compte</label>
+              <select id="import-compte" name="compte">
+                <option value="AUTO" selected>Auto</option>
+                <option value="CHEQUES">Cheques</option>
+                <option value="CARTE">Carte</option>
+              </select>
+            </div>
+            <div class="cqc-ops-form-group">
+              <label for="import-source">Source</label>
+              <select id="import-source" name="source_type">
+                <option value="corporate" selected>Corporatif</option>
+                <option value="personal">Personnel</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="cqc-btn cqc-btn-primary"
+                  title="Lancer l'import du fichier dans le ledger">
+            Importer
+          </button>
+        </form>
+        <div id="import-result" class="cqc-ops-result"></div>
       </div>
-      <div class="cqc-ops-form-group">
-        <label for="import-compte">Compte</label>
-        <select id="import-compte" name="compte">
-          <option value="AUTO" selected>AUTO (detection automatique)</option>
-          <option value="CHEQUES">CHEQUES</option>
-          <option value="CARTE">CARTE</option>
-        </select>
+
+      {# ---- Re-entrainement ML ---- #}
+      <div class="cqc-card">
+        <h4 style="margin: 0 0 4px 0; font-size: var(--cqc-font-md); font-weight: var(--cqc-weight-semibold);">
+          Modele de categorisation
+        </h4>
+        <p class="cqc-text-muted" style="margin: 0 0 16px 0;">
+          Re-entrainer le modele ML depuis les transactions approuvees du ledger.
+          Le modele apprend de vos corrections pour ameliorer la categorisation future.
+        </p>
+        <button type="button" id="btn-retrain" class="cqc-btn cqc-btn-primary"
+                title="Entrainer le modele ML depuis les transactions approuvees">
+          Re-entrainer le modele
+        </button>
+        <div id="retrain-result" class="cqc-ops-result"></div>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--qc-border-light, #eee);">
+          <h4 style="margin: 0 0 4px 0; font-size: var(--cqc-font-base); font-weight: var(--cqc-weight-semibold);">
+            Journal auto-approuve
+          </h4>
+          <p class="cqc-text-muted" style="margin: 0 0 10px 0;">
+            Transactions classees automatiquement avec une confiance superieure a 95%.
+          </p>
+          <button type="button" id="btn-journal" class="cqc-btn cqc-btn-outline"
+                  title="Afficher les transactions auto-approuvees">
+            Afficher le journal
+          </button>
+          <div id="journal-container" class="cqc-ops-journal-container"></div>
+        </div>
       </div>
-      <div class="cqc-ops-form-group">
-        <label for="import-source">Type de source</label>
-        <select id="import-source" name="source_type">
-          <option value="corporate" selected>Corporatif</option>
-          <option value="personal">Personnel</option>
-        </select>
+
+    </div>
+  </div>
+
+  {# ================================================================ #}
+  {# SECTION 2 : Navigation rapide                                    #}
+  {# ================================================================ #}
+  <div>
+    <h3 class="cqc-section-title">Navigation rapide</h3>
+    <div class="cqc-ops-nav-grid">
+
+      {# -- Revision -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Revision des transactions</h4>
+        <p class="cqc-text-muted">Approuver, rejeter ou recategoriser les transactions classees par IA.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.approbation }}" class="cqc-btn cqc-btn-outline"
+             title="Voir et gerer les transactions en attente de revision">
+            File d'approbation
+          </a>
+        </div>
       </div>
-      <button type="submit" class="cqc-btn cqc-btn-success" title="Lancer l'import du fichier dans le ledger">
-        Importer
-      </button>
-    </form>
-    <div id="import-result" class="cqc-ops-result"></div>
-  </div>
 
-  {# ---- 2. Revision ---- #}
-  <div class="cqc-card cqc-ops-card" title="Reviser, approuver ou rejeter les transactions en attente">
-    <h3>&#128203; Revision</h3>
-    <div class="cqc-ops-links">
-      <a href="{{ urls.approbation }}" class="cqc-btn cqc-btn-outline"
-         title="Voir les transactions #pending a approuver/rejeter">
-        File d'approbation
-      </a>
-      <button type="button" id="btn-journal" class="cqc-btn cqc-btn-outline"
-              title="Afficher les transactions auto-approuvees avec confiance >= 95%">
-        Journal auto-approuve
-      </button>
+      {# -- Rapports -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Rapports financiers</h4>
+        <p class="cqc-text-muted">Soldes, balance de verification, etat des resultats et bilan.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.trial_balance }}" class="cqc-btn cqc-btn-outline"
+             title="Soldes de tous les comptes et balance de verification">
+            Balance
+          </a>
+          <a href="{{ urls.income_statement }}" class="cqc-btn cqc-btn-outline"
+             title="Revenus et depenses de l'exercice">
+            Resultats
+          </a>
+          <a href="{{ urls.balance_sheet }}" class="cqc-btn cqc-btn-outline"
+             title="Actifs, passifs et capitaux propres">
+            Bilan
+          </a>
+        </div>
+      </div>
+
+      {# -- Paie -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Paie Quebec</h4>
+        <p class="cqc-text-muted">Calculer la paie avec deductions federales et provinciales.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.paie_qc }}" class="cqc-btn cqc-btn-outline"
+             title="Lancer un calcul de paie complet avec cotisations Quebec">
+            Calculateur de paie
+          </a>
+        </div>
+      </div>
+
+      {# -- Recus -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Recus et documents</h4>
+        <p class="cqc-text-muted">Telecharger des recus et les lier aux transactions du ledger.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.recus }}" class="cqc-btn cqc-btn-outline"
+             title="Telecharger des recus PDF/JPEG pour extraction IA et liaison">
+            Telecharger des recus
+          </a>
+        </div>
+      </div>
+
+      {# -- Taxes -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Taxes TPS/TVQ</h4>
+        <p class="cqc-text-muted">Sommaire des taxes collectees, payees et remise nette.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.taxes_qc }}" class="cqc-btn cqc-btn-outline"
+             title="Voir le sommaire TPS/TVQ et les montants a remettre">
+            Sommaire TPS/TVQ
+          </a>
+        </div>
+      </div>
+
+      {# -- DPA -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>DPA / CCA</h4>
+        <p class="cqc-text-muted">Deduction pour amortissement sur les actifs de l'entreprise.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.dpa_qc }}" class="cqc-btn cqc-btn-outline"
+             title="Voir le registre et les calculs de DPA par classe">
+            Registre DPA
+          </a>
+        </div>
+      </div>
+
+      {# -- Pret actionnaire -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Pret actionnaire</h4>
+        <p class="cqc-text-muted">Suivi du solde et alertes s.15(2) de la Loi de l'impot.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.pret_actionnaire }}" class="cqc-btn cqc-btn-outline"
+             title="Voir le solde du pret actionnaire et les alertes">
+            Suivi du pret
+          </a>
+        </div>
+      </div>
+
+      {# -- Export CPA -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Export CPA</h4>
+        <p class="cqc-text-muted">Generer le package de fin d'annee pour votre comptable.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.export_cpa }}" class="cqc-btn cqc-btn-outline"
+             title="Generer les rapports et schedules pour le comptable">
+            Exporter pour CPA
+          </a>
+        </div>
+      </div>
+
+      {# -- Echeances -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Echeances fiscales</h4>
+        <p class="cqc-text-muted">Calendrier des dates limites et rappels de production.</p>
+        <div class="cqc-ops-nav-links">
+          <a href="{{ urls.echeances }}" class="cqc-btn cqc-btn-outline"
+             title="Voir les echeances fiscales et alertes de production">
+            Calendrier fiscal
+          </a>
+        </div>
+      </div>
+
+      {# -- Factures (CLI only) -- #}
+      <div class="cqc-card cqc-ops-nav-card">
+        <h4>Factures</h4>
+        <p class="cqc-text-muted">Creer, lister, envoyer et marquer les factures comme payees.</p>
+        <div>
+          <span class="cqc-badge cqc-badge-muted">CLI uniquement</span>
+          <code style="display: block; margin-top: 8px; font-size: var(--cqc-font-xs); color: var(--qc-text-secondary);">cqc facture creer | lister | pdf | envoyer | payer</code>
+        </div>
+      </div>
+
     </div>
-    <div id="journal-container" class="cqc-ops-journal-container"></div>
-  </div>
-
-  {# ---- 3. Rapports ---- #}
-  <div class="cqc-card cqc-ops-card" title="Rapports financiers et soldes comptables">
-    <h3>&#128202; Rapports</h3>
-    <div class="cqc-ops-links">
-      <a href="{{ urls.trial_balance }}" class="cqc-btn cqc-btn-outline"
-         title="Soldes de tous les comptes">
-        Soldes
-      </a>
-      <a href="{{ urls.trial_balance }}" class="cqc-btn cqc-btn-outline"
-         title="Balance de verification (debits = credits)">
-        Balance de verification
-      </a>
-      <a href="{{ urls.income_statement }}" class="cqc-btn cqc-btn-outline"
-         title="Revenus et depenses de l'exercice">
-        Etat des resultats
-      </a>
-      <a href="{{ urls.balance_sheet }}" class="cqc-btn cqc-btn-outline"
-         title="Actifs, passifs et capitaux propres">
-        Bilan
-      </a>
-    </div>
-  </div>
-
-  {# ---- 4. Paie ---- #}
-  <div class="cqc-card cqc-ops-card" title="Calculer et comptabiliser la paie">
-    <h3>&#128176; Paie</h3>
-    <div class="cqc-ops-links">
-      <a href="{{ urls.paie_qc }}" class="cqc-btn cqc-btn-outline"
-         title="Lancer le calcul de paie avec deductions Quebec">
-        Calculateur de paie
-      </a>
-    </div>
-  </div>
-
-  {# ---- 5. Factures ---- #}
-  <div class="cqc-card cqc-ops-card" title="Creer, lister et gerer les factures clients">
-    <h3>&#128196; Factures</h3>
-    <p class="cqc-text-muted cqc-ops-info">
-      Disponible via CLI :<br>
-      <code>cqc facture creer / lister / voir / pdf / envoyer / payer / relances</code>
-    </p>
-  </div>
-
-  {# ---- 6. Recus ---- #}
-  <div class="cqc-card cqc-ops-card" title="Telecharger et lier des recus aux transactions">
-    <h3>&#128247; Recus</h3>
-    <div class="cqc-ops-links">
-      <a href="{{ urls.recus }}" class="cqc-btn cqc-btn-outline"
-         title="Glisser-deposer des recus PDF/JPEG pour extraction IA">
-        Telecharger des recus
-      </a>
-    </div>
-  </div>
-
-  {# ---- 7. Export CPA ---- #}
-  <div class="cqc-card cqc-ops-card" title="Generer le package de fin d'annee pour le comptable">
-    <h3>&#128188; Export CPA</h3>
-    <div class="cqc-ops-links">
-      <a href="{{ urls.export_cpa }}" class="cqc-btn cqc-btn-outline"
-         title="Generer les rapports et schedules pour le comptable">
-        Exporter pour CPA
-      </a>
-    </div>
-  </div>
-
-  {# ---- 8. Echeances ---- #}
-  <div class="cqc-card cqc-ops-card" title="Calendrier des echeances fiscales et rappels">
-    <h3>&#128197; Echeances</h3>
-    <div class="cqc-ops-links">
-      <a href="{{ urls.echeances }}" class="cqc-btn cqc-btn-outline"
-         title="Voir les echeances fiscales et alertes de production">
-        Calendrier fiscal
-      </a>
-    </div>
-  </div>
-
-  {# ---- 9. ML / IA ---- #}
-  <div class="cqc-card cqc-ops-card" title="Re-entrainer le modele de categorisation automatique">
-    <h3>&#129504; ML / IA</h3>
-    <button type="button" id="btn-retrain" class="cqc-btn cqc-btn-success"
-            title="Entrainer le modele ML depuis les transactions approuvees du ledger">
-      Re-entrainer le modele ML
-    </button>
-    <div id="retrain-result" class="cqc-ops-result"></div>
   </div>
 
 </div>
@@ -228,7 +338,6 @@
   var RETRAIN_URL = BASE + 'retrain';
   var JOURNAL_URL = BASE + 'journal';
 
-  // -- Helpers --
   function escapeHtml(str) {
     var div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
@@ -241,7 +350,7 @@
     el.style.display = '';
   }
 
-  // -- Import form (XHR with FormData) --
+  // -- Import form --
   var importForm = document.getElementById('import-form');
   var importResult = document.getElementById('import-result');
 
@@ -253,23 +362,25 @@
     var xhr = new XMLHttpRequest();
 
     var submitBtn = importForm.querySelector('button[type="submit"]');
+    var originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Import en cours\u2026';
 
     xhr.onload = function() {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Importer';
+      submitBtn.textContent = originalText;
       try {
         var data = JSON.parse(xhr.responseText);
         if (data.status === 'ok') {
-          showResult(importResult, 'cqc-ops-result-ok',
-            '<strong>' + data.importees + '</strong> transaction(s) importee(s)<br>' +
-            'Regles: ' + data.regles + ' | IA auto: ' + data.ia_auto + ' | En attente: ' + data.pending
-          );
+          var html = '<strong>' + data.importees + '</strong> transaction(s) importee(s)';
+          if (data.regles > 0 || data.ia_auto > 0 || data.pending > 0) {
+            html += '<br><span style="font-size:var(--cqc-font-sm)">Regles : ' + data.regles +
+                    ' &middot; IA auto : ' + data.ia_auto +
+                    ' &middot; En attente : ' + data.pending + '</span>';
+          }
+          showResult(importResult, 'cqc-ops-result-ok', html);
         } else {
-          showResult(importResult, 'cqc-ops-result-error',
-            escapeHtml(data.message || 'Erreur inconnue.')
-          );
+          showResult(importResult, 'cqc-ops-result-error', escapeHtml(data.message || 'Erreur inconnue.'));
         }
       } catch (err) {
         showResult(importResult, 'cqc-ops-result-error', 'Erreur de communication.');
@@ -278,7 +389,7 @@
 
     xhr.onerror = function() {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Importer';
+      submitBtn.textContent = originalText;
       showResult(importResult, 'cqc-ops-result-error', 'Erreur reseau.');
     };
 
@@ -292,20 +403,20 @@
 
   btnRetrain.addEventListener('click', function() {
     retrainResult.style.display = 'none';
+    var originalText = btnRetrain.textContent;
     btnRetrain.disabled = true;
     btnRetrain.textContent = 'Entrainement en cours\u2026';
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
       btnRetrain.disabled = false;
-      btnRetrain.textContent = 'Re-entrainer le modele ML';
+      btnRetrain.textContent = originalText;
       try {
         var data = JSON.parse(xhr.responseText);
         if (data.status === 'ok') {
           showResult(retrainResult, 'cqc-ops-result-ok',
             'Modele entraine sur <strong>' + data.transactions + '</strong> transactions, ' +
-            '<strong>' + data.comptes + '</strong> comptes distincts.'
-          );
+            '<strong>' + data.comptes + '</strong> comptes distincts.');
         } else if (data.status === 'warning') {
           showResult(retrainResult, 'cqc-ops-result-warning', escapeHtml(data.message));
         } else {
@@ -317,14 +428,14 @@
     };
     xhr.onerror = function() {
       btnRetrain.disabled = false;
-      btnRetrain.textContent = 'Re-entrainer le modele ML';
+      btnRetrain.textContent = originalText;
       showResult(retrainResult, 'cqc-ops-result-error', 'Erreur reseau.');
     };
     xhr.open('POST', RETRAIN_URL, true);
     xhr.send();
   });
 
-  // -- Journal button (GET, renders table) --
+  // -- Journal button --
   var btnJournal = document.getElementById('btn-journal');
   var journalContainer = document.getElementById('journal-container');
   var journalOpen = false;
@@ -334,32 +445,36 @@
       journalContainer.style.display = 'none';
       journalContainer.innerHTML = '';
       journalOpen = false;
+      btnJournal.textContent = 'Afficher le journal';
       return;
     }
 
+    var originalText = btnJournal.textContent;
     btnJournal.disabled = true;
     btnJournal.textContent = 'Chargement\u2026';
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
       btnJournal.disabled = false;
-      btnJournal.textContent = 'Journal auto-approuve';
       try {
         var entries = JSON.parse(xhr.responseText);
         if (entries.status === 'error') {
           journalContainer.innerHTML = '<div class="cqc-ops-result cqc-ops-result-error" style="display:block">' + escapeHtml(entries.message) + '</div>';
           journalContainer.style.display = '';
           journalOpen = true;
+          btnJournal.textContent = 'Masquer le journal';
           return;
         }
         if (!entries.length) {
-          journalContainer.innerHTML = '<div class="cqc-empty">Aucune transaction auto-approuvee.</div>';
+          journalContainer.innerHTML = '<div class="cqc-empty" style="padding:14px 0;">Aucune transaction auto-approuvee.</div>';
           journalContainer.style.display = '';
           journalOpen = true;
+          btnJournal.textContent = 'Masquer le journal';
           return;
         }
-        var html = '<table class="cqc-table"><thead><tr>';
-        html += '<th>Date</th><th>Beneficiaire</th><th>Narration</th>';
+        var html = '<div class="cqc-card-flush" style="margin-top:0">';
+        html += '<table class="cqc-table"><thead><tr>';
+        html += '<th>Date</th><th>Beneficiaire</th>';
         html += '<th class="montant">Montant</th><th>Compte</th><th>Confiance</th><th>Source</th>';
         html += '</tr></thead><tbody>';
         for (var i = 0; i < entries.length; i++) {
@@ -367,27 +482,28 @@
           var confPct = Math.round(parseFloat(e.confiance) * 100);
           html += '<tr>';
           html += '<td>' + escapeHtml(e.date) + '</td>';
-          html += '<td>' + escapeHtml(e.payee) + '</td>';
-          html += '<td>' + escapeHtml(e.narration) + '</td>';
+          html += '<td>' + escapeHtml(e.payee || e.narration) + '</td>';
           html += '<td class="montant">' + escapeHtml(e.montant) + ' $</td>';
-          html += '<td>' + escapeHtml(e.compte) + '</td>';
+          html += '<td style="font-size:var(--cqc-font-sm)">' + escapeHtml(e.compte) + '</td>';
           html += '<td>' + confPct + '%</td>';
-          html += '<td>' + escapeHtml(e.source) + '</td>';
+          html += '<td><span class="cqc-badge cqc-badge-info">' + escapeHtml(e.source) + '</span></td>';
           html += '</tr>';
         }
-        html += '</tbody></table>';
+        html += '</tbody></table></div>';
         journalContainer.innerHTML = html;
         journalContainer.style.display = '';
         journalOpen = true;
+        btnJournal.textContent = 'Masquer le journal';
       } catch (err) {
         journalContainer.innerHTML = '<div class="cqc-ops-result cqc-ops-result-error" style="display:block">Erreur de communication.</div>';
         journalContainer.style.display = '';
         journalOpen = true;
+        btnJournal.textContent = originalText;
       }
     };
     xhr.onerror = function() {
       btnJournal.disabled = false;
-      btnJournal.textContent = 'Journal auto-approuve';
+      btnJournal.textContent = originalText;
       journalContainer.innerHTML = '<div class="cqc-ops-result cqc-ops-result-error" style="display:block">Erreur reseau.</div>';
       journalContainer.style.display = '';
       journalOpen = true;
