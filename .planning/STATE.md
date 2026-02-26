@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 Phase: 10 of 10 (Cross-Cutting Polish and Validation)
 Plan: 2 of 2 in current phase (10-02 complete)
 Status: Phase 10 COMPLETE -- v1.1 milestone complete
-Last activity: 2026-02-26 - Completed quick task 13: Surface double-entry validation on dashboard
+Last activity: 2026-02-26 - Completed quick task 14: Add Operations tab with all CLI commands
 
 Progress: [####################] 75% (33/44 total plans -- 23 v1.0 complete, 10/10 v1.1)
 
@@ -97,9 +97,10 @@ None yet.
 | 11 | Fix dark mode compatibility, sidebar darkness, and header filter box colors on Fava built-in pages | 2026-02-26 | fa6e36d | [11-fix-font-and-color-issues-on-fava-built-](./quick/11-fix-font-and-color-issues-on-fava-built-/) |
 | 12 | Research RBC bank connection options and security | 2026-02-26 | 258d79c | [12-research-rbc-bank-connection-options-sec](./quick/12-research-rbc-bank-connection-options-sec/) |
 | 13 | Surface double-entry validation on dashboard | 2026-02-26 | 26ac262 | [13-document-and-surface-double-entry-valida](./quick/13-document-and-surface-double-entry-valida/) |
+| 14 | Add Operations tab with all CLI commands as web UI | 2026-02-26 | 343e5ca | [14-add-operations-tab-with-all-cli-commands](./quick/14-add-operations-tab-with-all-cli-commands/) |
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed quick task 13 -- Surface double-entry validation on dashboard
+Stopped at: Completed quick task 14 -- Add Operations tab with all CLI commands
 Resume file: N/A
