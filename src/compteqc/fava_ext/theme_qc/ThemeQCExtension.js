@@ -234,14 +234,19 @@ header input::placeholder {
 footer { display: none !important; }
 
 /* ===== Dark Sidebar ===== */
+/* OVERRIDE: Fava body grid -- widen sidebar column from default 160px */
+body {
+  grid-template-columns: 220px 1fr !important;
+}
+
 /* OVERRIDE: Svelte-scoped -- sidebar has Fava inline styles that must be overridden */
 aside {
   background: var(--qc-surface-sidebar) !important;
   border-right: none;
   box-shadow: 1px 0 0 rgba(255,255,255,0.04);
   padding-top: 8px;
-  width: 340px !important;
-  min-width: 340px !important;
+  width: 220px !important;
+  min-width: 220px !important;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
@@ -261,10 +266,20 @@ aside a {
   font-weight: var(--cqc-weight-normal);
   padding: 7px 12px;
   border-radius: var(--qc-radius-sm);
-  display: block;
+  display: flex !important;
+  align-items: center;
   transition: all var(--qc-transition);
   text-decoration: none;
   letter-spacing: 0.01em;
+}
+
+/* Sidebar link text truncation -- keeps badge visible */
+.cqc-sidebar-link-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 aside a:hover {
@@ -1401,6 +1416,7 @@ article svg {
   font-size: 0.72em; /* intentional: Fava override value */
   font-weight: var(--cqc-weight-bold);
   margin-left: 8px;
+  flex-shrink: 0;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2444,13 +2460,18 @@ async function updateSidebarBadge() {
 
     const data = await resp.json();
     if (data.count > 0) {
+      // Wrap bare text nodes in a span for flexbox truncation
+      if (!link.querySelector(".cqc-sidebar-link-text")) {
+        const textSpan = document.createElement("span");
+        textSpan.className = "cqc-sidebar-link-text";
+        while (link.firstChild) textSpan.appendChild(link.firstChild);
+        link.appendChild(textSpan);
+      }
       const badge = document.createElement("span");
       badge.className = "cqc-sidebar-badge";
       badge.textContent = String(data.count);
       badge.setAttribute("aria-live", "polite");
       badge.setAttribute("aria-label", data.count + " transactions en attente");
-      link.style.display = "inline-flex";
-      link.style.alignItems = "center";
       link.appendChild(badge);
     }
   } catch (e) {
