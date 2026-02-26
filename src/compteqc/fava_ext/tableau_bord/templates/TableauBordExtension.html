@@ -56,6 +56,14 @@
     </div>
   </div>
   <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Position AR/AP</div>
+    <div class="cqc-kpi-value {{ 'cqc-success' if kpis.position_apar >= 0 else 'cqc-error' }}"
+         data-value="{{ kpis.position_apar }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.position_apar) }} $
+    </div>
+  </div>
+  {% set bd = extension.balance_detail() %}
+  <div class="cqc-kpi cqc-kpi-equilibre">
     <div class="cqc-kpi-label">Equilibre comptable</div>
     <span class="cqc-text-muted" style="font-size: var(--cqc-font-xs);">Debits = Credits</span>
     <div class="cqc-kpi-value {{ 'cqc-success' if kpis.equilibre else 'cqc-error' }}">
@@ -65,6 +73,39 @@
         Ecart: {{ "{:,.2f}".format(kpis.ecart) }} $
       {% endif %}
     </div>
+    {% if bd %}
+    <div class="cqc-balance-detail">
+      <div class="cqc-balance-detail-title">Verification double entree</div>
+      <table class="cqc-balance-detail-table">
+        <tr>
+          <td>Total debits</td>
+          <td class="cqc-balance-num">{{ "{:,.2f}".format(bd.total_debit) }} $</td>
+        </tr>
+        <tr>
+          <td>Total credits</td>
+          <td class="cqc-balance-num">{{ "{:,.2f}".format(bd.total_credit) }} $</td>
+        </tr>
+        <tr class="cqc-balance-separator">
+          <td>Ecart</td>
+          <td class="cqc-balance-num {{ 'cqc-success' if kpis.equilibre else 'cqc-error' }}">
+            {{ "{:,.2f}".format(bd.ecart) }} $
+          </td>
+        </tr>
+      </table>
+      <div class="cqc-balance-detail-title" style="margin-top: 10px;">Soldes par type</div>
+      <table class="cqc-balance-detail-table">
+        {% for type_name, montant in bd.par_type.items()|sort %}
+        <tr>
+          <td>{{ type_name }}</td>
+          <td class="cqc-balance-num">{{ "{:,.2f}".format(montant) }} $</td>
+        </tr>
+        {% endfor %}
+      </table>
+      <div class="cqc-balance-detail-footer">
+        {{ bd.nb_comptes }} comptes verifies
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 

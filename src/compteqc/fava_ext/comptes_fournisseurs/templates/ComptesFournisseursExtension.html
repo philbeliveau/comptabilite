@@ -1,0 +1,290 @@
+{% set page_title = "Comptes a payer / a recevoir" %}
+
+{% block content %}
+
+{% set kpis = extension.kpis() %}
+{% set ar_list = extension.factures_ar() %}
+{% set ap_list = extension.factures_ap() %}
+{% set today = extension.ledger.beancount_file_path and none %}
+
+<style>
+  .cqc-tab-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--cqc-border, #d1d5db);
+    border-radius: 6px;
+    overflow: hidden;
+    width: fit-content;
+    margin: 20px 0;
+  }
+  .cqc-tab-toggle button {
+    padding: 8px 20px;
+    border: none;
+    background: var(--cqc-bg-secondary, #f9fafb);
+    cursor: pointer;
+    font-size: var(--cqc-font-sm, 14px);
+    transition: background 0.15s, color 0.15s;
+    color: var(--cqc-text, #374151);
+  }
+  .cqc-tab-toggle button.active {
+    background: var(--cqc-blue-600, #2563eb);
+    color: #fff;
+  }
+  .cqc-tab-toggle button:not(.active):hover {
+    background: var(--cqc-bg-tertiary, #e5e7eb);
+  }
+
+  /* Aging row colors */
+  .cqc-aging-current {
+    border-left: 3px solid var(--cqc-green-500, #22c55e);
+  }
+  .cqc-aging-30-60 {
+    border-left: 3px solid var(--cqc-yellow-500, #eab308);
+  }
+  .cqc-aging-60-90 {
+    border-left: 3px solid var(--cqc-orange-500, #f97316);
+  }
+  .cqc-aging-90-plus {
+    border-left: 3px solid var(--cqc-red-500, #ef4444);
+  }
+
+  /* Status badges */
+  .cqc-badge-draft {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #e5e7eb;
+    color: #374151;
+  }
+  .cqc-badge-sent, .cqc-badge-received {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #e5e7eb;
+    color: #374151;
+  }
+  .cqc-badge-approved {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  .cqc-badge-partial {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #fed7aa;
+    color: #9a3412;
+  }
+  .cqc-badge-paid {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #bbf7d0;
+    color: #166534;
+  }
+  .cqc-badge-overdue, .cqc-badge-disputed {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #fecaca;
+    color: #991b1b;
+  }
+</style>
+
+<div class="cqc-page-header">
+  <h2>Comptes a payer / a recevoir</h2>
+  <span class="cqc-subtitle">Position au {{ '{:%Y-%m-%d}'.format(import('datetime').date.today()) if false else '' }}</span>
+</div>
+
+<!-- KPI Row -->
+<div class="cqc-kpi-row">
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Comptes clients (AR)</div>
+    <div class="cqc-kpi-value" data-value="{{ kpis.ar_total }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.ar_total) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">En retard (AR)</div>
+    <div class="cqc-kpi-value cqc-error" data-value="{{ kpis.ar_en_retard }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.ar_en_retard) }} $
+      {% if kpis.ar_en_retard_count > 0 %}
+        <span class="cqc-badge cqc-badge-danger">{{ kpis.ar_en_retard_count }}</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Comptes fournisseurs (AP)</div>
+    <div class="cqc-kpi-value" data-value="{{ kpis.ap_total }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.ap_total) }} $
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Position nette</div>
+    <div class="cqc-kpi-value {{ 'cqc-success' if kpis.position_nette >= 0 else 'cqc-error' }}"
+         data-value="{{ kpis.position_nette }}" data-decimals="2" data-suffix=" $">
+      {{ "{:,.2f}".format(kpis.position_nette) }} $
+    </div>
+  </div>
+</div>
+
+<!-- Tab Toggle -->
+<div class="cqc-tab-toggle">
+  <button class="active" onclick="showTab('ar')">Factures clients (AR)</button>
+  <button onclick="showTab('ap')">Factures fournisseurs (AP)</button>
+</div>
+
+<!-- AR Table -->
+<div id="tab-ar">
+  <div class="cqc-card-flush">
+    <table class="cqc-table">
+      <caption class="cqc-sr-only">Factures clients en cours</caption>
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Client</th>
+          <th>Date</th>
+          <th>Echeance</th>
+          <th class="montant">Total</th>
+          <th class="montant">Paye</th>
+          <th class="montant">Solde</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in ar_list %}
+        <tr class="{{ f.age_class }}">
+          <td>{{ f.numero }}</td>
+          <td>{{ f.nom_client }}</td>
+          <td>{{ f.date }}</td>
+          <td>{{ f.date_echeance }}</td>
+          <td class="montant">{{ "{:,.2f}".format(f.total) }} $</td>
+          <td class="montant">{{ "{:,.2f}".format(f.montant_paye) }} $</td>
+          <td class="montant">{{ "{:,.2f}".format(f.solde) }} $</td>
+          <td>
+            {% if f.statut == 'draft' %}
+              <span class="cqc-badge-draft">Brouillon</span>
+            {% elif f.statut == 'sent' %}
+              <span class="cqc-badge-sent">Envoye</span>
+            {% elif f.statut == 'partial' %}
+              <span class="cqc-badge-partial">Partiel</span>
+            {% elif f.statut == 'paid' %}
+              <span class="cqc-badge-paid">Paye</span>
+            {% elif f.statut == 'overdue' %}
+              <span class="cqc-badge-overdue">En retard</span>
+            {% else %}
+              <span class="cqc-badge-draft">{{ f.statut }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <!-- Placeholder: Plan 02 adds action buttons -->
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="9" class="cqc-empty-state">Aucune facture client en cours.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Placeholder: Plan 02 adds "+ Nouvelle facture" button here -->
+</div>
+
+<!-- AP Table -->
+<div id="tab-ap" style="display: none;">
+  <div class="cqc-card-flush">
+    <table class="cqc-table">
+      <caption class="cqc-sr-only">Factures fournisseurs en cours</caption>
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Fournisseur</th>
+          <th>Ref</th>
+          <th>Date facture</th>
+          <th>Echeance</th>
+          <th class="montant">Total</th>
+          <th class="montant">Paye</th>
+          <th class="montant">Solde</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in ap_list %}
+        <tr class="{{ f.age_class }}">
+          <td>{{ f.numero_interne }}</td>
+          <td>{{ f.fournisseur }}</td>
+          <td>{{ f.numero_reference }}</td>
+          <td>{{ f.date_facture }}</td>
+          <td>{{ f.date_echeance }}</td>
+          <td class="montant">{{ "{:,.2f}".format(f.total) }} $</td>
+          <td class="montant">{{ "{:,.2f}".format(f.montant_paye) }} $</td>
+          <td class="montant">{{ "{:,.2f}".format(f.solde) }} $</td>
+          <td>
+            {% if f.statut == 'received' %}
+              <span class="cqc-badge-received">Recu</span>
+            {% elif f.statut == 'approved' %}
+              <span class="cqc-badge-approved">Approuve</span>
+            {% elif f.statut == 'partial' %}
+              <span class="cqc-badge-partial">Partiel</span>
+            {% elif f.statut == 'paid' %}
+              <span class="cqc-badge-paid">Paye</span>
+            {% elif f.statut == 'disputed' %}
+              <span class="cqc-badge-disputed">Conteste</span>
+            {% else %}
+              <span class="cqc-badge-draft">{{ f.statut }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <!-- Placeholder: Plan 02 adds action buttons -->
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="10" class="cqc-empty-state">Aucune facture fournisseur en cours.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Placeholder: Plan 02 adds "+ Nouvelle facture fournisseur" button here -->
+</div>
+
+<!-- Aging Chart -->
+<div class="cqc-card" style="margin-top: 24px;">
+  <h3>Vieillissement AR / AP</h3>
+  <div class="cqc-chart-container"
+       id="chart-aging-apar"
+       data-chart='{{ extension.aging_chart_json() }}'
+       data-chart-type="bar">
+    <canvas role="img" aria-label="Graphique de vieillissement des comptes"></canvas>
+  </div>
+</div>
+
+<script>
+function showTab(tab) {
+  var tabs = document.querySelectorAll('.cqc-tab-toggle button');
+  tabs.forEach(function(btn) { btn.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.getElementById('tab-ar').style.display = (tab === 'ar') ? '' : 'none';
+  document.getElementById('tab-ap').style.display = (tab === 'ap') ? '' : 'none';
+}
+</script>
+
+{% endblock %}

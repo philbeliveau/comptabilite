@@ -103,7 +103,29 @@ class TableauBordExtension(FavaExtensionBase):
             "pending_count": len(pending),
             "equilibre": equilibre,
             "ecart": ecart,
+            "position_apar": self._position_apar(),
         }
+
+    def _position_apar(self) -> Decimal:
+        """Net AR/AP position for dashboard KPI."""
+        try:
+            from compteqc.factures.registre import RegistreFactures
+            from compteqc.fournisseurs.registre import RegistreFournisseurs
+
+            registre_ar = RegistreFactures()
+            registre_ap = RegistreFournisseurs()
+            ar_total = sum(
+                (f.solde for f in registre_ar.lister() if f.solde > 0),
+                Decimal("0"),
+            )
+            ap_total = sum(
+                (f.solde for f in registre_ap.lister_impayees()),
+                Decimal("0"),
+            )
+            return ar_total - ap_total
+        except Exception:
+            logger.exception("Erreur calcul position AR/AP")
+            return Decimal("0")
 
     def _compute_balance_health(self, soldes: dict[str, Decimal]) -> tuple[bool, Decimal]:
         """Verifie l'equilibre comptable: la somme de tous les soldes doit etre zero.
@@ -116,13 +138,23 @@ class TableauBordExtension(FavaExtensionBase):
         """
         total_debit = Decimal("0")
         total_credit = Decimal("0")
-        for montant in soldes.values():
+        type_totals: dict[str, Decimal] = {}
+        for compte, montant in soldes.items():
+            account_type = compte.split(":")[0] if ":" in compte else compte
+            type_totals[account_type] = type_totals.get(account_type, Decimal("0")) + montant
             if montant > 0:
                 total_debit += montant
             else:
                 total_credit += abs(montant)
         ecart = total_debit - total_credit
         equilibre = ecart == Decimal("0")
+        self._balance_detail = {
+            "total_debit": total_debit,
+            "total_credit": total_credit,
+            "ecart": ecart,
+            "par_type": type_totals,
+            "nb_comptes": len(soldes),
+        }
         return equilibre, ecart
 
     def balance_health(self) -> dict:
@@ -131,6 +163,10 @@ class TableauBordExtension(FavaExtensionBase):
             "equilibre": self._kpis.get("equilibre", True),
             "ecart": self._kpis.get("ecart", Decimal("0")),
         }
+
+    def balance_detail(self) -> dict:
+        """Retourne le detail complet de l'equilibre comptable pour le tooltip."""
+        return getattr(self, "_balance_detail", {})
 
     def kpis(self) -> dict:
         """Retourne les KPIs du tableau de bord."""
