@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 7 -- Dashboard Homepage (v1.1)
+**Current focus:** Phase 8 (next v1.1 phase)
 
 ## Current Position
 
-Phase: 7 of 10 (Dashboard Homepage)
-Plan: 1 of 2 in current phase
-Status: Executing Phase 7
-Last activity: 2026-02-25 -- Completed 07-01 (Dashboard backend data layer)
+Phase: 7 of 10 (Dashboard Homepage) -- COMPLETE
+Plan: 2 of 2 in current phase (all done)
+Status: Phase 7 complete
+Last activity: 2026-02-25 -- Completed 07-02 (Dashboard template and extension registration)
 
-Progress: [############........] 59% (26/44 total plans -- 23 v1.0 complete, 3/9 v1.1)
+Progress: [#############.......] 61% (27/44 total plans -- 23 v1.0 complete, 4/9 v1.1)
 
 ## Performance Metrics
 
@@ -34,6 +34,7 @@ Progress: [############........] 59% (26/44 total plans -- 23 v1.0 complete, 3/9
 | 5. Reports + Export | 5 | ~4h | ~48 min |
 
 *v1.1 metrics will populate as plans execute*
+| Phase 07 P02 | 1min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -52,6 +53,8 @@ v1.1 decisions confirmed:
 - fava.beans.funcs.hash_entry with beancount fallback for entry context linking
 - Revenue negation at computation time for clean data API
 - Top 6 + Autres bucket for expense category doughnut chart
+- Single-quote wrapping for data-chart JSON attributes to avoid double-quote escaping
+- Server-rendered formatted values as no-JS fallback inside data-value elements
 
 ### Pending Todos
 
@@ -66,5 +69,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 07-01-PLAN.md (Dashboard backend data layer)
-Resume file: .planning/phases/07-dashboard-homepage/07-02-PLAN.md
+Stopped at: Completed 07-02-PLAN.md (Dashboard template and extension registration) -- Phase 7 complete
+Resume file: Next phase plan
