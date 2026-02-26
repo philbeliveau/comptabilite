@@ -71,10 +71,92 @@ class ApprobationExtension(FavaExtensionBase):
         for txn in self._pending:
             txn["niveau"] = niveau_confiance(txn["confiance"])
             txn["gros_montant"] = est_gros_montant(txn["montant"])
+        self._enrichir_rapprochements()
+
+    def _enrichir_rapprochements(self) -> None:
+        """Enrichir les transactions pending avec des suggestions AR/AP."""
+        try:
+            from compteqc.rapprochement import (
+                suggerer_rapprochement_ar,
+                suggerer_rapprochement_ap,
+            )
+            from compteqc.models.transaction import TransactionNormalisee
+        except ImportError:
+            # Phase 13 rapprochement module not yet available
+            return
+
+        # Load AR invoices
+        factures_ar: list = []
+        try:
+            from compteqc.factures.registre import RegistreFactures
+            from compteqc.factures.modeles import InvoiceStatus
+            registre_ar = RegistreFactures()
+            factures_ar = [
+                f for f in registre_ar.lister()
+                if f.statut != InvoiceStatus.PAID
+            ]
+        except (ImportError, Exception):
+            pass
+
+        # Load AP bills
+        factures_ap: list = []
+        try:
+            from compteqc.fournisseurs.registre import RegistreFournisseurs
+            registre_ap = RegistreFournisseurs()
+            factures_ap = registre_ap.lister_impayees()
+        except (ImportError, Exception):
+            pass
+
+        if not factures_ar and not factures_ap:
+            return
+
+        import datetime as _dt
+
+        for txn in self._pending:
+            # Convert pending dict to TransactionNormalisee for matching
+            try:
+                txn_norm = TransactionNormalisee(
+                    date=_dt.date.fromisoformat(str(txn["date"])),
+                    montant=txn["montant"],
+                    devise="CAD",
+                    beneficiaire=txn.get("payee", ""),
+                    description=txn.get("narration", ""),
+                    source="pending",
+                )
+            except Exception:
+                continue
+
+            # Find best AR match (for deposits)
+            best_match = None
+            if factures_ar and txn["montant"] > 0:
+                suggestions = suggerer_rapprochement_ar(txn_norm, factures_ar)
+                if suggestions:
+                    best_match = suggestions[0]  # Highest confidence
+
+            # Find best AP match (for withdrawals)
+            if not best_match and factures_ap and txn["montant"] < 0:
+                suggestions = suggerer_rapprochement_ap(txn_norm, factures_ap)
+                if suggestions:
+                    best_match = suggestions[0]
+
+            if best_match:
+                txn["match_apar"] = {
+                    "type": best_match.type_match,
+                    "numero": best_match.reference,
+                    "nom": best_match.nom,
+                    "montant": float(best_match.montant_attendu),
+                    "confiance": round(best_match.confiance * 100),
+                }
 
     def pending_transactions(self) -> list[dict]:
         """Retourne la liste des transactions en attente."""
         return self._pending
+
+    def account_names(self) -> list[str]:
+        """Retourne la liste triee des comptes ouverts du ledger."""
+        from beancount.core import getters
+        accounts = getters.get_account_open_close(self.ledger.all_entries)
+        return sorted(accounts.keys())
 
     @extension_endpoint("count", ["GET"])
     def pending_count(self):
@@ -118,6 +200,87 @@ class ApprobationExtension(FavaExtensionBase):
 
         # Redirect vers la page de l'extension
         return redirect(request.referrer or request.url)
+
+    @extension_endpoint("lier_apar", ["POST"])
+    def lier_apar(self) -> str:
+        """POST /lier_apar -- lie une transaction pending a une facture AR/AP."""
+        txn_index = request.form.get("txn_index", "")
+        numero = request.form.get("numero", "")
+        match_type = request.form.get("type", "")  # "ar" or "ap"
+
+        if not txn_index.isdigit() or not numero or match_type not in ("ar", "ap"):
+            return (
+                "<html><body>"
+                "<h2>Erreur</h2>"
+                "<p>Parametres manquants ou invalides.</p>"
+                '<a href="javascript:history.back()">Retour</a>'
+                "</body></html>"
+            )
+
+        try:
+            if match_type == "ar":
+                self._lier_ar(numero)
+            else:
+                self._lier_ap(numero)
+        except Exception as e:
+            return (
+                "<html><body>"
+                "<h2>Erreur</h2>"
+                "<p>" + str(e) + "</p>"
+                '<a href="javascript:history.back()">Retour</a>'
+                "</body></html>"
+            )
+
+        # Reload ledger and redirect back
+        self.ledger.load_file()
+        return redirect(request.referrer or request.url)
+
+    def _lier_ar(self, numero: str) -> None:
+        """Record AR payment for the given invoice number."""
+        from compteqc.factures.registre import RegistreFactures
+        from compteqc.factures.modeles import InvoiceStatus
+        from compteqc.factures.journal import generer_ecriture_paiement
+
+        registre = RegistreFactures()
+        facture = registre.obtenir(numero)
+        if facture is None:
+            raise ValueError(f"Facture {numero} introuvable.")
+
+        # Generate payment Beancount entry
+        ecriture = generer_ecriture_paiement(facture)
+
+        # Append to ledger
+        main_beancount = Path(self.ledger.beancount_file_path)
+        with open(main_beancount, "a") as f:
+            f.write("\n" + ecriture + "\n")
+
+        # Update invoice status
+        registre.mettre_a_jour_statut(numero, InvoiceStatus.PAID)
+
+    def _lier_ap(self, numero: str) -> None:
+        """Record AP payment for the given bill number."""
+        try:
+            from compteqc.fournisseurs.registre import RegistreFournisseurs
+            from compteqc.fournisseurs.modeles import BillStatus
+            from compteqc.fournisseurs.journal import generer_ecriture_paiement_fournisseur
+        except ImportError:
+            raise ValueError("Module fournisseurs non disponible.")
+
+        registre = RegistreFournisseurs()
+        facture = registre.obtenir(numero)
+        if facture is None:
+            raise ValueError(f"Facture fournisseur {numero} introuvable.")
+
+        # Generate payment Beancount entry
+        ecriture = generer_ecriture_paiement_fournisseur(facture)
+
+        # Append to ledger
+        main_beancount = Path(self.ledger.beancount_file_path)
+        with open(main_beancount, "a") as f:
+            f.write("\n" + ecriture + "\n")
+
+        # Update bill status
+        registre.mettre_a_jour_statut(numero, BillStatus.PAID)
 
     @extension_endpoint("rejeter", ["POST"])
     def rejeter(self) -> str:
