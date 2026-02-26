@@ -15,6 +15,7 @@ from rich.console import Console
 from rich.table import Table
 
 from compteqc.categorisation.capex import DetecteurCAPEX
+from compteqc.rapprochement import suggerer_rapprochement_ar, suggerer_rapprochement_ap
 from compteqc.categorisation.llm import ClassificateurLLM
 from compteqc.categorisation.ml import PredicteurML
 from compteqc.categorisation.moteur import MoteurRegles
@@ -405,6 +406,132 @@ def _importer_avec(
     return (len(nouvelles), nb_regles, nb_ia_auto, nb_pending)
 
 
+def _beancount_vers_transactions(entries: list) -> list:
+    """Convertit les entries beancount en TransactionNormalisee pour le rapprochement."""
+    from compteqc.models.transaction import TransactionNormalisee
+
+    transactions = []
+    for entry in entries:
+        if not isinstance(entry, data.Transaction):
+            continue
+        montant = entry.postings[0].units.number if entry.postings else Decimal(0)
+        transactions.append(
+            TransactionNormalisee(
+                date=entry.date,
+                montant=montant,
+                beneficiaire=entry.payee or "",
+                description=entry.narration or "",
+                source="import",
+            )
+        )
+    return transactions
+
+
+def _afficher_rapprochements(
+    transactions: list,
+    console: Console,
+    chemin_registre_ar: Path | None = None,
+    chemin_registre_ap: Path | None = None,
+) -> None:
+    """Affiche les suggestions de rapprochement AR/AP pour les transactions importees.
+
+    Charge les registres de factures et fournisseurs, puis suggere des correspondances
+    entre les transactions importees et les factures ouvertes.
+
+    Args:
+        transactions: Liste de TransactionNormalisee.
+        console: Console Rich pour l'affichage.
+        chemin_registre_ar: Chemin optionnel au registre AR (defaut: ledger/factures/registre.yaml).
+        chemin_registre_ap: Chemin optionnel au registre AP (defaut: ledger/fournisseurs/registre.yaml).
+    """
+    if not transactions:
+        return
+
+    # AR matching
+    toutes_suggestions_ar = []
+    try:
+        from compteqc.factures.registre import RegistreFactures
+
+        registre_path = chemin_registre_ar or Path("ledger/factures/registre.yaml")
+        if registre_path.exists():
+            registre = RegistreFactures(registre_path)
+            factures_ouvertes = registre.lister_impayees()
+            if factures_ouvertes:
+                for txn in transactions:
+                    suggestions = suggerer_rapprochement_ar(txn, factures_ouvertes)
+                    for s in suggestions:
+                        toutes_suggestions_ar.append((txn, s))
+    except Exception:
+        pass
+
+    # AP matching
+    toutes_suggestions_ap = []
+    try:
+        from compteqc.fournisseurs.registre import RegistreFournisseurs
+
+        registre_path = chemin_registre_ap or Path("ledger/fournisseurs/registre.yaml")
+        if registre_path.exists():
+            registre_four = RegistreFournisseurs(registre_path)
+            bills_ouvertes = registre_four.lister_impayees()
+            if bills_ouvertes:
+                for txn in transactions:
+                    suggestions = suggerer_rapprochement_ap(txn, bills_ouvertes)
+                    for s in suggestions:
+                        toutes_suggestions_ap.append((txn, s))
+    except ImportError:
+        pass  # AP module not yet available
+
+    # Display AR suggestions
+    if toutes_suggestions_ar:
+        console.print()
+        table_ar = Table(title="Rapprochements AR suggeres")
+        table_ar.add_column("Transaction", style="cyan")
+        table_ar.add_column("Facture", style="green")
+        table_ar.add_column("Client", style="white")
+        table_ar.add_column("Montant", style="yellow", justify="right")
+        table_ar.add_column("Confiance", style="magenta", justify="right")
+
+        for txn, sugg in toutes_suggestions_ar:
+            table_ar.add_row(
+                f"{txn.date} {txn.beneficiaire[:20]}",
+                sugg.reference,
+                sugg.nom,
+                f"{sugg.montant_attendu:,.2f} $",
+                f"{sugg.confiance:.0%}",
+            )
+
+        console.print(table_ar)
+        console.print(
+            "\n[dim]Pour appliquer un rapprochement, utilisez:"
+            " [cyan]cqc facture payer <NUMERO>[/cyan][/dim]"
+        )
+
+    # Display AP suggestions
+    if toutes_suggestions_ap:
+        console.print()
+        table_ap = Table(title="Rapprochements AP suggeres")
+        table_ap.add_column("Transaction", style="cyan")
+        table_ap.add_column("Facture", style="green")
+        table_ap.add_column("Fournisseur", style="white")
+        table_ap.add_column("Montant", style="yellow", justify="right")
+        table_ap.add_column("Confiance", style="magenta", justify="right")
+
+        for txn, sugg in toutes_suggestions_ap:
+            table_ap.add_row(
+                f"{txn.date} {txn.beneficiaire[:20]}",
+                sugg.reference,
+                sugg.nom,
+                f"{sugg.montant_attendu:,.2f} $",
+                f"{sugg.confiance:.0%}",
+            )
+
+        console.print(table_ap)
+        console.print(
+            "\n[dim]Pour appliquer un rapprochement, utilisez:"
+            " [cyan]cqc fournisseur payer <NUMERO>[/cyan][/dim]"
+        )
+
+
 @importer_app.command(name="fichier")
 def fichier(
     chemin_fichier: str = typer.Argument(
@@ -466,6 +593,7 @@ def fichier(
 
     # Charger le ledger existant pour deduplication
     entries_existantes, errors, options = loader.load_file(str(chemin_main))
+    nb_entries_avant_import = len(entries_existantes)
 
     total_importees = 0
     total_regles = 0
@@ -549,3 +677,14 @@ def fichier(
             "\n[yellow]Aucun commit git cree[/yellow]"
             " (pas de changements ou erreur)."
         )
+
+    # Display AR/AP match suggestions for the newly imported transactions
+    try:
+        entries_finales, _, _ = loader.load_file(str(chemin_main))
+        nouvelles_entries = entries_finales[nb_entries_avant_import:]
+        if nouvelles_entries:
+            transactions_pour_matching = _beancount_vers_transactions(nouvelles_entries)
+            if transactions_pour_matching:
+                _afficher_rapprochements(transactions_pour_matching, console)
+    except Exception:
+        pass  # Don't let matching errors break the import

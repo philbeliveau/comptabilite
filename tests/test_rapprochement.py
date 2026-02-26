@@ -278,3 +278,76 @@ class TestSimilarite:
         """Unrelated strings produce similarity < 0.3."""
         score = calculer_similarite("Random Text XYZ", "Acme Corp")
         assert score < 0.3
+
+
+# ---------------------------------------------------------------------------
+# Integration tests for _afficher_rapprochements
+# ---------------------------------------------------------------------------
+
+class TestAfficherRapprochements:
+    """Tests pour l'integration du rapprochement dans le pipeline d'import."""
+
+    def test_import_shows_ar_suggestions(self, tmp_path: Path) -> None:
+        """With an unpaid invoice and matching deposit, suggestions appear in output."""
+        from io import StringIO
+
+        from rich.console import Console
+
+        from compteqc.cli.importer import _afficher_rapprochements
+        from compteqc.factures.registre import RegistreFactures
+
+        # Create a registre with an unpaid invoice
+        registre_path = tmp_path / "ledger" / "factures" / "registre.yaml"
+        registre_path.parent.mkdir(parents=True, exist_ok=True)
+        registre = RegistreFactures(registre_path)
+        facture = _facture_ar(
+            nom_client="Acme Corp",
+            montant_ht=Decimal("1000.00"),
+            statut=InvoiceStatus.SENT,
+        )
+        registre.ajouter(facture)
+
+        # Create a TransactionNormalisee matching the invoice total
+        txn = _transaction(
+            montant=str(facture.total),
+            beneficiaire="Acme Corp",
+            description="Paiement consultation Acme",
+        )
+
+        output = StringIO()
+        test_console = Console(file=output, width=120)
+
+        # Call _afficher_rapprochements with explicit registre path
+        _afficher_rapprochements(
+            [txn],
+            test_console,
+            chemin_registre_ar=registre_path,
+        )
+
+        result = output.getvalue()
+        assert "Rapprochements AR" in result or "FAC-2026-001" in result
+
+    def test_import_no_suggestions_when_no_invoices(self, tmp_path: Path) -> None:
+        """With no invoice registry, no errors and no suggestions shown."""
+        from io import StringIO
+
+        from rich.console import Console
+
+        from compteqc.cli.importer import _afficher_rapprochements
+
+        txn = _transaction(montant="1000.00", beneficiaire="Some Vendor")
+
+        output = StringIO()
+        test_console = Console(file=output, width=120)
+
+        # Point to a non-existent registre -- should not raise
+        nonexistent = tmp_path / "nonexistent" / "registre.yaml"
+        _afficher_rapprochements(
+            [txn],
+            test_console,
+            chemin_registre_ar=nonexistent,
+        )
+
+        result = output.getvalue()
+        # No suggestions table should appear
+        assert "Rapprochements AR" not in result
