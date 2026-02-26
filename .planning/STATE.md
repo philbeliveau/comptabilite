@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 Phase: 10 of 10 (Cross-Cutting Polish and Validation)
 Plan: 2 of 2 in current phase (10-02 complete)
 Status: Phase 10 COMPLETE -- v1.1 milestone complete
-Last activity: 2026-02-26 - Completed quick task 16: Design chat tab integration
+Last activity: 2026-02-26 - Completed quick task 17: Add UI/UX design section to AP/AR design
 
 Progress: [####################] 75% (33/44 total plans -- 23 v1.0 complete, 10/10 v1.1)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23 (v1.0) + 14 quick tasks
+- Total plans completed: 23 (v1.0) + 15 quick tasks
 - Average duration: ~45 min (v1.0)
 - Total execution time: ~17 hours (v1.0)
 
@@ -85,6 +85,9 @@ v1.1 decisions confirmed:
 - Direct Anthropic API with tool_use over MCP subprocess for chat integration (simplicity for single-user)
 - Disable lancer_paie in chat context for safety (payroll mutations require dedicated UI)
 - sessionStorage for chat conversation persistence (stateless backend, no server-side sessions)
+- Inline form expansion (not modal) for AP/AR invoice creation in Fava tab
+- Receipt-to-AP pipeline via URL query parameters for stateless form pre-fill
+- cqc-tab-toggle pattern for sub-tab switching within a single Fava extension
 
 ### Pending Todos
 
@@ -106,9 +109,10 @@ None yet.
 | 14 | Add Operations tab with all CLI commands as web UI | 2026-02-26 | 343e5ca | [14-add-operations-tab-with-all-cli-commands](./quick/14-add-operations-tab-with-all-cli-commands/) |
 | 15 | Design AP/AR system for Quebec IT consulting | 2026-02-26 | 851fdc4 | [15-design-accounts-payable-and-accounts-rec](./quick/15-design-accounts-payable-and-accounts-rec/) |
 | 16 | Design chat tab integration for discussions with Claude | 2026-02-26 | 9ca2b0b | [16-design-chat-tab-integration-for-discussi](./quick/16-design-chat-tab-integration-for-discussi/) |
+| 17 | Add UI/UX design section to AP/AR design document | 2026-02-26 | 33fd206 | [17-add-ui-ux-design-section-to-ap-ar-design](./quick/17-add-ui-ux-design-section-to-ap-ar-design/) |
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed quick task 16 -- Design chat tab integration
+Stopped at: Completed quick task 17 -- Add UI/UX design section to AP/AR design
 Resume file: N/A
