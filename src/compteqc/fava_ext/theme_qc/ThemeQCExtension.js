@@ -822,11 +822,17 @@ article .headerline {
   box-shadow: 0 0 0 4px rgba(0, 61, 165, 0.06);
 }
 
+@keyframes cqc-border-pulse {
+  0%, 100% { border-color: var(--qc-blue); }
+  50% { border-color: var(--qc-blue-light, #4a90d9); }
+}
+
 .cqc-dropzone.dragover {
-  border-color: var(--qc-success);
-  background: var(--qc-success-bg);
+  animation: cqc-border-pulse 1.2s ease-in-out infinite;
   border-style: solid;
-  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+  border-color: var(--qc-blue);
+  background: var(--qc-blue-lighter);
+  box-shadow: 0 0 16px rgba(0, 61, 165, 0.15);
 }
 
 .cqc-dropzone-text {
@@ -965,6 +971,17 @@ article .headerline {
   .cqc-upload-progress-bar {
     transition: none;
   }
+  .cqc-dropzone.dragover {
+    animation: none;
+  }
+}
+
+.cqc-upload-queue-status {
+  text-align: center;
+  padding: 8px;
+  color: var(--qc-text-secondary);
+  font-size: var(--cqc-font-sm, 0.875rem);
+  font-weight: 500;
 }
 
 /* ===== Forms ===== */

@@ -23,7 +23,7 @@
   </div>
 
   <input type="file" id="fichier-input" name="fichier"
-         accept=".pdf,.jpg,.jpeg,.png,.heic"
+         accept=".pdf,.jpg,.jpeg,.png,.heic" multiple
          style="display: none;">
 
   <div id="upload-progress" class="cqc-upload-progress" style="display: none;">
@@ -87,32 +87,41 @@
     fileInput.click();
   });
 
-  // -- Drag and drop handlers
+  // -- Drag and drop handlers (counter pattern prevents child-element flicker)
+  var dragCounter = 0;
+
   dropzone.addEventListener('dragover', function(e) {
     e.preventDefault();
-    e.stopPropagation();
+  });
+
+  dropzone.addEventListener('dragenter', function(e) {
+    e.preventDefault();
+    dragCounter++;
     dropzone.classList.add('dragover');
   });
 
   dropzone.addEventListener('dragleave', function(e) {
     e.preventDefault();
-    e.stopPropagation();
-    dropzone.classList.remove('dragover');
+    dragCounter--;
+    if (dragCounter === 0) {
+      dropzone.classList.remove('dragover');
+    }
   });
 
   dropzone.addEventListener('drop', function(e) {
     e.preventDefault();
-    e.stopPropagation();
+    dragCounter = 0;
     dropzone.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) {
-      uploadFile(e.dataTransfer.files[0]);
+    var files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      uploadFiles(files);
     }
   });
 
-  // -- File input change
+  // -- File input change (multi-file)
   fileInput.addEventListener('change', function() {
     if (fileInput.files.length > 0) {
-      uploadFile(fileInput.files[0]);
+      uploadFiles(Array.from(fileInput.files));
     }
   });
 
@@ -121,57 +130,101 @@
     progressText.textContent = pct + '%';
   }
 
-  function uploadFile(file) {
-    var formData = new FormData();
-    formData.append('fichier', file);
+  // -- Queue status element (created dynamically)
+  var queueStatusEl = document.createElement('div');
+  queueStatusEl.className = 'cqc-upload-queue-status';
+  queueStatusEl.style.display = 'none';
+  progressContainer.parentNode.insertBefore(queueStatusEl, progressContainer);
 
-    // Reset UI
-    progressContainer.style.display = '';
-    statusDiv.style.display = 'none';
-    statusDiv.textContent = '';
+  function uploadFile(file) {
+    return new Promise(function(resolve, reject) {
+      var formData = new FormData();
+      formData.append('fichier', file);
+
+      // Reset progress UI
+      progressContainer.style.display = '';
+      statusDiv.style.display = 'none';
+      statusDiv.textContent = '';
+      updateProgressBar(0);
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+          var pct = Math.round(e.loaded / e.total * 100);
+          updateProgressBar(pct);
+          if (pct >= 100) {
+            statusDiv.style.display = '';
+            statusDiv.textContent = 'Traitement en cours\u2026';
+          }
+        }
+      };
+
+      xhr.onload = function() {
+        statusDiv.style.display = 'none';
+        progressContainer.style.display = 'none';
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (data.status === 'ok') {
+            resolve({ file: file, data: data });
+          } else {
+            showError(data.message || 'Erreur inconnue.');
+            resolve({ file: file, data: null, error: data.message });
+          }
+        } catch (parseErr) {
+          showError('Erreur de communication avec le serveur.');
+          resolve({ file: file, data: null, error: 'parse' });
+        }
+      };
+
+      xhr.onerror = function() {
+        statusDiv.style.display = 'none';
+        progressContainer.style.display = 'none';
+        showError('Erreur reseau. Veuillez reessayer.');
+        resolve({ file: file, data: null, error: 'network' });
+      };
+
+      xhr.open('POST', UPLOAD_URL, true);
+      xhr.send(formData);
+    });
+  }
+
+  async function uploadFiles(files) {
+    // Reset UI for new batch
     resultDiv.style.display = 'none';
     resultDiv.innerHTML = '';
-    updateProgressBar(0);
+    var previewContainer = document.getElementById('preview-container');
+    if (previewContainer) previewContainer.innerHTML = '';
 
-    var xhr = new XMLHttpRequest();
+    var successCount = 0;
 
-    xhr.upload.onprogress = function(e) {
-      if (e.lengthComputable) {
-        var pct = Math.round(e.loaded / e.total * 100);
-        updateProgressBar(pct);
-        if (pct >= 100) {
-          statusDiv.style.display = '';
-          statusDiv.textContent = 'Traitement en cours\u2026';
-        }
+    for (var i = 0; i < files.length; i++) {
+      // Show queue status for multi-file uploads
+      if (files.length > 1) {
+        queueStatusEl.style.display = '';
+        queueStatusEl.textContent = 'Fichier ' + (i + 1) + ' sur ' + files.length + ' : ' + files[i].name;
       }
-    };
 
-    xhr.onload = function() {
-      statusDiv.style.display = 'none';
-      progressContainer.style.display = 'none';
-      try {
-        var data = JSON.parse(xhr.responseText);
-        if (data.status === 'ok') {
-          renderResult(data);
-        } else {
-          showError(data.message || 'Erreur inconnue.');
-        }
-      } catch (parseErr) {
-        showError('Erreur de communication avec le serveur.');
+      var result = await uploadFile(files[i]);
+
+      if (result.data) {
+        renderResult(result.data);
+        renderPreview(result.file, result.data);
+        successCount++;
       }
-      // Reset file input for next upload
-      fileInput.value = '';
-    };
+    }
 
-    xhr.onerror = function() {
-      statusDiv.style.display = 'none';
-      progressContainer.style.display = 'none';
-      showError('Erreur reseau. Veuillez reessayer.');
-      fileInput.value = '';
-    };
+    // Hide queue status and show summary
+    queueStatusEl.style.display = 'none';
+    progressContainer.style.display = 'none';
 
-    xhr.open('POST', UPLOAD_URL, true);
-    xhr.send(formData);
+    if (files.length > 1 && successCount > 0) {
+      statusDiv.style.display = '';
+      statusDiv.textContent = successCount + ' fichier(s) televerse(s)';
+    }
+
+    // Reset file input
+    fileInput.value = '';
   }
 
   function showError(msg) {
