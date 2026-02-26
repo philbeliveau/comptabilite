@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 14 - Fava Extension Tab & MCP (v1.2 AP/AR & Financial Operations)
+**Current focus:** Phase 15 - Receipt-to-AP Pipeline (v1.2 AP/AR & Financial Operations)
 
 ## Current Position
 
-Phase: 14 of 15 (Fava Extension Tab & MCP)
-Plan: 3 of 3 in current phase (Plan 03 complete)
-Status: Phase 14 complete -- all 3 plans done (14-02 filled in)
-Last activity: 2026-02-26 - Completed Plan 14-02: AR/AP Inline Creation Forms
+Phase: 15 of 15 (Receipt-to-AP Pipeline)
+Plan: 1 of 2 in current phase (Plan 01 complete)
+Status: Plan 15-01 complete -- receipt-to-AP creation prompt
+Last activity: 2026-02-26 - Completed Plan 15-01: Receipt-to-AP Creation Prompt
 
-Progress: [################    ] 80% (v1.2 phases 11-15)
+Progress: [##################  ] 90% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [################    ] 80% (v1.2 phases 11-15)
 | 13. Recurring Invoices | 2/2 | 9min | 4.5 min |
 | 14. Fava Extension Tab | 3/3 | 8min | 2.7 min |
 | Phase 14 P02 | 3min | 2 tasks | 2 files |
+| 15. Receipt-to-AP | 1/2 | 1min | 1 min |
 
 ## Accumulated Context
 
@@ -92,6 +93,8 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - [Phase 14]: Form action URLs use /g.beancount_file_slug/extension/name/endpoint pattern for POST endpoints
 - [Phase 14]: Dynamic line items use indexed form fields (description_0, description_1...) parsed with while loop
 - [Phase 14]: URL query parameter prefill hook for stateless cross-extension form pre-population
+- [Phase 15]: Stateless URL query parameter handoff between RecusExtension and ComptesFournisseursExtension
+- [Phase 15]: Forward-compatible AP link (404 acceptable if Phase 14 not yet deployed)
 
 ### Pending Todos
 
@@ -117,5 +120,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 14-02-PLAN.md -- AR/AP inline creation forms (Phase 14 all plans now complete)
+Stopped at: Completed 15-01-PLAN.md -- Receipt-to-AP creation prompt (Plan 1 of 2 in Phase 15)
 Resume file: None
