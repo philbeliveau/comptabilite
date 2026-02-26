@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Every dollar that flows through the corporation is correctly categorized, traceable to source documents, and ready for CPA review -- without manual data entry.
-**Current focus:** Phase 8 (Table and Extension Polish)
+**Current focus:** Phase 9 (Receipt Upload UX)
 
 ## Current Position
 
-Phase: 8 of 10 (Table and Extension Polish) -- COMPLETE
-Plan: 2 of 2 in current phase (08-02 complete)
-Status: Phase 8 complete, ready for Phase 9
-Last activity: 2026-02-25 -- Completed 08-02 (Approval queue UX: confidence bars, keyboard shortcuts, sidebar badge)
+Phase: 9 of 10 (Receipt Upload UX) -- IN PROGRESS
+Plan: 1 of 2 in current phase (09-01 complete)
+Status: 09-01 complete, ready for 09-02
+Last activity: 2026-02-25 -- Completed 09-01 (AJAX upload with progress bar)
 
-Progress: [###############.....] 66% (29/44 total plans -- 23 v1.0 complete, 6/9 v1.1)
+Progress: [################....] 68% (30/44 total plans -- 23 v1.0 complete, 7/9 v1.1)
 
 ## Performance Metrics
 
@@ -37,6 +37,7 @@ Progress: [###############.....] 66% (29/44 total plans -- 23 v1.0 complete, 6/9
 | Phase 07 P02 | 1min | 2 tasks | 2 files |
 | Phase 08 P01 | 3min | 2 tasks | 5 files |
 | Phase 08 P02 | 3min | 2 tasks | 3 files |
+| Phase 09 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ v1.1 decisions confirmed:
 - AbortController pattern for SPA keyboard listener cleanup in ThemeQCExtension.js
 - JSON endpoints on Fava extensions via @extension_endpoint for lightweight data APIs
 - Sidebar badge with bfileSlug-relative URL for Fava multi-file routing
+- XHR with FormData for upload progress (fetch lacks upload.onprogress)
+- Lier button kept as form POST redirect for intentional page navigation
 
 ### Pending Todos
 
@@ -71,10 +74,10 @@ None yet.
 
 - Fava `<article>` replacement behavior needs runtime confirmation in Phase 6
 - Chart.js canvas sizing resolved with .cqc-chart-container CSS (300px height, responsive canvas)
-- Upload endpoint returns raw HTML -- must convert to JSON before any upload UX work (Phase 9 prereq)
+- Upload endpoint returns raw HTML -- RESOLVED in 09-01: converted to JSON via jsonify()
 
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 08-02-PLAN.md (Approval queue UX: confidence bars, keyboard shortcuts, sidebar badge)
-Resume file: .planning/phases/09-upload-ux-and-feedback/09-01-PLAN.md
+Stopped at: Completed 09-01-PLAN.md (AJAX upload with progress bar)
+Resume file: .planning/phases/09-receipt-upload-ux/09-02-PLAN.md
