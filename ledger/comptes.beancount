@@ -49,6 +49,9 @@ option "name_expenses" "Depenses"
 2025-01-01 open Passifs:CartesCredit:RBC CAD
   gifi: "2700"
 
+2025-01-01 open Passifs:ComptesFournisseurs CAD
+  gifi: "2010"
+
 2025-01-01 open Passifs:TPS-Percue CAD
   gifi: "2620"
 
