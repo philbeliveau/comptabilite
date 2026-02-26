@@ -1,5 +1,25 @@
 {% set page_title = "File d'approbation" %}
 
+<style>
+.cqc-match-suggestion td {
+  border-top: none !important;
+  padding-top: 0;
+  padding-bottom: 12px;
+}
+.cqc-match-info {
+  background: var(--cqc-blue-50, #eff6ff);
+  border-left: 3px solid var(--cqc-blue-400, #60a5fa);
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  font-size: var(--cqc-font-sm, 0.875rem);
+}
+.cqc-match-arrow {
+  color: var(--cqc-blue-600, #2563eb);
+  font-weight: bold;
+  margin-right: 4px;
+}
+</style>
+
 {% block content %}
 
 {% set pending = extension.pending_transactions() %}
@@ -10,6 +30,31 @@
 </div>
 
 {% if pending %}
+
+{% set accounts = extension.account_names() %}
+
+<div class="cqc-card">
+  <h3 class="cqc-section-title">Rejeter une transaction</h3>
+  <form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/rejeter"
+        style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
+    <label class="cqc-label" style="flex-direction: column; align-items: flex-start;">
+      Indice de la transaction
+      <input type="number" name="id" min="0" max="{{ pending | length - 1 }}" required
+             class="cqc-input" style="width: 70px;">
+    </label>
+    <label class="cqc-label" style="flex-direction: column; align-items: flex-start; flex: 1; min-width: 200px;">
+      Compte corrigé (optionnel)
+      <select name="compte_corrige" class="cqc-input" style="width: 100%;">
+        <option value="">— Aucun (supprimer seulement) —</option>
+        {% for acc in accounts %}
+        <option value="{{ acc }}">{{ acc }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit" class="cqc-btn cqc-btn-error" aria-label="Rejeter la transaction">Rejeter</button>
+  </form>
+</div>
+
 <form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/approuver">
 
   <div class="cqc-actions-bar">
@@ -60,29 +105,35 @@
             <span class="cqc-source-tag">{{ txn.source }}</span>
           </td>
         </tr>
+        {% if txn.get("match_apar") %}
+        <tr class="cqc-match-suggestion">
+          <td></td>
+          <td colspan="6">
+            <div class="cqc-match-info">
+              <span class="cqc-match-arrow">&raquo;</span>
+              Correspond a <strong>{{ txn.match_apar.numero }}</strong>
+              &mdash; {{ txn.match_apar.nom }}
+              ({{ "{:,.2f}".format(txn.match_apar.montant) }} $)
+              <span class="cqc-text-muted">Confiance: {{ txn.match_apar.confiance }}%</span>
+              <form method="POST"
+                    action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/lier_apar"
+                    style="display: inline; margin-left: 12px;">
+                <input type="hidden" name="txn_index" value="{{ loop.index0 }}">
+                <input type="hidden" name="numero" value="{{ txn.match_apar.numero }}">
+                <input type="hidden" name="type" value="{{ txn.match_apar.type }}">
+                <button type="submit" class="cqc-btn cqc-btn-sm">
+                  Lier comme paiement {{ txn.match_apar.type|upper }}
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endif %}
         {% endfor %}
       </tbody>
     </table>
   </div>
 </form>
-
-<div class="cqc-card">
-  <h3 class="cqc-section-title">Rejeter une transaction</h3>
-  <form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/rejeter"
-        style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
-    <label class="cqc-label" style="flex-direction: column; align-items: flex-start;">
-      Indice de la transaction
-      <input type="number" name="id" min="0" max="{{ pending | length - 1 }}" required
-             class="cqc-input" style="width: 70px;">
-    </label>
-    <label class="cqc-label" style="flex-direction: column; align-items: flex-start; flex: 1; min-width: 200px;">
-      Compte corrigé (optionnel)
-      <input type="text" name="compte_corrige" placeholder="Depenses:Bureau:Fournitures"
-             class="cqc-input" style="width: 100%;">
-    </label>
-    <button type="submit" class="cqc-btn cqc-btn-error" aria-label="Rejeter la transaction">Rejeter</button>
-  </form>
-</div>
 
 {% else %}
 <div class="cqc-empty">
