@@ -73,6 +73,26 @@ const THEME_CSS = `
   --button-hover-background: var(--qc-blue-light);
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-size: 14px;
+
+  /* === CompteQC Type Scale (Inter) === */
+  /* Based on 1.200 minor third ratio from 16px base */
+  --cqc-font-xs: 0.6875rem;    /* 11px -- table headers, labels */
+  --cqc-font-sm: 0.8125rem;    /* 13px -- secondary text, badges */
+  --cqc-font-base: 0.875rem;   /* 14px -- body text, table cells */
+  --cqc-font-md: 1rem;         /* 16px -- prominent body, card text */
+  --cqc-font-lg: 1.25rem;      /* 20px -- section headings */
+  --cqc-font-xl: 1.5rem;       /* 24px -- page titles */
+  --cqc-font-2xl: 2rem;        /* 32px -- KPI values */
+  --cqc-font-3xl: 2.5rem;      /* 40px -- hero numbers */
+
+  --cqc-weight-normal: 400;
+  --cqc-weight-medium: 500;
+  --cqc-weight-semibold: 600;
+  --cqc-weight-bold: 700;
+
+  --cqc-leading-tight: 1.2;
+  --cqc-leading-normal: 1.5;
+  --cqc-leading-relaxed: 1.75;
 }
 
 /* ===== Global Reset ===== */
@@ -360,8 +380,8 @@ article .headerline {
 
 /* ===== Section Title ===== */
 .cqc-section-title {
-  font-size: 1em;
-  font-weight: 600;
+  font-size: var(--cqc-font-md);
+  font-weight: var(--cqc-weight-semibold);
   color: var(--qc-text);
   margin: 0 0 16px 0;
   padding-left: 14px;
@@ -375,8 +395,8 @@ article .headerline {
 }
 
 .cqc-page-header h2 {
-  font-size: 1.5em;
-  font-weight: 700;
+  font-size: var(--cqc-font-xl);
+  font-weight: var(--cqc-weight-bold);
   color: var(--qc-text);
   margin: 0 0 6px 0;
   letter-spacing: -0.02em;
@@ -438,12 +458,12 @@ article .headerline {
 }
 
 .cqc-kpi-value {
-  font-size: 1.6em;
-  font-weight: 700;
+  font-size: var(--cqc-font-2xl);
+  font-weight: var(--cqc-weight-bold);
   color: var(--qc-text);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: var(--cqc-leading-tight);
 }
 
 .cqc-kpi-value.cqc-success { color: var(--qc-success); }
@@ -460,13 +480,14 @@ article .headerline {
 .cqc-table th {
   background-color: var(--qc-surface);
   color: var(--qc-text-secondary);
-  font-weight: 600;
-  font-size: 0.78em;
+  font-weight: var(--cqc-weight-semibold);
+  font-size: var(--cqc-font-xs);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 11px 16px;
+  letter-spacing: 0.06em;
+  padding: 10px 16px;
   text-align: left;
   border-bottom: 2px solid var(--qc-border);
+  white-space: nowrap;
 }
 
 .cqc-table td {
@@ -474,24 +495,48 @@ article .headerline {
   border-bottom: 1px solid var(--qc-border-light);
   background: var(--qc-surface-raised);
   text-align: left;
-  font-size: 0.9em;
+  font-size: var(--cqc-font-base);
+  line-height: var(--cqc-leading-normal);
   color: var(--qc-text);
-  transition: background var(--qc-transition);
+  transition: background-color var(--qc-transition);
 }
 
 .cqc-table tbody tr {
   background: var(--qc-surface-raised);
-  transition: background var(--qc-transition);
+  transition: background-color var(--qc-transition);
 }
 
 .cqc-table tbody tr:hover {
   background-color: var(--qc-blue-lighter);
 }
 
+/* Subtle zebra striping */
+.cqc-table tbody tr:nth-child(even) {
+  background-color: rgba(0, 61, 165, 0.015);
+}
+
+/* Last row: clean bottom */
+.cqc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* === Tabular numbers for financial data === */
+.cqc-table .montant,
+.cqc-table td:last-child,
+.cqc-kpi-value,
+[data-value] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Negative amounts styling */
+.cqc-table .montant-negatif {
+  color: var(--qc-error, #dc3545);
+}
+
+/* Right-align money columns */
 .cqc-table .montant {
   text-align: right;
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
+  font-weight: var(--cqc-weight-medium);
   letter-spacing: -0.01em;
 }
 
@@ -766,8 +811,8 @@ article .headerline {
 .cqc-placeholder h3 {
   color: var(--qc-blue);
   margin-top: 0;
-  font-size: 1.1em;
-  font-weight: 600;
+  font-size: var(--cqc-font-lg);
+  font-weight: var(--cqc-weight-semibold);
 }
 
 .cqc-placeholder ul {
@@ -1024,8 +1069,8 @@ article svg {
 .cqc-report-intro h3 {
   margin: 0 0 8px 0;
   color: var(--qc-blue-dark);
-  font-size: 1.1em;
-  font-weight: 600;
+  font-size: var(--cqc-font-lg);
+  font-weight: var(--cqc-weight-semibold);
 }
 .cqc-report-intro p {
   margin: 6px 0;
