@@ -1184,6 +1184,79 @@ article svg {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* === Confidence visualization === */
+.cqc-confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cqc-confidence-bar {
+  width: 48px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--qc-border);
+  overflow: hidden;
+}
+.cqc-confidence-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 300ms ease;
+}
+.cqc-confidence-pct {
+  font-size: 0.78em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 32px;
+}
+.cqc-confidence-high .cqc-confidence-bar-fill { background: var(--qc-success); }
+.cqc-confidence-high .cqc-confidence-pct { color: var(--qc-success); }
+.cqc-confidence-medium .cqc-confidence-bar-fill { background: var(--qc-amber); }
+.cqc-confidence-medium .cqc-confidence-pct { color: var(--qc-amber); }
+.cqc-confidence-low .cqc-confidence-bar-fill { background: var(--qc-error); }
+.cqc-confidence-low .cqc-confidence-pct { color: var(--qc-error); }
+
+/* Row confidence borders */
+.cqc-table tbody tr.cqc-row-high-confidence td:first-child {
+  border-left: 3px solid var(--qc-success);
+}
+.cqc-table tbody tr.cqc-row-low-confidence td:first-child {
+  border-left: 3px solid var(--qc-amber);
+}
+
+/* Keyboard shortcut hint */
+.cqc-keyboard-hint {
+  font-size: 0.8em;
+  color: var(--qc-muted, #64748B);
+  margin-top: 8px;
+}
+.cqc-keyboard-hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 0.85em;
+  font-family: 'Inter', monospace;
+  background: var(--qc-surface-raised, #f8f9fa);
+  border: 1px solid var(--qc-border, #d1d5db);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 var(--qc-border, #d1d5db);
+}
+
+/* === Sidebar notification badge === */
+.cqc-sidebar-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--qc-error);
+  color: #fff;
+  font-size: 0.72em;
+  font-weight: 700;
+  margin-left: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
 /* === Reduced motion safety net === */
 /* OVERRIDE: Accessibility -- must override all animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -1905,6 +1978,9 @@ function injectReportHeader() {
 
 // ===== Chart.js Infrastructure =====
 
+/** @type {AbortController|null} Keyboard handler cleanup for SPA navigation */
+let keyboardController = null;
+
 /** @type {Promise<void>|null} */
 let chartJsPromise = null;
 
@@ -2122,6 +2198,104 @@ function animateKPIs() {
   });
 }
 
+// ===== Approval Queue: Keyboard Shortcuts =====
+
+/**
+ * Initialize keyboard shortcuts for the Approbation approval queue.
+ * j/k navigate rows, Space/Enter toggle checkbox, a clicks approve.
+ * Uses AbortController for clean SPA navigation teardown.
+ */
+function initApprovalKeyboard() {
+  // Clean up previous listener (SPA navigation cleanup)
+  if (keyboardController) keyboardController.abort();
+  keyboardController = new AbortController();
+
+  // Only activate on Approbation page
+  if (!window.location.pathname.includes("ApprobationExtension")) return;
+
+  const rows = document.querySelectorAll(".cqc-table tbody tr[data-row-index]");
+  if (rows.length === 0) return;
+
+  let focusedRow = -1;
+
+  function focusRow(index) {
+    rows.forEach(r => r.classList.remove("cqc-row-focused"));
+    if (index >= 0 && index < rows.length) {
+      focusedRow = index;
+      rows[index].classList.add("cqc-row-focused");
+      rows[index].scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  document.addEventListener("keydown", (e) => {
+    // Don't capture when typing in inputs
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
+
+    switch(e.key) {
+      case "j":
+        e.preventDefault();
+        focusRow(Math.min(focusedRow + 1, rows.length - 1));
+        break;
+      case "k":
+        e.preventDefault();
+        focusRow(Math.max(focusedRow - 1, 0));
+        break;
+      case " ":
+      case "Enter":
+        if (focusedRow >= 0) {
+          const cb = rows[focusedRow].querySelector('input[type="checkbox"]');
+          if (cb) { cb.checked = !cb.checked; e.preventDefault(); }
+        }
+        break;
+      case "a":
+        // Click the approve/submit button
+        const approveBtn = document.querySelector('.cqc-btn-success[type="submit"]') ||
+                           document.querySelector('button[type="submit"].cqc-btn-success');
+        if (approveBtn) { approveBtn.click(); }
+        break;
+    }
+  }, { signal: keyboardController.signal });
+}
+
+// ===== Sidebar Badge: Pending Approval Count =====
+
+/**
+ * Fetch pending approval count and inject a red badge into the sidebar link.
+ * Fire-and-forget -- errors are silently caught (badge is cosmetic).
+ */
+async function updateSidebarBadge() {
+  try {
+    // Find the Approbation link in sidebar
+    const links = document.querySelectorAll("aside a, nav a");
+    const link = Array.from(links).find(a =>
+      a.textContent.includes("Approbation") || a.href.includes("ApprobationExtension")
+    );
+    if (!link) return;
+
+    // Remove existing badge first (always clean up)
+    const existing = link.querySelector(".cqc-sidebar-badge");
+    if (existing) existing.remove();
+
+    // Determine the base path (Fava uses /<bfile-slug>/extension/...)
+    const pathParts = window.location.pathname.split("/");
+    const bfileSlug = pathParts[1] || "";
+    const resp = await fetch(`/${bfileSlug}/extension/ApprobationExtension/count`);
+    if (!resp.ok) return;
+
+    const data = await resp.json();
+    if (data.count > 0) {
+      const badge = document.createElement("span");
+      badge.className = "cqc-sidebar-badge";
+      badge.textContent = String(data.count);
+      link.style.display = "inline-flex";
+      link.style.alignItems = "center";
+      link.appendChild(badge);
+    }
+  } catch (e) {
+    // Silently fail -- badge is cosmetic, should never break the page
+  }
+}
+
 /** @type import("fava").ExtensionModule */
 export default {
   init() {
@@ -2138,5 +2312,7 @@ export default {
     attachTooltips();
     renderCharts();
     animateKPIs();
+    initApprovalKeyboard();
+    updateSidebarBadge();
   },
 };
