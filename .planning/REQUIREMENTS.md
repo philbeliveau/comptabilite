@@ -48,8 +48,8 @@ Requirements for AP/AR & Financial Operations milestone. Each maps to roadmap ph
 
 - [x] **RECM-01**: User can create recurring invoice templates with frequency and auto-generation date
 - [x] **RECM-02**: System generates invoices from templates on schedule or via `cqc facture generate-recurring`
-- [ ] **RECM-03**: System auto-matches bank deposits against outstanding AR invoices by amount and description
-- [ ] **RECM-04**: System auto-matches bank withdrawals against outstanding AP bills by amount and vendor
+- [x] **RECM-03**: System auto-matches bank deposits against outstanding AR invoices by amount and description
+- [x] **RECM-04**: System auto-matches bank withdrawals against outstanding AP bills by amount and vendor
 
 ### Fava Extension (FVAP)
 
@@ -128,8 +128,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLAP-03 | Phase 12 | Complete |
 | RECM-01 | Phase 13 | Complete |
 | RECM-02 | Phase 13 | Complete |
-| RECM-03 | Phase 13 | Pending |
-| RECM-04 | Phase 13 | Pending |
+| RECM-03 | Phase 13 | Complete |
+| RECM-04 | Phase 13 | Complete |
 | FVAP-01 | Phase 14 | Pending |
 | FVAP-02 | Phase 14 | Pending |
 | FVAP-03 | Phase 14 | Pending |

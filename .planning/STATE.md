@@ -8,7 +8,7 @@ progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 23
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 13 of 15 (Recurring Invoices & Auto-Matching)
-Plan: 1 of 2 in current phase (Plan 01 complete)
-Status: Plan 13-01 complete -- ready for Plan 13-02
-Last activity: 2026-02-26 - Completed Plan 13-01: Recurring Invoice Templates
+Phase: 13 of 15 (Recurring Invoices & Auto-Matching) -- COMPLETE
+Plan: 2 of 2 in current phase (Plan 02 complete)
+Status: Phase 13 complete -- ready for Phase 14
+Last activity: 2026-02-26 - Completed Plan 13-02: Auto-Matching Engine
 
-Progress: [##########          ] 50% (v1.2 phases 11-15)
+Progress: [############        ] 60% (v1.2 phases 11-15)
 
 ## Performance Metrics
 
@@ -52,7 +52,7 @@ Progress: [##########          ] 50% (v1.2 phases 11-15)
 |-------|-------|-------|----------|
 | 11. AP Foundation | 2/2 | 5min | 2.5 min |
 | 12. Aging AR/CLI | 2/2 | 9min | 4.5 min |
-| 13. Recurring Invoices | 1/2 | 4min | 4 min |
+| 13. Recurring Invoices | 2/2 | 9min | 4.5 min |
 
 *v1.1/v1.2 metrics will populate as plans execute*
 
@@ -82,6 +82,9 @@ Key v1.1/v1.2 decisions affecting AP/AR work:
 - RegistreRecurrents mirrors RegistreFactures YAML persistence pattern for recurring templates
 - avancer_date() uses relativedelta for months, timedelta for bimensuel (2 weeks)
 - Removed prompt on --frequence CLI option (default 'mensuel', prompt breaks non-interactive use)
+- Protocol pattern (FactureOuverte) for forward-compatible auto-matching interface
+- Shared _calculer_score() eliminates AR/AP duplication in matching engine
+- Registry path injection in _afficher_rapprochements for testability
 
 ### Pending Todos
 
@@ -107,5 +110,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 13-01-PLAN.md -- Plan 01 complete, ready for Plan 13-02
+Stopped at: Completed 13-02-PLAN.md -- Phase 13 complete, ready for Phase 14
 Resume file: None
