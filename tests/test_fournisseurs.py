@@ -14,6 +14,10 @@ from compteqc.fournisseurs.modeles import (
     LigneFactureFournisseur,
 )
 from compteqc.fournisseurs.registre import RegistreFournisseurs
+from compteqc.fournisseurs.journal import (
+    generer_ecriture_facture_fournisseur,
+    generer_ecriture_paiement_fournisseur,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -362,3 +366,216 @@ class TestProchainNumero:
         assert registre.prochain_numero(2026) == "FOUR-2026-001"
         # 2025 doit continuer a 003
         assert registre.prochain_numero(2025) == "FOUR-2025-003"
+
+
+# ---------------------------------------------------------------------------
+# Helpers for journal entry tests
+# ---------------------------------------------------------------------------
+
+def _parse_amounts(entry: str) -> list[Decimal]:
+    """Extract all CAD amounts from a Beancount entry string."""
+    import re
+    amounts = []
+    for line in entry.strip().split("\n"):
+        match = re.search(r'(-?[\d,]+\.?\d*)\s+CAD', line)
+        if match:
+            amounts.append(Decimal(match.group(1).replace(",", "")))
+    return amounts
+
+
+def _assert_balanced(entry: str) -> None:
+    """Assert that a Beancount entry balances (sum of all postings == 0)."""
+    amounts = _parse_amounts(entry)
+    total = sum(amounts)
+    assert total == Decimal("0"), f"Entry does not balance: sum={total}\n{entry}"
+
+
+# ---------------------------------------------------------------------------
+# Tests Journal - Facture Fournisseur (Bill Recording)
+# ---------------------------------------------------------------------------
+
+class TestJournalFactureFournisseur:
+    """Tests de generation d'ecritures Beancount pour les factures fournisseurs."""
+
+    def test_single_line_full_tax(self):
+        """Ligne unique avec ITC/ITR a 100%: depense + taxes separees."""
+        bill = _facture_fournisseur_exemple()
+        entry = generer_ecriture_facture_fournisseur(bill)
+
+        assert "Depenses:Honoraires-Professionnels:Comptable  1000.00 CAD" in entry
+        assert "Actifs:TPS-Payee  50.00 CAD" in entry
+        assert "Actifs:TVQ-Payee  99.75 CAD" in entry
+        assert "Passifs:ComptesFournisseurs  -1149.75 CAD" in entry
+        _assert_balanced(entry)
+
+    def test_multi_line_different_categories(self):
+        """Deux lignes avec categories de depenses differentes."""
+        bill = _facture_fournisseur_exemple(
+            lignes=[
+                LigneFactureFournisseur(
+                    description="Abonnement logiciel",
+                    montant=Decimal("500"),
+                    categorie_depense="Depenses:Bureau:Abonnements-Logiciels",
+                ),
+                LigneFactureFournisseur(
+                    description="Honoraires comptable",
+                    montant=Decimal("300"),
+                    categorie_depense="Depenses:Honoraires-Professionnels:Comptable",
+                ),
+            ]
+        )
+        entry = generer_ecriture_facture_fournisseur(bill)
+
+        assert "Depenses:Bureau:Abonnements-Logiciels" in entry
+        assert "Depenses:Honoraires-Professionnels:Comptable" in entry
+        assert "Actifs:TPS-Payee" in entry
+        assert "Actifs:TVQ-Payee" in entry
+        assert "Passifs:ComptesFournisseurs" in entry
+        _assert_balanced(entry)
+
+    def test_partial_itc_meals(self):
+        """Repas a 50% ITC/ITR: portion non-reclamable ajoutee a la depense."""
+        bill = _facture_fournisseur_exemple(
+            lignes=[
+                LigneFactureFournisseur(
+                    description="Repas client",
+                    montant=Decimal("50"),
+                    categorie_depense="Depenses:Repas-Representation",
+                    taux_itc=Decimal("0.5"),
+                    taux_itr=Decimal("0.5"),
+                ),
+            ]
+        )
+        entry = generer_ecriture_facture_fournisseur(bill)
+
+        # Full GST = 50 * 0.05 = 2.50, claimable = 1.25, non-claimable = 1.25
+        # Full QST = 50 * 0.09975 = 4.99, claimable = 2.50 (rounded), non-claimable = 2.49
+        # Expense total = 50 + 1.25 + 2.49 = 53.74
+        assert "Actifs:TPS-Payee  1.25 CAD" in entry
+        assert "Actifs:TVQ-Payee  2.50 CAD" in entry
+
+        # Expense debit includes pre-tax + non-claimable portions
+        amounts = _parse_amounts(entry)
+        depense_line = [
+            line for line in entry.strip().split("\n")
+            if "Depenses:Repas-Representation" in line
+        ]
+        assert len(depense_line) == 1
+        import re
+        match = re.search(r'(-?[\d,]+\.?\d*)\s+CAD', depense_line[0])
+        depense_amount = Decimal(match.group(1))
+        assert depense_amount == Decimal("53.74")
+
+        # AP credit = -(1.25 + 2.50 + 53.74) = -57.49
+        assert "Passifs:ComptesFournisseurs  -57.49 CAD" in entry
+        _assert_balanced(entry)
+
+    def test_no_tax_line(self):
+        """Ligne sans aucune taxe: seulement depense et AP."""
+        bill = _facture_fournisseur_exemple(
+            lignes=[
+                LigneFactureFournisseur(
+                    description="Service exempt",
+                    montant=Decimal("200"),
+                    categorie_depense="Depenses:Divers",
+                    tps_applicable=False,
+                    tvq_applicable=False,
+                ),
+            ]
+        )
+        entry = generer_ecriture_facture_fournisseur(bill)
+
+        assert "Depenses:Divers  200.00 CAD" in entry
+        assert "Passifs:ComptesFournisseurs  -200.00 CAD" in entry
+        assert "Actifs:TPS-Payee" not in entry
+        assert "Actifs:TVQ-Payee" not in entry
+        _assert_balanced(entry)
+
+    def test_narration_format(self):
+        """Narration contient le numero interne et le nom du fournisseur."""
+        bill = _facture_fournisseur_exemple(
+            fournisseur="Test Vendor",
+        )
+        entry = generer_ecriture_facture_fournisseur(bill)
+        first_line = entry.split("\n")[0]
+
+        assert "FOUR-2026-001" in first_line
+        assert "Test Vendor" in first_line
+
+    def test_date_in_entry(self):
+        """La date de l'ecriture correspond a la date de facture."""
+        bill = _facture_fournisseur_exemple(
+            date_facture=datetime.date(2026, 3, 20),
+        )
+        entry = generer_ecriture_facture_fournisseur(bill)
+
+        assert entry.startswith("2026-03-20")
+
+
+# ---------------------------------------------------------------------------
+# Tests Journal - Paiement Fournisseur
+# ---------------------------------------------------------------------------
+
+class TestJournalPaiementFournisseur:
+    """Tests de generation d'ecritures Beancount pour les paiements fournisseurs."""
+
+    def test_full_payment_cheque(self):
+        """Paiement complet par cheque -> Actifs:Banque:RBC:Cheques."""
+        bill = _facture_fournisseur_exemple(
+            date_paiement=datetime.date(2026, 2, 1),
+            methode_paiement="cheque",
+        )
+        entry = generer_ecriture_paiement_fournisseur(bill)
+
+        assert "Passifs:ComptesFournisseurs  1149.75 CAD" in entry
+        assert "Actifs:Banque:RBC:Cheques  -1149.75 CAD" in entry
+        assert "partiel" not in entry.lower().split("\n")[0].lower()
+        _assert_balanced(entry)
+
+    def test_full_payment_carte_credit(self):
+        """Paiement complet par carte de credit -> Passifs:CartesCredit:RBC."""
+        bill = _facture_fournisseur_exemple(
+            date_paiement=datetime.date(2026, 2, 1),
+            methode_paiement="carte-credit",
+        )
+        entry = generer_ecriture_paiement_fournisseur(bill, methode="carte-credit")
+
+        assert "Passifs:ComptesFournisseurs  1149.75 CAD" in entry
+        assert "Passifs:CartesCredit:RBC  -1149.75 CAD" in entry
+        _assert_balanced(entry)
+
+    def test_partial_payment(self):
+        """Paiement partiel: seulement le montant specifie."""
+        bill = _facture_fournisseur_exemple(
+            date_paiement=datetime.date(2026, 2, 1),
+        )
+        entry = generer_ecriture_paiement_fournisseur(
+            bill, montant=Decimal("500"), methode="cheque",
+            date_paiement=datetime.date(2026, 2, 1),
+        )
+
+        assert "Passifs:ComptesFournisseurs  500.00 CAD" in entry
+        assert "Actifs:Banque:RBC:Cheques  -500.00 CAD" in entry
+        assert "partiel" in entry.split("\n")[0].lower()
+        _assert_balanced(entry)
+
+    def test_payment_narration(self):
+        """Narration du paiement contient le numero de facture et le fournisseur."""
+        bill = _facture_fournisseur_exemple(
+            fournisseur="Test Vendor",
+            date_paiement=datetime.date(2026, 2, 1),
+        )
+        entry = generer_ecriture_paiement_fournisseur(bill)
+        first_line = entry.split("\n")[0]
+
+        assert "FOUR-2026-001" in first_line
+        assert "Test Vendor" in first_line
+
+    def test_payment_date(self):
+        """La date du paiement est celle fournie en parametre."""
+        bill = _facture_fournisseur_exemple()
+        entry = generer_ecriture_paiement_fournisseur(
+            bill, date_paiement=datetime.date(2026, 5, 15),
+        )
+
+        assert entry.startswith("2026-05-15")
