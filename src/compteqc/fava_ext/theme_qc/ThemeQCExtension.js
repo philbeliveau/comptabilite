@@ -5,6 +5,8 @@
 const THEME_CSS = `
 /* ===== Quebec Color Palette (flag-coherent) ===== */
 :root {
+  color-scheme: light;
+
   /* Core Quebec blue from the fleurdelise */
   --qc-blue: #003DA5;
   --qc-blue-light: #1A5BBF;
@@ -16,7 +18,7 @@ const THEME_CSS = `
   /* Surfaces */
   --qc-surface: #F8FAFC;
   --qc-surface-raised: #FFFFFF;
-  --qc-surface-sidebar: #0A1628;
+  --qc-surface-sidebar: #122B52;
 
   /* Semantic */
   --qc-success: #16A34A;
@@ -151,21 +153,19 @@ header h1 strong {
 /* Header filter inputs */
 header input, header select {
   border-radius: var(--qc-radius-sm);
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(26, 91, 191, 0.9);
   color: white;
-  background-color: rgba(0, 61, 165, 0.85); /* fallback for browsers without backdrop-filter */
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   transition: all var(--qc-transition);
   font-family: 'Inter', sans-serif;
+  font-size: var(--cqc-font-sm);
 }
 
 header input:focus, header select:focus {
-  background: rgba(255,255,255,0.18);
-  border-color: rgba(255,255,255,0.4);
+  background: rgba(26, 91, 191, 1);
+  border-color: rgba(255,255,255,0.5);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
 }
 
 header input::placeholder {
