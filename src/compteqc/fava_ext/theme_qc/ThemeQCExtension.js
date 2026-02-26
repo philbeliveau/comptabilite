@@ -1407,6 +1407,19 @@ article svg {
     animation: none;
   }
 }
+
+/* ===== Screen-reader-only utility ===== */
+.cqc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 `;
 
 let styleInjected = false;
@@ -2424,6 +2437,8 @@ async function updateSidebarBadge() {
       const badge = document.createElement("span");
       badge.className = "cqc-sidebar-badge";
       badge.textContent = String(data.count);
+      badge.setAttribute("aria-live", "polite");
+      badge.setAttribute("aria-label", data.count + " transactions en attente");
       link.style.display = "inline-flex";
       link.style.alignItems = "center";
       link.appendChild(badge);

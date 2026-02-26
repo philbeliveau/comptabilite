@@ -15,18 +15,19 @@
   <div class="cqc-actions-bar">
     <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleAll(true)">Tout sélectionner</button>
     <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleAll(false)">Tout désélectionner</button>
-    <button type="submit" class="cqc-btn cqc-btn-success">Approuver la sélection</button>
+    <button type="submit" class="cqc-btn cqc-btn-success" aria-label="Approuver la selection">Approuver la sélection</button>
     <label class="cqc-label" style="margin-left: auto;">
       <input type="checkbox" name="confirmer_gros_montants">
       Confirmer les montants &gt; 2 000 $
     </label>
   </div>
-  <p class="cqc-keyboard-hint">
+  <p class="cqc-keyboard-hint" id="keyboard-shortcuts-hint">
     Raccourcis : <kbd>j</kbd>/<kbd>k</kbd> naviguer, <kbd>Espace</kbd> selectionner, <kbd>a</kbd> approuver
   </p>
 
   <div class="cqc-card-flush">
-    <table class="cqc-table">
+    <table class="cqc-table" aria-describedby="keyboard-shortcuts-hint" aria-roledescription="Tableau interactif avec raccourcis clavier">
+      <caption class="cqc-sr-only">File d'approbation des transactions</caption>
       <thead>
         <tr>
           <th class="cqc-col-checkbox"><input type="checkbox" id="select-all" onchange="toggleAll(this.checked)"></th>
@@ -40,7 +41,8 @@
       </thead>
       <tbody>
         {% for txn in pending %}
-        <tr data-row-index="{{ loop.index0 }}"{% if txn.confiance >= 0.95 %} class="cqc-row-high-confidence"{% elif txn.confiance < 0.7 %} class="cqc-row-low-confidence"{% endif %}>
+        {% set conf = txn.confiance|float %}
+        <tr data-row-index="{{ loop.index0 }}"{% if conf >= 0.95 %} class="cqc-row-high-confidence"{% elif conf < 0.7 %} class="cqc-row-low-confidence"{% endif %}>
           <td><input type="checkbox" name="ids" value="{{ loop.index0 }}"></td>
           <td>{{ txn.date }}</td>
           <td>{{ txn.payee }}</td>
@@ -48,11 +50,12 @@
           <td class="montant {{ 'cqc-gros-montant' if txn.gros_montant else '' }}">{{ "{:,.2f}".format(txn.montant) }} $</td>
           <td>{{ txn.get("compte_propose", "-") }}</td>
           <td>
-            <div class="cqc-confidence cqc-confidence-{{ 'high' if txn.confiance >= 0.95 else ('medium' if txn.confiance >= 0.7 else 'low') }}">
+            <div class="cqc-confidence cqc-confidence-{{ 'high' if conf >= 0.95 else ('medium' if conf >= 0.7 else 'low') }}"
+                 role="meter" aria-valuenow="{{ (conf * 100)|round|int }}" aria-valuemin="0" aria-valuemax="100" aria-label="Confiance: {{ (conf * 100)|round|int }}%">
               <div class="cqc-confidence-bar">
-                <div class="cqc-confidence-bar-fill" style="width: {{ (txn.confiance * 100)|round|int }}%"></div>
+                <div class="cqc-confidence-bar-fill" style="width: {{ (conf * 100)|round|int }}%"></div>
               </div>
-              <span class="cqc-confidence-pct">{{ (txn.confiance * 100)|round|int }}%</span>
+              <span class="cqc-confidence-pct">{{ (conf * 100)|round|int }}%</span>
             </div>
             <span class="cqc-source-tag">{{ txn.source }}</span>
           </td>
@@ -77,7 +80,7 @@
       <input type="text" name="compte_corrige" placeholder="Depenses:Bureau:Fournitures"
              class="cqc-input" style="width: 100%;">
     </label>
-    <button type="submit" class="cqc-btn cqc-btn-error">Rejeter</button>
+    <button type="submit" class="cqc-btn cqc-btn-error" aria-label="Rejeter la transaction">Rejeter</button>
   </form>
 </div>
 

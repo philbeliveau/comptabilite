@@ -14,7 +14,7 @@
 {% endif %}
 
 <div class="cqc-card">
-  <div id="dropzone" class="cqc-dropzone">
+  <div id="dropzone" class="cqc-dropzone" role="button" tabindex="0" aria-label="Zone de depot: glissez un fichier ou cliquez pour telecharger">
     <div class="cqc-dropzone-text">
       <span class="icone">&#128194;</span>
       <strong>Glissez-déposez un fichier ici</strong><br>
@@ -22,6 +22,7 @@
     </div>
   </div>
 
+  <label for="fichier-input" class="cqc-sr-only">Selectionner des fichiers</label>
   <input type="file" id="fichier-input" name="fichier"
          accept=".pdf,.jpg,.jpeg,.png,.heic" multiple
          style="display: none;">
@@ -46,6 +47,7 @@
   {% set recents = extension.recent_uploads() %}
   {% if recents %}
   <table class="cqc-table">
+    <caption class="cqc-sr-only">Recus recemment televerses</caption>
     <thead>
       <tr>
         <th>Date</th>

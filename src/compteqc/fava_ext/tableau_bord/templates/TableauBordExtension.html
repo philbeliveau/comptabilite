@@ -64,7 +64,7 @@
          id="chart-revenus-mensuels"
          data-chart='{{ extension.revenus_mensuels_json() }}'
          data-chart-type="line">
-      <canvas></canvas>
+      <canvas role="img" aria-label="Graphique des revenus mensuels"></canvas>
     </div>
   </div>
   <div class="cqc-card">
@@ -73,7 +73,7 @@
          id="chart-depenses-categories"
          data-chart='{{ extension.depenses_categories_json() }}'
          data-chart-type="doughnut">
-      <canvas></canvas>
+      <canvas role="img" aria-label="Graphique des depenses par categorie"></canvas>
     </div>
   </div>
 </div>
@@ -81,6 +81,7 @@
 <div class="cqc-card">
   <h3>Transactions recentes</h3>
   <table class="cqc-table">
+    <caption class="cqc-sr-only">Transactions recentes</caption>
     <thead>
       <tr>
         <th>Date</th>
