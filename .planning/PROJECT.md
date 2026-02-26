@@ -34,18 +34,22 @@ Every dollar that flows through the corporation is correctly categorized, tracea
 
 <!-- Current scope. Building toward these. -->
 
-## Current Milestone: v1.1 Production UI/UX
+## Current Milestone: v1.2 AP/AR & Financial Operations
 
-**Goal:** Transform CompteQC from functional to fintech-polished — competing with QuickBooks on look, feel, and usability while staying within Fava's extension architecture.
+**Goal:** Implement a complete accounts payable and accounts receivable system — track vendor bills, manage customer invoices, automate payment matching, and surface aging reports — so the solo consultant's cash position is always clear and CPA-ready.
 
 **Target features:**
-- Dashboard homepage with KPI cards and Chart.js visualizations (revenue trend, expense breakdown, cash flow)
-- Sleek table redesign across all extensions (hover states, spacing, visual hierarchy)
-- Animated receipt upload with progress bar, file previews, and polished drag-and-drop
-- Approval queue UX overhaul (scannable layout, refined confidence badges, smooth bulk actions)
-- Design system refinement: Quebec blue palette, typography scale, spacing, shadows
-- Micro-interactions: KPI count-up animation, table row hover, page transitions
-- All extensions restyled to consistent production quality
+- Accounts Payable: vendor bill tracking (FactureFournisseur model, YAML registry, Beancount journal entries)
+- Accounts Receivable enhancements: partial payments, aging calculation, recurring invoice templates
+- Aging reports: AR and AP aging by bucket (0-30, 30-60, 60-90, 90+ days), combined net position
+- CLI commands: `cqc fournisseur add/list/pay`, `cqc aging ar/ap/summary`
+- Fava extension tab: combined AP/AR view with KPI row, sub-tab toggle, Chart.js aging chart, inline forms
+- Receipt-to-AP pipeline: receipt upload → AI extraction → "Create AP?" prompt → pre-filled form
+- Auto-matching UX: bank transactions matched to open AR invoices / AP bills in approval queue
+- MCP server tools: `ap_list`, `ap_add`, `ap_pay`, `ar_aging`, `ap_aging`, `apar_summary`
+- Dashboard KPI: net AR/AP position on homepage
+
+**Design document:** `docs/design/accounts-payable-receivable.md` (1671 lines, comprehensive)
 
 ### Out of Scope
 
@@ -125,4 +129,4 @@ Every dollar that flows through the corporation is correctly categorized, tracea
 | Keep Quebec blue identity | Refine #003DA5 palette rather than rebrand | — Pending |
 
 ---
-*Last updated: 2026-02-25 after v1.1 milestone started*
+*Last updated: 2026-02-26 after v1.2 milestone started*
