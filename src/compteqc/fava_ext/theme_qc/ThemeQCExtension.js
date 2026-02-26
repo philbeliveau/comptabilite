@@ -154,7 +154,9 @@ header input, header select {
   border: 1px solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.1);
   color: white;
+  background-color: rgba(0, 61, 165, 0.85); /* fallback for browsers without backdrop-filter */
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   transition: all var(--qc-transition);
   font-family: 'Inter', sans-serif;
 }
@@ -231,6 +233,8 @@ aside {
   padding-top: 8px;
   width: 310px !important;
   min-width: 310px !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
 
 aside ul {
@@ -653,19 +657,19 @@ article .headerline {
 .cqc-alert-success {
   background: var(--qc-success-bg);
   border-color: var(--qc-success);
-  color: #15803D;
+  color: #15803D; /* a11y: darker shade for contrast on colored bg */
 }
 
 .cqc-alert-warning {
   background: var(--qc-warning-bg);
   border-color: var(--qc-warning);
-  color: #C2410C;
+  color: #C2410C; /* a11y: darker shade for contrast on colored bg */
 }
 
 .cqc-alert-error {
   background: var(--qc-error-bg);
   border-color: var(--qc-error);
-  color: #B91C1C;
+  color: #B91C1C; /* a11y: darker shade for contrast on colored bg */
 }
 
 .cqc-alert-info {
@@ -677,7 +681,7 @@ article .headerline {
 .cqc-alert-amber {
   background: var(--qc-amber-bg);
   border-color: var(--qc-amber);
-  color: #92400E;
+  color: #92400E; /* a11y: darker shade for contrast on colored bg */
 }
 
 /* ===== Buttons ===== */
@@ -748,6 +752,20 @@ article .headerline {
   border-color: var(--qc-blue);
   color: var(--qc-blue);
   background: var(--qc-blue-lighter);
+}
+
+/* ===== Focus-visible for keyboard navigation ===== */
+.cqc-btn:focus-visible,
+.cqc-badge:focus-visible,
+article a:focus-visible,
+aside a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--qc-blue);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 61, 165, 0.15);
 }
 
 /* ===== Actions Bar ===== */
@@ -1086,7 +1104,7 @@ article .headerline {
   border-left: 4px solid var(--qc-amber);
   border-radius: var(--qc-radius-sm);
   font-size: var(--cqc-font-base);
-  color: #92400E;
+  color: #92400E; /* a11y: darker shade for contrast on colored bg */
   line-height: 1.5;
 }
 
