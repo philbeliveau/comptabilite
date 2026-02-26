@@ -21,6 +21,8 @@ from fava.ext import FavaExtensionBase, extension_endpoint
 from compteqc.factures.modeles import Facture, LigneFacture, InvoiceStatus
 from compteqc.factures.journal import generer_ecriture_facture
 from compteqc.factures.registre import RegistreFactures
+from compteqc.fournisseurs.modeles import FactureFournisseur, LigneFactureFournisseur, BillStatus
+from compteqc.fournisseurs.journal import generer_ecriture_facture_fournisseur
 from compteqc.fournisseurs.registre import RegistreFournisseurs
 from compteqc.vieillissement import (
     calculer_vieillissement_ar,
@@ -294,6 +296,74 @@ class ComptesFournisseursExtension(FavaExtensionBase):
         ecriture = generer_ecriture_facture(facture)
         ledger_path = Path(self.ledger.beancount_file_path)
         journal_path = ledger_path.parent / "factures" / "journal.beancount"
+        journal_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(journal_path, "a", encoding="utf-8") as f:
+            f.write("\n" + ecriture + "\n")
+
+        # Reload ledger to pick up new entry
+        self.ledger.load_file()
+
+        return redirect(request.referrer or "/")
+
+    @extension_endpoint("creer_facture_fournisseur", ["POST"])
+    def creer_facture_fournisseur(self):
+        """POST: Create a new AP bill from form data."""
+        form = request.form
+
+        fournisseur = form.get("fournisseur", "").strip()
+        numero_reference = form.get("numero_reference", "").strip()
+        date_facture_str = form.get("date_facture", "")
+        date_echeance_str = form.get("date_echeance", "")
+        notes = form.get("notes", "")
+
+        date_facture = datetime.date.fromisoformat(date_facture_str)
+        date_echeance = datetime.date.fromisoformat(date_echeance_str)
+
+        # Parse dynamic line items
+        # Fields: ap_description_0, ap_montant_0, ap_categorie_0, ap_tps_0, ap_tvq_0, ap_taux_itc_0, ap_taux_itr_0
+        lignes: list[LigneFactureFournisseur] = []
+        i = 0
+        while f"ap_description_{i}" in form:
+            desc = form.get(f"ap_description_{i}", "").strip()
+            montant = Decimal(form.get(f"ap_montant_{i}", "0"))
+            categorie = form.get(f"ap_categorie_{i}", "Depenses:Divers")
+            tps = f"ap_tps_{i}" in form
+            tvq = f"ap_tvq_{i}" in form
+            taux_itc = Decimal(form.get(f"ap_taux_itc_{i}", "1.0"))
+            taux_itr = Decimal(form.get(f"ap_taux_itr_{i}", "1.0"))
+            if desc and montant > 0:
+                lignes.append(LigneFactureFournisseur(
+                    description=desc,
+                    montant=montant,
+                    categorie_depense=categorie,
+                    tps_applicable=tps,
+                    tvq_applicable=tvq,
+                    taux_itc=taux_itc,
+                    taux_itr=taux_itr,
+                ))
+            i += 1
+
+        if not lignes or not fournisseur:
+            return redirect(request.referrer or "/")
+
+        registre = RegistreFournisseurs()
+        numero_interne = registre.prochain_numero(date_facture.year)
+        bill = FactureFournisseur(
+            numero_reference=numero_reference,
+            numero_interne=numero_interne,
+            fournisseur=fournisseur,
+            date_facture=date_facture,
+            date_echeance=date_echeance,
+            lignes=lignes,
+            statut=BillStatus.RECEIVED,
+            notes=notes,
+        )
+        registre.ajouter(bill)
+
+        # Generate and append Beancount journal entry
+        ecriture = generer_ecriture_facture_fournisseur(bill)
+        ledger_path = Path(self.ledger.beancount_file_path)
+        journal_path = ledger_path.parent / "fournisseurs" / "journal.beancount"
         journal_path.parent.mkdir(parents=True, exist_ok=True)
         with open(journal_path, "a", encoding="utf-8") as f:
             f.write("\n" + ecriture + "\n")

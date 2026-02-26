@@ -326,6 +326,81 @@
 
 <!-- AP Table -->
 <div id="tab-ap" style="display: none;">
+  <!-- AP Creation Button -->
+  <div style="margin-bottom: 16px;">
+    <button class="cqc-btn cqc-btn-primary" onclick="toggleForm('ap-form')">+ Nouvelle facture fournisseur</button>
+  </div>
+
+  <!-- AP Creation Form (hidden by default) -->
+  <div id="ap-form" class="cqc-card" style="display: none; margin-bottom: 16px;">
+    <h3>Nouvelle facture fournisseur</h3>
+    <form method="POST" action="/{{ g.beancount_file_slug }}/extension/{{ extension.name }}/creer_facture_fournisseur">
+      <div class="cqc-form-row" style="display: flex; gap: 16px;">
+        <div style="flex:1;">
+          <label>Fournisseur</label>
+          <input type="text" name="fournisseur" list="vendors-list" required>
+          <datalist id="vendors-list">
+            {% for v in extension.vendor_names() %}
+            <option value="{{ v }}">
+            {% endfor %}
+          </datalist>
+        </div>
+        <div style="flex:1;">
+          <label>Ref fournisseur</label>
+          <input type="text" name="numero_reference" placeholder="INV-2026-..." required>
+        </div>
+      </div>
+      <div class="cqc-form-row" style="display: flex; gap: 16px;">
+        <div>
+          <label>Date facture</label>
+          <input type="date" name="date_facture" value="{{ extension.today_str() }}" required>
+        </div>
+        <div>
+          <label>Echeance</label>
+          <input type="date" name="date_echeance" value="{{ extension.echeance_default_str() }}" required>
+        </div>
+      </div>
+
+      <h4>Lignes</h4>
+      <div id="ap-lines">
+        <div class="cqc-form-line" data-index="0">
+          <input type="text" name="ap_description_0" placeholder="Description" required style="flex:2;">
+          <input type="number" name="ap_montant_0" step="0.01" placeholder="Montant" required style="width:100px;">
+          <select name="ap_categorie_0" style="flex:2;">
+            {% for acct in extension.expense_accounts() %}
+            <option value="{{ acct }}">{{ acct }}</option>
+            {% endfor %}
+          </select>
+          <label><input type="checkbox" name="ap_tps_0" checked> TPS</label>
+          <label><input type="checkbox" name="ap_tvq_0" checked> TVQ</label>
+          <input type="number" name="ap_taux_itc_0" value="1.0" step="0.1" min="0" max="1" style="width:50px;" title="Taux ITC">
+          <input type="number" name="ap_taux_itr_0" value="1.0" step="0.1" min="0" max="1" style="width:50px;" title="Taux ITR">
+        </div>
+      </div>
+      <button type="button" class="cqc-btn cqc-btn-sm cqc-btn-outline" onclick="addAPLine()" style="margin-top:8px;">+ Ajouter une ligne</button>
+
+      <div id="ap-totals" style="margin-top: 16px; padding: 12px; background: var(--cqc-bg-secondary, #f8f9fa); border-radius: 6px;">
+        <div>Sous-total: <span id="ap-subtotal">0.00</span> $</div>
+        <div>TPS (5%): <span id="ap-tps">0.00</span> $</div>
+        <div>TVQ (9.975%): <span id="ap-tvq">0.00</span> $</div>
+        <div><strong>Total: <span id="ap-total">0.00</span> $</strong></div>
+        <hr style="margin: 8px 0;">
+        <div>ITC reclamable: <span id="ap-itc">0.00</span> $</div>
+        <div>ITR reclamable: <span id="ap-itr">0.00</span> $</div>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <label>Notes</label>
+        <textarea name="notes" rows="2" style="width:100%;"></textarea>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <button type="submit" class="cqc-btn cqc-btn-success">Creer la facture fournisseur</button>
+        <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleForm('ap-form')">Annuler</button>
+      </div>
+    </form>
+  </div>
+
   <div class="cqc-card-flush">
     <table class="cqc-table">
       <caption class="cqc-sr-only">Factures fournisseurs en cours</caption>
@@ -381,7 +456,6 @@
       </tbody>
     </table>
   </div>
-  <!-- Placeholder: Plan 02 adds "+ Nouvelle facture fournisseur" button here -->
 </div>
 
 <!-- Aging Chart -->
@@ -454,6 +528,79 @@ document.querySelectorAll('#ar-lines input').forEach(function(inp) {
   inp.addEventListener('input', updateARTotals);
   inp.addEventListener('change', updateARTotals);
 });
+
+/* ---- AP form: dynamic lines and live totals with ITC/ITR ---- */
+var apLineCount = 1;
+
+function addAPLine() {
+  var idx = apLineCount++;
+  var container = document.getElementById('ap-lines');
+  var div = document.createElement('div');
+  div.className = 'cqc-form-line';
+  div.setAttribute('data-index', idx);
+  // Build the category select options from the first line's select
+  var firstSelect = document.querySelector('#ap-lines select');
+  var options = firstSelect ? firstSelect.innerHTML : '<option>Depenses:Divers</option>';
+  div.innerHTML = '<input type="text" name="ap_description_' + idx + '" placeholder="Description" required style="flex:2;">'
+    + '<input type="number" name="ap_montant_' + idx + '" step="0.01" placeholder="Montant" required style="width:100px;">'
+    + '<select name="ap_categorie_' + idx + '" style="flex:2;">' + options + '</select>'
+    + '<label><input type="checkbox" name="ap_tps_' + idx + '" checked> TPS</label>'
+    + '<label><input type="checkbox" name="ap_tvq_' + idx + '" checked> TVQ</label>'
+    + '<input type="number" name="ap_taux_itc_' + idx + '" value="1.0" step="0.1" min="0" max="1" style="width:50px;" title="Taux ITC">'
+    + '<input type="number" name="ap_taux_itr_' + idx + '" value="1.0" step="0.1" min="0" max="1" style="width:50px;" title="Taux ITR">';
+  container.appendChild(div);
+  div.querySelectorAll('input, select').forEach(function(inp) {
+    inp.addEventListener('input', updateAPTotals);
+    inp.addEventListener('change', updateAPTotals);
+  });
+}
+
+function updateAPTotals() {
+  var subtotal = 0, tpsTotal = 0, tvqTotal = 0, itcTotal = 0, itrTotal = 0;
+  document.querySelectorAll('#ap-lines .cqc-form-line').forEach(function(line) {
+    var idx = line.getAttribute('data-index');
+    var montant = parseFloat(line.querySelector('[name="ap_montant_' + idx + '"]').value) || 0;
+    subtotal += montant;
+    var tpsOn = line.querySelector('[name="ap_tps_' + idx + '"]').checked;
+    var tvqOn = line.querySelector('[name="ap_tvq_' + idx + '"]').checked;
+    var tauxItc = parseFloat(line.querySelector('[name="ap_taux_itc_' + idx + '"]').value) || 0;
+    var tauxItr = parseFloat(line.querySelector('[name="ap_taux_itr_' + idx + '"]').value) || 0;
+    var lineTps = tpsOn ? montant * 0.05 : 0;
+    var lineTvq = tvqOn ? montant * 0.09975 : 0;
+    tpsTotal += lineTps;
+    tvqTotal += lineTvq;
+    itcTotal += lineTps * tauxItc;
+    itrTotal += lineTvq * tauxItr;
+  });
+  document.getElementById('ap-subtotal').textContent = subtotal.toFixed(2);
+  document.getElementById('ap-tps').textContent = tpsTotal.toFixed(2);
+  document.getElementById('ap-tvq').textContent = tvqTotal.toFixed(2);
+  document.getElementById('ap-total').textContent = (subtotal + tpsTotal + tvqTotal).toFixed(2);
+  document.getElementById('ap-itc').textContent = itcTotal.toFixed(2);
+  document.getElementById('ap-itr').textContent = itrTotal.toFixed(2);
+}
+
+// Attach listeners to initial AP line
+document.querySelectorAll('#ap-lines input, #ap-lines select').forEach(function(inp) {
+  inp.addEventListener('input', updateAPTotals);
+  inp.addEventListener('change', updateAPTotals);
+});
+
+// Pre-fill AP form from URL query parameters (receipt-to-AP pipeline)
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('prefill') === '1') {
+    // Switch to AP tab
+    showTab('ap');
+    // Open the AP form
+    document.getElementById('ap-form').style.display = '';
+    // Fill fields
+    if (params.get('fournisseur')) document.querySelector('[name="fournisseur"]').value = params.get('fournisseur');
+    if (params.get('date')) document.querySelector('[name="date_facture"]').value = params.get('date');
+    if (params.get('montant')) document.querySelector('[name="ap_montant_0"]').value = params.get('montant');
+    updateAPTotals();
+  }
+})();
 </script>
 
 {% endblock %}
