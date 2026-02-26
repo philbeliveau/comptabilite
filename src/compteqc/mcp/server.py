@@ -57,6 +57,7 @@ import compteqc.mcp.tools.quebec  # noqa: E402, F401
 import compteqc.mcp.tools.categorisation  # noqa: E402, F401
 import compteqc.mcp.tools.approbation  # noqa: E402, F401
 import compteqc.mcp.tools.paie  # noqa: E402, F401
+import compteqc.mcp.tools.apar  # noqa: E402, F401
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
