@@ -39,11 +39,11 @@
   2. CSS theming overrides Fava styles through custom property reassignment, not `!important` escalation -- existing `!important` count reduced by at least 80%
   3. All animations and transitions are suppressed when the user has `prefers-reduced-motion: reduce` enabled in their OS settings
   4. Money amounts across all extensions render with tabular-nums (columns align visually) and the Inter font loads without FOUT
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: Chart.js CDN loader, chart registry with destroy-on-load, and renderCharts() engine
-- [ ] 06-02: CSS variable migration and typography/animation foundation
+- [ ] 06-01-PLAN.md — Chart.js CDN loader, chart registry with destroy-on-load, renderCharts() engine, KPI animation, page transitions, prefers-reduced-motion guards
+- [ ] 06-02-PLAN.md — CSS variable migration (!important audit), typography scale, tabular-nums for money columns
 
 ### Phase 7: Dashboard Homepage
 **Goal**: User opens CompteQC and immediately sees a financial snapshot -- KPI cards with animated numbers, a revenue trend line, an expense breakdown donut, and recent transaction activity
