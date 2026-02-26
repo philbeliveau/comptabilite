@@ -151,11 +151,15 @@ header h1 strong {
 }
 
 /* Header filter inputs -- white boxes with dark text */
-header input, header select {
+/* OVERRIDE: Svelte-scoped + dark mode -- force white bg, dark text, dark placeholder on all header inputs */
+header input, header select,
+header input[type="text"], header select[class] {
   border-radius: var(--qc-radius-sm);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid #CBD5E1 !important;
   background: #FFFFFF !important;
-  color: var(--qc-text) !important;
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+  -webkit-text-fill-color: #1E293B !important;
   transition: all var(--qc-transition);
   font-family: 'Inter', sans-serif;
   font-size: var(--cqc-font-sm);
@@ -163,13 +167,18 @@ header input, header select {
 
 header input:focus, header select:focus {
   background: #FFFFFF !important;
-  border-color: var(--qc-blue-light);
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+  -webkit-text-fill-color: #1E293B !important;
+  border-color: var(--qc-blue) !important;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+  box-shadow: 0 0 0 3px rgba(0, 61, 165, 0.15);
 }
 
 header input::placeholder {
-  color: var(--qc-muted);
+  color: #64748B !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #64748B !important;
 }
 
 /* ===== CompteQC Brand Strip ===== */
