@@ -17,6 +17,7 @@ include "comptes.beancount"
 ; Les fichiers mensuels seront ajoutes dynamiquement
 
 2010-01-01 custom "fava-extension" "compteqc.fava_ext.theme_qc"
+2010-01-01 custom "fava-extension" "compteqc.fava_ext.tableau_bord"
 2010-01-01 custom "fava-extension" "compteqc.fava_ext.approbation"
 2010-01-01 custom "fava-extension" "compteqc.fava_ext.paie_qc"
 2010-01-01 custom "fava-extension" "compteqc.fava_ext.taxes_qc"
