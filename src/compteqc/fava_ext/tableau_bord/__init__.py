@@ -109,14 +109,150 @@ class TableauBordExtension(FavaExtensionBase):
         return datetime.date.today().year
 
     # ------------------------------------------------------------------
-    # Stubs for remaining compute methods (implemented in Task 2)
+    # Revenus mensuels (line chart)
     # ------------------------------------------------------------------
 
     def _compute_revenus_mensuels(self) -> None:
-        """Placeholder -- implemented in Task 2."""
+        """Calcule les revenus mensuels pour le graphique en ligne."""
+        annee = datetime.date.today().year
+        mensuels = [Decimal("0")] * 12
+
+        for entry in self.ledger.all_entries:
+            if not isinstance(entry, data.Transaction):
+                continue
+            if entry.date.year != annee:
+                continue
+            for posting in entry.postings:
+                if posting.units is None:
+                    continue
+                if posting.account.startswith("Revenus"):
+                    # Negate: credits are negative in Beancount
+                    mensuels[entry.date.month - 1] -= posting.units.number
+
+        mois_courant = datetime.date.today().month
+        self._revenus_mensuels = {
+            "labels": MOIS_FR[:mois_courant],
+            "datasets": [{
+                "label": "Revenus",
+                "data": [float(m) for m in mensuels[:mois_courant]],
+            }],
+        }
+
+    def revenus_mensuels(self) -> dict:
+        """Retourne les donnees de revenus mensuels."""
+        return self._revenus_mensuels
+
+    def revenus_mensuels_json(self) -> str:
+        """Retourne les revenus mensuels en JSON pour data-chart."""
+        return json.dumps(self._revenus_mensuels)
+
+    # ------------------------------------------------------------------
+    # Depenses par categorie (doughnut chart)
+    # ------------------------------------------------------------------
 
     def _compute_depenses_categories(self) -> None:
-        """Placeholder -- implemented in Task 2."""
+        """Calcule la repartition des depenses par categorie de second niveau."""
+        annee = datetime.date.today().year
+        categories: dict[str, Decimal] = {}
+
+        for entry in self.ledger.all_entries:
+            if not isinstance(entry, data.Transaction):
+                continue
+            if entry.date.year != annee:
+                continue
+            for posting in entry.postings:
+                if posting.units is None:
+                    continue
+                if posting.account.startswith("Depenses:"):
+                    parts = posting.account.split(":")
+                    cat = parts[1] if len(parts) >= 2 else "Autres"
+                    categories[cat] = categories.get(cat, Decimal("0")) + posting.units.number
+
+        if not categories:
+            self._depenses_categories = {
+                "labels": [],
+                "datasets": [{"data": [], "backgroundColor": []}],
+            }
+            return
+
+        # Sort descending, top 6 + Autres bucket
+        sorted_cats = sorted(categories.items(), key=lambda x: x[1], reverse=True)
+        if len(sorted_cats) > 6:
+            top6 = sorted_cats[:6]
+            autres_total = sum(v for _, v in sorted_cats[6:])
+            labels = [c for c, _ in top6] + ["Autres"]
+            values = [float(v) for _, v in top6] + [float(autres_total)]
+        else:
+            labels = [c for c, _ in sorted_cats]
+            values = [float(v) for _, v in sorted_cats]
+
+        self._depenses_categories = {
+            "labels": labels,
+            "datasets": [{
+                "data": values,
+                "backgroundColor": QUEBEC_PALETTE[:len(labels)],
+            }],
+        }
+
+    def depenses_categories(self) -> dict:
+        """Retourne les donnees de depenses par categorie."""
+        return self._depenses_categories
+
+    def depenses_categories_json(self) -> str:
+        """Retourne les depenses par categorie en JSON pour data-chart."""
+        return json.dumps(self._depenses_categories)
+
+    # ------------------------------------------------------------------
+    # Transactions recentes
+    # ------------------------------------------------------------------
 
     def _compute_transactions_recentes(self) -> None:
-        """Placeholder -- implemented in Task 2."""
+        """Calcule les 10 transactions les plus recentes."""
+        transactions = [
+            e for e in self.ledger.all_entries
+            if isinstance(e, data.Transaction)
+        ]
+        transactions.sort(key=lambda e: e.date, reverse=True)
+        transactions = transactions[:10]
+
+        # Import hash_entry for Fava context linking
+        try:
+            from fava.beans.funcs import hash_entry
+        except ImportError:
+            try:
+                from beancount.core.compare import hash_entry
+            except ImportError:
+                def hash_entry(entry: object) -> str:
+                    return ""
+
+        result = []
+        for txn in transactions:
+            # Montant = sum of positive posting amounts (debit side)
+            montant = Decimal("0")
+            for p in txn.postings:
+                if p.units is not None and p.units.number > 0:
+                    montant += p.units.number
+
+            # Status badge
+            tags = txn.tags or frozenset()
+            if "pending" in tags:
+                statut = "pending"
+            elif txn.flag == "!":
+                statut = "attention"
+            else:
+                statut = "ok"
+
+            result.append({
+                "date": str(txn.date),
+                "payee": txn.payee or "",
+                "narration": txn.narration or "",
+                "montant": montant,
+                "statut": statut,
+                "entry_hash": hash_entry(txn),
+            })
+
+        self._transactions_recentes = result
+
+    def transactions_recentes(self) -> list[dict]:
+        """Retourne les 10 transactions les plus recentes."""
+        return self._transactions_recentes
