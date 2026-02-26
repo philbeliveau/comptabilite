@@ -240,8 +240,8 @@ aside {
   border-right: none;
   box-shadow: 1px 0 0 rgba(255,255,255,0.04);
   padding-top: 8px;
-  width: 310px !important;
-  min-width: 310px !important;
+  width: 340px !important;
+  min-width: 340px !important;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
