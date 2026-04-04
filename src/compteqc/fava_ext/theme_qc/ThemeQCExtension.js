@@ -1591,27 +1591,148 @@ function injectBrand() {
   brandInjected = true;
 }
 
+const DEFAULT_ENTRY_FILTER = 'fichier_source:"^debit\\\\-march\\\\.csv$"';
+
 /**
- * Sidebar group definitions: each maps link text patterns to a French group name.
- * Order matters for display. The last group ("Extensions Québec") is the catch-all.
+ * Sidebar groups are organized around operator workflow rather than Fava internals.
+ * This keeps "what do I do next?" distinct from reports and maintenance surfaces.
  */
 const SIDEBAR_GROUPS = [
   {
-    name: "Rapports financiers",
-    patterns: ["Income Statement", "Balance Sheet", "Trial Balance", "Journal", "Profit and Loss"],
+    name: "Demarrer",
     open: true,
+    match(item) {
+      return (
+        item.href.includes("/extension/OperationsExtension/") ||
+        item.label === "Tableau de bord"
+      );
+    },
   },
   {
-    name: "Données et documents",
-    patterns: ["Holdings", "Commodities", "Documents", "Statistics", "Events"],
-    open: false,
+    name: "Traiter",
+    open: true,
+    match(item) {
+      return [
+        "File d'approbation",
+        "Recus",
+        "Comptes a payer / a recevoir",
+      ].includes(item.label);
+    },
   },
   {
-    name: "Outils",
-    patterns: ["Editor", "Errors", "Import", "Query", "Options"],
+    name: "Conformite Quebec",
     open: false,
+    match(item) {
+      return [
+        "Paie Quebec",
+        "TPS/TVQ",
+        "DPA/CCA",
+        "Pret actionnaire",
+        "Echeances",
+        "Export CPA",
+      ].includes(item.label);
+    },
+  },
+  {
+    name: "Rapports",
+    open: false,
+    match(item) {
+      return [
+        "Trial Balance",
+        "Income Statement",
+        "Balance Sheet",
+        "Journal",
+        "Holdings",
+        "Commodities",
+        "Documents",
+        "Statistics",
+        "Events",
+      ].includes(item.label);
+    },
+  },
+  {
+    name: "Maintenance",
+    open: false,
+    match(item) {
+      return ["Editor", "Errors", "Import", "Query", "Options"].includes(item.label);
+    },
   },
 ];
+
+function normalizeSidebarLabel(label) {
+  return label.replace(/\s+/g, " ").trim();
+}
+
+function isSidebarLinkActive(link) {
+  return (
+    link.classList.contains("active") ||
+    link.getAttribute("aria-current") === "page" ||
+    link.getAttribute("aria-current") === "true"
+  );
+}
+
+function buildSidebarItems(navLists) {
+  const items = [];
+
+  navLists.forEach((ul, listIndex) => {
+    Array.from(ul.children).forEach((child, itemIndex) => {
+      if (!(child instanceof HTMLElement)) return;
+      const link = child.querySelector("a");
+      if (!link) return;
+
+      items.push({
+        node: child,
+        label: normalizeSidebarLabel(link.textContent || ""),
+        href: link.getAttribute("href") || "",
+        active: isSidebarLinkActive(link),
+        order: `${String(listIndex).padStart(3, "0")}-${String(itemIndex).padStart(3, "0")}`,
+      });
+    });
+  });
+
+  return items;
+}
+
+function getSidebarGroup(item) {
+  return SIDEBAR_GROUPS.find((group) => group.match(item)) || null;
+}
+
+function isEntryRoute(pathname, slug) {
+  return pathname === `/${slug}/` || pathname === `/${slug}/index`;
+}
+
+function isLegacyDashboardRoute(pathname, slug) {
+  return pathname === `/${slug}/extension/TableauBordExtension/`;
+}
+
+function shouldRedirectToDefaultEntry() {
+  const pathParts = window.location.pathname.split("/");
+  const slug = pathParts[1] || "";
+  if (!slug) return false;
+  return isEntryRoute(window.location.pathname, slug) || isLegacyDashboardRoute(window.location.pathname, slug);
+}
+
+function redirectToDefaultEntry() {
+  if (!shouldRedirectToDefaultEntry()) return false;
+
+  const pathParts = window.location.pathname.split("/");
+  const slug = pathParts[1] || "";
+  if (!slug) return false;
+
+  const target = new URL(window.location.origin + `/${slug}/extension/OperationsExtension/`);
+  target.searchParams.set("filter", DEFAULT_ENTRY_FILTER);
+
+  const alreadyThere =
+    window.location.pathname === target.pathname &&
+    new URLSearchParams(window.location.search).get("filter") === DEFAULT_ENTRY_FILTER;
+
+  if (!alreadyThere) {
+    window.location.replace(target.toString());
+    return true;
+  }
+
+  return false;
+}
 
 function reorganizeSidebar() {
   const aside = document.querySelector("aside");
@@ -1620,35 +1741,27 @@ function reorganizeSidebar() {
   const navLists = aside.querySelectorAll("ul.navigation");
   if (navLists.length === 0) return;
 
-  // Classify each <ul> into a group based on its link text content
-  const grouped = new Map(); // groupName -> [ul, ...]
-  const ungrouped = []; // extension reports catch-all
+  const grouped = new Map();
+  const ungrouped = [];
+  const items = buildSidebarItems(navLists);
 
-  navLists.forEach((ul) => {
-    const linkTexts = Array.from(ul.querySelectorAll("a")).map((a) => a.textContent.trim());
-    let matched = false;
+  SIDEBAR_GROUPS.forEach((group) => grouped.set(group.name, []));
 
-    for (const group of SIDEBAR_GROUPS) {
-      const hasMatch = linkTexts.some((text) =>
-        group.patterns.some((pattern) => text.includes(pattern))
-      );
-      if (hasMatch) {
-        if (!grouped.has(group.name)) grouped.set(group.name, []);
-        grouped.get(group.name).push(ul);
-        matched = true;
-        break;
-      }
-    }
-
-    if (!matched) {
-      ungrouped.push(ul);
+  items.forEach((item) => {
+    const group = getSidebarGroup(item);
+    if (group) {
+      grouped.get(group.name).push(item);
+    } else {
+      ungrouped.push(item);
     }
   });
 
   // Build collapsible groups using plain <div> elements (avoids native <details> marker)
   const fragment = document.createDocumentFragment();
 
-  function makeGroup(name, uls, open) {
+  function makeGroup(name, itemsForGroup, open) {
+    if (!itemsForGroup || itemsForGroup.length === 0) return null;
+
     const group = document.createElement("div");
     group.className = "cqc-sidebar-group" + (open ? " open" : "");
 
@@ -1660,21 +1773,29 @@ function reorganizeSidebar() {
 
     const body = document.createElement("div");
     body.className = "cqc-sidebar-group-body";
-    uls.forEach((ul) => body.appendChild(ul));
+    const ul = document.createElement("ul");
+    ul.className = "navigation";
+    itemsForGroup
+      .sort((a, b) => a.order.localeCompare(b.order))
+      .forEach((item) => ul.appendChild(item.node));
+    body.appendChild(ul);
     group.appendChild(body);
 
     return group;
   }
 
   for (const group of SIDEBAR_GROUPS) {
-    const uls = grouped.get(group.name);
-    if (!uls || uls.length === 0) continue;
-    fragment.appendChild(makeGroup(group.name, uls, group.open));
+    const itemsForGroup = grouped.get(group.name);
+    if (!itemsForGroup || itemsForGroup.length === 0) continue;
+    const shouldOpen = group.open || itemsForGroup.some((item) => item.active);
+    const groupNode = makeGroup(group.name, itemsForGroup, shouldOpen);
+    if (groupNode) fragment.appendChild(groupNode);
   }
 
   // Extensions Québec catch-all
   if (ungrouped.length > 0) {
-    fragment.appendChild(makeGroup("Extensions Québec", ungrouped, true));
+    const groupNode = makeGroup("Autres", ungrouped, ungrouped.some((item) => item.active));
+    if (groupNode) fragment.appendChild(groupNode);
   }
 
   // Replace original content: remove old <ul>s, append grouped fragment
@@ -2585,6 +2706,7 @@ export default {
     loadChartJs(); // Non-blocking pre-load
   },
   onPageLoad() {
+    if (redirectToDefaultEntry()) return;
     animatePageEntry();
     injectStyle();
     initTooltipPopup();
