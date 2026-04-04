@@ -5,13 +5,10 @@ from __future__ import annotations
 import datetime
 from decimal import Decimal
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import Mock
 
 from beancount.core import data
 from flask import Flask
-from fava.core.filters import FilterError
-
 from compteqc.fava_ext.export_cpa import ExportCPAExtension
 from compteqc.rapports.cpa_package import CpaPackageError
 
@@ -53,20 +50,29 @@ def _make_transaction(
     )
 
 
+def _make_open(account: str = "Depenses:Logiciels") -> data.Open:
+    return data.Open(
+        meta={},
+        date=datetime.date(2026, 1, 1),
+        account=account,
+        currencies=["CAD"],
+        booking=None,
+    )
+
+
 def test_export_context_uses_filter_from_request():
     """L'extension passe le filtre d'URL a Fava et expose les lignes d'aperçu."""
     ext = ExportCPAExtension.__new__(ExportCPAExtension)
     txn = _make_transaction()
     ledger = Mock()
-    ledger.get_filtered.return_value = SimpleNamespace(entries=[txn])
+    ledger.all_entries = [txn]
     ext.ledger = ledger
 
     app = Flask(__name__)
-    filtre = 'fichier_source:"^debit\\\\-march\\\\.csv$"'
+    filtre = 'fichier_source:"debit-march.csv"'
     with app.test_request_context(f"/?filter={filtre}"):
         contexte = ext.export_context()
 
-    ledger.get_filtered.assert_called_once_with(filter=filtre)
     assert contexte["filter"] == filtre
     assert contexte["count"] == 1
     assert contexte["sources"] == ["debit-march.csv"]
@@ -77,7 +83,7 @@ def test_export_context_handles_invalid_filter_gracefully():
     """Un filtre invalide retourne un message d'erreur au template."""
     ext = ExportCPAExtension.__new__(ExportCPAExtension)
     ledger = Mock()
-    ledger.get_filtered.side_effect = FilterError("filter", "Filtre brise")
+    ledger.all_entries = [_make_transaction()]
     ext.ledger = ledger
 
     app = Flask(__name__)
@@ -86,7 +92,7 @@ def test_export_context_handles_invalid_filter_gracefully():
 
     assert contexte["count"] == 0
     assert contexte["transactions"] == []
-    assert contexte["error"] == "Filtre brise"
+    assert "Failed to parse filter" in contexte["error"]
 
 
 def test_export_context_without_request_uses_all_entries():
@@ -99,19 +105,39 @@ def test_export_context_without_request_uses_all_entries():
 
     contexte = ext.export_context()
 
-    ledger.get_filtered.assert_not_called()
     assert contexte["filter"] == ""
     assert contexte["count"] == 1
     assert contexte["sources"] == ["credit-march.csv"]
 
 
+def test_export_context_supports_date_range():
+    """La plage de dates limite les transactions affichees dans l'aperçu."""
+    ext = ExportCPAExtension.__new__(ExportCPAExtension)
+    ledger = Mock()
+    ledger.all_entries = [
+        _make_transaction(date_txn=datetime.date(2026, 3, 3), fichier_source="debit-march.csv"),
+        _make_transaction(date_txn=datetime.date(2026, 4, 2), fichier_source="debit-april.csv"),
+    ]
+    ext.ledger = ledger
+
+    app = Flask(__name__)
+    with app.test_request_context("/?date_debut=2026-04-01&date_fin=2026-04-30"):
+        contexte = ext.export_context()
+
+    assert contexte["count"] == 1
+    assert contexte["sources"] == ["debit-april.csv"]
+    assert contexte["date_debut"] == "2026-04-01"
+    assert contexte["date_fin"] == "2026-04-30"
+
+
 def test_export_endpoint_generates_zip_download(tmp_path, monkeypatch):
     """Le endpoint d'export genere un ZIP et le retourne en telechargement."""
     ext = ExportCPAExtension.__new__(ExportCPAExtension)
+    open_entry = _make_open()
     txn = _make_transaction()
     ledger = Mock()
     ledger.beancount_file_path = str(tmp_path / "ledger" / "main.beancount")
-    ledger.get_filtered.return_value = SimpleNamespace(entries=[txn])
+    ledger.all_entries = [open_entry, txn]
     ext.ledger = ledger
 
     zip_path = tmp_path / "ledger" / "exports" / "cpa-package-2026.zip"
@@ -119,7 +145,7 @@ def test_export_endpoint_generates_zip_download(tmp_path, monkeypatch):
     zip_path.write_bytes(b"zip-data")
 
     def faux_generer_package_cpa(*, entries, annee, output_dir, **_kwargs):
-        assert entries == [txn]
+        assert entries == [open_entry, txn]
         assert annee == 2026
         assert Path(output_dir) == tmp_path / "ledger" / "exports"
         return zip_path
@@ -130,7 +156,7 @@ def test_export_endpoint_generates_zip_download(tmp_path, monkeypatch):
     )
 
     app = Flask(__name__)
-    filtre = 'fichier_source:"^debit\\\\-march\\\\.csv$"'
+    filtre = 'fichier_source:"debit-march.csv"'
     with app.test_request_context(
         "/export",
         method="POST",
@@ -149,7 +175,7 @@ def test_export_endpoint_returns_400_on_cpa_error(monkeypatch, tmp_path):
     txn = _make_transaction()
     ledger = Mock()
     ledger.beancount_file_path = str(tmp_path / "ledger" / "main.beancount")
-    ledger.get_filtered.return_value = SimpleNamespace(entries=[txn])
+    ledger.all_entries = [txn]
     ext.ledger = ledger
 
     monkeypatch.setattr(
@@ -161,7 +187,7 @@ def test_export_endpoint_returns_400_on_cpa_error(monkeypatch, tmp_path):
     with app.test_request_context(
         "/export",
         method="POST",
-        data={"annee": "2026", "filter": 'fichier_source:"ok"'},
+        data={"annee": "2026", "filter": ""},
     ):
         response, status = ext.export()
 
@@ -174,7 +200,7 @@ def test_export_endpoint_rejects_empty_scope(tmp_path):
     ext = ExportCPAExtension.__new__(ExportCPAExtension)
     ledger = Mock()
     ledger.beancount_file_path = str(tmp_path / "ledger" / "main.beancount")
-    ledger.get_filtered.return_value = SimpleNamespace(entries=[])
+    ledger.all_entries = []
     ext.ledger = ledger
 
     app = Flask(__name__)

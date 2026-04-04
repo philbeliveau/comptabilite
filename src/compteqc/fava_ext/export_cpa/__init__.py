@@ -14,7 +14,7 @@ from pathlib import Path
 from beancount.core import data as beancount_data
 from flask import has_request_context, jsonify, request, send_file
 from fava.core import FavaLedger
-from fava.core.filters import FilterError
+from fava.core.filters import AdvancedFilter, FilterError
 from fava.ext import FavaExtensionBase, extension_endpoint
 
 from compteqc.rapports.cpa_package import CpaPackageError, generer_package_cpa
@@ -37,28 +37,76 @@ class ExportCPAExtension(FavaExtensionBase):
             return ""
         return (request.args.get("filter") or "").strip()
 
-    def _entries_export(self, filtre: str) -> list[beancount_data.Directive]:
-        """Retourne les entrees visees par le filtre Fava courant."""
-        if not filtre:
-            return list(self.ledger.all_entries)
-        return list(self.ledger.get_filtered(filter=filtre).entries)
+    def date_debut_active(self) -> str:
+        """Retourne la date debut choisie dans l'URL courante."""
+        if not has_request_context():
+            return ""
+        return (request.args.get("date_debut") or "").strip()
 
-    def _transactions_export(self, filtre: str) -> list[beancount_data.Transaction]:
-        """Retourne les transactions visees par le filtre courant."""
-        entries = self._entries_export(filtre)
-        return [
-            entry for entry in entries if isinstance(entry, beancount_data.Transaction)
+    def date_fin_active(self) -> str:
+        """Retourne la date fin choisie dans l'URL courante."""
+        if not has_request_context():
+            return ""
+        return (request.args.get("date_fin") or "").strip()
+
+    @staticmethod
+    def _parse_date(date_str: str) -> datetime.date | None:
+        """Convertit une date ISO optionnelle."""
+        if not date_str:
+            return None
+        return datetime.date.fromisoformat(date_str)
+
+    def _filtre_transactions(
+        self,
+        filtre: str,
+        date_debut: str = "",
+        date_fin: str = "",
+    ) -> list[beancount_data.Transaction]:
+        """Filtre seulement les transactions, en preservant les autres directives."""
+        transactions = [
+            entry for entry in self.ledger.all_entries
+            if isinstance(entry, beancount_data.Transaction)
         ]
+        if filtre:
+            transactions = list(AdvancedFilter(filtre).apply(transactions))
+
+        debut = self._parse_date(date_debut)
+        fin = self._parse_date(date_fin)
+        if debut:
+            transactions = [entry for entry in transactions if entry.date >= debut]
+        if fin:
+            transactions = [entry for entry in transactions if entry.date <= fin]
+        return transactions
+
+    def _entries_export(
+        self,
+        filtre: str,
+        date_debut: str = "",
+        date_fin: str = "",
+    ) -> list[beancount_data.Directive]:
+        """Retourne les entrees exportees avec directives de structure intactes."""
+        transactions = self._filtre_transactions(filtre, date_debut, date_fin)
+        autres_directives = [
+            entry for entry in self.ledger.all_entries
+            if not isinstance(entry, beancount_data.Transaction)
+        ]
+        return [*autres_directives, *transactions]
 
     def annee_par_defaut(self) -> int:
         """Infere l'annee a proposer dans le formulaire d'export."""
         filtre = self.filtre_actif()
+        date_debut = self.date_debut_active()
+        date_fin = self.date_fin_active()
         try:
-            transactions = self._transactions_export(filtre)
-        except FilterError:
+            transactions = self._filtre_transactions(filtre, date_debut, date_fin)
+        except (FilterError, ValueError):
             transactions = []
         if transactions:
             return max(entry.date.year for entry in transactions)
+        if date_debut:
+            return datetime.date.fromisoformat(date_debut).year
+        if date_fin:
+            return datetime.date.fromisoformat(date_fin).year
         return datetime.date.today().year
 
     @staticmethod
@@ -87,11 +135,15 @@ class ExportCPAExtension(FavaExtensionBase):
     def export_context(self) -> dict[str, object]:
         """Construit le contexte rendu par le template d'export CPA."""
         filtre = self.filtre_actif()
+        date_debut = self.date_debut_active()
+        date_fin = self.date_fin_active()
         try:
-            transactions = self._transactions_export(filtre)
-        except FilterError as exc:
+            transactions = self._filtre_transactions(filtre, date_debut, date_fin)
+        except (FilterError, ValueError) as exc:
             return {
                 "filter": filtre,
+                "date_debut": date_debut,
+                "date_fin": date_fin,
                 "error": str(exc),
                 "transactions": [],
                 "count": 0,
@@ -127,12 +179,12 @@ class ExportCPAExtension(FavaExtensionBase):
         )
         return {
             "filter": filtre,
+            "date_debut": date_debut or (transactions[0].date.isoformat() if transactions else ""),
+            "date_fin": date_fin or (transactions[-1].date.isoformat() if transactions else ""),
             "error": "",
             "transactions": lignes,
             "count": len(transactions),
             "sources": sources,
-            "date_debut": transactions[0].date.isoformat() if transactions else None,
-            "date_fin": transactions[-1].date.isoformat() if transactions else None,
             "preview_truncated": len(transactions) > len(lignes),
             "annee_defaut": annee_defaut,
         }
@@ -146,10 +198,12 @@ class ExportCPAExtension(FavaExtensionBase):
             return jsonify({"status": "error", "message": "Annee invalide."}), 400
 
         filtre = (request.form.get("filter") or "").strip()
+        date_debut = (request.form.get("date_debut") or "").strip()
+        date_fin = (request.form.get("date_fin") or "").strip()
 
         try:
-            entries = self._entries_export(filtre)
-        except FilterError as exc:
+            entries = self._entries_export(filtre, date_debut, date_fin)
+        except (FilterError, ValueError) as exc:
             return jsonify({"status": "error", "message": str(exc)}), 400
 
         if not any(isinstance(entry, beancount_data.Transaction) for entry in entries):

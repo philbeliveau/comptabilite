@@ -13,21 +13,43 @@
   par le filtre Fava courant et peut maintenant générer le package CPA correspondant.
 </div>
 
-{% if ctx.error %}
-<div class="cqc-alert cqc-alert-error">
-  <strong>Filtre invalide.</strong>
-  <div style="margin-top: 8px;"><code>{{ ctx.filter }}</code></div>
-  <div style="margin-top: 8px;">{{ ctx.error }}</div>
-</div>
-{% else %}
 <div class="cqc-card" style="margin-bottom: 16px;">
-  <h3 style="margin-top: 0;">Générer le package</h3>
+  <h3 style="margin-top: 0;">Définir le périmètre</h3>
   <p class="cqc-text-muted" style="margin-top: 0;">
-    L’export utilise le filtre courant. Si le filtre cible un sous-ensemble du ledger,
-    le package généré reflétera exactement ce périmètre.
+    Choisissez le filtre et la plage de dates à utiliser pour l’aperçu et pour le ZIP généré.
   </p>
-  <form id="cqc-export-cpa-form" style="display: flex; gap: 12px; align-items: end; flex-wrap: wrap;">
-    <input type="hidden" name="filter" value="{{ ctx.filter }}">
+  <form id="cqc-export-cpa-form" method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: end;">
+    <div style="grid-column: 1 / -1;">
+      <label for="cqc-export-filter" style="display: block; margin-bottom: 6px;">Filtre avancé Fava</label>
+      <input
+        id="cqc-export-filter"
+        name="filter"
+        type="text"
+        value="{{ ctx.filter }}"
+        placeholder='Ex: fichier_source:"^debit\\-march\\.csv$"'
+        style="width: 100%; padding: 8px 10px; border: 1px solid var(--qc-border, #ccc); border-radius: var(--qc-radius-sm, 4px);"
+      >
+    </div>
+    <div>
+      <label for="cqc-export-date-debut" style="display: block; margin-bottom: 6px;">Date début</label>
+      <input
+        id="cqc-export-date-debut"
+        name="date_debut"
+        type="date"
+        value="{{ ctx.date_debut or '' }}"
+        style="width: 100%; padding: 8px 10px; border: 1px solid var(--qc-border, #ccc); border-radius: var(--qc-radius-sm, 4px);"
+      >
+    </div>
+    <div>
+      <label for="cqc-export-date-fin" style="display: block; margin-bottom: 6px;">Date fin</label>
+      <input
+        id="cqc-export-date-fin"
+        name="date_fin"
+        type="date"
+        value="{{ ctx.date_fin or '' }}"
+        style="width: 100%; padding: 8px 10px; border: 1px solid var(--qc-border, #ccc); border-radius: var(--qc-radius-sm, 4px);"
+      >
+    </div>
     <div>
       <label for="cqc-export-annee" style="display: block; margin-bottom: 6px;">Année fiscale</label>
       <input
@@ -41,11 +63,20 @@
         required
       >
     </div>
-    <button type="submit" class="cqc-btn cqc-btn-primary">Télécharger le ZIP</button>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button type="submit" class="cqc-btn cqc-btn-outline">Mettre à jour l’aperçu</button>
+      <button type="button" id="cqc-export-cpa-submit" class="cqc-btn cqc-btn-primary">Télécharger le ZIP</button>
+    </div>
   </form>
   <div id="cqc-export-cpa-feedback" class="cqc-text-muted" style="margin-top: 12px;"></div>
 </div>
 
+{% if ctx.error %}
+<div class="cqc-alert cqc-alert-error">
+  <strong>Périmètre invalide.</strong>
+  <div style="margin-top: 8px;">{{ ctx.error }}</div>
+</div>
+{% else %}
 <div class="cqc-kpi-row">
   <div class="cqc-kpi">
     <div class="cqc-kpi-label">Filtre actif</div>
@@ -121,15 +152,17 @@
   L’aperçu affiche les 200 premières transactions. Le total ci-dessus reflète le périmètre complet.
 </div>
 {% endif %}
+{% endif %}
 
 <script>
   (() => {
     const form = document.getElementById("cqc-export-cpa-form");
+    const submit = document.getElementById("cqc-export-cpa-submit");
     const feedback = document.getElementById("cqc-export-cpa-feedback");
-    if (!form || !feedback) return;
+    if (!form || !feedback || !submit) return;
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    submit.addEventListener("click", async () => {
+      if (!form.reportValidity()) return;
       feedback.textContent = "Generation du package CPA en cours...";
 
       const formData = new FormData(form);
@@ -163,5 +196,4 @@
     });
   })();
 </script>
-{% endif %}
 {% endblock %}
