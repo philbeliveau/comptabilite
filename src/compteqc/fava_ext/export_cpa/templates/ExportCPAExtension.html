@@ -10,7 +10,7 @@
 
 <div class="cqc-alert cqc-alert-info" style="margin-bottom: 16px;">
   Cette page n’écrit rien dans le ledger. Elle confirme quelles transactions sont visées
-  par le filtre Fava courant avant l’implémentation complète de l’export CPA.
+  par le filtre Fava courant et peut maintenant générer le package CPA correspondant.
 </div>
 
 {% if ctx.error %}
@@ -20,6 +20,32 @@
   <div style="margin-top: 8px;">{{ ctx.error }}</div>
 </div>
 {% else %}
+<div class="cqc-card" style="margin-bottom: 16px;">
+  <h3 style="margin-top: 0;">Générer le package</h3>
+  <p class="cqc-text-muted" style="margin-top: 0;">
+    L’export utilise le filtre courant. Si le filtre cible un sous-ensemble du ledger,
+    le package généré reflétera exactement ce périmètre.
+  </p>
+  <form id="cqc-export-cpa-form" style="display: flex; gap: 12px; align-items: end; flex-wrap: wrap;">
+    <input type="hidden" name="filter" value="{{ ctx.filter }}">
+    <div>
+      <label for="cqc-export-annee" style="display: block; margin-bottom: 6px;">Année fiscale</label>
+      <input
+        id="cqc-export-annee"
+        name="annee"
+        type="number"
+        min="2000"
+        max="2100"
+        value="{{ ctx.annee_defaut }}"
+        style="padding: 8px 10px; border: 1px solid var(--qc-border, #ccc); border-radius: var(--qc-radius-sm, 4px);"
+        required
+      >
+    </div>
+    <button type="submit" class="cqc-btn cqc-btn-primary">Télécharger le ZIP</button>
+  </form>
+  <div id="cqc-export-cpa-feedback" class="cqc-text-muted" style="margin-top: 12px;"></div>
+</div>
+
 <div class="cqc-kpi-row">
   <div class="cqc-kpi">
     <div class="cqc-kpi-label">Filtre actif</div>
@@ -95,5 +121,47 @@
   L’aperçu affiche les 200 premières transactions. Le total ci-dessus reflète le périmètre complet.
 </div>
 {% endif %}
+
+<script>
+  (() => {
+    const form = document.getElementById("cqc-export-cpa-form");
+    const feedback = document.getElementById("cqc-export-cpa-feedback");
+    if (!form || !feedback) return;
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      feedback.textContent = "Generation du package CPA en cours...";
+
+      const formData = new FormData(form);
+      try {
+        const response = await fetch("./export", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          throw new Error(payload.message || "Echec de generation du package CPA.");
+        }
+
+        const blob = await response.blob();
+        const disposition = response.headers.get("Content-Disposition") || "";
+        const match = disposition.match(/filename=\"?([^\";]+)\"?/i);
+        const filename = match ? match[1] : "cpa-package.zip";
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        feedback.textContent = `Package genere: ${filename}`;
+      } catch (error) {
+        feedback.textContent = error instanceof Error ? error.message : "Echec de generation du package CPA.";
+      }
+    });
+  })();
+</script>
 {% endif %}
 {% endblock %}

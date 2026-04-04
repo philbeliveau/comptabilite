@@ -10,7 +10,7 @@ completed: 2026-04-04
 
 ## Root Cause
 
-`ExportCPAExtension` was still a stub. The page rendered a generic Phase 5 placeholder and never read Fava's `filter` query parameter, so URLs such as `...?filter=fichier_source:"^debit\\-march\\.csv$"` could not confirm the export scope.
+`ExportCPAExtension` was still a stub. The page rendered a generic Phase 5 placeholder, never read Fava's `filter` query parameter, and provided no way to launch the existing CPA package generator from the UI.
 
 ## Fix
 
@@ -21,8 +21,10 @@ completed: 2026-04-04
   - the included source files
   - the covered date range
   - a transaction preview table
+- Added a POST endpoint that reuses `generer_package_cpa()` and downloads a ZIP generated from the current filtered scope and selected fiscal year.
+- Added browser-side form handling so the export can be launched directly from the Fava page with inline error reporting.
 - Added graceful handling for invalid filter syntax instead of failing silently.
-- Added focused tests for filter forwarding, invalid filter handling, and no-request fallback.
+- Added focused tests for filter forwarding, invalid filter handling, no-request fallback, successful ZIP download, and guarded export failures.
 - Updated the legacy extension-count assertion in `tests/test_fava_quebec.py` from 8 to 12 to match the current ledger configuration.
 
 ## Verification

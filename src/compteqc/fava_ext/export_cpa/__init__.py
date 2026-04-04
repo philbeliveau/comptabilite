@@ -7,13 +7,17 @@ permet de valider exactement quelles transactions seront incluses.
 
 from __future__ import annotations
 
+import datetime
 from decimal import Decimal
+from pathlib import Path
 
 from beancount.core import data as beancount_data
-from flask import has_request_context, request
+from flask import has_request_context, jsonify, request, send_file
 from fava.core import FavaLedger
 from fava.core.filters import FilterError
-from fava.ext import FavaExtensionBase
+from fava.ext import FavaExtensionBase, extension_endpoint
+
+from compteqc.rapports.cpa_package import CpaPackageError, generer_package_cpa
 
 
 class ExportCPAExtension(FavaExtensionBase):
@@ -32,6 +36,30 @@ class ExportCPAExtension(FavaExtensionBase):
         if not has_request_context():
             return ""
         return (request.args.get("filter") or "").strip()
+
+    def _entries_export(self, filtre: str) -> list[beancount_data.Directive]:
+        """Retourne les entrees visees par le filtre Fava courant."""
+        if not filtre:
+            return list(self.ledger.all_entries)
+        return list(self.ledger.get_filtered(filter=filtre).entries)
+
+    def _transactions_export(self, filtre: str) -> list[beancount_data.Transaction]:
+        """Retourne les transactions visees par le filtre courant."""
+        entries = self._entries_export(filtre)
+        return [
+            entry for entry in entries if isinstance(entry, beancount_data.Transaction)
+        ]
+
+    def annee_par_defaut(self) -> int:
+        """Infere l'annee a proposer dans le formulaire d'export."""
+        filtre = self.filtre_actif()
+        try:
+            transactions = self._transactions_export(filtre)
+        except FilterError:
+            transactions = []
+        if transactions:
+            return max(entry.date.year for entry in transactions)
+        return datetime.date.today().year
 
     @staticmethod
     def _montant_representatif(entry: beancount_data.Transaction) -> str:
@@ -60,11 +88,7 @@ class ExportCPAExtension(FavaExtensionBase):
         """Construit le contexte rendu par le template d'export CPA."""
         filtre = self.filtre_actif()
         try:
-            entries = (
-                self.ledger.get_filtered(filter=filtre).entries
-                if filtre
-                else self.ledger.all_entries
-            )
+            transactions = self._transactions_export(filtre)
         except FilterError as exc:
             return {
                 "filter": filtre,
@@ -75,11 +99,9 @@ class ExportCPAExtension(FavaExtensionBase):
                 "date_debut": None,
                 "date_fin": None,
                 "preview_truncated": False,
+                "annee_defaut": self.annee_par_defaut(),
             }
 
-        transactions = [
-            entry for entry in entries if isinstance(entry, beancount_data.Transaction)
-        ]
         lignes = [
             {
                 "date": entry.date.isoformat(),
@@ -98,6 +120,11 @@ class ExportCPAExtension(FavaExtensionBase):
                 if (fichier_source := (entry.meta or {}).get("fichier_source"))
             }
         )
+        annee_defaut = (
+            max(entry.date.year for entry in transactions)
+            if transactions
+            else self.annee_par_defaut()
+        )
         return {
             "filter": filtre,
             "error": "",
@@ -107,4 +134,48 @@ class ExportCPAExtension(FavaExtensionBase):
             "date_debut": transactions[0].date.isoformat() if transactions else None,
             "date_fin": transactions[-1].date.isoformat() if transactions else None,
             "preview_truncated": len(transactions) > len(lignes),
+            "annee_defaut": annee_defaut,
         }
+
+    @extension_endpoint("export", ["POST"])
+    def export(self):
+        """Genere le package CPA depuis le perimetre Fava courant et le telecharge."""
+        try:
+            annee = int((request.form.get("annee") or "").strip())
+        except ValueError:
+            return jsonify({"status": "error", "message": "Annee invalide."}), 400
+
+        filtre = (request.form.get("filter") or "").strip()
+
+        try:
+            entries = self._entries_export(filtre)
+        except FilterError as exc:
+            return jsonify({"status": "error", "message": str(exc)}), 400
+
+        if not any(isinstance(entry, beancount_data.Transaction) for entry in entries):
+            return jsonify({
+                "status": "error",
+                "message": "Aucune transaction a exporter pour ce filtre.",
+            }), 400
+
+        ledger_dir = Path(self.ledger.beancount_file_path).resolve().parent
+        output_dir = ledger_dir / "exports"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        try:
+            zip_path = generer_package_cpa(
+                entries=entries,
+                annee=annee,
+                output_dir=output_dir,
+            )
+        except CpaPackageError as exc:
+            return jsonify({"status": "error", "message": str(exc)}), 400
+        except Exception as exc:  # pragma: no cover - defensive path
+            return jsonify({"status": "error", "message": str(exc)}), 500
+
+        return send_file(
+            zip_path,
+            as_attachment=True,
+            download_name=zip_path.name,
+            mimetype="application/zip",
+        )
