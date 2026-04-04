@@ -1,0 +1,28 @@
+; Transactions avril 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-04-01 * "Frais Annuels" "FRAIS ANNUELS"
+  source: "rbc-carte-csv"
+  fichier_source: "credit-march.csv"
+  ligne: "2"
+  Passifs:CartesCredit:RBC  -175.00 CAD
+  Depenses:Frais-Bancaires   175.00 CAD
+
+2026-04-01 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "8"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-04-04 * "Virement Envoyé Compte Personnel Rbc (Moi) Ca3Wej3N" "Retour partiel au compte personnel d'un depot errone"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "9"
+  note: "Classe en pret actionnaire. Le pairage avec le depot du 2026-03-27 laisse 4.92 CAD non reconciliés."
+  Actifs:Banque:RBC:Cheques  -895.08 CAD
+  Passifs:Pret-Actionnaire    895.08 CAD

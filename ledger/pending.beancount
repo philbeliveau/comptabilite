@@ -10,67 +10,8 @@ option "name_expenses" "Depenses"
   categorisation: "llm"
   fichier_source: "credit-march.csv"
   ligne: "2"
-  confiance: "0.85"
+  confiance: "0.95"
   source_ia: "llm"
   compte_propose: "Depenses:Frais-Bancaires"
   Passifs:CartesCredit:RBC  -175.0 CAD
   Depenses:Frais-Bancaires   175.0 CAD
-
-2026-03-27 ! "Virement Reçu Anastasiia Subbotina Cajnskrt" "Virement reçu Anastasiia Subbotina CAJnSkRt" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "debit-march.csv"
-  ligne: "2"
-  confiance: "0.85"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  capex: "oui"
-  Actifs:Banque:RBC:Cheques   900 CAD
-  Passifs:Pret-Actionnaire   -900 CAD
-
-2026-03-27 ! "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement envoyé compte personnel rbc (Moi)" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "debit-march.csv"
-  ligne: "3"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  capex: "oui"
-  Actifs:Banque:RBC:Cheques  -2000 CAD
-  Passifs:Pret-Actionnaire    2000 CAD
-
-2026-03-30 ! "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement envoyé compte personnel rbc (Moi)" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "debit-march.csv"
-  ligne: "4"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  capex: "oui"
-  Actifs:Banque:RBC:Cheques  -750 CAD
-  Passifs:Pret-Actionnaire    750 CAD
-
-2026-04-01 ! "Frais Mensuels" "Frais mensuels" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "debit-march.csv"
-  ligne: "5"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Frais-Bancaires"
-  Actifs:Banque:RBC:Cheques  -6 CAD
-  Depenses:Frais-Bancaires    6 CAD
-
-2026-04-04 ! "Virement Envoyé Compte Personnel Rbc (Moi) Ca3Wej3N" "Virement envoyé compte personnel rbc (Moi) CA3Wej3N" #pending
-  source: "rbc-cheques-csv"
-  categorisation: "llm"
-  fichier_source: "debit-march.csv"
-  ligne: "6"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Passifs:Pret-Actionnaire"
-  capex: "oui"
-  Actifs:Banque:RBC:Cheques  -895.08 CAD
-  Passifs:Pret-Actionnaire    895.08 CAD

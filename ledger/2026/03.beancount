@@ -1,0 +1,62 @@
+; Transactions mars 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-03-10 * "Boi Lab 003 Inc. (Les Productions Boi La Caryubbr" "Remboursement abonnement Claude Code"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "2"
+  note: "Remboursement client BOI pour une depense liee au mandat."
+  Actifs:Banque:RBC:Cheques   241.58 CAD
+  Revenus:Consultation       -241.58 CAD
+
+2026-03-11 * "Crl Ca7Fffkj" "Paiement projet site web"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "3"
+  note: "Paiement client CRL pour services de conception/developpement web."
+  Actifs:Banque:RBC:Cheques  2299.50 CAD
+  Revenus:Consultation      -2299.50 CAD
+
+2026-03-14 * "Eric Vuong" "MacBook Pro 16 M2 Max 64GB 1TB - Facebook Marketplace"
+  preuve_pdf: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/personal/2026/macbookpro-m2max/macbook_purchase_receipt_template-1 (1).pdf"
+  serial_number: "T01FTGCYTQ"
+  classe_dpa: "50"
+  note: "Achete avec le compte personnel RBC; remboursement corporatif subsequant de 2000 CAD et 750 CAD."
+  Actifs:Immobilisations:Informatique   2750.00 CAD
+  Passifs:Pret-Actionnaire             -2750.00 CAD
+
+2026-03-14 document Actifs:Immobilisations:Informatique "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/personal/2026/macbookpro-m2max/macbook_purchase_receipt_template-1 (1).pdf"
+
+2026-03-27 * "Conseil Et Solution Enact Inc" "Remboursement partiel MacBook Pro - virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "6"
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-03-30 * "Conseil Et Solution Enact Inc" "Remboursement final MacBook Pro - virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "7"
+  Actifs:Banque:RBC:Cheques   -750.00 CAD
+  Passifs:Pret-Actionnaire     750.00 CAD
+
+2026-03-27 * "Virement Reçu Anastasiia Subbotina Cajnskrt" "Depot personnel verse par erreur au compte corporatif"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "5"
+  note: "Classe en pret actionnaire. Le pairage avec le virement du 2026-04-04 laisse 4.92 CAD non reconciliés."
+  Actifs:Banque:RBC:Cheques   900.00 CAD
+  Passifs:Pret-Actionnaire   -900.00 CAD
+
+2026-03-16 * "Philippebeliveau Cagybqvd" "Virement reçu PHILIPPEBELIVEAU CAGyBqvD"
+  source: "rbc-cheques-csv"
+  fichier_source: "debit-march.csv"
+  ligne: "4"
+  note: "Transfert personnel vers le compte corporatif; traite comme avance au pret actionnaire."
+  Actifs:Banque:RBC:Cheques   210.00 CAD
+  Passifs:Pret-Actionnaire   -210.00 CAD
