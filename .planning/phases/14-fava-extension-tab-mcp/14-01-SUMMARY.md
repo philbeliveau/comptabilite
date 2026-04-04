@@ -72,7 +72,7 @@ Each task was committed atomically:
 1. **Task 1: Create ComptesFournisseursExtension Python backend** - `2b8930b` (feat)
 2. **Task 2: Create Jinja2 template, register extension, dashboard KPI** - `90c4fa0` (feat)
 
-**Plan metadata:** [pending] (docs: complete plan)
+**Plan metadata:** `3def1fc` (docs: complete plan)
 
 ## Files Created/Modified
 - `src/compteqc/fava_ext/comptes_fournisseurs/__init__.py` - Extension class with KPI, list, chart data methods

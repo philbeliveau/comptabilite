@@ -21,6 +21,36 @@ option "name_expenses" "Depenses"
   Actifs:Banque:RBC:Cheques  2299.50 CAD
   Revenus:Consultation      -2299.50 CAD
 
+2026-03-04 * "Fizz" "Allocation bureau a domicile - internet mars 2026 (50%)"
+  source: "personal-statement"
+  note: "Estimation de travail en cours basee sur l'usage professionnel du service internet residentiel; voir AGENTS.md."
+  Depenses:Bureau:Internet-Telecom    24.72 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-03-29 * "Fizz" "Allocation bureau a domicile - internet mars 2026 (50%)"
+  source: "personal-statement"
+  note: "Estimation de travail en cours basee sur l'usage professionnel du service internet residentiel; voir AGENTS.md."
+  Depenses:Bureau:Internet-Telecom    12.97 CAD
+  Passifs:Pret-Actionnaire           -12.97 CAD
+
+2026-03-02 * "Colleen Marie Yfggzs" "Allocation bureau a domicile - loyer mars 2026 (20%)"
+  source: "personal-statement"
+  note: "Estimation de travail en cours basee sur l'utilisation du domicile comme bureau; voir AGENTS.md."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
+2026-03-19 * "Microsoft*Subscription Mississauga" "Abonnement logiciel"
+  source: "personal-statement"
+  note: "Traite comme depense d'entreprise payee personnellement."
+  Depenses:Bureau:Abonnements-Logiciels    2.30 CAD
+  Passifs:Pret-Actionnaire                -2.30 CAD
+
+2026-03-30 * "Google*Google One Internet" "Abonnement logiciel"
+  source: "personal-statement"
+  note: "Traite comme depense d'entreprise payee personnellement."
+  Depenses:Bureau:Abonnements-Logiciels   15.51 CAD
+  Passifs:Pret-Actionnaire               -15.51 CAD
+
 2026-03-14 * "Eric Vuong" "MacBook Pro 16 M2 Max 64GB 1TB - Facebook Marketplace"
   preuve_pdf: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/personal/2026/macbookpro-m2max/macbook_purchase_receipt_template-1 (1).pdf"
   serial_number: "T01FTGCYTQ"

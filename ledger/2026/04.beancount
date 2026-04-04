@@ -26,3 +26,9 @@ option "name_expenses" "Depenses"
   note: "Classe en pret actionnaire. Le pairage avec le depot du 2026-03-27 laisse 4.92 CAD non reconciliés."
   Actifs:Banque:RBC:Cheques  -895.08 CAD
   Passifs:Pret-Actionnaire    895.08 CAD
+
+2026-04-01 * "Google *Cloud Mx7Vkn G.Co/HelpPay#" "Services infonuagiques"
+  source: "personal-statement"
+  note: "Traite comme depense d'entreprise payee personnellement."
+  Depenses:Bureau:Abonnements-Logiciels   42.75 CAD
+  Passifs:Pret-Actionnaire               -42.75 CAD

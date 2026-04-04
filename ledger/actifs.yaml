@@ -1,0 +1,7 @@
+# Registre des actifs immobilises pour le calcul de la DPA
+actifs:
+  - id: macbook-pro-16-m2-max-2026-03
+    description: Apple MacBook Pro 16 M2 Max 64GB 1TB (Facebook Marketplace, serial T01FTGCYTQ)
+    classe: 50
+    cout: "2750.00"
+    date_acquisition: 2026-03-14

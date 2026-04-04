@@ -1671,6 +1671,28 @@ function isSidebarLinkActive(link) {
   );
 }
 
+function isGlobalReportPath(pathname) {
+  return /^\/[^/]+\/(?:income_statement|balance_sheet|trial_balance|journal)\/$/.test(pathname);
+}
+
+function normalizeSidebarHref(rawHref) {
+  if (!rawHref) return rawHref;
+
+  try {
+    const url = new URL(rawHref, window.location.origin);
+    if (!isGlobalReportPath(url.pathname)) return rawHref;
+
+    // Native Fava report links inherit account/filter/time from the current page.
+    // Strip scoped params here so the sidebar always opens the global report view.
+    ["account", "filter", "time", "conversion"].forEach((param) => {
+      url.searchParams.delete(param);
+    });
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch (_error) {
+    return rawHref;
+  }
+}
+
 function buildSidebarItems(navLists) {
   const items = [];
 
@@ -1679,11 +1701,13 @@ function buildSidebarItems(navLists) {
       if (!(child instanceof HTMLElement)) return;
       const link = child.querySelector("a");
       if (!link) return;
+      const href = normalizeSidebarHref(link.getAttribute("href") || "");
+      link.setAttribute("href", href);
 
       items.push({
         node: child,
         label: normalizeSidebarLabel(link.textContent || ""),
-        href: link.getAttribute("href") || "",
+        href,
         active: isSidebarLinkActive(link),
         order: `${String(listIndex).padStart(3, "0")}-${String(itemIndex).padStart(3, "0")}`,
       });

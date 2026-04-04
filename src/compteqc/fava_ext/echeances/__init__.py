@@ -8,6 +8,7 @@ compteqc.echeances.calendrier quand il est disponible.
 from __future__ import annotations
 
 from datetime import date
+from typing import Any
 
 from fava.core import FavaLedger
 from fava.ext import FavaExtensionBase
@@ -46,8 +47,25 @@ class EcheancesExtension(FavaExtensionBase):
 
     def __init__(self, ledger: FavaLedger, config: str | None = None) -> None:
         super().__init__(ledger, config)
-        self._alertes: list[dict] = []
+        self._alertes: list[dict[str, Any]] = []
         self._echeances_disponible: bool = False
+
+    def _normaliser_alertes(self, alertes_brutes: list[object]) -> list[dict[str, Any]]:
+        """Convertit les alertes du domaine vers un format simple pour le template."""
+        alertes: list[dict[str, Any]] = []
+        for alerte in alertes_brutes:
+            urgence = getattr(alerte, "urgence", "info")
+            echeance = getattr(alerte, "echeance", None)
+            alertes.append(
+                {
+                    "description": getattr(echeance, "description", ""),
+                    "date_limite": getattr(echeance, "date_limite", ""),
+                    "jours_restants": getattr(alerte, "jours_restants", 0),
+                    "urgence": urgence,
+                    "classe_css": couleur_urgence(urgence),
+                }
+            )
+        return alertes
 
     def after_load_file(self) -> None:
         """Charge les echeances depuis le module Phase 5 si disponible."""
@@ -62,16 +80,13 @@ class EcheancesExtension(FavaExtensionBase):
 
             echeances = calculer_echeances(fin_exercice)
             alertes_brutes = obtenir_alertes(echeances)
-            # Pre-compute CSS class for each alert (Jinja2 can't call Python functions)
-            for alerte in alertes_brutes:
-                alerte["classe_css"] = couleur_urgence(alerte.get("urgence", "info"))
-            self._alertes = alertes_brutes
+            self._alertes = self._normaliser_alertes(alertes_brutes)
             self._echeances_disponible = True
         except ImportError:
             self._alertes = []
             self._echeances_disponible = False
 
-    def alertes(self) -> list[dict]:
+    def alertes(self) -> list[dict[str, Any]]:
         """Retourne la liste des alertes actives."""
         return self._alertes
 

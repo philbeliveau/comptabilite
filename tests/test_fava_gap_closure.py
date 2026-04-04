@@ -4,13 +4,16 @@ Verifie l'importabilite, le mapping couleur_urgence, la degradation
 gracieuse sans Phase 5, et l'enregistrement dans main.beancount.
 """
 
+import datetime
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from fava.ext import FavaExtensionBase
 
 from compteqc.fava_ext.echeances import EcheancesExtension, couleur_urgence
 from compteqc.fava_ext.recus import RecusExtension
+from compteqc.echeances.calendrier import AlerteEcheance, Echeance, TypeEcheance
 
 # Racine du projet
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -80,11 +83,11 @@ def test_recus_graceful_without_phase5():
 
 
 # ---------------------------------------------------------------------------
-# Test: main.beancount a 8 directives
+# Test: main.beancount declare les extensions attendues
 # ---------------------------------------------------------------------------
 
-def test_main_beancount_8_extensions():
-    """main.beancount contient 8 directives fava-extension."""
+def test_main_beancount_declares_expected_extensions():
+    """main.beancount contient l'ensemble attendu des directives fava-extension."""
     main_path = PROJECT_ROOT / "ledger" / "main.beancount"
     assert main_path.exists(), "ledger/main.beancount manquant"
 
@@ -93,9 +96,58 @@ def test_main_beancount_8_extensions():
         line for line in content.splitlines()
         if 'fava-extension' in line and line.strip().startswith("2010")
     ]
-    assert len(extension_lines) == 8, (
-        f"Attendu 8 directives fava-extension, trouve {len(extension_lines)}"
+    extensions = {line.split('"')[-2] for line in extension_lines}
+    assert extensions == {
+        "compteqc.fava_ext.theme_qc",
+        "compteqc.fava_ext.tableau_bord",
+        "compteqc.fava_ext.approbation",
+        "compteqc.fava_ext.paie_qc",
+        "compteqc.fava_ext.taxes_qc",
+        "compteqc.fava_ext.dpa_qc",
+        "compteqc.fava_ext.pret_actionnaire",
+        "compteqc.fava_ext.export_cpa",
+        "compteqc.fava_ext.echeances",
+        "compteqc.fava_ext.recus",
+        "compteqc.fava_ext.operations",
+        "compteqc.fava_ext.comptes_fournisseurs",
+    }
+
+
+def test_echeances_after_load_file_normalizes_pydantic_alerts():
+    """after_load_file convertit les AlerteEcheance en dicts compatibles template."""
+    ext = EcheancesExtension.__new__(EcheancesExtension)
+    ext._alertes = []
+    ext._echeances_disponible = False
+
+    alerte = AlerteEcheance(
+        echeance=Echeance(
+            type=TypeEcheance.T2,
+            date_limite=datetime.date(2026, 6, 30),
+            description="Declaration T2",
+        ),
+        jours_restants=10,
+        urgence="urgent",
     )
+
+    with patch(
+        "compteqc.echeances.calendrier.calculer_echeances",
+        return_value=[alerte.echeance],
+    ), patch(
+        "compteqc.echeances.calendrier.obtenir_alertes",
+        return_value=[alerte],
+    ):
+        ext.after_load_file()
+
+    assert ext.echeances_disponible() is True
+    assert ext.alertes() == [
+        {
+            "description": "Declaration T2",
+            "date_limite": datetime.date(2026, 6, 30),
+            "jours_restants": 10,
+            "urgence": "urgent",
+            "classe_css": "alerte-urgent",
+        }
+    ]
 
 
 # ---------------------------------------------------------------------------

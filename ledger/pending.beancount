@@ -4,14 +4,3 @@ option "name_liabilities" "Passifs"
 option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
-
-2026-04-01 ! "Frais Annuels" "FRAIS ANNUELS" #pending
-  source: "rbc-carte-csv"
-  categorisation: "llm"
-  fichier_source: "credit-march.csv"
-  ligne: "2"
-  confiance: "0.95"
-  source_ia: "llm"
-  compte_propose: "Depenses:Frais-Bancaires"
-  Passifs:CartesCredit:RBC  -175.0 CAD
-  Depenses:Frais-Bancaires   175.0 CAD
