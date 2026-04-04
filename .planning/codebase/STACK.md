@@ -1,130 +1,62 @@
 # Technology Stack
 
-**Analysis Date:** 2026-02-25
-
-## Languages
-
-**Primary:**
-- Python 3.12+ - All application code, CLI, Fava extensions, MCP server, ML pipeline
-
-**Secondary:**
-- Beancount DSL (plain-text accounting format) - All ledger files in `ledger/`
-- HTML/Jinja2 - Report templates and Fava extension UI in `src/compteqc/rapports/templates/` and `src/compteqc/fava_ext/*/templates/`
-- YAML - Categorisation rules and tax config in `rules/categorisation.yaml`, `rules/taxes.yaml`
+**Analysis Date:** 2026-04-04
 
 ## Runtime
 
-**Environment:**
-- Python 3.12 (minimum, required by `pyproject.toml`)
-- Virtual environment managed by `uv` at `.venv/`
+- Python 3.12+ is the application runtime (`pyproject.toml`).
+- Local development uses `uv` with `uv.lock` committed and `uv_build` as the build backend.
+- The main app entrypoint is the `cqc` console script (`src/compteqc/cli/app.py`).
 
-**Package Manager:**
-- `uv` (uv_build backend)
-- Lockfile: `uv.lock` present and committed
+## Core Stack
 
-## Frameworks
+- Beancount 3.2 is the ledger engine and persistence format for all accounting data.
+- `beangulp` powers the bank importers in `src/compteqc/ingestion/`.
+- `beanquery` is available for Beancount-style querying and reports.
+- Fava 1.30 provides the browser UI and extension host.
+- Typer + Rich implement the CLI in `src/compteqc/cli/`.
+- Pydantic v2 models the structured data contracts used across receipts, categorisation, payroll, AP/AR, and Quebec modules.
+- WeasyPrint + Jinja2 generate PDF reports and invoices.
+- Pillow is used for receipt image handling.
+- `ofxtools` parses RBC OFX/QFX exports.
+- `smart-importer` and scikit-learn back the ML categorisation layer.
+- Anthropic and OpenAI SDKs are used for OCR and LLM classification.
+- `mcp>=1.25,<2` provides the FastMCP server in `src/compteqc/mcp/server.py`.
 
-**Core Ledger:**
-- `beancount` >= 3.2 - Plain-text double-entry accounting engine; all financial data stored as `.beancount` files
-- `beangulp` >= 0.2 - Beancount importer framework; base class for `RBCOfxImporter`, `RBCChequeImporter`, `RBCCarteImporter`
-- `beanquery` >= 0.2 - SQL-like query engine over Beancount entries
+## Repo Layout
 
-**Web UI:**
-- `fava` >= 1.30 - Web interface for Beancount ledger; serves the review/approval UI at `http://localhost:5000`
-- `flask` (transitive via fava) - Used directly in Fava extensions for request handling (`from flask import g, request`)
+- Ledger files live under `ledger/`:
+  - `ledger/main.beancount` is the root include file.
+  - `ledger/comptes.beancount` defines the chart of accounts.
+  - `ledger/pending.beancount` stages uncategorised transactions.
+  - `ledger/2025/*.beancount` and `ledger/2026/*.beancount` hold monthly entries.
+  - `ledger/documents/` stores linked source documents.
+- Rule/config sources live in `rules/` and `data/`:
+  - `rules/categorisation.yaml`
+  - `rules/taxes.yaml`
+  - `data/actifs.yaml`
+- Derived/runtime artifacts are file-based:
+  - `data/llm_log/categorisations.jsonl`
+  - `data/ml/modele.pkl`
+  - `data/corrections/historique.json`
+  - `data/processed/`
 
-**CLI:**
-- `typer` >= 0.24 - CLI framework; entry point `cqc` defined in `pyproject.toml`
-- `rich` - Terminal output formatting, tables, progress display
+## UI And Reports
 
-**AI / ML:**
-- `anthropic` >= 0.82.0 - Direct Anthropic SDK; used in `src/compteqc/documents/extraction.py` for Claude Vision receipt OCR (model: `claude-sonnet-4-5-20250929`)
-- `openai` >= 2.21.0 - OpenAI-compatible SDK; pointed at OpenRouter in `src/compteqc/categorisation/llm.py` for transaction classification (model: `anthropic/claude-sonnet-4` via OpenRouter)
-- `smart-importer` >= 1.2 - ML-assisted Beancount importing (transitive dependency, sklearn integration)
-- `scikit-learn` (transitive via smart-importer) - SVC + CountVectorizer pipeline in `src/compteqc/categorisation/ml.py`
-- `numpy` (transitive) - Array ops in ML predictor
-- `scipy` (transitive) - Dependency of scikit-learn
+- Fava extensions live in `src/compteqc/fava_ext/`.
+- Extension templates live beside each extension in `src/compteqc/fava_ext/*/templates/`.
+- Report templates live in `src/compteqc/rapports/templates/`.
+- Invoice templates live in `src/compteqc/factures/templates/`.
+- The local UI is started from `ledger/main.beancount` via Fava, with the current extension set registered there.
 
-**MCP:**
-- `mcp` >= 1.25, < 2 - Model Context Protocol server; `FastMCP` instance in `src/compteqc/mcp/server.py`, runs via stdio for Claude Desktop/Code integration
+## Tooling
 
-**Data Validation:**
-- `pydantic` >= 2 - All data models: `DonneesRecu`, `ResultatClassificationLLM`, `Facture`, `LigneFacture`, `ConfigFacturation`, `Correspondance`
+- `pytest` is configured for `tests/` in `pyproject.toml`.
+- `ruff` handles linting/formatting rules.
+- `mypy` is available for static typing checks.
+- `python-dotenv` loads `.env` values in modules that talk to external services.
 
-**PDF/Document Generation:**
-- `weasyprint` >= 68.1 - HTML-to-PDF conversion for invoice and report generation
-- `jinja2` >= 3.1.6 - HTML templates for reports (`src/compteqc/rapports/templates/`) and invoices (`src/compteqc/factures/templates/`)
-- `Pillow` >= 11 - Image processing for receipt upload normalization in `src/compteqc/documents/upload.py`
+## Notes
 
-**File Import:**
-- `ofxtools` >= 0.9 - OFX/QFX bank file parser; used in `src/compteqc/ingestion/rbc_ofx.py`
-
-**Date/Config:**
-- `python-dateutil` >= 2.9 - Date parsing for CSV importers
-- `pyyaml` - YAML config loading for categorisation rules
-- `python-dotenv` >= 1.2.1 - `.env` file loading in `src/compteqc/categorisation/llm.py` and `src/compteqc/documents/extraction.py`
-
-**Testing:**
-- `pytest` - Test runner; config in `pyproject.toml` (`testpaths = ["tests"]`)
-- `pytest-cov` - Coverage reporting
-- `freezegun` >= 1.5.5 - Time freezing for date-sensitive payroll/tax tests
-
-**Build/Dev:**
-- `ruff` - Linter and formatter; `line-length = 100`, `target-version = "py312"`, rules `E, F, I, W`
-- `mypy` - Static type checking
-- `uv_build` >= 0.8.5 - Build backend
-
-**Model Persistence:**
-- `joblib` (transitive) - ML model serialization in `cqc retrain` command; saves to `data/ml/modele.pkl`
-
-## Key Dependencies
-
-**Critical:**
-- `beancount` >= 3.2 - The entire ledger persistence layer; all financial data lives in `.beancount` files
-- `fava` >= 1.30 - Primary review UI; Fava extensions provide all approval, payroll, tax, DPA, and CPA export screens
-- `anthropic` >= 0.82.0 - Claude Vision for receipt OCR; no alternative path if unavailable
-- `mcp` >= 1.25 - Enables Claude Code/Desktop to query and mutate the ledger directly
-
-**Infrastructure:**
-- `openai` >= 2.21.0 - LLM classification backbone (routed through OpenRouter, not OpenAI directly)
-- `pydantic` >= 2 - All structured data contracts between modules
-- `weasyprint` >= 68.1 - PDF generation for invoices and CPA package reports
-
-## Configuration
-
-**Environment:**
-- Loaded via `python-dotenv` at module level in LLM and extraction modules
-- `.env` file present at project root (contents not read)
-- Key vars referenced in code:
-  - `OPENROUTER_API_KEY` - Required for LLM transaction classification
-  - `OPENROUTER_BASE_URL` - OpenRouter endpoint (default: `https://openrouter.ai/api/v1`)
-  - `ANTHROPIC_API_KEY` - Required for Claude Vision receipt extraction
-  - `COMPTEQC_LEDGER` - Path to `main.beancount` (default: `ledger/main.beancount`)
-  - `COMPTEQC_READONLY` - MCP server read-only mode flag (default: `false`)
-
-**Build:**
-- `pyproject.toml` - Project metadata, dependencies, dev groups, ruff/pytest config
-- `uv.lock` - Locked dependency graph
-- Package installed as `compteqc` with CLI entry point `cqc`
-
-**Ledger:**
-- `ledger/main.beancount` - Root ledger file; includes `comptes.beancount`, `pending.beancount`, monthly files
-- `ledger/comptes.beancount` - Chart of accounts definitions
-- `rules/categorisation.yaml` - YAML-based categorisation rules (regex pattern matching)
-- `rules/taxes.yaml` - Tax configuration
-
-## Platform Requirements
-
-**Development:**
-- Python 3.12+
-- `uv` package manager
-- macOS (darwin 25.3.0 confirmed); no OS-specific code detected
-
-**Production:**
-- Local-only deployment (no cloud hosting detected)
-- Fava web server (`fava ledger/main.beancount`) for the review UI
-- MCP server (`uv run python -m compteqc.mcp.server`) for Claude integration
-
----
-
-*Stack analysis: 2026-02-25*
+- This is a local-first stack: no database, no hosted backend, and no cloud deployment config detected.
+- Most state is explicit and file-backed, which keeps the ledger and the planning docs easy to audit.
