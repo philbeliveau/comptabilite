@@ -14,6 +14,8 @@ from pathlib import Path
 
 from jinja2 import Environment, PackageLoader
 
+from compteqc.weasyprint_runtime import prepare_weasyprint_runtime
+
 
 class BaseReport(ABC):
     """Classe de base abstraite pour les rapports financiers.
@@ -87,6 +89,7 @@ class BaseReport(ABC):
         Returns:
             Chemin du fichier PDF cree.
         """
+        prepare_weasyprint_runtime()
         from weasyprint import HTML
 
         output_path.parent.mkdir(parents=True, exist_ok=True)

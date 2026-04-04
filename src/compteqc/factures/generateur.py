@@ -10,6 +10,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 from compteqc.factures.modeles import ConfigFacturation, Facture
+from compteqc.weasyprint_runtime import prepare_weasyprint_runtime
 
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -21,6 +22,7 @@ def generer_pdf(
     output_dir: Path,
 ) -> Path:
     """Genere un PDF de la facture et retourne le chemin du fichier."""
+    prepare_weasyprint_runtime()
     import weasyprint
 
     env = Environment(
