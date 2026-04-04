@@ -94,7 +94,7 @@ def test_template_exists(template_path):
 # ---------------------------------------------------------------------------
 
 def test_main_beancount_has_all_extensions():
-    """main.beancount contient 8 directives fava-extension."""
+    """main.beancount contient 12 directives fava-extension."""
     main_path = PROJECT_ROOT / "ledger" / "main.beancount"
     assert main_path.exists(), "ledger/main.beancount manquant"
 
@@ -103,8 +103,8 @@ def test_main_beancount_has_all_extensions():
         line for line in content.splitlines()
         if 'fava-extension' in line and line.strip().startswith("2010")
     ]
-    assert len(extension_lines) == 8, (
-        f"Attendu 8 directives fava-extension, trouve {len(extension_lines)}: {extension_lines}"
+    assert len(extension_lines) == 12, (
+        f"Attendu 12 directives fava-extension, trouve {len(extension_lines)}: {extension_lines}"
     )
 
 

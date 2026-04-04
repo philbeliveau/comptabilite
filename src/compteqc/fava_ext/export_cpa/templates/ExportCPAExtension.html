@@ -1,33 +1,99 @@
 {% set page_title = "Export CPA" %}
 
 {% block content %}
+{% set ctx = extension.export_context() %}
 
 <div class="cqc-page-header">
   <h2>Export CPA</h2>
-  <span class="cqc-subtitle">Package pour le comptable</span>
+  <span class="cqc-subtitle">Validation du périmètre avant génération du package</span>
 </div>
 
-<div class="cqc-placeholder">
-  <h3>Phase 5 -- À venir</h3>
-  <p>
-    Cette fonctionnalité sera implémentée dans la Phase 5.
-    Elle générera un package complet incluant :
-  </p>
-  <ul>
-    <li>Balance de vérification</li>
-    <li>État des résultats</li>
-    <li>Bilan</li>
-    <li>Annexe de paie (cotisations, retenues, YTD)</li>
-    <li>Cédule DPA (déduction pour amortissement)</li>
-    <li>Sommaire TPS/TVQ</li>
-    <li>Continuité du prêt actionnaire</li>
-  </ul>
+<div class="cqc-alert cqc-alert-info" style="margin-bottom: 16px;">
+  Cette page n’écrit rien dans le ledger. Elle confirme quelles transactions sont visées
+  par le filtre Fava courant avant l’implémentation complète de l’export CPA.
+</div>
 
-  <div style="margin-top: 16px;">
-    <strong>Formats prévus :</strong>
-    <span class="cqc-tag">CSV</span>
-    <span class="cqc-tag">PDF</span>
+{% if ctx.error %}
+<div class="cqc-alert cqc-alert-error">
+  <strong>Filtre invalide.</strong>
+  <div style="margin-top: 8px;"><code>{{ ctx.filter }}</code></div>
+  <div style="margin-top: 8px;">{{ ctx.error }}</div>
+</div>
+{% else %}
+<div class="cqc-kpi-row">
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Filtre actif</div>
+    <div class="cqc-kpi-value" style="font-size: var(--cqc-font-sm);">
+      {% if ctx.filter %}<code>{{ ctx.filter }}</code>{% else %}Aucun{% endif %}
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Transactions</div>
+    <div class="cqc-kpi-value">{{ ctx.count }}</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Fichiers source</div>
+    <div class="cqc-kpi-value">{{ ctx.sources|length }}</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Période</div>
+    <div class="cqc-kpi-value" style="font-size: var(--cqc-font-sm);">
+      {% if ctx.date_debut and ctx.date_fin %}
+        {{ ctx.date_debut }} → {{ ctx.date_fin }}
+      {% else %}
+        n/d
+      {% endif %}
+    </div>
   </div>
 </div>
 
+{% if ctx.sources %}
+<div class="cqc-card" style="margin-top: 16px;">
+  <h3 style="margin-top: 0;">Fichiers inclus</h3>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+    {% for source in ctx.sources %}
+    <span class="cqc-tag">{{ source }}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="cqc-card-flush" style="margin-top: 16px;">
+  <table class="cqc-table">
+    <caption class="cqc-sr-only">Aperçu des transactions incluses dans l’export CPA</caption>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Bénéficiaire</th>
+        <th>Description</th>
+        <th>Fichier source</th>
+        <th class="montant">Montant</th>
+        <th>Comptes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in ctx.transactions %}
+      <tr>
+        <td>{{ row.date }}</td>
+        <td>{{ row.payee or "—" }}</td>
+        <td>{{ row.narration or "—" }}</td>
+        <td>{{ row.fichier_source or "—" }}</td>
+        <td class="montant">{{ row.montant }}</td>
+        <td>{{ row.comptes }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="cqc-text-muted">Aucune transaction ne correspond au filtre courant.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if ctx.preview_truncated %}
+<div class="cqc-alert cqc-alert-info" style="margin-top: 16px;">
+  L’aperçu affiche les 200 premières transactions. Le total ci-dessus reflète le périmètre complet.
+</div>
+{% endif %}
+{% endif %}
 {% endblock %}

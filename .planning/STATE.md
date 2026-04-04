@@ -121,6 +121,7 @@ None yet.
 | 18 | Make ApprobationExtension table responsive with horizontal scroll | 2026-02-26 | 57430ec | [18-make-approbationextension-table-responsi](./quick/18-make-approbationextension-table-responsi/) |
 | 19 | Reflect and improve Fava left sidebar grouping and default Operations landing view | 2026-04-04 | pending | [260404-gij-reflect-and-improve-fava-left-sidebar-gr](./quick/260404-gij-reflect-and-improve-fava-left-sidebar-gr/) |
 | 20 | Investigate Fava/UI inconsistency for stale or missing ledger entries and apply minimal fix if needed | 2026-04-04 | pending | [260404-gga-investigate-fava-ui-inconsistency-for-st](./quick/260404-gga-investigate-fava-ui-inconsistency-for-st/) |
+| 21 | Make ExportCPAExtension work with filter URLs and show matching entries | 2026-04-04 | pending | [260404-hfi-make-exportcpaextension-work-with-filter](./quick/260404-hfi-make-exportcpaextension-work-with-filter/) |
 
 ## Session Continuity
 
