@@ -8,15 +8,21 @@ from __future__ import annotations
 from compteqc.documents.beancount_link import ecrire_directive, generer_directive_document
 from compteqc.documents.extraction import DonneesRecu, extraire_recu
 from compteqc.documents.matching import Correspondance, proposer_correspondances
+from compteqc.documents.prefill_depenses import PrefillAPDepense, suggerer_prefill_ap_depense
+from compteqc.documents.registre import DocumentFiscal, RegistreDocumentsFiscaux
 from compteqc.documents.upload import renommer_recu, telecharger_recu
 
 __all__ = [
     "DonneesRecu",
     "Correspondance",
+    "DocumentFiscal",
+    "RegistreDocumentsFiscaux",
+    "PrefillAPDepense",
     "telecharger_recu",
     "renommer_recu",
     "extraire_recu",
     "proposer_correspondances",
+    "suggerer_prefill_ap_depense",
     "generer_directive_document",
     "ecrire_directive",
 ]

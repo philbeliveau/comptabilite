@@ -1,8 +1,4 @@
-"""Extension Fava: Suivi TPS/TVQ par periode de production.
-
-Affiche les sommaires TPS/TVQ par periode de declaration (annuel ou trimestriel)
-avec CTI, RTI, et remise nette.
-"""
+"""Extension Fava: preparation trimestrielle des remises TPS/TVQ."""
 
 from __future__ import annotations
 
@@ -11,82 +7,95 @@ from decimal import Decimal
 
 from fava.core import FavaLedger
 from fava.ext import FavaExtensionBase
+from flask import g, has_request_context, request
 
-from compteqc.quebec.taxes.sommaire import SommairePeriode, generer_sommaires_annuels
+from compteqc.quebec.taxes import (
+    checklist_operateur_remise,
+    lister_periodes_remise,
+    preparer_remise_trimestrielle,
+)
 
 
 class TaxesQCExtension(FavaExtensionBase):
-    """Suivi TPS/TVQ par periode de production."""
+    """Vue operationnelle pour preparer la remise trimestrielle."""
 
-    report_title = "TPS/TVQ"
+    report_title = "Remise TPS/TVQ"
 
     def __init__(self, ledger: FavaLedger, config: str | None = None) -> None:
         super().__init__(ledger, config)
-        self._sommaires: list[SommairePeriode] = []
-        self._annee: int = datetime.date.today().year
-        # Defaut: annuel. Peut etre configure via le config string.
-        self._frequence: str = "annuel"
-        if config and config.strip() in ("annuel", "trimestriel"):
-            self._frequence = config.strip()
+        self._date_reference = datetime.date.today()
 
     def after_load_file(self) -> None:
-        """Recalcule les sommaires TPS/TVQ apres chargement du ledger."""
-        self._annee = datetime.date.today().year
-        entries = self.ledger.all_entries
-        self._sommaires = generer_sommaires_annuels(entries, self._annee, self._frequence)
+        """Garde une date de reference stable jusqu'au prochain reload."""
+        self._date_reference = datetime.date.today()
 
-    def annee(self) -> int:
-        """Retourne l'annee courante."""
-        return self._annee
+    def preparation(self):
+        """Retourne la preparation complete pour la periode selectionnee."""
+        return preparer_remise_trimestrielle(
+            self.ledger.all_entries,
+            self._periode_code_selectionnee(),
+            date_reference=self._date_reference,
+            ledger_path=getattr(self.ledger, "beancount_file_path", None),
+        )
 
-    def frequence(self) -> str:
-        """Retourne la frequence de declaration."""
-        return self._frequence
+    def period_options(self) -> list[dict]:
+        """Construit la navigation par trimestre."""
+        code_selectionne = self.preparation().periode.code
+        options: list[dict] = []
+        for periode in lister_periodes_remise(
+            self.ledger.all_entries,
+            date_reference=self._date_reference,
+        ):
+            options.append(
+                {
+                    "code": periode.code,
+                    "label": periode.label,
+                    "url": self._url_periode(periode.code),
+                    "selected": periode.code == code_selectionne,
+                    "est_terminee": periode.est_terminee,
+                    "est_future": periode.est_future,
+                }
+            )
+        return options
 
-    def tax_summary(self) -> list[dict]:
-        """Retourne les sommaires par periode pour le template.
+    def checklist(self) -> list[dict[str, str]]:
+        """Checklist operateur rendue par le template."""
+        return checklist_operateur_remise()
 
-        Structure par periode:
-        - periode: Libelle de la periode (ex: "2026-01-01 au 2026-12-31")
-        - tps_percue: TPS percue sur revenus
-        - tvq_percue: TVQ percue sur revenus
-        - ctis_tps: Credits de taxe sur intrants (TPS payee sur depenses)
-        - rtis_tvq: Remboursements de taxe sur intrants (TVQ payee sur depenses)
-        - remise_nette_tps: TPS percue - CTI (positif = du au gouvernement)
-        - remise_nette_tvq: TVQ percue - RTI (positif = du au gouvernement)
-        - nb_transactions: Nombre de transactions dans la periode
-        """
-        result = []
-        for s in self._sommaires:
-            result.append({
-                "periode": f"{s.debut.isoformat()} au {s.fin.isoformat()}",
-                "tps_percue": s.tps_percue,
-                "tvq_percue": s.tvq_percue,
-                "ctis_tps": s.tps_payee,
-                "rtis_tvq": s.tvq_payee,
-                "remise_nette_tps": s.tps_nette,
-                "remise_nette_tvq": s.tvq_nette,
-                "nb_transactions": s.nb_transactions,
-            })
-        return result
+    def jours_avant_echeance(self) -> int:
+        """Nombre de jours entre la date de reference et l'echeance."""
+        preparation = self.preparation()
+        return (preparation.periode.date_limite - self._date_reference).days
 
-    def totaux_annuels(self) -> dict:
-        """Retourne les totaux annuels agrege de toutes les periodes."""
-        total = {
-            "tps_percue": Decimal("0"),
-            "tvq_percue": Decimal("0"),
-            "ctis_tps": Decimal("0"),
-            "rtis_tvq": Decimal("0"),
-            "remise_nette_tps": Decimal("0"),
-            "remise_nette_tvq": Decimal("0"),
-            "nb_transactions": 0,
+    def format_money(self, amount: Decimal) -> str:
+        """Formate un montant CAD avec signe explicite."""
+        return f"{amount:,.2f} $"
+
+    def format_amount_class(self, amount: Decimal) -> str:
+        """Classe CSS semantique pour les montants nets."""
+        if amount > 0:
+            return "cqc-positif"
+        if amount < 0:
+            return "cqc-negatif"
+        return ""
+
+    def warning_class(self, niveau: str) -> str:
+        """Mappe un niveau de message vers la classe d'alerte."""
+        mapping = {
+            "attention": "cqc-alert-warning",
+            "erreur": "cqc-alert-error",
+            "info": "cqc-alert-info",
         }
-        for s in self._sommaires:
-            total["tps_percue"] += s.tps_percue
-            total["tvq_percue"] += s.tvq_percue
-            total["ctis_tps"] += s.tps_payee
-            total["rtis_tvq"] += s.tvq_payee
-            total["remise_nette_tps"] += s.tps_nette
-            total["remise_nette_tvq"] += s.tvq_nette
-            total["nb_transactions"] += s.nb_transactions
-        return total
+        return mapping.get(niveau, "cqc-alert-info")
+
+    def _periode_code_selectionnee(self) -> str | None:
+        if has_request_context():
+            code = request.args.get("periode", "").strip()
+            return code or None
+        return None
+
+    def _url_periode(self, code: str) -> str:
+        if not has_request_context():
+            return f"?periode={code}"
+        slug = g.beancount_file_slug
+        return f"/{slug}/extension/TaxesQCExtension/?periode={code}"

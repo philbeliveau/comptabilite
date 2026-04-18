@@ -203,15 +203,15 @@
 
 <!-- Tab Toggle -->
 <div class="cqc-tab-toggle">
-  <button class="active" onclick="showTab('ar')">Factures clients (AR)</button>
-  <button onclick="showTab('ap')">Factures fournisseurs (AP)</button>
+  <button type="button" class="active" data-tab-target="ar">Factures clients (AR)</button>
+  <button type="button" data-tab-target="ap">Factures fournisseurs (AP)</button>
 </div>
 
 <!-- AR Table -->
 <div id="tab-ar">
   <!-- AR Creation Button -->
   <div style="margin-bottom: 16px;">
-    <button class="cqc-btn cqc-btn-primary" onclick="toggleForm('ar-form')">+ Nouvelle facture</button>
+    <button type="button" class="cqc-btn cqc-btn-primary" data-toggle-form="ar-form">+ Nouvelle facture</button>
   </div>
 
   <!-- AR Creation Form (hidden by default) -->
@@ -248,7 +248,7 @@
           <label><input type="checkbox" name="tvq_0" checked> TVQ</label>
         </div>
       </div>
-      <button type="button" class="cqc-btn cqc-btn-sm cqc-btn-outline" onclick="addARLine()" style="margin-top:8px;">+ Ajouter une ligne</button>
+      <button type="button" id="add-ar-line" class="cqc-btn cqc-btn-sm cqc-btn-outline" style="margin-top:8px;">+ Ajouter une ligne</button>
 
       <div id="ar-totals" style="margin-top: 16px; padding: 12px; background: var(--cqc-bg-secondary, #f8f9fa); border-radius: 6px;">
         <div>Sous-total: <span id="ar-subtotal">0.00</span> $</div>
@@ -264,7 +264,7 @@
 
       <div style="margin-top: 12px;">
         <button type="submit" class="cqc-btn cqc-btn-success">Creer la facture</button>
-        <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleForm('ar-form')">Annuler</button>
+        <button type="button" class="cqc-btn cqc-btn-outline" data-toggle-form="ar-form">Annuler</button>
       </div>
     </form>
   </div>
@@ -328,7 +328,7 @@
 <div id="tab-ap" style="display: none;">
   <!-- AP Creation Button -->
   <div style="margin-bottom: 16px;">
-    <button class="cqc-btn cqc-btn-primary" onclick="toggleForm('ap-form')">+ Nouvelle facture fournisseur</button>
+    <button type="button" class="cqc-btn cqc-btn-primary" data-toggle-form="ap-form">+ Nouvelle facture fournisseur</button>
   </div>
 
   <!-- AP Creation Form (hidden by default) -->
@@ -377,7 +377,7 @@
           <input type="number" name="ap_taux_itr_0" value="1.0" step="0.1" min="0" max="1" style="width:50px;" title="Taux ITR">
         </div>
       </div>
-      <button type="button" class="cqc-btn cqc-btn-sm cqc-btn-outline" onclick="addAPLine()" style="margin-top:8px;">+ Ajouter une ligne</button>
+      <button type="button" id="add-ap-line" class="cqc-btn cqc-btn-sm cqc-btn-outline" style="margin-top:8px;">+ Ajouter une ligne</button>
 
       <div id="ap-totals" style="margin-top: 16px; padding: 12px; background: var(--cqc-bg-secondary, #f8f9fa); border-radius: 6px;">
         <div>Sous-total: <span id="ap-subtotal">0.00</span> $</div>
@@ -396,7 +396,7 @@
 
       <div style="margin-top: 12px;">
         <button type="submit" class="cqc-btn cqc-btn-success">Creer la facture fournisseur</button>
-        <button type="button" class="cqc-btn cqc-btn-outline" onclick="toggleForm('ap-form')">Annuler</button>
+        <button type="button" class="cqc-btn cqc-btn-outline" data-toggle-form="ap-form">Annuler</button>
       </div>
     </form>
   </div>
@@ -470,10 +470,12 @@
 </div>
 
 <script>
-function showTab(tab) {
+function showTab(tab, buttonEl) {
   var tabs = document.querySelectorAll('.cqc-tab-toggle button');
   tabs.forEach(function(btn) { btn.classList.remove('active'); });
-  event.target.classList.add('active');
+  if (buttonEl) {
+    buttonEl.classList.add('active');
+  }
   document.getElementById('tab-ar').style.display = (tab === 'ar') ? '' : 'none';
   document.getElementById('tab-ap').style.display = (tab === 'ap') ? '' : 'none';
 }
@@ -482,6 +484,18 @@ function toggleForm(id) {
   var el = document.getElementById(id);
   el.style.display = el.style.display === 'none' ? '' : 'none';
 }
+
+document.querySelectorAll('[data-tab-target]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    showTab(btn.getAttribute('data-tab-target'), btn);
+  });
+});
+
+document.querySelectorAll('[data-toggle-form]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    toggleForm(btn.getAttribute('data-toggle-form'));
+  });
+});
 
 /* ---- AR form: dynamic lines and live totals ---- */
 var arLineCount = 1;
@@ -528,6 +542,8 @@ document.querySelectorAll('#ar-lines input').forEach(function(inp) {
   inp.addEventListener('input', updateARTotals);
   inp.addEventListener('change', updateARTotals);
 });
+
+document.getElementById('add-ar-line').addEventListener('click', addARLine);
 
 /* ---- AP form: dynamic lines and live totals with ITC/ITR ---- */
 var apLineCount = 1;
@@ -586,18 +602,38 @@ document.querySelectorAll('#ap-lines input, #ap-lines select').forEach(function(
   inp.addEventListener('change', updateAPTotals);
 });
 
-// Pre-fill AP form from URL query parameters (receipt-to-AP pipeline)
+document.getElementById('add-ap-line').addEventListener('click', addAPLine);
+
+// Pre-fill AP/AR forms from URL query parameters (document intake pipeline)
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('prefill') === '1') {
-    // Switch to AP tab
+    if (params.get('tab') === 'ar') {
+      showTab('ar');
+      document.getElementById('ar-form').style.display = '';
+      if (params.get('nom_client')) document.querySelector('[name="nom_client"]').value = params.get('nom_client');
+      if (params.get('date')) document.querySelector('[name="date"]').value = params.get('date');
+      if (params.get('description')) document.querySelector('[name="description_0"]').value = params.get('description');
+      if (params.get('montant')) document.querySelector('[name="prix_unitaire_0"]').value = params.get('montant');
+      if (params.get('tps_applicable') === '0') document.querySelector('[name="tps_0"]').checked = false;
+      if (params.get('tvq_applicable') === '0') document.querySelector('[name="tvq_0"]').checked = false;
+      if (params.get('notes')) document.querySelector('#ar-form textarea[name="notes"]').value = params.get('notes');
+      updateARTotals();
+      return;
+    }
+
     showTab('ap');
-    // Open the AP form
     document.getElementById('ap-form').style.display = '';
-    // Fill fields
     if (params.get('fournisseur')) document.querySelector('[name="fournisseur"]').value = params.get('fournisseur');
     if (params.get('date')) document.querySelector('[name="date_facture"]').value = params.get('date');
     if (params.get('montant')) document.querySelector('[name="ap_montant_0"]').value = params.get('montant');
+    if (params.get('description')) document.querySelector('[name="ap_description_0"]').value = params.get('description');
+    if (params.get('categorie')) document.querySelector('[name="ap_categorie_0"]').value = params.get('categorie');
+    document.querySelector('[name="ap_tps_0"]').checked = params.has('tps');
+    document.querySelector('[name="ap_tvq_0"]').checked = params.has('tvq');
+    if (params.get('taux_itc')) document.querySelector('[name="ap_taux_itc_0"]').value = params.get('taux_itc');
+    if (params.get('taux_itr')) document.querySelector('[name="ap_taux_itr_0"]').value = params.get('taux_itr');
+    if (params.get('notes')) document.querySelector('#ap-form textarea[name="notes"]').value = params.get('notes');
     updateAPTotals();
   }
 })();

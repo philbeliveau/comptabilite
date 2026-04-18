@@ -58,9 +58,12 @@ def generer_sommaire_periode(
     toutes les transactions dans la plage de dates.
 
     Note sur les signes:
-    - Passifs:TPS-Percue / TVQ-Percue: credits (negatifs en beancount).
-      Le sommaire montre la valeur absolue.
-    - Actifs:TPS-Payee / TVQ-Payee: debits (positifs en beancount).
+    - Passifs:TPS-Percue / TVQ-Percue: seuls les credits (negatifs en
+      beancount) comptent comme taxes percues / percevables.
+    - Actifs:TPS-Payee / TVQ-Payee: seuls les debits (positifs) comptent
+      comme CTI / RTI selon les ecritures d'achat.
+    - Les ecritures de sens inverse (remise, reclassement, ajustement) ne
+      sont pas ajoutees a ces totaux; elles doivent etre revues separement.
     - Net = percue - payee. Positif = montant du au gouvernement.
 
     Args:
@@ -87,17 +90,21 @@ def generer_sommaire_periode(
         for posting in entry.postings:
             montant = _extraire_montant_posting(posting)
             if posting.account == COMPTE_TPS_PERCUE:
-                # Credit (negatif) -> valeur absolue pour le sommaire
-                tps_percue += abs(montant)
+                # Credit (negatif) -> taxe percue / percevable.
+                if montant < 0:
+                    tps_percue += abs(montant)
                 a_des_taxes = True
             elif posting.account == COMPTE_TVQ_PERCUE:
-                tvq_percue += abs(montant)
+                if montant < 0:
+                    tvq_percue += abs(montant)
                 a_des_taxes = True
             elif posting.account == COMPTE_TPS_PAYEE:
-                tps_payee += montant
+                if montant > 0:
+                    tps_payee += montant
                 a_des_taxes = True
             elif posting.account == COMPTE_TVQ_PAYEE:
-                tvq_payee += montant
+                if montant > 0:
+                    tvq_payee += montant
                 a_des_taxes = True
 
         if a_des_taxes:

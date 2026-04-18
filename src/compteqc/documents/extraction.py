@@ -1,7 +1,10 @@
-"""Extraction de donnees structurees depuis un recu via Claude Vision.
+"""Extraction de donnees structurees depuis un document via Claude Vision.
 
 Utilise l'API Anthropic avec messages.create() et structured output Pydantic
-pour extraire fournisseur, date, montants et taxes depuis une image ou un PDF.
+pour extraire contrepartie, date, montants et taxes depuis une image ou un PDF.
+Le flux "expense" conserve le comportement historique de recu fournisseur;
+le flux "revenue" reste plus conservateur et n'invente pas de lignes de taxes
+si elles ne sont pas visibles.
 """
 
 from __future__ import annotations
@@ -11,6 +14,7 @@ import logging
 import os
 from decimal import Decimal
 from pathlib import Path
+from typing import Literal
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
@@ -26,8 +30,8 @@ _MEDIA_TYPES = {
     ".pdf": "application/pdf",
 }
 
-_PROMPT_EXTRACTION = """\
-Extract from this receipt:
+_PROMPT_EXTRACTION_DEPENSE = """\
+Extract from this expense receipt:
 - Vendor name (fournisseur)
 - Date in YYYY-MM-DD format
 - Subtotal before tax (sous_total)
@@ -36,10 +40,36 @@ Extract from this receipt:
 - Total amount (total)
 - Brief description of what was purchased (description)
 
-If a tax line is not visible, calculate it from the subtotal.
+If a tax line is not visible but the subtotal is visible, calculate TPS/TVQ from the subtotal.
 If the date is not readable, use 'UNKNOWN'.
 Rate your overall confidence from 0.0 to 1.0 based on image quality and readability.
 """
+
+_PROMPT_EXTRACTION_REVENU = """\
+Extract from this client revenue document:
+- Client or counterparty name (fournisseur)
+- Date in YYYY-MM-DD format
+- Subtotal before tax if explicitly shown (sous_total)
+- GST/TPS amount if explicitly shown (montant_tps)
+- QST/TVQ amount if explicitly shown (montant_tvq)
+- Total amount received or billed (total)
+- Brief description of the service/payment (description)
+
+Important:
+- Do not invent or infer GST/QST lines if they are not visibly shown.
+- If only a total is visible, set sous_total equal to total and leave tax amounts null.
+- If the date is not readable, use 'UNKNOWN'.
+- Rate your overall confidence from 0.0 to 1.0 based on image quality and readability.
+"""
+
+DocumentKind = Literal["expense", "revenue"]
+PricingMode = Literal["tax_included", "pre_tax", "explicit_tax_lines", "unknown"]
+NormalizationStatus = Literal[
+    "matched_and_normalized",
+    "matched_needs_review",
+    "unmatched",
+    "already_normalized",
+]
 
 
 class DonneesRecu(BaseModel):
@@ -53,6 +83,15 @@ class DonneesRecu(BaseModel):
     total: Decimal = Field(description="Montant total")
     description: str = Field(default="", description="Description de l'achat")
     confiance: float = Field(ge=0.0, le=1.0, description="Confiance de l'extraction 0.0-1.0")
+    document_kind: DocumentKind = Field(default="expense", description="Nature du document")
+    pricing_mode: PricingMode = Field(
+        default="explicit_tax_lines",
+        description="Mode de prix confirme par l'operateur",
+    )
+    normalization_status: NormalizationStatus = Field(
+        default="unmatched",
+        description="Etat courant d'appariement ou normalisation",
+    )
 
 
 # Lazy client initialization (same pattern as categorisation/llm.py)
@@ -74,12 +113,14 @@ def _get_client():
 def extraire_recu(
     image_path: Path,
     modele: str = "claude-sonnet-4-5-20250929",
+    document_kind: DocumentKind = "expense",
 ) -> DonneesRecu:
     """Extrait les donnees structurees d'un recu via Claude Vision.
 
     Args:
         image_path: Chemin vers l'image ou PDF du recu.
         modele: Modele Claude a utiliser.
+        document_kind: Nature du document a extraire.
 
     Returns:
         DonneesRecu avec les champs extraits et un score de confiance.
@@ -122,6 +163,12 @@ def extraire_recu(
         "input_schema": DonneesRecu.model_json_schema(),
     }
 
+    prompt = (
+        _PROMPT_EXTRACTION_REVENU
+        if document_kind == "revenue"
+        else _PROMPT_EXTRACTION_DEPENSE
+    )
+
     response = client.messages.create(
         model=modele,
         max_tokens=1024,
@@ -132,7 +179,7 @@ def extraire_recu(
                 "role": "user",
                 "content": [
                     source_block,
-                    {"type": "text", "text": _PROMPT_EXTRACTION},
+                    {"type": "text", "text": prompt},
                 ],
             }
         ],
@@ -142,6 +189,11 @@ def extraire_recu(
     for block in response.content:
         if block.type == "tool_use":
             resultat = DonneesRecu.model_validate(block.input)
+            resultat.document_kind = document_kind
+            resultat.pricing_mode = (
+                "explicit_tax_lines" if document_kind == "expense" else "unknown"
+            )
+            resultat.normalization_status = "unmatched"
 
             if resultat.confiance < 0.5:
                 logger.warning(

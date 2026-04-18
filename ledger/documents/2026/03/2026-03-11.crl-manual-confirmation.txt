@@ -1,0 +1,18 @@
+Confirmation manuelle revenue documentee le 2026-04-05.
+
+Client: CRL
+Date de paiement: 2026-03-11
+Description: Paiement projet site web
+
+Montants confirmes par l'operateur:
+- Sous-total: 2000.00 CAD
+- TPS (5%): 100.00 CAD
+- TVQ (9.975%): 199.50 CAD
+- Total: 2299.50 CAD
+
+Source:
+- Confirmation explicite fournie dans la session de travail Codex du 2026-04-05.
+
+Note:
+- Ce fichier sert de piste d'audit locale en attendant un document client natif
+  (facture/PDF) si necessaire.

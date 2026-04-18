@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import datetime
 from decimal import Decimal
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -16,9 +15,9 @@ from PIL import Image
 
 from compteqc.documents.beancount_link import generer_directive_document
 from compteqc.documents.extraction import DonneesRecu
-from compteqc.documents.matching import Correspondance, proposer_correspondances
+from compteqc.documents.matching import proposer_correspondances
+from compteqc.documents.prefill_depenses import suggerer_prefill_ap_depense
 from compteqc.documents.upload import renommer_recu, telecharger_recu
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -177,6 +176,49 @@ class TestDonneesRecu:
         )
         assert d.montant_tps is None
         assert d.montant_tvq is None
+
+
+class TestPrefillAPDepenses:
+    def test_telecom_receipt_suggests_category_without_reducing_amount(self):
+        """Les recus telecom ne doivent pas reduire le montant sans confirmation explicite."""
+        donnees = DonneesRecu(
+            fournisseur="Fizz",
+            date="2026-03-04",
+            sous_total=Decimal("43.00"),
+            montant_tps=Decimal("2.15"),
+            montant_tvq=Decimal("4.29"),
+            total=Decimal("49.44"),
+            description="Forfait internet residentiel",
+            confiance=0.9,
+        )
+
+        suggestion = suggerer_prefill_ap_depense(donnees)
+
+        assert suggestion.categorie_depense == "Depenses:Bureau:Internet-Telecom"
+        assert suggestion.montant_ht == Decimal("43.00")
+        assert suggestion.taux_itc == Decimal("1.0")
+        assert suggestion.taux_itr == Decimal("1.0")
+        assert suggestion.allocation_ratio == Decimal("1.0")
+        assert suggestion.note is not None
+
+    def test_non_telecom_receipt_keeps_full_amount(self):
+        """Les autres recus conservent le montant HT extrait."""
+        donnees = DonneesRecu(
+            fournisseur="Staples",
+            date="2026-03-04",
+            sous_total=Decimal("100.00"),
+            montant_tps=Decimal("5.00"),
+            montant_tvq=Decimal("9.98"),
+            total=Decimal("114.98"),
+            description="Fournitures",
+            confiance=0.9,
+        )
+
+        suggestion = suggerer_prefill_ap_depense(donnees)
+
+        assert suggestion.categorie_depense is None
+        assert suggestion.montant_ht == Decimal("100.00")
+        assert suggestion.allocation_ratio == Decimal("1.0")
 
 
 # ---------------------------------------------------------------------------

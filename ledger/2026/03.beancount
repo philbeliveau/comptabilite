@@ -10,27 +10,56 @@ option "name_expenses" "Depenses"
   fichier_source: "debit-march.csv"
   ligne: "2"
   note: "Remboursement client BOI pour une depense liee au mandat."
+  document: "documents/2026/03/2026-03-09.boi-lab-003-inc.pdf"
+  document_fiscal_id: "doc-boi-lab-003-20260310"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  normalisation_revenu: "oui"
   Actifs:Banque:RBC:Cheques   241.58 CAD
-  Revenus:Consultation       -241.58 CAD
+  Revenus:Consultation       -210.11 CAD
+  Passifs:TPS-Percue          -10.51 CAD
+  Passifs:TVQ-Percue          -20.96 CAD
+
+2026-03-10 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/03/2026-03-09.boi-lab-003-inc.pdf"
 
 2026-03-11 * "Crl Ca7Fffkj" "Paiement projet site web"
   source: "rbc-cheques-csv"
   fichier_source: "debit-march.csv"
   ligne: "3"
   note: "Paiement client CRL pour services de conception/developpement web."
+  document: "documents/2026/03/2026-03-11.crl-manual-confirmation.txt"
+  document_fiscal_id: "doc-crl-20260311-manual"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  normalisation_revenu: "oui"
+  traitement_taxes_revenu: "tps_tvq"
+  source_taxes_revenu: "confirmation_manuelle_2026-04-05"
   Actifs:Banque:RBC:Cheques  2299.50 CAD
-  Revenus:Consultation      -2299.50 CAD
+  Revenus:Consultation      -2000.00 CAD
+  Passifs:TPS-Percue         -100.00 CAD
+  Passifs:TVQ-Percue         -199.50 CAD
+
+2026-03-11 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/03/2026-03-11.crl-manual-confirmation.txt"
 
 2026-03-04 * "Fizz" "Allocation bureau a domicile - internet mars 2026 (50%)"
   source: "personal-statement"
-  note: "Estimation de travail en cours basee sur l'usage professionnel du service internet residentiel; voir AGENTS.md."
-  Depenses:Bureau:Internet-Telecom    24.72 CAD
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 49.44 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
   Passifs:Pret-Actionnaire           -24.72 CAD
 
 2026-03-29 * "Fizz" "Allocation bureau a domicile - internet mars 2026 (50%)"
   source: "personal-statement"
-  note: "Estimation de travail en cours basee sur l'usage professionnel du service internet residentiel; voir AGENTS.md."
-  Depenses:Bureau:Internet-Telecom    12.97 CAD
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 25.93 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    11.28 CAD
+  Actifs:TPS-Payee                     0.56 CAD
+  Actifs:TVQ-Payee                     1.13 CAD
   Passifs:Pret-Actionnaire           -12.97 CAD
 
 2026-03-02 * "Colleen Marie Yfggzs" "Allocation bureau a domicile - loyer mars 2026 (20%)"

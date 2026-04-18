@@ -12,12 +12,16 @@ import datetime
 import json
 import logging
 from decimal import Decimal
+from pathlib import Path
+from pathlib import Path
 
 from beancount.core import data
 from fava.core import FavaLedger
 from fava.ext import FavaExtensionBase
 
+from compteqc.documents.registre import RegistreDocumentsFiscaux
 from compteqc.mcp.services import calculer_soldes, lister_pending
+from compteqc.quebec.taxes import auditer_revenus_taxes, generer_sommaire_periode
 
 logger = logging.getLogger(__name__)
 
@@ -84,13 +88,28 @@ class TableauBordExtension(FavaExtensionBase):
         # Pending count
         pending = lister_pending(self.ledger.all_entries)
 
-        # Tax owing (GST/QST net remittance)
+        # Tax owing (GST/QST net remittance) from sign-safe period summary.
         soldes = calculer_soldes(self.ledger.all_entries)
-        tps_percue = abs(soldes.get("Passifs:TPS-Percue", Decimal("0")))
-        tvq_percue = abs(soldes.get("Passifs:TVQ-Percue", Decimal("0")))
-        tps_payee = soldes.get("Actifs:TPS-Payee", Decimal("0"))
-        tvq_payee = soldes.get("Actifs:TVQ-Payee", Decimal("0"))
-        taxes_dues = (tps_percue + tvq_percue) - (tps_payee + tvq_payee)
+        sommaire_taxes = generer_sommaire_periode(self.ledger.all_entries, debut, fin)
+        taxes_dues = sommaire_taxes.tps_nette + sommaire_taxes.tvq_nette
+
+        try:
+            ledger_path = getattr(self.ledger, "beancount_file_path", None)
+            registre_path = (
+                Path(ledger_path).parent / "documents" / "registre.yaml"
+                if ledger_path
+                else None
+            )
+            registre_documents = RegistreDocumentsFiscaux(registre_path)
+            audit_revenus = auditer_revenus_taxes(
+                self.ledger.all_entries,
+                registre_documents.lister_revenus(),
+                debut=debut,
+                fin=fin,
+            )
+        except Exception:
+            logger.exception("Erreur calcul audit revenus/taxes")
+            audit_revenus = None
 
         # Balance health: sum all account balances (must equal zero in double-entry)
         equilibre, ecart = self._compute_balance_health(soldes)
@@ -100,6 +119,7 @@ class TableauBordExtension(FavaExtensionBase):
             "depenses_ytd": depenses,
             "resultat_net": revenus - depenses,
             "taxes_dues": taxes_dues,
+            "revenus_taxe_review_count": audit_revenus.count if audit_revenus else 0,
             "pending_count": len(pending),
             "equilibre": equilibre,
             "ecart": ecart,

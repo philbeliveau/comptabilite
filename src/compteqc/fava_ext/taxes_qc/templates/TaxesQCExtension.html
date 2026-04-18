@@ -1,86 +1,228 @@
-{% set page_title = "TPS/TVQ" %}
+{% set page_title = "Remise TPS/TVQ" %}
+{% set preparation = extension.preparation() %}
+{% set periode = preparation.periode %}
+{% set sommaire = preparation.sommaire %}
+{% set options = extension.period_options() %}
+{% set jours_avant_echeance = extension.jours_avant_echeance() %}
 
 {% block content %}
 
-{% set periodes = extension.tax_summary() %}
-{% set totaux = extension.totaux_annuels() %}
-
 <div class="cqc-page-header">
-  <h2>TPS/TVQ</h2>
-  <span class="cqc-subtitle">Suivi par période de production {{ extension.annee() }} &mdash; Fréquence : {{ extension.frequence() }}</span>
+  <h2>Remise TPS/TVQ</h2>
+  <span class="cqc-subtitle">
+    Preparation trimestrielle pour {{ periode.label }} ({{ periode.debut }} au {{ periode.fin }})
+    · Echeance {{ periode.date_limite }}
+  </span>
+</div>
+
+<div class="cqc-card" style="margin-bottom: 16px;">
+  <div class="cqc-section-title">Selection de periode</div>
+  <p style="margin-top: 0;">
+    L'onglet privilegie les trimestres civils afin de rester aligne sur la preparation de remise.
+    Les montants affiches proviennent uniquement des ecritures du ledger.
+  </p>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+    {% for option in options %}
+      <a
+        href="{{ option.url }}"
+        class="cqc-btn {% if option.selected %}cqc-btn-primary{% else %}cqc-btn-outline{% endif %}"
+        style="text-decoration: none; color: {{ '#FFFFFF' if option.selected else '#1E293B' }};"
+      >
+        {{ option.label }}
+        {% if option.est_future %} · futur{% elif not option.est_terminee %} · en cours{% endif %}
+      </a>
+    {% endfor %}
+  </div>
 </div>
 
 <div class="cqc-kpi-row">
   <div class="cqc-kpi">
-    <div class="cqc-kpi-label">Remise nette TPS</div>
-    <div class="cqc-kpi-value {{ 'cqc-error' if totaux.remise_nette_tps > 0 else 'cqc-success' if totaux.remise_nette_tps < 0 else '' }}">
-      {{ "{:,.2f}".format(totaux.remise_nette_tps) }} $
+    <div class="cqc-kpi-label">Date limite</div>
+    <div class="cqc-kpi-value">{{ periode.date_limite }}</div>
+    <div class="cqc-kpi-meta">
+      {% if jours_avant_echeance >= 0 %}
+        {{ jours_avant_echeance }} jour(s) restants
+      {% else %}
+        En retard de {{ -jours_avant_echeance }} jour(s)
+      {% endif %}
     </div>
   </div>
   <div class="cqc-kpi">
-    <div class="cqc-kpi-label">Remise nette TVQ</div>
-    <div class="cqc-kpi-value {{ 'cqc-error' if totaux.remise_nette_tvq > 0 else 'cqc-success' if totaux.remise_nette_tvq < 0 else '' }}">
-      {{ "{:,.2f}".format(totaux.remise_nette_tvq) }} $
-    </div>
+    <div class="cqc-kpi-label">TPS percue / percevable</div>
+    <div class="cqc-kpi-value">{{ extension.format_money(sommaire.tps_percue) }}</div>
   </div>
   <div class="cqc-kpi">
-    <div class="cqc-kpi-label">Transactions</div>
-    <div class="cqc-kpi-value">{{ totaux.nb_transactions }}</div>
+    <div class="cqc-kpi-label">TVQ percue / percevable</div>
+    <div class="cqc-kpi-value">{{ extension.format_money(sommaire.tvq_percue) }}</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">CTI TPS</div>
+    <div class="cqc-kpi-value">{{ extension.format_money(sommaire.tps_payee) }}</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">RTI TVQ</div>
+    <div class="cqc-kpi-value">{{ extension.format_money(sommaire.tvq_payee) }}</div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Transactions source</div>
+    <div class="cqc-kpi-value">{{ sommaire.nb_transactions }}</div>
+    <div class="cqc-kpi-meta">
+      {{ preparation.nb_collecte }} collecte · {{ preparation.nb_intrants }} intrants · {{ preparation.nb_ajustements }} ajustements
+      {% if preparation.nb_anomalies_revenus %} · {{ preparation.nb_anomalies_revenus }} revue revenus{% endif %}
+    </div>
   </div>
 </div>
 
-<div class="cqc-card-flush">
+<div class="cqc-kpi-row" style="margin-top: 16px;">
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Net TPS a remettre / recouvrer</div>
+    <div class="cqc-kpi-value {{ extension.format_amount_class(sommaire.tps_nette) }}">
+      {{ extension.format_money(sommaire.tps_nette) }}
+    </div>
+  </div>
+  <div class="cqc-kpi">
+    <div class="cqc-kpi-label">Net TVQ a remettre / recouvrer</div>
+    <div class="cqc-kpi-value {{ extension.format_amount_class(sommaire.tvq_nette) }}">
+      {{ extension.format_money(sommaire.tvq_nette) }}
+    </div>
+  </div>
+</div>
+
+{% for avertissement in preparation.avertissements %}
+  <div class="cqc-alert {{ extension.warning_class(avertissement.niveau) }}" style="margin-top: 16px;">
+    <strong>{{ avertissement.titre }}</strong><br>
+    {{ avertissement.detail }}
+  </div>
+{% endfor %}
+
+<div class="cqc-card-flush" style="margin-top: 16px;">
+  <div class="cqc-section-title">Tableau de preparation</div>
   <table class="cqc-table">
-    <caption class="cqc-sr-only">Detail TPS/TVQ par periode</caption>
+    <caption class="cqc-sr-only">Sommaire operationnel TPS/TVQ pour la periode selectionnee</caption>
     <thead>
       <tr>
-        <th>Période</th>
-        <th class="montant">TPS perçue</th>
-        <th class="montant">TVQ perçue</th>
-        <th class="montant">CTI (TPS)</th>
-        <th class="montant">RTI (TVQ)</th>
-        <th class="montant">Remise TPS</th>
-        <th class="montant">Remise TVQ</th>
-        <th class="montant">Txns</th>
+        <th>Mesure</th>
+        <th class="montant">TPS</th>
+        <th class="montant">TVQ</th>
       </tr>
     </thead>
     <tbody>
-      {% for p in periodes %}
       <tr>
-        <td>{{ p.periode }}</td>
-        <td class="montant">{{ "{:,.2f}".format(p.tps_percue) }} $</td>
-        <td class="montant">{{ "{:,.2f}".format(p.tvq_percue) }} $</td>
-        <td class="montant">{{ "{:,.2f}".format(p.ctis_tps) }} $</td>
-        <td class="montant">{{ "{:,.2f}".format(p.rtis_tvq) }} $</td>
-        <td class="montant {{ 'cqc-positif' if p.remise_nette_tps > 0 else 'cqc-negatif' if p.remise_nette_tps < 0 else '' }}">
-          {{ "{:,.2f}".format(p.remise_nette_tps) }} $
-        </td>
-        <td class="montant {{ 'cqc-positif' if p.remise_nette_tvq > 0 else 'cqc-negatif' if p.remise_nette_tvq < 0 else '' }}">
-          {{ "{:,.2f}".format(p.remise_nette_tvq) }} $
-        </td>
-        <td class="montant">{{ p.nb_transactions }}</td>
+        <td>Taxes perçues / percevables</td>
+        <td class="montant">{{ extension.format_money(sommaire.tps_percue) }}</td>
+        <td class="montant">{{ extension.format_money(sommaire.tvq_percue) }}</td>
       </tr>
-      {% endfor %}
+      <tr>
+        <td>CTI / RTI selon écritures d'achat</td>
+        <td class="montant">{{ extension.format_money(sommaire.tps_payee) }}</td>
+        <td class="montant">{{ extension.format_money(sommaire.tvq_payee) }}</td>
+      </tr>
       <tr class="sommaire-row">
-        <td>Total annuel</td>
-        <td class="montant">{{ "{:,.2f}".format(totaux.tps_percue) }} $</td>
-        <td class="montant">{{ "{:,.2f}".format(totaux.tvq_percue) }} $</td>
-        <td class="montant">{{ "{:,.2f}".format(totaux.ctis_tps) }} $</td>
-        <td class="montant">{{ "{:,.2f}".format(totaux.rtis_tvq) }} $</td>
-        <td class="montant {{ 'cqc-positif' if totaux.remise_nette_tps > 0 else 'cqc-negatif' if totaux.remise_nette_tps < 0 else '' }}">
-          {{ "{:,.2f}".format(totaux.remise_nette_tps) }} $
-        </td>
-        <td class="montant {{ 'cqc-positif' if totaux.remise_nette_tvq > 0 else 'cqc-negatif' if totaux.remise_nette_tvq < 0 else '' }}">
-          {{ "{:,.2f}".format(totaux.remise_nette_tvq) }} $
-        </td>
-        <td class="montant">{{ totaux.nb_transactions }}</td>
+        <td>Net à remettre (positif) / remboursement (négatif)</td>
+        <td class="montant {{ extension.format_amount_class(sommaire.tps_nette) }}">{{ extension.format_money(sommaire.tps_nette) }}</td>
+        <td class="montant {{ extension.format_amount_class(sommaire.tvq_nette) }}">{{ extension.format_money(sommaire.tvq_nette) }}</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div class="cqc-alert cqc-alert-info">
-  Remise nette positive = montant dû au gouvernement. Négative = remboursement à recevoir.
+<div class="cqc-card-flush" style="margin-top: 16px;">
+  <div class="cqc-section-title">Transactions source avec taxes</div>
+  <table class="cqc-table">
+    <caption class="cqc-sr-only">Transactions source utilisees pour la preparation de remise</caption>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Source</th>
+        <th>Type</th>
+        <th>Compte de reference</th>
+        <th class="montant">Montant base</th>
+        <th class="montant">TPS</th>
+        <th class="montant">TVQ</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ligne in preparation.lignes %}
+      <tr>
+        <td>{{ ligne.date }}</td>
+        <td>
+          <strong>{{ ligne.payee or "Sans payee" }}</strong><br>
+          {{ ligne.narration or "Sans narration" }}
+        </td>
+        <td>{{ ligne.categorie }}</td>
+        <td>{{ ligne.compte_reference }}</td>
+        <td class="montant">{{ extension.format_money(ligne.montant_reference) }}</td>
+        <td class="montant">{{ extension.format_money(ligne.tps) }}</td>
+        <td class="montant">{{ extension.format_money(ligne.tvq) }}</td>
+        <td>
+          {% if ligne.remarques %}
+            {{ ligne.remarques | join(" · ") }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8">Aucune transaction avec TPS/TVQ dans cette periode.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="cqc-card-flush" style="margin-top: 16px;">
+  <div class="cqc-section-title">Revue revenus/taxes</div>
+  <table class="cqc-table">
+    <caption class="cqc-sr-only">Anomalies de revenus a revoir avant la remise</caption>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Point a revoir</th>
+        <th>Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for anomalie in preparation.audit_revenus.anomalies %}
+      <tr>
+        <td>{{ anomalie.date or "Date inconnue" }}</td>
+        <td><strong>{{ anomalie.titre }}</strong></td>
+        <td>{{ anomalie.detail }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3">Aucune anomalie de revenu detectee pour cette periode.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="cqc-card-flush" style="margin-top: 16px;">
+  <div class="cqc-section-title">Checklist operateur</div>
+  <table class="cqc-table">
+    <caption class="cqc-sr-only">Checklist de preparation de remise TPS/TVQ</caption>
+    <thead>
+      <tr>
+        <th>Point de controle</th>
+        <th>Pourquoi le verifier</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in extension.checklist() %}
+      <tr>
+        <td><strong>{{ item.titre }}</strong></td>
+        <td>{{ item.detail }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="cqc-alert cqc-alert-info" style="margin-top: 16px;">
+  Les libelles utilisent volontairement des termes neutres comme « percue / percevable » et « CTI / RTI selon ecritures »
+  pour eviter de pretendre a une equivalence automatique avec les lignes officielles de declaration.
 </div>
 
 {% endblock %}

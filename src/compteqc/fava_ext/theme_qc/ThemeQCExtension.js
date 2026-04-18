@@ -1886,12 +1886,12 @@ const REPORT_INTROS = {
     fonction: "compteqc.fava_ext.paie (PaieQCExtension)",
   },
   "extension/TaxesQCExtension": {
-    titre: "Suivi TPS/TVQ",
+    titre: "Remise TPS/TVQ",
     explication:
-      "Suivi de la TPS (5%) et de la TVQ (9,975%) perçues sur vos factures et payées sur vos " +
-      "achats. La différence entre les taxes perçues et les crédits de taxe sur intrants (CTI/RTI) " +
-      "est le montant net à remettre au gouvernement.",
-    qui: "Vous, pour préparer vos remises de taxes. Votre CPA, pour valider les montants.",
+      "Préparation trimestrielle de la TPS (5%) et de la TVQ (9,975%) à partir du ledger. " +
+      "L'onglet montre les taxes perçues ou percevables, les CTI/RTI saisis, les transactions " +
+      "source et les points à revoir avant la remise.",
+    qui: "Vous, pour préparer la remise. Votre CPA, pour valider les montants et les cas ambigus.",
     fonction: "compteqc.fava_ext.taxes (TaxesQCExtension)",
   },
   "extension/DpaQCExtension": {

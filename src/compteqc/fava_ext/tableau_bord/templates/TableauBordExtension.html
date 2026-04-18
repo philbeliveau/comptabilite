@@ -48,6 +48,11 @@
     <div class="cqc-kpi-value" data-value="{{ kpis.taxes_dues }}" data-decimals="2" data-suffix=" $">
       {{ "{:,.2f}".format(kpis.taxes_dues) }} $
     </div>
+    {% if kpis.revenus_taxe_review_count %}
+    <div class="cqc-kpi-meta">
+      {{ kpis.revenus_taxe_review_count }} revenu(x) a revoir avant remise
+    </div>
+    {% endif %}
   </div>
   <div class="cqc-kpi">
     <div class="cqc-kpi-label">En attente</div>

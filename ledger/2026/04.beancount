@@ -27,8 +27,33 @@ option "name_expenses" "Depenses"
   Actifs:Banque:RBC:Cheques  -895.08 CAD
   Passifs:Pret-Actionnaire    895.08 CAD
 
+2026-04-10 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-03-09 au 2026-03-31)"
+  source: "rbc-cheques-csv"
+  fichier_source: "paie-10avril.csv"
+  ligne: "3"
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/paie-mars/Payment-PQI160679.csv"
+  document_fiscal_id: "payment-pqi160679-20260410"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  periode_service: "2026-03-09/2026-03-31"
+  ref_paiement: "PQI160679"
+  ref_transaction: "PQI503215-P-1"
+  Actifs:Banque:RBC:Cheques  11129.58 CAD
+  Revenus:Consultation       -9680.00 CAD
+  Passifs:TPS-Percue          -484.00 CAD
+  Passifs:TVQ-Percue          -965.58 CAD
+
+2026-04-10 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/paie-mars/Payment-PQI160679.csv"
+
 2026-04-01 * "Google *Cloud Mx7Vkn G.Co/HelpPay#" "Services infonuagiques"
   source: "personal-statement"
   note: "Traite comme depense d'entreprise payee personnellement."
   Depenses:Bureau:Abonnements-Logiciels   42.75 CAD
   Passifs:Pret-Actionnaire               -42.75 CAD
+
+2026-04-17 * "Avion*Air/Vol 877-636-2870 BC" "Billet d'avion personnel paye avec carte corporative"
+  source: "rbc-carte-pending"
+  note: "Achat personnel non lie au travail; traite comme avance au pret actionnaire, sans CTI/RTI ni depense d'entreprise."
+  Passifs:CartesCredit:RBC  -1343.22 CAD
+  Passifs:Pret-Actionnaire   1343.22 CAD

@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 from decimal import Decimal
+from pathlib import Path
 from urllib.parse import parse_qs, urlencode, urlparse
+
+from flask import Flask, g
 
 
 class TestUploadEndpointExtractedData:
@@ -134,3 +137,111 @@ class TestAPQueryParameterConstruction:
 
         assert "tps" not in params
         assert "tvq" not in params
+
+    def test_telecom_receipt_prefill_uses_full_amount_and_category_hint(self):
+        """Les recus telecom gardent le montant complet et suggerent seulement la categorie."""
+        from compteqc.documents.extraction import DonneesRecu
+        from compteqc.fava_ext.recus import RecusExtension
+
+        app = Flask(__name__)
+        donnees = DonneesRecu(
+            fournisseur="Fizz",
+            date="2026-03-04",
+            sous_total=Decimal("43.00"),
+            montant_tps=Decimal("2.15"),
+            montant_tvq=Decimal("4.29"),
+            total=Decimal("49.44"),
+            description="Forfait internet residentiel",
+            confiance=0.9,
+        )
+        ext = RecusExtension.__new__(RecusExtension)
+        ext.ledger = type("LedgerStub", (), {"beancount_file_path": "ledger/main.beancount"})()
+
+        with app.test_request_context("/"):
+            g.beancount_file_slug = "beancount"
+            url, payload = ext._build_ap_prefill_url(donnees)
+
+        parsed = urlparse(url)
+        qs = parse_qs(parsed.query)
+
+        assert qs["prefill"] == ["1"]
+        assert qs["tab"] == ["ap"]
+        assert qs["fournisseur"] == ["Fizz"]
+        assert qs["montant"] == ["43.00"]
+        assert qs["categorie"] == ["Depenses:Bureau:Internet-Telecom"]
+        assert qs["taux_itc"] == ["1.0"]
+        assert qs["taux_itr"] == ["1.0"]
+        assert payload["allocation_ratio"] == "1.0"
+
+
+class TestARQueryParameterConstruction:
+    """Verify unmatched revenue documents can prefill the AR draft form."""
+
+    def test_revenue_prefill_url_uses_same_tax_split(self):
+        """Le lien AR reprend le sous-total et l'applicabilite TPS/TVQ du document."""
+        from compteqc.documents.registre import DocumentFiscal
+        from compteqc.fava_ext.recus import RecusExtension
+
+        app = Flask(__name__)
+        document = DocumentFiscal(
+            chemin_document="documents/2026/04/2026-04-05.procom.pdf",
+            nom_fichier="2026-04-05.procom.pdf",
+            fournisseur="PROCOM SERVICES",
+            date="2026-03-11",
+            sous_total=Decimal("1000.00"),
+            montant_tps=Decimal("50.00"),
+            montant_tvq=Decimal("99.75"),
+            total=Decimal("1149.75"),
+            description="Services consultation",
+            confiance=0.9,
+            document_kind="revenue",
+            pricing_mode="explicit_tax_lines",
+        )
+        ext = RecusExtension.__new__(RecusExtension)
+        ext.ledger = type("LedgerStub", (), {"beancount_file_path": "ledger/main.beancount"})()
+
+        with app.test_request_context("/"):
+            g.beancount_file_slug = "beancount"
+            url = ext._build_ar_prefill_url(document)
+
+        parsed = urlparse(url)
+        qs = parse_qs(parsed.query)
+
+        assert qs["prefill"] == ["1"]
+        assert qs["tab"] == ["ar"]
+        assert qs["nom_client"] == ["PROCOM SERVICES"]
+        assert qs["montant"] == ["1000.00"]
+        assert qs["tps_applicable"] == ["1"]
+        assert qs["tvq_applicable"] == ["1"]
+
+
+class TestReceiptNormalizationSafety:
+    """Verify conservative guards around automatic in-place revenue rewrites."""
+
+    def test_entry_slice_with_comments_is_not_considered_safely_rewritable(self):
+        """Les commentaires Beancount doivent bloquer la reecriture printer-based."""
+        from compteqc.fava_ext.recus import RecusExtension
+
+        assert not RecusExtension._entry_slice_est_safely_rewritable(
+            '2026-03-11 * "Client" "Projet"\n  ; note manuelle\n'
+        )
+        assert RecusExtension._entry_slice_est_safely_rewritable(
+            '2026-03-11 * "Client" "Projet"\n  Actifs:Banque:RBC:Cheques  1149.75 CAD\n'
+        )
+
+
+class TestAPTemplatePrefillCoverage:
+    """Verify AP/AR form prefill JS consumes the expected query parameters."""
+
+    def test_template_handles_ap_tax_flags_and_notes(self):
+        """Le template AP doit consommer tps/tvq/note depuis le query-string."""
+        template = Path(
+            "src/compteqc/fava_ext/comptes_fournisseurs/templates/ComptesFournisseursExtension.html"
+        ).read_text(encoding="utf-8")
+
+        assert "checked = params.has('tps')" in template
+        assert "checked = params.has('tvq')" in template
+        assert "params.get('categorie')" in template
+        assert "params.get('taux_itc')" in template
+        assert "params.get('taux_itr')" in template
+        assert "textarea[name=\"notes\"]" in template

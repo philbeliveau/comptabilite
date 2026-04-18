@@ -4,7 +4,6 @@ from decimal import Decimal
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Tests: extraire_taxes (extraction TPS/TVQ d'un montant TTC)
 # ---------------------------------------------------------------------------
@@ -29,7 +28,9 @@ class TestExtraireTaxes:
         assert tps > Decimal("0")
         assert tvq > Decimal("0")
         # TPS should be approximately 5% of pre-tax
-        assert abs(tps - (avant_taxes * Decimal("0.05")).quantize(Decimal("0.01"))) <= Decimal("0.01")
+        assert abs(
+            tps - (avant_taxes * Decimal("0.05")).quantize(Decimal("0.01"))
+        ) <= Decimal("0.01")
 
     def test_extraire_taxes_rounding_discrepancy(self):
         """$57.49: independent rounding may cause $0.01 discrepancy.
@@ -320,6 +321,483 @@ class TestSommairePeriode:
         # Q4: rien
         q4 = sommaires[3]
         assert q4.nb_transactions == 0
+
+    def test_sommaire_ignore_remittance_reversal_entries(self):
+        """Une remise au fisc ne doit pas gonfler les taxes percues du trimestre."""
+        import datetime
+
+        from compteqc.quebec.taxes.sommaire import generer_sommaire_periode
+
+        entries = [
+            _creer_transaction(
+                datetime.date(2026, 1, 31),
+                "Facture janvier",
+                [
+                    ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                    ("Revenus:Consultation", "-1000.00"),
+                    ("Passifs:TPS-Percue", "-50.00"),
+                    ("Passifs:TVQ-Percue", "-99.75"),
+                ],
+            ),
+            _creer_transaction(
+                datetime.date(2026, 2, 20),
+                "Paiement remise precedente",
+                [
+                    ("Passifs:TPS-Percue", "50.00"),
+                    ("Passifs:TVQ-Percue", "99.75"),
+                    ("Actifs:Banque:RBC:Cheques", "-149.75"),
+                ],
+            ),
+        ]
+
+        sommaire = generer_sommaire_periode(
+            entries,
+            datetime.date(2026, 1, 1),
+            datetime.date(2026, 3, 31),
+        )
+
+        assert sommaire.tps_percue == Decimal("50.00")
+        assert sommaire.tvq_percue == Decimal("99.75")
+        assert sommaire.tps_nette == Decimal("50.00")
+        assert sommaire.tvq_nette == Decimal("99.75")
+        assert sommaire.nb_transactions == 2
+
+
+class TestNormalisationRevenus:
+    """Tests pour le split fiscal des revenus appuye par documents."""
+
+    def _document_revenu(
+        self,
+        *,
+        pricing_mode: str,
+        fournisseur: str = "PROCOM SERVICES",
+        sous_total: str = "1000.00",
+        total: str = "1149.75",
+        montant_tps: str | None = None,
+        montant_tvq: str | None = None,
+    ):
+        from compteqc.documents.registre import DocumentFiscal
+
+        return DocumentFiscal(
+            chemin_document="documents/2026/04/2026-04-05.procom.pdf",
+            nom_fichier="2026-04-05.procom.pdf",
+            fournisseur=fournisseur,
+            date="2026-03-11",
+            sous_total=Decimal(sous_total),
+            montant_tps=Decimal(montant_tps) if montant_tps is not None else None,
+            montant_tvq=Decimal(montant_tvq) if montant_tvq is not None else None,
+            total=Decimal(total),
+            description="Services consultation",
+            confiance=0.91,
+            document_kind="revenue",
+            pricing_mode=pricing_mode,
+        )
+
+    def test_explicit_tax_lines_normalizes_matched_deposit(self):
+        """Lignes TPS/TVQ visibles -> reecriture bank + revenu net + taxes."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import preparer_normalisation_transaction_revenu
+
+        document = self._document_revenu(
+            pricing_mode="explicit_tax_lines",
+            montant_tps="50.00",
+            montant_tvq="99.75",
+        )
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                ("Revenus:Consultation", "-1149.75"),
+            ],
+            payee="Client Web",
+        )
+
+        resultat = preparer_normalisation_transaction_revenu(document, txn, score=0.99)
+
+        assert resultat.status == "matched_and_normalized"
+        assert "Revenus:Consultation" in resultat.entry_source
+        assert "-1000.00 CAD" in resultat.entry_source
+        assert "Passifs:TPS-Percue" in resultat.entry_source
+        assert "-50.00 CAD" in resultat.entry_source
+        assert "Passifs:TVQ-Percue" in resultat.entry_source
+        assert "-99.75 CAD" in resultat.entry_source
+
+    def test_tax_included_computes_split(self):
+        """Mode taxes incluses -> extraction du HT/TPS/TVQ selon traitement client."""
+        from compteqc.quebec.taxes.revenus import calculer_resume_taxes_revenu
+
+        document = self._document_revenu(
+            pricing_mode="tax_included",
+            sous_total="1149.75",
+            total="1149.75",
+        )
+
+        resultat = calculer_resume_taxes_revenu(document)
+
+        assert resultat.resume is not None
+        assert resultat.resume.sous_total == Decimal("1000.00")
+        assert resultat.resume.tps == Decimal("50.00")
+        assert resultat.resume.tvq == Decimal("99.75")
+
+    def test_pre_tax_computes_taxes(self):
+        """Mode montant HT -> application des taxes sur le sous-total confirme."""
+        from compteqc.quebec.taxes.revenus import calculer_resume_taxes_revenu
+
+        document = self._document_revenu(
+            pricing_mode="pre_tax",
+            sous_total="1000.00",
+            total="1000.00",
+        )
+
+        resultat = calculer_resume_taxes_revenu(document)
+
+        assert resultat.resume is not None
+        assert resultat.resume.total == Decimal("1149.75")
+        assert resultat.resume.tps == Decimal("50.00")
+        assert resultat.resume.tvq == Decimal("99.75")
+
+    def test_unknown_pricing_mode_blocks_normalization(self):
+        """Mode inconnu -> pas d'inference, revue obligatoire."""
+        from compteqc.quebec.taxes.revenus import calculer_resume_taxes_revenu
+
+        document = self._document_revenu(pricing_mode="unknown")
+
+        resultat = calculer_resume_taxes_revenu(document)
+
+        assert resultat.status == "matched_needs_review"
+        assert resultat.resume is None
+        assert "Mode de prix" in resultat.review_reason
+
+    def test_explicit_tax_lines_without_visible_taxes_blocks_normalization(self):
+        """Mode lignes explicites sans lignes extraites -> revue obligatoire."""
+        from compteqc.quebec.taxes.revenus import calculer_resume_taxes_revenu
+
+        document = self._document_revenu(
+            pricing_mode="explicit_tax_lines",
+            montant_tps=None,
+            montant_tvq=None,
+            sous_total="1149.75",
+            total="1149.75",
+        )
+
+        resultat = calculer_resume_taxes_revenu(document)
+
+        assert resultat.status == "matched_needs_review"
+        assert resultat.resume is None
+        assert "Aucune ligne TPS/TVQ" in resultat.review_reason
+
+    def test_boi_reimbursement_is_flagged_for_review(self):
+        """Un remboursement BOI ne doit pas etre normalise automatiquement."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import preparer_normalisation_transaction_revenu
+
+        document = self._document_revenu(
+            pricing_mode="explicit_tax_lines",
+            fournisseur="Boi Lab 003 Inc.",
+            montant_tps="10.50",
+            montant_tvq="20.95",
+            sous_total="210.13",
+            total="241.58",
+        )
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 10),
+            "Remboursement abonnement Claude Code",
+            [
+                ("Actifs:Banque:RBC:Cheques", "241.58"),
+                ("Revenus:Consultation", "-241.58"),
+            ],
+            payee="Boi Lab 003 Inc.",
+        )
+        txn.meta["note"] = "Remboursement client BOI pour une depense liee au mandat."
+
+        resultat = preparer_normalisation_transaction_revenu(document, txn, score=0.98)
+
+        assert resultat.status == "matched_needs_review"
+        assert "remboursement" in resultat.review_reason.lower()
+
+    def test_boi_name_alone_does_not_trigger_reimbursement_review(self):
+        """La simple presence de BOI dans le nom du client ne doit pas bloquer la normalisation."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import preparer_normalisation_transaction_revenu
+
+        document = self._document_revenu(
+            pricing_mode="explicit_tax_lines",
+            fournisseur="Boi Lab 003 Inc.",
+            montant_tps="50.00",
+            montant_tvq="99.75",
+        )
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                ("Revenus:Consultation", "-1149.75"),
+            ],
+            payee="Boi Lab 003 Inc.",
+        )
+
+        resultat = preparer_normalisation_transaction_revenu(document, txn, score=0.99)
+
+        assert resultat.status == "matched_and_normalized"
+
+    def test_already_normalized_transaction_is_detected(self):
+        """Une transaction avec postes taxes explicites n'est pas reecrite une seconde fois."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import preparer_normalisation_transaction_revenu
+
+        document = self._document_revenu(
+            pricing_mode="explicit_tax_lines",
+            montant_tps="50.00",
+            montant_tvq="99.75",
+        )
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                ("Revenus:Consultation", "-1000.00"),
+                ("Passifs:TPS-Percue", "-50.00"),
+                ("Passifs:TVQ-Percue", "-99.75"),
+            ],
+            payee="Client Web",
+        )
+
+        resultat = preparer_normalisation_transaction_revenu(document, txn, score=0.99)
+
+        assert resultat.status == "already_normalized"
+        assert resultat.resume is not None
+
+    def test_existing_tax_split_mismatch_is_not_treated_as_already_normalized(self):
+        """Une transaction taxe mal ventilee doit rester en revue manuelle."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import preparer_normalisation_transaction_revenu
+
+        document = self._document_revenu(
+            pricing_mode="explicit_tax_lines",
+            montant_tps="50.00",
+            montant_tvq="99.75",
+        )
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                ("Revenus:Consultation", "-1020.00"),
+                ("Passifs:TPS-Percue", "-50.00"),
+                ("Passifs:TVQ-Percue", "-79.75"),
+            ],
+            payee="Client Web",
+        )
+
+        resultat = preparer_normalisation_transaction_revenu(document, txn, score=0.99)
+
+        assert resultat.status == "matched_needs_review"
+        assert "ne concorde pas" in resultat.review_reason
+
+    def test_pre_tax_correspondance_uses_normalized_gross_total(self):
+        """Le matching d'un document HT compare le depot sur le total TTC attendu."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import proposer_correspondances_revenu
+
+        document = self._document_revenu(
+            pricing_mode="pre_tax",
+            sous_total="1000.00",
+            total="1000.00",
+        )
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                ("Revenus:Consultation", "-1149.75"),
+            ],
+            payee="Client Web",
+        )
+
+        correspondances = proposer_correspondances_revenu(document, [txn])
+
+        assert len(correspondances) == 1
+        assert correspondances[0].score >= 0.99
+
+    def test_audit_detects_unmatched_document_and_gross_receipt(self):
+        """L'audit partage signale depot brut sans taxes et document revenu non apparie."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import auditer_revenus_taxes
+
+        document = self._document_revenu(pricing_mode="pre_tax", total="1000.00")
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                ("Revenus:Consultation", "-1149.75"),
+            ],
+            payee="Client Web",
+        )
+
+        audit = auditer_revenus_taxes(
+            [txn],
+            [document],
+            debut=datetime.date(2026, 1, 1),
+            fin=datetime.date(2026, 3, 31),
+        )
+
+        assert audit.count == 2
+        assert any(a.type == "document_revenu_non_apparie" for a in audit.anomalies)
+        assert any(a.type == "reception_brute_sans_taxes" for a in audit.anomalies)
+
+    def test_audit_flags_reimbursement_like_revenue_even_when_tax_split_exists(self):
+        """Un encaissement taxe qui ressemble a un remboursement doit rester visible."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import auditer_revenus_taxes
+
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 10),
+            "Remboursement abonnement Claude Code",
+            [
+                ("Actifs:Banque:RBC:Cheques", "241.58"),
+                ("Revenus:Consultation", "-210.11"),
+                ("Passifs:TPS-Percue", "-10.51"),
+                ("Passifs:TVQ-Percue", "-20.96"),
+            ],
+            payee="Boi Lab 003 Inc.",
+        )
+        txn.meta["note"] = "Remboursement client BOI pour une depense liee au mandat."
+        txn.meta["document_fiscal_id"] = "doc-boi"
+        txn.meta["normalisation_revenu"] = "oui"
+
+        audit = auditer_revenus_taxes(
+            [txn],
+            [],
+            debut=datetime.date(2026, 1, 1),
+            fin=datetime.date(2026, 3, 31),
+        )
+
+        assert any(
+            a.type == "encaissement_taxe_remboursement_a_revoir"
+            for a in audit.anomalies
+        )
+
+    def test_audit_flags_manual_normalization_without_document(self):
+        """Un split fiscal manuel sans document lie doit rester en revue."""
+        import datetime
+
+        from compteqc.quebec.taxes.revenus import auditer_revenus_taxes
+
+        txn = _creer_transaction(
+            datetime.date(2026, 3, 11),
+            "Paiement projet site web",
+            [
+                ("Actifs:Banque:RBC:Cheques", "2299.50"),
+                ("Revenus:Consultation", "-2000.00"),
+                ("Passifs:TPS-Percue", "-100.00"),
+                ("Passifs:TVQ-Percue", "-199.50"),
+            ],
+            payee="CRL",
+        )
+        txn.meta["normalisation_revenu"] = "oui"
+        txn.meta["source_taxes_revenu"] = "confirmation_manuelle_2026-04-05"
+
+        audit = auditer_revenus_taxes(
+            [txn],
+            [],
+            debut=datetime.date(2026, 1, 1),
+            fin=datetime.date(2026, 3, 31),
+        )
+
+        assert any(a.type == "revenu_normalise_sans_document" for a in audit.anomalies)
+
+
+class TestPreparationRemise:
+    """Tests des helpers de preparation trimestrielle TPS/TVQ."""
+
+    def test_periode_par_defaut_prend_le_dernier_trimestre_complet(self):
+        import datetime
+
+        from compteqc.quebec.taxes.remise import construire_periode_remise
+
+        periode = construire_periode_remise(date_reference=datetime.date(2026, 4, 4))
+
+        assert periode.code == "2026-Q1"
+        assert periode.debut == datetime.date(2026, 1, 1)
+        assert periode.fin == datetime.date(2026, 3, 31)
+        assert periode.date_limite == datetime.date(2026, 4, 30)
+
+    def test_preparation_classe_collecte_intrants_et_ajustements(self):
+        import datetime
+
+        from compteqc.quebec.taxes.remise import preparer_remise_trimestrielle
+
+        entries = [
+            _creer_transaction(
+                datetime.date(2026, 1, 31),
+                "Facture janvier",
+                [
+                    ("Actifs:Banque:RBC:Cheques", "1149.75"),
+                    ("Revenus:Consultation", "-1000.00"),
+                    ("Passifs:TPS-Percue", "-50.00"),
+                    ("Passifs:TVQ-Percue", "-99.75"),
+                ],
+                payee="Client ABC",
+            ),
+            _creer_transaction(
+                datetime.date(2026, 2, 10),
+                "Abonnement logiciel",
+                [
+                    ("Depenses:Bureau:Abonnements-Logiciels", "100.00"),
+                    ("Actifs:TPS-Payee", "5.00"),
+                    ("Actifs:TVQ-Payee", "9.98"),
+                    ("Actifs:Banque:RBC:Cheques", "-114.98"),
+                ],
+                payee="Fournisseur SaaS",
+            ),
+            _creer_transaction(
+                datetime.date(2026, 3, 15),
+                "Paiement remise precedente",
+                [
+                    ("Passifs:TPS-Percue", "12.00"),
+                    ("Passifs:TVQ-Percue", "23.94"),
+                    ("Actifs:Banque:RBC:Cheques", "-35.94"),
+                ],
+                payee="ARC / RQ",
+            ),
+        ]
+
+        preparation = preparer_remise_trimestrielle(
+            entries,
+            "2026-Q1",
+            date_reference=datetime.date(2026, 4, 4),
+        )
+
+        assert preparation.periode.date_limite == datetime.date(2026, 4, 30)
+        assert preparation.sommaire.tps_percue == Decimal("50.00")
+        assert preparation.sommaire.tvq_percue == Decimal("99.75")
+        assert preparation.sommaire.tps_payee == Decimal("5.00")
+        assert preparation.sommaire.tvq_payee == Decimal("9.98")
+        assert preparation.sommaire.tps_nette == Decimal("45.00")
+        assert preparation.sommaire.tvq_nette == Decimal("89.77")
+        assert preparation.nb_collecte == 1
+        assert preparation.nb_intrants == 1
+        assert preparation.nb_ajustements == 1
+        assert preparation.lignes_collecte[0].compte_reference == "Revenus:Consultation"
+        assert (
+            preparation.lignes_intrants[0].compte_reference
+            == "Depenses:Bureau:Abonnements-Logiciels"
+        )
+        assert preparation.lignes_ajustements[0].compte_reference == "Revue manuelle"
+        assert any(
+            avertissement.titre == "Ajustements ou remises a revoir"
+            for avertissement in preparation.avertissements
+        )
 
 
 class TestConcordanceTpsTvq:

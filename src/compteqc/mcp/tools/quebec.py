@@ -6,10 +6,12 @@ Delegue aux modules existants de compteqc.quebec.* pour les calculs.
 from __future__ import annotations
 
 import datetime
+from pathlib import Path
 
 from mcp.server.fastmcp import Context
 from mcp.server.session import ServerSession
 
+from compteqc.documents.registre import RegistreDocumentsFiscaux
 from compteqc.mcp.server import AppContext, mcp
 from compteqc.mcp.services import formater_montant
 
@@ -27,9 +29,20 @@ def sommaire_tps_tvq(
     Args:
         periode: Annee (ex: "2026") ou "2026-Q1" a "2026-Q4" pour trimestriel.
     """
-    from compteqc.quebec.taxes import generer_sommaire_periode, generer_sommaires_annuels
+    from compteqc.quebec.taxes import (
+        auditer_revenus_taxes,
+        generer_sommaires_annuels,
+        trimestre_dates,
+    )
 
     app = ctx.request_context.lifespan_context
+    try:
+        registre = RegistreDocumentsFiscaux(
+            Path(app.ledger_path).parent / "documents" / "registre.yaml"
+        )
+        documents_revenus = registre.lister_revenus()
+    except Exception:
+        documents_revenus = []
 
     if periode and "-Q" in periode:
         # Format trimestriel: "2026-Q1"
@@ -40,24 +53,38 @@ def sommaire_tps_tvq(
             s = sommaires[trimestre - 1]
         else:
             return {"erreur": f"Trimestre invalide: Q{trimestre}"}
-        resultats = [_formater_sommaire(s)]
+        debut, fin = trimestre_dates(annee, trimestre)
+        audit = auditer_revenus_taxes(app.entries, documents_revenus, debut=debut, fin=fin)
+        resultats = [_formater_sommaire(s, audit_count=audit.count)]
     elif periode:
         annee = int(periode)
         sommaires = generer_sommaires_annuels(app.entries, annee, frequence="annuel")
-        resultats = [_formater_sommaire(s) for s in sommaires]
+        audit = auditer_revenus_taxes(
+            app.entries,
+            documents_revenus,
+            debut=datetime.date(annee, 1, 1),
+            fin=datetime.date(annee, 12, 31),
+        )
+        resultats = [_formater_sommaire(s, audit_count=audit.count) for s in sommaires]
     else:
         annee = datetime.date.today().year
         sommaires = generer_sommaires_annuels(app.entries, annee, frequence="annuel")
-        resultats = [_formater_sommaire(s) for s in sommaires]
+        audit = auditer_revenus_taxes(
+            app.entries,
+            documents_revenus,
+            debut=datetime.date(annee, 1, 1),
+            fin=datetime.date(annee, 12, 31),
+        )
+        resultats = [_formater_sommaire(s, audit_count=audit.count) for s in sommaires]
 
     if len(resultats) == 1:
         return resultats[0]
     return {"periodes": resultats}
 
 
-def _formater_sommaire(s) -> dict:
+def _formater_sommaire(s, audit_count: int = 0) -> dict:
     """Formatte un SommairePeriode en dict pour la reponse MCP."""
-    return {
+    resultat = {
         "periode": f"{s.debut} a {s.fin}",
         "tps_percue": formater_montant(s.tps_percue),
         "tvq_percue": formater_montant(s.tvq_percue),
@@ -67,6 +94,13 @@ def _formater_sommaire(s) -> dict:
         "remise_nette_tvq": formater_montant(s.tvq_nette),
         "nb_transactions": s.nb_transactions,
     }
+    if audit_count:
+        resultat["anomalies_revenus_count"] = audit_count
+        resultat["avertissement"] = (
+            f"{audit_count} revenu(x) ou document(s) de revenu restent a revoir; "
+            "les montants sont bases uniquement sur les ecritures explicites du ledger."
+        )
+    return resultat
 
 
 @mcp.tool()

@@ -1,20 +1,41 @@
 {% set page_title = "Reçus" %}
+{% set ui_message = extension.ui_message() %}
 
 <style>
-.cqc-receipt-to-ap {
+.cqc-receipt-to-ap,
+.cqc-receipt-to-ar {
   border-left: 3px solid var(--cqc-blue-400, #60a5fa);
   background: var(--cqc-blue-50, #eff6ff);
 }
-.cqc-receipt-to-ap-prompt {
-  padding: 4px 0;
+.cqc-receipt-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.cqc-receipt-result-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+.cqc-receipt-result-meta div {
+  padding: 8px 10px;
+  background: var(--cqc-bg-secondary, #f8fafc);
+  border-radius: 6px;
 }
 </style>
 
 {% block content %}
 
 <div class="cqc-page-header">
-  <h2>Téléversement de reçus et factures</h2>
+  <h2>Téléversement de documents</h2>
 </div>
+
+{% if ui_message %}
+<div class="cqc-alert {{ 'cqc-alert-warning' if ui_message.niveau == 'attention' else 'cqc-alert-error' if ui_message.niveau == 'erreur' else 'cqc-alert-info' }}">
+  {{ ui_message.texte }}
+</div>
+{% endif %}
 
 {% if not extension.upload_disponible() %}
 <div class="cqc-alert cqc-alert-info">
@@ -24,6 +45,29 @@
 {% endif %}
 
 <div class="cqc-card">
+  <div class="cqc-receipt-mode-grid">
+    <div>
+      <label for="document-kind-select">Type de document</label>
+      <select id="document-kind-select" class="account-search">
+        <option value="expense" selected>Dépense / reçu fournisseur</option>
+        <option value="revenue">Revenu / pièce client</option>
+      </select>
+    </div>
+    <div id="pricing-mode-wrap" style="display:none;">
+      <label for="pricing-mode-select">Mode de prix revenu</label>
+      <select id="pricing-mode-select" class="account-search">
+        <option value="">Choisir…</option>
+        <option value="tax_included">Taxes incluses</option>
+        <option value="pre_tax">Montant avant taxes</option>
+        <option value="explicit_tax_lines">Lignes TPS/TVQ visibles</option>
+        <option value="unknown">Je ne sais pas encore</option>
+      </select>
+    </div>
+  </div>
+  <p id="document-kind-help" class="cqc-text-muted" style="margin-top: 0;">
+    Le flux fournisseur conserve la création AP existante.
+  </p>
+
   <div id="dropzone" class="cqc-dropzone" role="button" tabindex="0" aria-label="Zone de depot: glissez un fichier ou cliquez pour telecharger">
     <div class="cqc-dropzone-text">
       <span class="icone">&#128194;</span>
@@ -51,6 +95,37 @@
 
 <div id="upload-result" style="display: none;"></div>
 <div id="preview-container" class="cqc-preview-grid"></div>
+
+<div class="cqc-card-flush">
+  <h3 class="cqc-section-title">Documents revenus à revoir</h3>
+  {% set review_items = extension.revenue_review_items() %}
+  {% if review_items %}
+  <table class="cqc-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Client / contrepartie</th>
+        <th class="montant">Total</th>
+        <th>Etat</th>
+        <th>Raison</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in review_items %}
+      <tr>
+        <td>{{ item.date }}</td>
+        <td>{{ item.fournisseur }}</td>
+        <td class="montant">{{ "{:,.2f}".format(item.total) }} $</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.review_reason or "—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="cqc-empty">Aucun document de revenu en revue.</div>
+  {% endif %}
+</div>
 
 <div class="cqc-card-flush">
   <h3 class="cqc-section-title">Reçus récents</h3>
@@ -86,6 +161,7 @@
 
   var UPLOAD_URL = '{{ "/" ~ g.beancount_file_slug ~ "/extension/" ~ extension.name ~ "/upload" }}';
   var LINK_URL = '{{ "/" ~ g.beancount_file_slug ~ "/extension/" ~ extension.name ~ "/link" }}';
+  var NORMALIZE_URL = '{{ "/" ~ g.beancount_file_slug ~ "/extension/" ~ extension.name ~ "/normaliser_revenu" }}';
 
   var dropzone = document.getElementById('dropzone');
   var fileInput = document.getElementById('fichier-input');
@@ -94,13 +170,26 @@
   var progressText = document.getElementById('progress-text');
   var statusDiv = document.getElementById('upload-status');
   var resultDiv = document.getElementById('upload-result');
+  var documentKindSelect = document.getElementById('document-kind-select');
+  var pricingModeWrap = document.getElementById('pricing-mode-wrap');
+  var pricingModeSelect = document.getElementById('pricing-mode-select');
+  var documentKindHelp = document.getElementById('document-kind-help');
 
-  // -- Dropzone click -> open file picker
+  function syncDocumentModeUI() {
+    var isRevenue = documentKindSelect.value === 'revenue';
+    pricingModeWrap.style.display = isRevenue ? '' : 'none';
+    documentKindHelp.textContent = isRevenue
+      ? 'Le flux revenu permet de normaliser un dépôt bancaire brut ou de préremplir une facture client.'
+      : 'Le flux fournisseur conserve la création AP existante.';
+  }
+
+  syncDocumentModeUI();
+  documentKindSelect.addEventListener('change', syncDocumentModeUI);
+
   dropzone.addEventListener('click', function() {
     fileInput.click();
   });
 
-  // -- Drag and drop handlers (counter pattern prevents child-element flicker)
   var dragCounter = 0;
 
   dropzone.addEventListener('dragover', function(e) {
@@ -131,7 +220,6 @@
     }
   });
 
-  // -- File input change (multi-file)
   fileInput.addEventListener('change', function() {
     if (fileInput.files.length > 0) {
       uploadFiles(Array.from(fileInput.files));
@@ -143,18 +231,25 @@
     progressText.textContent = pct + '%';
   }
 
-  // -- Queue status element (created dynamically)
   var queueStatusEl = document.createElement('div');
   queueStatusEl.className = 'cqc-upload-queue-status';
   queueStatusEl.style.display = 'none';
   progressContainer.parentNode.insertBefore(queueStatusEl, progressContainer);
 
   function uploadFile(file) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       var formData = new FormData();
       formData.append('fichier', file);
+      formData.append('document_kind', documentKindSelect.value);
+      if (documentKindSelect.value === 'revenue') {
+        if (!pricingModeSelect.value) {
+          showError('Choisissez le mode de prix avant de téléverser un document de revenu.');
+          resolve({ file: file, data: null, error: 'pricing-mode' });
+          return;
+        }
+        formData.append('pricing_mode', pricingModeSelect.value);
+      }
 
-      // Reset progress UI
       progressContainer.style.display = '';
       statusDiv.style.display = 'none';
       statusDiv.textContent = '';
@@ -168,7 +263,7 @@
           updateProgressBar(pct);
           if (pct >= 100) {
             statusDiv.style.display = '';
-            statusDiv.textContent = 'Traitement en cours\u2026';
+            statusDiv.textContent = 'Traitement en cours…';
           }
         }
       };
@@ -203,7 +298,6 @@
   }
 
   async function uploadFiles(files) {
-    // Reset UI for new batch
     resultDiv.style.display = 'none';
     resultDiv.innerHTML = '';
     var previewContainer = document.getElementById('preview-container');
@@ -212,7 +306,6 @@
     var successCount = 0;
 
     for (var i = 0; i < files.length; i++) {
-      // Show queue status for multi-file uploads
       if (files.length > 1) {
         queueStatusEl.style.display = '';
         queueStatusEl.textContent = 'Fichier ' + (i + 1) + ' sur ' + files.length + ' : ' + files[i].name;
@@ -227,7 +320,6 @@
       }
     }
 
-    // Hide queue status and show summary
     queueStatusEl.style.display = 'none';
     progressContainer.style.display = 'none';
 
@@ -236,7 +328,6 @@
       statusDiv.textContent = successCount + ' fichier(s) televerse(s)';
     }
 
-    // Reset file input
     fileInput.value = '';
   }
 
@@ -247,7 +338,7 @@
 
   function escapeHtml(str) {
     var div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
+    div.appendChild(document.createTextNode(str == null ? '' : String(str)));
     return div.innerHTML;
   }
 
@@ -255,35 +346,59 @@
     resultDiv.style.display = '';
     var html = '';
 
-    // Extraction summary card
     if (data.extracted) {
       var ex = data.extracted;
+      var isRevenue = ex.document_kind === 'revenue';
       var confPct = Math.round((ex.confiance || 0) * 100);
       html += '<div class="cqc-card">';
-      html += '<h3>Recu telecharge et analyse</h3>';
+      html += '<h3>' + (isRevenue ? 'Document revenu analysé' : 'Reçu téléversé et analysé') + '</h3>';
       html += '<p><strong>Fichier :</strong> ' + escapeHtml(data.filename) + '</p>';
-      html += '<p><strong>Fournisseur :</strong> ' + escapeHtml(ex.fournisseur) + '</p>';
-      html += '<p><strong>Date :</strong> ' + escapeHtml(ex.date) + '</p>';
-      html += '<p><strong>Total :</strong> ' + escapeHtml(ex.total) + ' $</p>';
-      html += '<p><strong>Confiance :</strong> ' + confPct + ' %</p>';
+      html += '<div class="cqc-receipt-result-meta">';
+      html += '<div><strong>' + (isRevenue ? 'Client / contrepartie' : 'Fournisseur') + '</strong><br>' + escapeHtml(ex.fournisseur) + '</div>';
+      html += '<div><strong>Date</strong><br>' + escapeHtml(ex.date) + '</div>';
+      html += '<div><strong>Total</strong><br>' + escapeHtml(ex.total) + ' $</div>';
+      html += '<div><strong>Confiance</strong><br>' + confPct + ' %</div>';
+      if (isRevenue) {
+        html += '<div><strong>Mode de prix</strong><br>' + escapeHtml(ex.pricing_mode) + '</div>';
+        html += '<div><strong>Traitement taxes</strong><br>' + escapeHtml(ex.traitement_taxes || 'à confirmer') + '</div>';
+      }
       html += '</div>';
+      if (ex.description) {
+        html += '<p style="margin-top: 12px;"><strong>Description :</strong> ' + escapeHtml(ex.description) + '</p>';
+      }
+      if (ex.review_reason) {
+        html += '<div class="cqc-alert cqc-alert-warning" style="margin-top: 12px;">' + escapeHtml(ex.review_reason) + '</div>';
+      }
+      html += '</div>';
+
+      if (isRevenue && data.resume_revenu) {
+        html += '<div class="cqc-card-flush">';
+        html += '<h3 class="cqc-section-title">Résumé fiscal du document</h3>';
+        html += '<table class="cqc-table"><tbody>';
+        html += '<tr><td>Sous-total</td><td class="montant">' + escapeHtml(data.resume_revenu.sous_total) + ' $</td></tr>';
+        html += '<tr><td>TPS</td><td class="montant">' + escapeHtml(data.resume_revenu.tps) + ' $</td></tr>';
+        html += '<tr><td>TVQ</td><td class="montant">' + escapeHtml(data.resume_revenu.tvq) + ' $</td></tr>';
+        html += '<tr><td><strong>Total</strong></td><td class="montant"><strong>' + escapeHtml(data.resume_revenu.total) + ' $</strong></td></tr>';
+        html += '</tbody></table>';
+        html += '</div>';
+      }
     } else {
       html += '<div class="cqc-card">';
-      html += '<h3>Fichier enregistre</h3>';
+      html += '<h3>Fichier enregistré</h3>';
       html += '<p><strong>Fichier :</strong> ' + escapeHtml(data.filename) + '</p>';
       if (data.error_extraction) {
-        html += '<p class="cqc-text-muted">Extraction echouee : ' + escapeHtml(data.error_extraction) + '</p>';
+        html += '<p class="cqc-text-muted">Extraction échouée : ' + escapeHtml(data.error_extraction) + '</p>';
       }
       html += '</div>';
     }
 
-    // Match table
     if (data.correspondances && data.correspondances.length > 0) {
+      var isRevenueTable = data.extracted && data.extracted.document_kind === 'revenue';
       html += '<div class="cqc-card-flush">';
-      html += '<h3 class="cqc-section-title">Correspondances proposees</h3>';
+      html += '<h3 class="cqc-section-title">Correspondances proposées</h3>';
       html += '<table class="cqc-table">';
       html += '<thead><tr>';
-      html += '<th>Date</th><th>Narration</th><th>Montant</th><th>Score</th><th>Action</th>';
+      html += '<th>Date</th><th>Source</th><th>Montant</th><th>Score</th><th>Action</th>';
       html += '</tr></thead><tbody>';
 
       for (var i = 0; i < data.correspondances.length; i++) {
@@ -291,62 +406,69 @@
         var scorePct = Math.round(c.score * 100) + '%';
         html += '<tr>';
         html += '<td>' + escapeHtml(c.date) + '</td>';
-        html += '<td>' + escapeHtml(c.narration) + '</td>';
-        html += '<td>' + escapeHtml(c.montant) + ' $</td>';
+        html += '<td><strong>' + escapeHtml(c.payee || '') + '</strong><br>' + escapeHtml(c.narration || '') + '</td>';
+        html += '<td class="montant">' + escapeHtml(c.montant) + ' $</td>';
         html += '<td>' + scorePct + '</td>';
         html += '<td>';
-        html += '<form method="POST" action="' + escapeHtml(data.link_url || LINK_URL) + '" style="margin:0">';
-        html += '<input type="hidden" name="chemin_recu" value="' + escapeHtml(data.chemin_recu || '') + '">';
-        html += '<input type="hidden" name="entry_hash" value="' + escapeHtml(c.entry_hash) + '">';
-        html += '<input type="hidden" name="date_txn" value="' + escapeHtml(c.date) + '">';
-        html += '<input type="hidden" name="compte" value="' + escapeHtml(c.compte) + '">';
-        html += '<button type="submit" class="cqc-btn cqc-btn-sm">Lier</button>';
-        html += '</form>';
+
+        if (isRevenueTable) {
+          if (c.entry_hash && !c.needs_review) {
+            html += '<form method="POST" action="' + escapeHtml(NORMALIZE_URL) + '" style="margin:0">';
+            html += '<input type="hidden" name="document_id" value="' + escapeHtml(data.extracted.document_id) + '">';
+            html += '<input type="hidden" name="entry_hash" value="' + escapeHtml(c.entry_hash) + '">';
+            html += '<input type="hidden" name="score" value="' + escapeHtml(c.score) + '">';
+            html += '<button type="submit" class="cqc-btn cqc-btn-sm ' + (c.already_normalized ? 'cqc-btn-outline' : 'cqc-btn-primary') + '">';
+            html += c.already_normalized ? 'Lier et valider' : 'Normaliser';
+            html += '</button>';
+            html += '</form>';
+          } else {
+            html += '<span class="cqc-text-muted">' + escapeHtml(c.review_reason || 'Revue manuelle') + '</span>';
+          }
+        } else {
+          html += '<form method="POST" action="' + escapeHtml(data.link_url || LINK_URL) + '" style="margin:0">';
+          html += '<input type="hidden" name="chemin_recu" value="' + escapeHtml(data.chemin_recu || '') + '">';
+          html += '<input type="hidden" name="entry_hash" value="' + escapeHtml(c.entry_hash) + '">';
+          html += '<input type="hidden" name="date_txn" value="' + escapeHtml(c.date) + '">';
+          html += '<input type="hidden" name="compte" value="' + escapeHtml(c.compte || '') + '">';
+          html += '<button type="submit" class="cqc-btn cqc-btn-sm">Lier</button>';
+          html += '</form>';
+        }
+
         html += '</td>';
         html += '</tr>';
       }
 
       html += '</tbody></table></div>';
     } else if (data.extracted) {
-      html += '<div class="cqc-card"><p>Aucune correspondance trouvee.</p></div>';
+      html += '<div class="cqc-card"><p>Aucune correspondance trouvée.</p></div>';
     }
 
-    // Receipt-to-AP creation prompt
-    if (data.extracted) {
-      var ex = data.extracted;
-      // Build the AP form pre-fill URL with query parameters
-      var apBaseUrl = '{{ "/" ~ g.beancount_file_slug ~ "/extension/ComptesFournisseursExtension/" }}';
-      var apParams = new URLSearchParams();
-      apParams.set('prefill', '1');
-      apParams.set('tab', 'ap');
-      if (ex.fournisseur) apParams.set('fournisseur', ex.fournisseur);
-      if (ex.date && ex.date !== 'UNKNOWN') apParams.set('date', ex.date);
-      if (ex.sous_total) apParams.set('montant', ex.sous_total);
-      if (ex.montant_tps) apParams.set('tps', ex.montant_tps);
-      if (ex.montant_tvq) apParams.set('tvq', ex.montant_tvq);
-      if (ex.description) apParams.set('description', ex.description);
-      var apUrl = apBaseUrl + '?' + apParams.toString();
-
+    if (data.extracted && data.extracted.document_kind === 'expense') {
       html += '<div class="cqc-card cqc-receipt-to-ap">';
-      html += '<div class="cqc-receipt-to-ap-prompt">';
-      html += '<strong>Creer une facture fournisseur a partir de ce recu?</strong>';
-      html += '<p class="cqc-text-muted" style="margin: 4px 0 8px 0;">';
-      html += escapeHtml(ex.fournisseur) + ' &mdash; ' + escapeHtml(ex.total) + ' $';
-      if (ex.date && ex.date !== 'UNKNOWN') {
-        html += ' &mdash; ' + escapeHtml(ex.date);
+      html += '<strong>Créer une facture fournisseur à partir de ce reçu?</strong>';
+      html += '<p class="cqc-text-muted" style="margin: 4px 0 8px 0;">' + escapeHtml(data.extracted.fournisseur) + ' — ' + escapeHtml(data.extracted.total) + ' $</p>';
+      if (data.ap_prefill && data.ap_prefill.justification) {
+        html += '<p class="cqc-text-muted" style="margin: 4px 0 8px 0;">' + escapeHtml(data.ap_prefill.justification) + '</p>';
       }
-      html += '</p>';
-      html += '<a href="' + escapeHtml(apUrl) + '" class="cqc-btn cqc-btn-primary">';
-      html += 'Creer facture fournisseur';
-      html += '</a>';
+      if (data.ap_prefill && data.ap_prefill.note) {
+        html += '<div class="cqc-alert cqc-alert-info" style="margin-top: 8px;">' + escapeHtml(data.ap_prefill.note) + '</div>';
+      }
+      html += '<a href="' + escapeHtml(data.ap_prefill_url || '#') + '" class="cqc-btn cqc-btn-primary">Créer facture fournisseur</a>';
       html += '</div>';
+    }
+
+    if (data.extracted && data.extracted.document_kind === 'revenue' && data.ar_prefill_url) {
+      html += '<div class="cqc-card cqc-receipt-to-ar">';
+      html += '<strong>Créer un brouillon de facture client si aucun dépôt n’est prêt à normaliser?</strong>';
+      html += '<p class="cqc-text-muted" style="margin: 4px 0 8px 0;">Le brouillon AR réutilise le même split fiscal que ce document.</p>';
+      html += '<a href="' + escapeHtml(data.ar_prefill_url) + '" class="cqc-btn cqc-btn-primary">Préremplir facture client</a>';
       html += '</div>';
     }
 
     resultDiv.innerHTML = html;
   }
 
-  function renderPreview(file, data) {
+  function renderPreview(file) {
     var container = document.getElementById('preview-container');
     if (!container) return;
 
@@ -358,35 +480,23 @@
     if (isImage) {
       var img = document.createElement('img');
       img.className = 'cqc-preview-thumb';
-      img.src = URL.createObjectURL(file);
-      img.onload = function() {
-        URL.revokeObjectURL(img.src);
-      };
       img.alt = file.name;
+      img.src = URL.createObjectURL(file);
       item.appendChild(img);
     } else {
-      var icon = document.createElement('span');
-      icon.className = 'cqc-preview-icon';
-      icon.textContent = '\u{1F4C4}';
+      var icon = document.createElement('div');
+      icon.className = 'cqc-preview-pdf';
+      icon.textContent = 'PDF';
       item.appendChild(icon);
     }
 
-    var nameEl = document.createElement('span');
-    nameEl.className = 'cqc-preview-name';
-    nameEl.textContent = file.name;
-    nameEl.title = file.name;
-    item.appendChild(nameEl);
-
-    if (data && data.extracted && data.extracted.total) {
-      var badge = document.createElement('span');
-      badge.className = 'cqc-preview-badge';
-      badge.textContent = data.extracted.total + ' $';
-      item.appendChild(badge);
-    }
+    var caption = document.createElement('div');
+    caption.className = 'cqc-preview-caption';
+    caption.textContent = file.name;
+    item.appendChild(caption);
 
     container.appendChild(item);
   }
-
 })();
 </script>
 
