@@ -1,8 +1,4 @@
 # GSD Agent Configuration — managed by get-shit-done installer
-# GSD codex_hooks ownership: section
-
-[features]
-codex_hooks = true
 
 [agents.gsd-advisor-researcher]
 description = "Researches a single gray area decision and returns a structured comparison table with rationale. Spawned by discuss-phase advisor mode."
@@ -75,13 +71,3 @@ config_file = "/Users/philippebeliveau/Desktop/Notebook/comptabilite/.codex/agen
 [agents.gsd-verifier]
 description = "Verifies phase goal achievement through goal-backward analysis. Checks codebase delivers what phase promised, not just that tasks completed. Creates VERIFICATION.md report."
 config_file = "/Users/philippebeliveau/Desktop/Notebook/comptabilite/.codex/agents/gsd-verifier.toml"
-
-
-# GSD Hooks (Codex 0.124+ nested schema — see https://developers.openai.com/codex/hooks)
-[[hooks.SessionStart]]
-matcher = "startup|resume"
-
-[[hooks.SessionStart.hooks]]
-type = "command"
-command = "node /Users/philippebeliveau/Desktop/Notebook/comptabilite/.claude/hooks/gsd-check-update.js"
-statusMessage = "Checking for GSD updates"
