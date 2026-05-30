@@ -77,7 +77,11 @@ description = "Verifies phase goal achievement through goal-backward analysis. C
 config_file = "/Users/philippebeliveau/Desktop/Notebook/comptabilite/.codex/agents/gsd-verifier.toml"
 
 
-# GSD Hooks
-[[hooks]]
-event = "SessionStart"
-command = "node /Users/philippebeliveau/Desktop/Notebook/comptabilite/.codex/get-shit-done/hooks/gsd-update-check.js"
+# GSD Hooks (Codex 0.124+ nested schema — see https://developers.openai.com/codex/hooks)
+[[hooks.SessionStart]]
+matcher = "startup|resume"
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "node /Users/philippebeliveau/Desktop/Notebook/comptabilite/.claude/hooks/gsd-check-update.js"
+statusMessage = "Checking for GSD updates"
