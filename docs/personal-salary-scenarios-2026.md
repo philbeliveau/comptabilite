@@ -21,6 +21,7 @@ This note is for planning only. It is not tax, legal, or mortgage advice.
 - `FHSA` contributions do reduce taxable income.
 - `RRQ/QPP`, `RQAP`, and `EI` are based on salary, not on the FHSA deduction.
 - These numbers are estimates using the repo's `2026` Quebec payroll logic and tax tables.
+- Quebec personal tax-bracket reference archived locally: `docs/tax-references/2026/impot_particuliers_quebec_2026.pdf`.
 - Actual source deductions can differ from final tax owed depending on payroll setup, TD1/TP-1015 forms, and whether FHSA is reflected at source.
 - Mortgage underwriting varies by lender. In practice, clean T4 income usually matters more than shaving a few thousand dollars of RRQ.
 
@@ -151,3 +152,6 @@ The estimates above align with the payroll rates and Quebec payroll engine in:
 - `src/compteqc/quebec/paie/impot_quebec.py`
 - `src/compteqc/quebec/paie/cotisations.py`
 
+Local reference used for Quebec personal tax brackets:
+
+- `docs/tax-references/2026/impot_particuliers_quebec_2026.pdf`

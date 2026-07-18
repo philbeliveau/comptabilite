@@ -1,0 +1,109 @@
+; Transactions mai 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-05-08 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-04-01 au 2026-04-30)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-9.csv"
+  ligne: "2"
+  document: "documents/2026/05/2026-05-08.procom-pqi505403.pdf"
+  document_fiscal_id: "doc-procom-pqi505403-20260508"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  normalisation_revenu: "oui"
+  periode_service: "2026-04-01/2026-04-30"
+  ref_paiement: "PQI505403"
+  ref_transaction: "PQI505403-P-1"
+  Actifs:Banque:RBC:Cheques   20867.96 CAD
+  Revenus:Consultation       -18150.00 CAD
+  Passifs:TPS-Percue           -907.50 CAD
+  Passifs:TVQ-Percue          -1810.46 CAD
+
+2026-05-08 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/05/2026-05-08.procom-pqi505403.pdf"
+
+2026-05-12 * "Virement Par Banque En Direct 9554" "Paiement carte de credit RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-9.csv"
+  ligne: "3"
+  note: "Confirme par l'operateur comme paiement de carte de credit."
+  Actifs:Banque:RBC:Cheques  -1534.73 CAD
+  Passifs:CartesCredit:RBC    1534.73 CAD
+
+2026-05-01 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "10"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-05-04 * "Colleen Marie 4Qc43D" "Allocation bureau a domicile - loyer mai 2026 (20%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-11.csv"
+  ligne: "47"
+  note: "Estimation de travail en cours basee sur l'utilisation du domicile comme bureau; voir AGENTS.md."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
+2026-05-04 * "Fizz" "Allocation bureau a domicile - internet mai 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "116"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 49.44 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-05-04 * "Anthropic" "Abonnement logiciel"
+  source: "personal-statement"
+  fichier_source: "download-transactions-16.csv"
+  ligne: "16"
+  note: "Traite comme depense d'entreprise payee personnellement; montant CAD selon le releve RBC."
+  Depenses:Bureau:Abonnements-Logiciels    9.61 CAD
+  Passifs:Pret-Actionnaire                -9.61 CAD
+
+2026-05-22 * "Fizz" "Allocation bureau a domicile - internet mai 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "206"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 1.15 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom     0.50 CAD
+  Actifs:TPS-Payee                     0.03 CAD
+  Actifs:TVQ-Payee                     0.05 CAD
+  Passifs:Pret-Actionnaire            -0.58 CAD
+
+2026-05-29 * "Fizz" "Allocation bureau a domicile - internet mai 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "234"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 25.93 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    11.28 CAD
+  Actifs:TPS-Payee                     0.56 CAD
+  Actifs:TVQ-Payee                     1.13 CAD
+  Passifs:Pret-Actionnaire           -12.97 CAD
+
+2026-05-01 * "Google *Cloud Lm5Jhw G.Co/HelpPay#" "Services infonuagiques"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "108"
+  note: "Traite comme depense d'entreprise payee personnellement; montant residuel a confirmer avec le recu."
+  Depenses:Bureau:Abonnements-Logiciels    0.03 CAD
+  Passifs:Pret-Actionnaire                -0.03 CAD
+
+2026-05-19 * "Microsoft*Subscription Halifax" "Abonnement logiciel"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "196"
+  note: "Traite comme depense d'entreprise payee personnellement; classification a revoir avec les recus/supports."
+  Depenses:Bureau:Abonnements-Logiciels    2.30 CAD
+  Passifs:Pret-Actionnaire                -2.30 CAD

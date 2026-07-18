@@ -36,3 +36,41 @@
   review_reason: Montants confirmes manuellement par l'operateur; joindre la facture client native si disponible.
   created_at: '2026-04-05T12:30:00'
   updated_at: '2026-04-05T12:30:00'
+- id: doc-procom-pqi507327-20260605
+  chemin_document: documents/2026/06/2026-06-05.procom-pqi507327.pdf
+  nom_fichier: 2026-06-05.procom-pqi507327.pdf
+  fournisseur: Procom Quebec Inc.
+  date: '2026-06-05'
+  sous_total: '11165.00'
+  montant_tps: '558.25'
+  montant_tvq: '1113.71'
+  total: '12836.96'
+  description: Paiement Procom - Industrielle Alliance, services 2026-05-01 au 2026-05-31
+  confiance: 1.0
+  document_kind: revenue
+  pricing_mode: explicit_tax_lines
+  normalization_status: matched_and_normalized
+  matched_transaction_ref: /Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/2026/06.beancount:15
+  traitement_taxes: tps_tvq
+  review_reason:
+  created_at: '2026-06-07T16:15:00'
+  updated_at: '2026-06-07T16:15:00'
+- id: doc-procom-pqi505403-20260508
+  chemin_document: documents/2026/05/2026-05-08.procom-pqi505403.pdf
+  nom_fichier: 2026-05-08.procom-pqi505403.pdf
+  fournisseur: Procom Quebec Inc.
+  date: '2026-05-08'
+  sous_total: '18150.00'
+  montant_tps: '907.50'
+  montant_tvq: '1810.46'
+  total: '20867.96'
+  description: Paiement Procom - Industrielle Alliance, services 2026-04-01 au 2026-04-30
+  confiance: 1.0
+  document_kind: revenue
+  pricing_mode: explicit_tax_lines
+  normalization_status: matched_and_normalized
+  matched_transaction_ref: /Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/2026/05.beancount:8
+  traitement_taxes: tps_tvq
+  review_reason:
+  created_at: '2026-06-07T16:25:00'
+  updated_at: '2026-06-07T16:25:00'

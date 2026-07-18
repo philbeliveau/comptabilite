@@ -1,0 +1,340 @@
+date,source_file,line,account_type,description,amount,direction,category,recurring,excluded_reason
+2026-03-01,download-transactions-10.csv,2,,IGA #8639 MONTREAL,-18.72,outflow,Groceries and household,yes,
+2026-03-01,download-transactions-10.csv,3,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-03-02,download-transactions-10.csv,4,,MICROSOFT*XBOX MSBILL.INFO,-68.97,outflow,"Telecom, software, subscriptions",yes,
+2026-03-02,download-transactions-10.csv,5,,CAFE SANAAQ MONTREAL,-3.27,outflow,Restaurants and coffee,yes,
+2026-03-02,download-transactions-11.csv,2,,VIREMENT ENVOYÉ COLLEEN MARIE YFGGZS,-1775.00,outflow,Housing,yes,
+2026-03-02,download-transactions-11.csv,3,,VIREMENT REÇU ANASTASIIA SUBBOTINA CAES6X4K,900.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-03-02,download-transactions-11.csv,4,,ASSURANCE CIE BELAIR,-89.09,outflow,Insurance,yes,
+2026-03-02,download-transactions-11.csv,5,,ASSURANCE CIE BELAIR,-38.69,outflow,Insurance,yes,
+2026-03-03,download-transactions-10.csv,6,,ALLO VELO MONTREAL,-28.45,outflow,Transport,yes,
+2026-03-03,download-transactions-10.csv,7,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-03-03,download-transactions-11.csv,6,,FRAIS MENSUELS,-12.95,outflow,Bank fees,yes,
+2026-03-04,download-transactions-10.csv,8,,IGA #8639 MONTREAL,-9.98,outflow,Groceries and household,yes,
+2026-03-04,download-transactions-10.csv,9,,FIZZ (TX. INCL.) MONTREAL,-49.44,outflow,"Telecom, software, subscriptions",yes,
+2026-03-04,download-transactions-10.csv,10,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-03-04,download-transactions-10.csv,11,,4 Origines Montreal,-23.40,outflow,Other recurring personal,yes,
+2026-03-05,download-transactions-11.csv,7,,CRÉDIT D'IMPÔT POUR SOLIDARITÉ GOUV. QUEBEC,66.67,inflow,Income / transfers in,no,inflow
+2026-03-06,download-transactions-10.csv,12,,PUB ST-AMBROISE GRANBY,-10.01,outflow,Other recurring personal,yes,
+2026-03-06,download-transactions-10.csv,13,,PUB ST-AMBROISE GRANBY,-9.04,outflow,Other recurring personal,yes,
+2026-03-07,download-transactions-10.csv,14,,COUCHE-TARD #436 OTTERBURN PAR,-74.60,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-03-09,download-transactions-10.csv,15,,OAKLEY CANADA SAINT-LAURENT,-80.48,outflow,Clothing and gear,yes,
+2026-03-09,download-transactions-10.csv,16,,Spotify P4030169F2 Stockholm,-20.57,outflow,"Telecom, software, subscriptions",yes,
+2026-03-09,download-transactions-10.csv,17,,CTRE RENOVATION ST PAT MONTREAL,-9.18,outflow,Other recurring personal,yes,
+2026-03-10,download-transactions-10.csv,18,,LS Five Guys Rue McGil Montreal,-13.99,outflow,Other recurring personal,yes,
+2026-03-10,download-transactions-10.csv,19,,LS 49th Parallel Coffe Montreal,-4.88,outflow,Other recurring personal,yes,
+2026-03-10,download-transactions-10.csv,20,,4 Origines Montreal,-7.80,outflow,Other recurring personal,yes,
+2026-03-11,download-transactions-10.csv,21,,IGA #8639 MONTREAL,-8.18,outflow,Groceries and household,yes,
+2026-03-11,download-transactions-11.csv,8,,ACHAT INTERAC - 0471 COSTCO WHOLESAL,-323.64,outflow,Groceries and household,yes,
+2026-03-11,download-transactions-11.csv,9,,PMNT FACT ÉLECTR HYDRO-QUEBEC,-81.14,outflow,Utilities,yes,
+2026-03-12,download-transactions-10.csv,22,,MOLLO BOULANGERIE & LAB MONTREAL,-7.21,outflow,Restaurants and coffee,yes,
+2026-03-12,download-transactions-10.csv,23,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-03-13,download-transactions-10.csv,24,,IGA #8639 MONTREAL,-5.99,outflow,Groceries and household,yes,
+2026-03-13,download-transactions-10.csv,25,,WINNERS 451 MONTREAL,-95.40,outflow,Clothing and gear,yes,
+2026-03-13,download-transactions-10.csv,26,,RESTAURANT IL FOCOLAIO 514-879-1045,-69.80,outflow,Restaurants and coffee,yes,
+2026-03-15,download-transactions-10.csv,27,,AMZN Mktp CA*B50FT2CT2 866-216-1072,-54.03,outflow,Other recurring personal,yes,
+2026-03-16,download-transactions-10.csv,28,,IGA #8639 MONTREAL,-35.88,outflow,Groceries and household,yes,
+2026-03-16,download-transactions-10.csv,29,,MCDONALD'S #40060 MONTREAL,-17.25,outflow,Other recurring personal,yes,
+2026-03-16,download-transactions-10.csv,30,,STM CHARLEVOIX SIN101 MONTREAL,-7.00,outflow,Transport,yes,
+2026-03-16,download-transactions-10.csv,31,,"ECCO Shoes Canada, Inc. Toronto",-206.94,outflow,Clothing and gear,yes,
+2026-03-16,download-transactions-11.csv,10,,VIREMENT REÇU JEREMIE LEVASSEUR CATFJCJD,20.00,inflow,Income / transfers in,no,inflow
+2026-03-16,download-transactions-11.csv,11,,VIREMENT ENVOYÉ ERIC VUONG VX2KN2,-2750.00,outflow,Business or capital items,no,business_or_capex_review
+2026-03-16,download-transactions-11.csv,12,,VIREMENT ENVOYÉ CONSEIL ET SOLUTION ENACT INC BPRMYU,-210.00,outflow,Transfers / review,no,transfer_review
+2026-03-16,download-transactions-11.csv,13,,VIREMENT PAR BANQUE EN DIRECT - 3557,0.97,inflow,Transfers / card payments,no,card_payment_or_credit
+2026-03-18,download-transactions-10.csv,32,,LE POKE STATION MCGILL MONTREAL,-24.14,outflow,Other recurring personal,yes,
+2026-03-19,download-transactions-10.csv,33,,HIATUS MONTREAL,-108.21,outflow,Restaurants and coffee,yes,
+2026-03-19,download-transactions-10.csv,34,,Microsoft*Subscription Mississauga,-2.30,outflow,"Telecom, software, subscriptions",yes,
+2026-03-21,download-transactions-10.csv,35,,SAQ23365 MONT ST-HILAIRE MONT-SAINT-HI,-44.00,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-03-23,download-transactions-11.csv,14,,VIREMENT ENVOYÉ VELO ZP5YH3,-25.00,outflow,Transfers / review,no,transfer_review
+2026-03-23,download-transactions-11.csv,15,,VIREMENT REÇU ANASTASIIA SUBBOTINA CAJB7PCW,40.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-03-24,download-transactions-10.csv,36,,ARCTERYX Equipment North Vancouv,-120.15,outflow,Clothing and gear,yes,
+2026-03-25,download-transactions-10.csv,37,,LS Lord William Pub Montreal,-12.00,outflow,Other recurring personal,yes,
+2026-03-26,download-transactions-10.csv,38,,MCDONALD'S #26035 MONTREAL,-5.62,outflow,Other recurring personal,yes,
+2026-03-26,download-transactions-10.csv,39,,SQ *F.C.E. FOUNDATION CUL Montreal,-10.00,outflow,Other recurring personal,yes,
+2026-03-26,download-transactions-10.csv,40,,APPLE.COM/BILL 866-712-7753,-1.48,outflow,"Telecom, software, subscriptions",yes,
+2026-03-26,download-transactions-10.csv,41,,PAIEMENT AUTOMATISE - MER CI,1538.80,inflow,Transfers / card payments,no,card_payment_or_credit
+2026-03-27,download-transactions-10.csv,42,,SAQ23057 MAIL MONTENACH BELOEIL,-9.55,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-03-27,download-transactions-10.csv,43,,MOLLO CAFE MONTREAL,-9.70,outflow,Restaurants and coffee,yes,
+2026-03-27,download-transactions-10.csv,44,,SAQ23131 SAINT-LAMBERT SAINT-LAMBERT,-58.70,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-03-27,download-transactions-11.csv,16,,VIREMENT REÇU CONSEIL ET SOLUTION ENACT INC. CAJNE997,2000.00,inflow,Income / transfers in,no,inflow
+2026-03-27,download-transactions-11.csv,17,,PAIEMENT DIVERS CARTE RBC,-1538.80,outflow,Transfers / card payments,no,card_payment_or_credit
+2026-03-28,download-transactions-10.csv,45,,SAQ23365 MONT ST-HILAIRE MONT-SAINT-HI,-59.10,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-03-29,download-transactions-10.csv,46,,FIZZ (TX. INCL.) MONTREAL,-25.93,outflow,"Telecom, software, subscriptions",yes,
+2026-03-30,download-transactions-10.csv,47,,GOOGLE*GOOGLE ONE INTERNET,-15.51,outflow,"Telecom, software, subscriptions",yes,
+2026-03-30,download-transactions-11.csv,18,,VIREMENT ENVOYÉ VINCENT BOUDREAU GQXQMQ,-155.56,outflow,Transfers / review,no,transfer_review
+2026-03-30,download-transactions-11.csv,19,,VIREMENT REÇU CONSEIL ET SOLUTION ENACT INC. CAZP8W3N,750.00,inflow,Income / transfers in,no,inflow
+2026-03-30,download-transactions-11.csv,20,,VIREMENT ENVOYÉ ALEX ABILE ZD88RU,-35.00,outflow,Transfers / review,no,transfer_review
+2026-03-30,download-transactions-11.csv,21,,ACHAT INTERAC SANS CONTACT - 9181 COSTCO WHOLESAL,-219.80,outflow,Groceries and household,yes,
+2026-03-31,download-transactions-10.csv,48,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-04-01,download-transactions-10.csv,49,,GOOGLE *CLOUD MX7VKN g.co/HelpPay#,-42.75,outflow,"Telecom, software, subscriptions",yes,
+2026-04-01,download-transactions-11.csv,22,,ASSURANCE CIE BELAIR,-89.09,outflow,Insurance,yes,
+2026-04-01,download-transactions-11.csv,23,,ASSURANCE CIE BELAIR,-38.69,outflow,Insurance,yes,
+2026-04-02,download-transactions-10.csv,50,,HIATUS MONTREAL,-82.19,outflow,Restaurants and coffee,yes,
+2026-04-02,download-transactions-10.csv,51,,HIATUS MONTREAL,-62.09,outflow,Restaurants and coffee,yes,
+2026-04-02,download-transactions-10.csv,52,,MELK STANLEY MONTREAL,-3.57,outflow,Other recurring personal,yes,
+2026-04-02,download-transactions-11.csv,24,,FRAIS MENSUELS,-12.95,outflow,Bank fees,yes,
+2026-04-02,download-transactions-11.csv,25,,TPS CANADA,89.58,inflow,Income / transfers in,no,inflow
+2026-04-02,download-transactions-11.csv,26,,CRÉDIT D'IMPÔT POUR SOLIDARITÉ GOUV. QUEBEC,66.67,inflow,Income / transfers in,no,inflow
+2026-04-03,download-transactions-10.csv,53,,MOLLO BOULANGERIE & LAB MONTREAL,-7.25,outflow,Restaurants and coffee,yes,
+2026-04-03,download-transactions-10.csv,54,,ADELARD BELANGER ET FILS MONTREAL,-7.00,outflow,Other recurring personal,yes,
+2026-04-03,download-transactions-10.csv,55,,POISSONNERIE DU MARCHE AT MONTREAL,-36.29,outflow,Other recurring personal,yes,
+2026-04-03,download-transactions-10.csv,56,,FERNAND THEORET MONTREAL,-24.00,outflow,Other recurring personal,yes,
+2026-04-03,download-transactions-10.csv,57,,LS La Scacciata Montreal,-11.71,outflow,Other recurring personal,yes,
+2026-04-04,download-transactions-10.csv,58,,PETRO-CANADA 10703 OTTERBURN PAR,-89.72,outflow,Transport,yes,
+2026-04-04,download-transactions-10.csv,59,,FIZZ (TX. INCL.) MONTREAL,-49.44,outflow,"Telecom, software, subscriptions",yes,
+2026-04-04,download-transactions-10.csv,60,,SAQ23057 MAIL MONTENACH BELOEIL,-24.45,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-04-06,download-transactions-11.csv,27,,VIREMENT REÇU CONSEIL ET SOLUTION ENACT INC. CAUAD3A3,895.08,inflow,Income / transfers in,no,inflow
+2026-04-06,download-transactions-11.csv,28,,VIREMENT ENVOYÉ COLLEEN MARIE GRU69U,-1775.00,outflow,Housing,yes,
+2026-04-06,download-transactions-11.csv,29,,VIREMENT ENVOYÉ ALEX ABILE U7L5E5,-35.00,outflow,Transfers / review,no,transfer_review
+2026-04-06,download-transactions-11.csv,30,,VIREMENT ENVOYÉ MURSALEM 6EEZ2L,-10.00,outflow,Transfers / review,no,transfer_review
+2026-04-08,download-transactions-10.csv,61,,IGA #8639 MONTREAL,-6.49,outflow,Groceries and household,yes,
+2026-04-08,download-transactions-11.csv,31,,PMNT FACT ÉLECTR HYDRO-QUEBEC,-81.14,outflow,Utilities,yes,
+2026-04-09,download-transactions-10.csv,62,,Spotify P4144AB83E Stockholm,-20.57,outflow,"Telecom, software, subscriptions",yes,
+2026-04-10,download-transactions-10.csv,63,,PETRO-CANADA 10702 MONT SAINT HI,-17.64,outflow,Transport,yes,
+2026-04-10,download-transactions-11.csv,32,,VIREMENT ENVOYÉ MURSALEM XUCFT3,-10.00,outflow,Transfers / review,no,transfer_review
+2026-04-11,download-transactions-10.csv,64,,PROVIGO LE MARCHE ST-B SAINT-BRUNO,-5.03,outflow,Other recurring personal,yes,
+2026-04-11,download-transactions-10.csv,65,,FEMME ET LE BOULANGER OTTERBURN PAR,-2.60,outflow,Other recurring personal,yes,
+2026-04-11,download-transactions-10.csv,66,,"Crocs Canada, Inc. crocs.ca",-43.82,outflow,Other recurring personal,yes,
+2026-04-12,download-transactions-10.csv,67,,IGA #8639 MONTREAL,-4.11,outflow,Groceries and household,yes,
+2026-04-12,download-transactions-10.csv,68,,COUCHETARD #436 OTTERBURN PAR,-5.69,outflow,Other recurring personal,yes,
+2026-04-12,download-transactions-10.csv,69,,FEMME ET LE BOULANGER OTTERBURN PAR,-3.95,outflow,Other recurring personal,yes,
+2026-04-12,download-transactions-10.csv,70,,MOUNTAIN EQUIPMENT COMPAN GREENFIELD PA,-73.44,outflow,Clothing and gear,yes,
+2026-04-13,download-transactions-11.csv,33,,VIREMENT REÇU ANASTASIIA SUBBOTINA CA4B3VSZ,250.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-04-13,download-transactions-11.csv,34,,VIREMENT ENVOYÉ JEREMIE LEVASSEUR 6E6KDL,-500.00,outflow,Transfers / review,no,transfer_review
+2026-04-13,download-transactions-11.csv,35,,VIREMENT ENVOYÉ NEWGEAR 69PKUC,-350.00,outflow,Transfers / review,no,transfer_review
+2026-04-13,download-transactions-11.csv,36,,VIREMENT ENVOYÉ LOIC DEROSCHE EQC9KS,-35.00,outflow,Transfers / review,no,transfer_review
+2026-04-14,download-transactions-11.csv,37,,VIREMENT ENVOYÉ MURSALEM GETH9M,-10.00,outflow,Transfers / review,no,transfer_review
+2026-04-15,download-transactions-10.csv,71,,BAR BARA MONTREAL,-47.45,outflow,Other recurring personal,yes,
+2026-04-16,download-transactions-10.csv,72,,MOLLO CAFE MONTREAL,-5.31,outflow,Restaurants and coffee,yes,
+2026-04-17,download-transactions-10.csv,73,,VASCO MONTREAL,-32.01,outflow,Other recurring personal,yes,
+2026-04-17,download-transactions-10.csv,74,,LES ENFANTS TERRIBLES MONTREAL,-34.04,outflow,Other recurring personal,yes,
+2026-04-17,download-transactions-10.csv,75,,MELK STANLEY MONTREAL,-3.57,outflow,Other recurring personal,yes,
+2026-04-17,download-transactions-11.csv,38,,VIREMENT REÇU ANASTASIIA SUBBOTINA CABJZP6Q,672.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-04-18,download-transactions-10.csv,76,,IGA #8639 MONTREAL,-4.99,outflow,Groceries and household,yes,
+2026-04-18,download-transactions-10.csv,77,,DEPANNEUR PEEL MONTREAL,-8.24,outflow,Other recurring personal,yes,
+2026-04-18,download-transactions-10.csv,78,,MOLLO BOULANGERIE & LAB MONTREAL,-11.30,outflow,Restaurants and coffee,yes,
+2026-04-18,download-transactions-10.csv,79,,LE PARADIS DU FROMAGE MONTREAL,-16.00,outflow,Other recurring personal,yes,
+2026-04-18,download-transactions-10.csv,80,,SQ *COOP LA ROBINE DES BO MONTREAL,-23.13,outflow,Other recurring personal,yes,
+2026-04-18,download-transactions-10.csv,81,,CHARCUTERIE DE TOURS (201 MONTREAL,-31.02,outflow,"Groceries, pharmacy, and health",yes,
+2026-04-18,download-transactions-10.csv,82,,BOUCHERIE LES 2 FRERES Montreal,-41.35,outflow,"Groceries, pharmacy, and health",yes,
+2026-04-19,download-transactions-10.csv,83,,Microsoft*Subscription Mississauga,-2.30,outflow,"Telecom, software, subscriptions",yes,
+2026-04-20,download-transactions-11.csv,39,,ACHAT INTERAC - 2754 COSTCO WHOLESAL,-292.64,outflow,Groceries and household,yes,
+2026-04-20,download-transactions-11.csv,40,,VIREMENT REÇU FELIX TOUCHETTE CAS5QF8R,141.00,inflow,Income / transfers in,no,inflow
+2026-04-21,download-transactions-10.csv,84,,3 BRASSEURS MCGILL MONTREAL,-15.60,outflow,Other recurring personal,yes,
+2026-04-22,download-transactions-11.csv,41,,VIREMENT ENVOYÉ MARIO BISONNETTE ACUPUNCTEUR SAWRA3,-90.00,outflow,Transfers / review,no,transfer_review
+2026-04-23,download-transactions-10.csv,85,,HIATUS MONTREAL,-46.57,outflow,Restaurants and coffee,yes,
+2026-04-24,download-transactions-10.csv,86,,CHEZ MILLER MONTREAL,-45.88,outflow,Other recurring personal,yes,
+2026-04-24,download-transactions-10.csv,87,,RESTAURANT IL FOCOLAIO 514-879-1045,-48.42,outflow,Restaurants and coffee,yes,
+2026-04-24,download-transactions-11.csv,42,,VIREMENT REÇU JULIENGRENIER CA7FJ6RH,141.00,inflow,Income / transfers in,no,inflow
+2026-04-24,download-transactions-11.csv,43,,VIREMENT REÇU WILLIAM POTVIN CAABVJKE,141.00,inflow,Income / transfers in,no,inflow
+2026-04-24,download-transactions-11.csv,44,,VIREMENT REÇU SAMUEL ARSENAULT CAEEK8TT,141.00,inflow,Income / transfers in,no,inflow
+2026-04-24,download-transactions-11.csv,45,,VIREMENT REÇU YOANN MERCIER CAVGJAG8,141.00,inflow,Income / transfers in,no,inflow
+2026-04-24,download-transactions-11.csv,46,,VIREMENT REÇU CONSEIL ET SOLUTION ENACT INC. CAPQKWMH,2000.00,inflow,Income / transfers in,no,inflow
+2026-04-25,download-transactions-10.csv,88,,SAQ23132 MARCHE ATWATER MONTREAL,-23.40,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-04-25,download-transactions-10.csv,89,,PUB BURGUNDY LION MONTREAL,-13.36,outflow,Other recurring personal,yes,
+2026-04-25,download-transactions-10.csv,90,,LE PARADIS DU FROMAGE MONTREAL,-5.16,outflow,Other recurring personal,yes,
+2026-04-25,download-transactions-10.csv,91,,MOLLO BOULANGERIE & LAB MONTREAL,-4.88,outflow,Restaurants and coffee,yes,
+2026-04-25,download-transactions-10.csv,92,,MOLLO CAFE MONTREAL,-10.85,outflow,Restaurants and coffee,yes,
+2026-04-25,download-transactions-10.csv,93,,BOUCHERIE LES 2 FRERES Montreal,-30.85,outflow,"Groceries, pharmacy, and health",yes,
+2026-04-25,download-transactions-10.csv,94,,CHARCUTERIE DE TOURS (201 MONTREAL,-13.98,outflow,"Groceries, pharmacy, and health",yes,
+2026-04-25,download-transactions-10.csv,95,,MOUNTAIN EQUIPMENT COMPAN GREENFIELD PA,39.00,inflow,Income / transfers in,no,inflow
+2026-04-26,download-transactions-10.csv,96,,IGA #8639 MONTREAL,-4.07,outflow,Groceries and household,yes,
+2026-04-26,download-transactions-10.csv,97,,APPLE.COM/BILL 866-712-7753,-1.48,outflow,"Telecom, software, subscriptions",yes,
+2026-04-27,download-transactions-10.csv,98,,PAIEMENT AUTOMATISE - MER CI,1666.32,inflow,Transfers / card payments,no,card_payment_or_credit
+2026-04-27,download-transactions-11.csv,47,,VIREMENT REÇU THOMAS LAFLEUR CAMKYSHV,141.00,inflow,Income / transfers in,no,inflow
+2026-04-27,download-transactions-11.csv,48,,VIREMENT ENVOYÉ MURSALEM F9AA4D,-10.00,outflow,Transfers / review,no,transfer_review
+2026-04-28,download-transactions-10.csv,99,,COUCHE-TARD # 1191 LONGUEUIL,-7.10,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-04-28,download-transactions-10.csv,100,,MELK STANLEY MONTREAL,-3.57,outflow,Other recurring personal,yes,
+2026-04-28,download-transactions-10.csv,101,,FIZZ (TX. INCL.) MONTREAL,-25.93,outflow,"Telecom, software, subscriptions",yes,
+2026-04-28,download-transactions-11.csv,49,,VIREMENT REÇU SIMON JEAN CA6GN4ES,60.00,inflow,Income / transfers in,no,inflow
+2026-04-28,download-transactions-11.csv,50,,PAIEMENT DIVERS CARTE RBC,-1666.32,outflow,Transfers / card payments,no,card_payment_or_credit
+2026-04-28,download-transactions-11.csv,51,,VIREMENT ENVOYÉ MURSALEM G2YNFQ,-10.00,outflow,Transfers / review,no,transfer_review
+2026-04-29,download-transactions-10.csv,102,,PAYPAL *AIRBNB HM3HHNKX4 35314369001,-1133.26,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-04-29,download-transactions-10.csv,103,,IGA #8639 MONTREAL,-9.69,outflow,Groceries and household,yes,
+2026-04-29,download-transactions-10.csv,104,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-04-29,download-transactions-11.csv,52,,VIREMENT ENVOYÉ MARIO BISONNETTE ACUPUNCTEUR 523RG8,-90.00,outflow,Transfers / review,no,transfer_review
+2026-04-29,download-transactions-11.csv,53,,VIREMENT ENVOYÉ HANNAH DIMANDOR F9BFY4,-100.00,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-04-30,download-transactions-10.csv,105,,CLICKTIRE COM BOUCHERVILLE,-119.57,outflow,Transport,yes,
+2026-04-30,download-transactions-10.csv,106,,COUCHE-TARD #981   QPS BOUCHERVILLE,-89.40,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-04-30,download-transactions-10.csv,107,,ANTHROPIC ANTHROPIC.COM 6.9 USD @ 1.404347,-9.69,outflow,Other recurring personal,yes,
+2026-05-01,download-transactions-10.csv,108,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-05-01,download-transactions-10.csv,109,,ZONE MAISON MONTREAL,-2.30,outflow,Other recurring personal,yes,
+2026-05-01,download-transactions-10.csv,110,,LS Aylwin Deli Montreal,-13.15,outflow,Other recurring personal,yes,
+2026-05-01,download-transactions-10.csv,111,,GOOGLE *CLOUD LM5JHW g.co/HelpPay#,-0.03,outflow,"Telecom, software, subscriptions",yes,
+2026-05-01,download-transactions-10.csv,112,,BOUCHERIE LES 2 FRERES Montreal,-15.00,outflow,"Groceries, pharmacy, and health",yes,
+2026-05-01,download-transactions-10.csv,113,,CHARCUTERIE DE TOURS (201 MONTREAL,-10.87,outflow,"Groceries, pharmacy, and health",yes,
+2026-05-01,download-transactions-10.csv,114,,LE PARADIS DU FROMAGE MONTREAL,-10.33,outflow,Other recurring personal,yes,
+2026-05-01,download-transactions-10.csv,115,,BRULERIE AUX 4 VENTS MONTREAL,-5.50,outflow,Other recurring personal,yes,
+2026-05-01,download-transactions-10.csv,116,,SAQ23316 DEPOT RIVE-SUD LONGUEUIL,-328.90,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-05-01,download-transactions-11.csv,54,,FRAIS MENSUELS,-12.95,outflow,Bank fees,yes,
+2026-05-01,download-transactions-11.csv,55,,ASSURANCE CIE BELAIR,-89.09,outflow,Insurance,yes,
+2026-05-01,download-transactions-11.csv,56,,ASSURANCE CIE BELAIR,-38.69,outflow,Insurance,yes,
+2026-05-02,download-transactions-10.csv,117,,CRAZY HORSE KING OF VAPE KAHNAWAKE,-42.00,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-05-02,download-transactions-10.csv,118,,CRAZY HORSE EXPRESS KAHNAWAKE,-50.00,outflow,Other recurring personal,yes,
+2026-05-04,download-transactions-10.csv,119,,PAYPAL *AIRBNB HMA8XYAQ5 35314369001,-468.08,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-04,download-transactions-10.csv,120,,IHERB IHERB.COM iherb.com,-89.85,outflow,"Groceries, pharmacy, and health",yes,
+2026-05-04,download-transactions-10.csv,121,,WWW COSTCO CA 800-955-2292,-66.62,outflow,Groceries and household,yes,
+2026-05-04,download-transactions-10.csv,122,,ANTHROPIC ANTHROPIC.COM 6.9 USD @ 1.392753,-9.61,outflow,Other recurring personal,yes,
+2026-05-04,download-transactions-10.csv,123,,FIZZ (TX. INCL.) MONTREAL,-49.44,outflow,"Telecom, software, subscriptions",yes,
+2026-05-04,download-transactions-11.csv,57,,VIREMENT REÇU ANASTASIIA SUBBOTINA CAPBAGE8,900.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-05-04,download-transactions-11.csv,58,,VIREMENT ENVOYÉ COLLEEN MARIE 4QC43D,-1775.00,outflow,Housing,yes,
+2026-05-05,download-transactions-10.csv,124,,COUCHE-TARD # 1191 LONGUEUIL,-9.24,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-05-05,download-transactions-10.csv,125,,CRAZY HORSE KING OF VAPE KAHNAWAKE,-29.45,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-05-05,download-transactions-11.csv,59,,CRÉDIT D'IMPÔT POUR SOLIDARITÉ GOUV. QUEBEC,66.67,inflow,Income / transfers in,no,inflow
+2026-05-06,download-transactions-11.csv,60,,VIREMENT ENVOYÉ MURSALEM A5WPP6,-10.00,outflow,Transfers / review,no,transfer_review
+2026-05-07,download-transactions-10.csv,126,,IGA #8639 MONTREAL,-13.50,outflow,Groceries and household,yes,
+2026-05-07,download-transactions-11.csv,61,,REMB. IMPÔT CANADA,4626.81,inflow,Income / transfers in,no,inflow
+2026-05-07,download-transactions-11.csv,62,,VIREMENT ENVOYÉ ALEX ABILE 5T4PCH,-35.00,outflow,Transfers / review,no,transfer_review
+2026-05-08,download-transactions-10.csv,127,,MICRODISTILLERIE SHERBROOKE,-49.00,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-05-08,download-transactions-10.csv,128,,MICRODISTILLERIE SHERBROOKE,-30.00,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-05-08,download-transactions-10.csv,129,,OMG RESTO SHERBROOKE,-74.75,outflow,Restaurants and coffee,yes,
+2026-05-08,download-transactions-11.csv,63,,REMBOURSEMENT D'IMPÔT GOUV. QUEBEC,2308.64,inflow,Income / transfers in,no,inflow
+2026-05-09,download-transactions-10.csv,130,,MICROBRASSERIE LE BOQ SHERBROOKE,-10.40,outflow,Other recurring personal,yes,
+2026-05-09,download-transactions-10.csv,131,,UBER CANADA/UBERTRIP TORONTO,-12.54,outflow,Transport,yes,
+2026-05-09,download-transactions-10.csv,132,,UBER CANADA/UBERTRIP TORONTO,-15.91,outflow,Transport,yes,
+2026-05-09,download-transactions-10.csv,133,,Spotify P424431176 Stockholm,-20.57,outflow,"Telecom, software, subscriptions",yes,
+2026-05-10,download-transactions-10.csv,134,,IGA #8639 MONTREAL,-29.85,outflow,Groceries and household,yes,
+2026-05-10,download-transactions-10.csv,135,,RESTO BAR 55 ANGE GARDIEN,-11.49,outflow,Restaurants and coffee,yes,
+2026-05-12,download-transactions-10.csv,136,,Mr Pretzels MONT-ROYAL,-7.69,outflow,Other recurring personal,yes,
+2026-05-12,download-transactions-10.csv,137,,ARCHIBALD DORVAL,-17.25,outflow,Other recurring personal,yes,
+2026-05-12,download-transactions-10.csv,138,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-05-12,download-transactions-11.csv,64,,PMNT FACT ÉLECTR HYDRO-QUEBEC,-81.14,outflow,Utilities,yes,
+2026-05-13,download-transactions-10.csv,139,,KEOLIS TBM DTTT BORDEAUX 1.9 EUR @ 1.647368,-3.13,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,140,,KEOLIS TBM DTTT BORDEAUX 1.9 EUR @ 1.647368,-3.13,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,141,,CAFE JUSTIN ARCACHON 23.5 EUR @ 1.652765,-38.84,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,142,,BOUL. DE L'AIGUILLON ARCACHON 8.5 EUR @ 1.652941,-14.05,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,143,,arcachon market 4320260 33arcachon 3.0 EUR @ 1.653333,-4.96,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,144,,M.C.J MAUBEC 13.0 EUR @ 1.652307,-21.48,outflow,Other recurring personal,yes,
+2026-05-13,download-transactions-10.csv,145,,KUBA-MODALIS-DAT MISEREY SALIN 17.0 EUR @ 1.652352,-28.09,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,146,,LE PIQUE-NIQUE ARCACHON 7.0 EUR @ 1.652857,-11.57,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-13,download-transactions-10.csv,147,,SNC DU BASSIN ARCACHON 21.8 EUR @ 1.652752,-36.03,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-14,download-transactions-10.csv,148,,PHILIPPE CEDRIC LA TESTE DE B 5.5 EUR @ 1.64909,-9.07,outflow,Other recurring personal,yes,
+2026-05-14,download-transactions-10.csv,149,,AMOUR DU VIN ARCACHON 9.0 EUR @ 1.648888,-14.84,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-14,download-transactions-10.csv,150,,AUX DELICES GLAC2067162 ARCACHON 6.5 EUR @ 1.64923,-10.72,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-14,download-transactions-10.csv,151,,POISSONNERIE AIGUIL ARCACHON 38.81 EUR @ 1.648801,-63.99,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-14,download-transactions-10.csv,152,,ALOIR ET FILLE ARCACHON 14.0 EUR @ 1.648571,-23.08,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-14,download-transactions-10.csv,153,,M.C.J MAUBEC 13.0 EUR @ 1.648461,-21.43,outflow,Other recurring personal,yes,
+2026-05-14,download-transactions-10.csv,154,,SOYA           3123844 ARCACHON 5.1 EUR @ 1.647058,-8.40,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-14,download-transactions-10.csv,155,,LA CABANE DES COPAIN LA TESTE-DE-B 8.0 EUR @ 1.64875,-13.19,outflow,Other recurring personal,yes,
+2026-05-14,download-transactions-10.csv,156,,PAT-DE-MAFILLE ARCACHON 13.1 EUR @ 1.648091,-21.59,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,157,,KUBA-MODALIS-DAT MISEREY SALIN 17.0 EUR @ 1.647058,-28.00,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,158,,MARCHE DES BASSINS BORDEAUX 3.6 EUR @ 1.647222,-5.93,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,159,,VINIMARCHE BORDEAUX 15.0 EUR @ 1.647333,-24.71,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,160,,MOXY BORDEAUX FB BORDEAUX 3.0 EUR @ 1.646666,-4.94,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,161,,BISTROT HALLES BORDEAUX 13.5 EUR @ 1.647407,-22.24,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,162,,EGD BORDEAUX 16.7 EUR @ 1.647305,-27.51,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-10.csv,163,,OQG LADOS 169.1 EUR @ 1.647427,-278.58,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-15,download-transactions-11.csv,65,,VIREMENT ANNULÉ WILL POTVIN 25U3V4,50.00,inflow,Income / transfers in,no,inflow
+2026-05-15,download-transactions-11.csv,66,,VIREMENT ENVOYÉ WILL POTVIN QAWSAT,-50.00,outflow,Transfers / review,no,transfer_review
+2026-05-15,download-transactions-11.csv,67,,VIREMENT ENVOYÉ WILL POTVIN 25U3V4,-50.00,outflow,Transfers / review,no,transfer_review
+2026-05-15,download-transactions-11.csv,68,,VIREMENT REÇU ANASTASIIA SUBBOTINA CAU3XXVJ,70.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-05-16,download-transactions-10.csv,164,,BELLESPERDRIX ST EMILION 389.0 EUR @ 1.642776,-639.04,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-16,download-transactions-10.csv,165,,MARCHE DES BASSINS BORDEAUX 5.2 EUR @ 1.640384,-8.53,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-16,download-transactions-10.csv,166,,LE 7            2019189 ST EMILION 75.0 EUR @ 1.642666,-123.20,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-17,download-transactions-10.csv,167,,LE MEDIEVAL SAINT-EMILION 60.0 EUR @ 1.642666,-98.56,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-19,download-transactions-10.csv,168,,CHATEAU PALMER MARGAUX-CANTE 60.0 EUR @ 1.643,-98.58,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-19,download-transactions-10.csv,169,,MICROSOFT*SUBSCRIPTION HALIFAX,-2.30,outflow,"Telecom, software, subscriptions",yes,
+2026-05-20,download-transactions-10.csv,170,,CHAT GISCOURS   4763476 33MARGAUX CAN 15.0 EUR @ 1.643333,-24.65,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-21,download-transactions-10.csv,171,,FERMIERE LEOVILL SC SAINT-JULIEN 12.0 EUR @ 1.638333,-19.66,outflow,Other recurring personal,yes,
+2026-05-22,download-transactions-10.csv,172,,DYLAN PIGNON    2188382 ST ESTEPHE 62.05 EUR @ 1.642868,-101.94,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-22,download-transactions-10.csv,173,,FIZZ (TX. INCL.)/FIZZ MONTREAL,-1.15,outflow,"Telecom, software, subscriptions",yes,
+2026-05-22,download-transactions-10.csv,174,,EXPEDIA 72074639813983 EXPEDIA.CA,-356.53,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-22,download-transactions-10.csv,175,,DYLAN PIGNON    2188382 ST ESTEPHE 6.0 EUR @ 1.643333,-9.86,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-23,download-transactions-10.csv,176,,MS* CHTEAULAFFITTECAR SAINT ESTEPHE,-3.50,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-23,download-transactions-10.csv,177,,MS* CHTEAULAFFITTECAR SAINT ESTEPHE,-117.58,outflow,Non-recurring travel/ring,no,non_recurring_travel_ring
+2026-05-23,download-transactions-10.csv,178,,BOUCHERIE LES 2 FRERES Montreal,-21.05,outflow,"Groceries, pharmacy, and health",yes,
+2026-05-23,download-transactions-10.csv,179,,BOUCHERIE LES 2 FRERES Montreal,-15.99,outflow,"Groceries, pharmacy, and health",yes,
+2026-05-23,download-transactions-10.csv,180,,CHARCUTERIE DE TOURS (201 MONTREAL,-19.67,outflow,"Groceries, pharmacy, and health",yes,
+2026-05-26,download-transactions-10.csv,181,,MELK STANLEY MONTREAL,-3.57,outflow,Other recurring personal,yes,
+2026-05-26,download-transactions-10.csv,182,,APPLE.COM/BILL 866-712-7753,-1.48,outflow,"Telecom, software, subscriptions",yes,
+2026-05-26,download-transactions-10.csv,183,,PAIEMENT AUTOMATISE - MER CI,2720.77,inflow,Transfers / card payments,no,card_payment_or_credit
+2026-05-26,download-transactions-11.csv,69,,VIREMENT ENVOYÉ YASSINE BOSS DOUIDA 4G5LLW,-235.60,outflow,Transfers / review,no,transfer_review
+2026-05-27,download-transactions-10.csv,184,,IGA #8639 MONTREAL,-38.80,outflow,Groceries and household,yes,
+2026-05-27,download-transactions-10.csv,185,,APPLE.COM/BILL 866-712-7753,-3.21,outflow,"Telecom, software, subscriptions",yes,
+2026-05-27,download-transactions-11.csv,70,,VIREMENT REÇU ANASTASIIA SUBBOTINA CAKWBPDK,1018.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-05-27,download-transactions-11.csv,71,,PAIEMENT DIVERS CARTE RBC,-2720.77,outflow,Transfers / card payments,no,card_payment_or_credit
+2026-05-27,download-transactions-11.csv,72,,VIREMENT ENVOYÉ MURSALEM QKS97S,-10.00,outflow,Transfers / review,no,transfer_review
+2026-05-28,download-transactions-10.csv,186,,IGA #8639 MONTREAL,-17.78,outflow,Groceries and household,yes,
+2026-05-28,download-transactions-10.csv,187,,IGA #8639 MONTREAL,-13.61,outflow,Groceries and household,yes,
+2026-05-29,download-transactions-10.csv,188,,FIZZ (TX. INCL.) MONTREAL,-25.93,outflow,"Telecom, software, subscriptions",yes,
+2026-05-30,download-transactions-10.csv,189,,LE COIN DES GOURMETS OTTERBURN PAR,-7.83,outflow,Other recurring personal,yes,
+2026-05-30,download-transactions-10.csv,190,,JEAN COUTU  087 BELOEIL,-10.05,outflow,Other recurring personal,yes,
+2026-05-30,download-transactions-10.csv,191,,ODESSA BELOEIL BELOEIL,-58.54,outflow,Restaurants and coffee,yes,
+2026-05-31,download-transactions-10.csv,192,,NESTORE PICORE GOURMAND OTTERBURN PAR,-9.50,outflow,Other recurring personal,yes,
+2026-05-31,download-transactions-10.csv,193,,SHELL C22527 ST-MATHIAS-SU,-75.59,outflow,Transport,yes,
+2026-06-01,download-transactions-10.csv,194,,FAMILIPRIX 3002 MONTREAL,-60.15,outflow,"Groceries, pharmacy, and health",yes,
+2026-06-01,download-transactions-10.csv,195,,LS Bar Edicola Montreal,-32.89,outflow,Other recurring personal,yes,
+2026-06-01,download-transactions-10.csv,196,,GOOGLE*CLOUD FFJSXQ CC GOOGLE.COM,-0.65,outflow,"Telecom, software, subscriptions",yes,
+2026-06-01,download-transactions-11.csv,73,,VIREMENT ENVOYÉ COLLEEN MARIE FEDWE8,-1775.00,outflow,Housing,yes,
+2026-06-01,download-transactions-11.csv,74,,VIREMENT ENVOYÉ AKREC SUMMER 2026 QD9BPD,-256.00,outflow,Transfers / review,no,transfer_review
+2026-06-01,download-transactions-11.csv,75,,VIREMENT ENVOYÉ BENOIT PARADIS HYX7MS,-2365.00,outflow,Transfers / review,no,transfer_review
+2026-06-01,download-transactions-11.csv,76,,ASSURANCE CIE BELAIR,-89.09,outflow,Insurance,yes,
+2026-06-01,download-transactions-11.csv,77,,ASSURANCE CIE BELAIR,-38.69,outflow,Insurance,yes,
+2026-06-02,download-transactions-10.csv,197,,SUPER C ATWATER  5952 MONTREAL,-11.96,outflow,Other recurring personal,yes,
+2026-06-03,download-transactions-10.csv,198,,IGA #8639 MONTREAL,-10.29,outflow,Groceries and household,yes,
+2026-06-03,download-transactions-10.csv,199,,PHARMAPRIX #1946 LONGUEUIL,-30.22,outflow,Groceries and household,yes,
+2026-06-03,download-transactions-11.csv,78,,FRAIS MENSUELS,-12.95,outflow,Bank fees,yes,
+2026-06-04,download-transactions-10.csv,200,,FIZZ (TX. INCL.) MONTREAL,-49.44,outflow,"Telecom, software, subscriptions",yes,
+2026-06-04,download-transactions-10.csv,201,,MOLLO BOULANGERIE & LAB MONTREAL,-4.88,outflow,Restaurants and coffee,yes,
+2026-06-05,download-transactions-10.csv,202,,GOKUDO MONTREAL,-37.22,outflow,Other recurring personal,yes,
+2026-06-05,download-transactions-10.csv,203,,STM CHARLEVOIX DIN101/ MONTREAL,-7.00,outflow,Transport,yes,
+2026-06-05,download-transactions-10.csv,204,,Il Teatro - Quartier des MONTREAL,-81.48,outflow,Restaurants and coffee,yes,
+2026-06-05,download-transactions-10.csv,205,,CAFE PARVIS MONTREAL,-26.00,outflow,Restaurants and coffee,yes,
+2026-06-05,download-transactions-10.csv,206,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-06-05,download-transactions-11.csv,79,,CANADA ALLOCATION ESSENTIELS CANADA,179.13,inflow,Income / transfers in,no,inflow
+2026-06-05,download-transactions-11.csv,80,,CRÉDIT D'IMPÔT POUR SOLIDARITÉ GOUV. QUEBEC,66.63,inflow,Income / transfers in,no,inflow
+2026-06-06,download-transactions-10.csv,207,,IGA #8639 MONTREAL,-12.98,outflow,Groceries and household,yes,
+2026-06-06,download-transactions-10.csv,208,,SQ *MAISON SAINT COLUMBA Montreal,-19.00,outflow,Other recurring personal,yes,
+2026-06-07,download-transactions-10.csv,209,,CHARCUTERIE DE TOURS (201 MONTREAL,-18.70,outflow,"Groceries, pharmacy, and health",yes,
+2026-06-07,download-transactions-10.csv,210,,S.O.S. BOUCHER INC MONTREAL,-56.37,outflow,Other recurring personal,yes,
+2026-06-07,download-transactions-10.csv,211,,MOLLO CAFE MONTREAL,-15.31,outflow,Restaurants and coffee,yes,
+2026-06-07,download-transactions-10.csv,212,,SAQ23132 MARCHE ATWATER MONTREAL,-51.25,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-06-07,download-transactions-10.csv,213,,PREMIERE MOISSON ATWAT MONTREAL,-3.40,outflow,Other recurring personal,yes,
+2026-06-08,download-transactions-10.csv,214,,MOLLO BOULANGERIE & LAB MONTREAL,-4.88,outflow,Restaurants and coffee,yes,
+2026-06-09,download-transactions-10.csv,215,,PATATI PATATA FRITERIE MONTREAL,-11.06,outflow,Other recurring personal,yes,
+2026-06-09,download-transactions-10.csv,216,,PATATI PATATA FRITERIE MONTREAL,-9.70,outflow,Other recurring personal,yes,
+2026-06-09,download-transactions-10.csv,217,,PITARIFIQUE MONTREAL,-6.84,outflow,Other recurring personal,yes,
+2026-06-09,download-transactions-10.csv,218,,Spotify P4355C43A7 Stockholm,-20.57,outflow,"Telecom, software, subscriptions",yes,
+2026-06-09,download-transactions-11.csv,81,,PMNT FACT ÉLECTR HYDRO-QUEBEC,-81.14,outflow,Utilities,yes,
+2026-06-10,download-transactions-10.csv,219,,DOLLARAMA # 401 BELOEIL,-16.68,outflow,Groceries and household,yes,
+2026-06-11,download-transactions-10.csv,220,,IGA #8639 MONTREAL,-25.00,outflow,Groceries and household,yes,
+2026-06-11,download-transactions-11.csv,82,,PAIEMENT DIVERS GOUV. QUEBEC,100.00,inflow,Transfers / card payments,no,card_payment_or_credit
+2026-06-12,download-transactions-10.csv,221,,LE COIN DES GOURMETS OTTERBURN PAR,-25.67,outflow,Other recurring personal,yes,
+2026-06-13,download-transactions-10.csv,222,,MAXI MONT ST-HILAIRE # MONT-SAINT-HI,-80.13,outflow,Groceries and household,yes,
+2026-06-13,download-transactions-10.csv,223,,SAQ23365 MONT ST-HILAIRE MONT-SAINT-HI,-72.25,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-06-13,download-transactions-10.csv,224,,FERME CHEZ MARIO FRUITS E SAINTE-MADELE,-15.50,outflow,Other recurring personal,yes,
+2026-06-13,download-transactions-10.csv,225,,NESTORE PICORE GOURMAND OTTERBURN PAR,-37.59,outflow,Other recurring personal,yes,
+2026-06-14,download-transactions-10.csv,226,,BOSSA PR T-?-MANGER VERDUN,-19.55,outflow,Other recurring personal,yes,
+2026-06-15,download-transactions-10.csv,227,,MOLLO CAFE MONTREAL,-4.88,outflow,Restaurants and coffee,yes,
+2026-06-16,download-transactions-10.csv,228,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-06-17,download-transactions-10.csv,229,,IGA #8639 MONTREAL,-30.55,outflow,Groceries and household,yes,
+2026-06-17,download-transactions-10.csv,230,,BOSSA PR T-?-MANGER VERDUN,-23.00,outflow,Other recurring personal,yes,
+2026-06-17,download-transactions-11.csv,83,,VIREMENT ENVOYÉ THOMAS LAFLEUR X5URU7,-356.00,outflow,Transfers / review,no,transfer_review
+2026-06-18,download-transactions-10.csv,231,,HIATUS MONTREAL,-83.18,outflow,Restaurants and coffee,yes,
+2026-06-18,download-transactions-10.csv,232,,RESTAURANT IL FOCOLAIO 514-879-1045,-70.25,outflow,Restaurants and coffee,yes,
+2026-06-18,download-transactions-10.csv,233,,SAQ23113 DE LA MONTAGNE MONTREAL,-99.75,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-06-18,download-transactions-11.csv,84,,VIREMENT REÇU CONSEIL ET SOLUTION ENACT INC. CAHNG6CX,2000.00,inflow,Income / transfers in,no,inflow
+2026-06-19,download-transactions-10.csv,234,,DRINKERIE STE-CUNEGONDE MONTREAL,-20.80,outflow,Other recurring personal,yes,
+2026-06-19,download-transactions-10.csv,235,,IGA #8639 MONTREAL,-66.91,outflow,Groceries and household,yes,
+2026-06-19,download-transactions-10.csv,236,,MICROSOFT*SUBSCRIPTION HALIFAX,-2.30,outflow,"Telecom, software, subscriptions",yes,
+2026-06-19,download-transactions-11.csv,85,,VIREMENT REÇU ANASTASIIA SUBBOTINA CAQ5MUUG,1900.00,inflow,Shared housing contribution,no,spouse_rent_contribution_candidate
+2026-06-20,download-transactions-10.csv,237,,IGA #8639 MONTREAL,-14.18,outflow,Groceries and household,yes,
+2026-06-20,download-transactions-10.csv,238,,CRAZY HORSE KING OF VAPE KAHNAWAKE,-55.00,outflow,"Alcohol, convenience, and discretionary",yes,
+2026-06-21,download-transactions-10.csv,239,,UBER CANADA/UBERTRIP TORONTO,-17.50,outflow,Transport,yes,
+2026-06-22,download-transactions-10.csv,240,,MOLLO CAFE MONTREAL,-5.13,outflow,Restaurants and coffee,yes,
+2026-06-22,download-transactions-10.csv,241,,FAMILIPRIX 3002 MONTREAL,-12.98,outflow,"Groceries, pharmacy, and health",yes,
+2026-06-22,download-transactions-11.csv,86,,VIREMENT ANNULÉ TERENCE UBER TD6H2S,40.00,inflow,Income / transfers in,no,inflow
+2026-06-22,download-transactions-11.csv,87,,VIREMENT ENVOYÉ TERENCE UBER TD6H2S,-40.00,outflow,Transfers / review,no,transfer_review
+2026-06-23,download-transactions-11.csv,88,,PLACEMENT IG FIN SER SFGI,-8000.00,outflow,Savings / investment artifacts,no,savings_or_artifact
+2026-06-24,download-transactions-10.csv,242,,LA BRASSERIE MCAUSLAN MONTREAL,-20.55,outflow,Other recurring personal,yes,
+2026-06-24,download-transactions-10.csv,243,,CAFE OLIMPICO DOWNTOWN MONTREAL,-8.51,outflow,Restaurants and coffee,yes,
+2026-06-24,download-transactions-10.csv,244,,KAHWA CAFE MONTREAL,-30.88,outflow,Restaurants and coffee,yes,
+2026-06-24,download-transactions-11.csv,89,,EFFET REFUSÉ SANS PROVISION,8000.00,inflow,Returned or failed payment,no,returned_or_failed_payment
+2026-06-24,download-transactions-11.csv,90,,VIREMENT SERVICES BANCAIRES TÉLÉPHONE REF 091861753938300,4000.00,inflow,Income / transfers in,no,inflow
+2026-06-24,download-transactions-11.csv,91,,VIREMENT REÇU CONSEIL ET SOLUTION ENACT INC. CAEEMQHN,2000.00,inflow,Income / transfers in,no,inflow
+2026-06-24,download-transactions-11.csv,92,,FRAIS DE MANIPULATION SUR DÉCOUVERT 1 @ $ 5.00,-5.00,outflow,Bank fees,yes,
+2026-06-25,download-transactions-10.csv,245,,STM MCGILL DIE101/1994 MONTREAL,-3.75,outflow,Transport,yes,
+2026-06-25,download-transactions-10.csv,246,,MOLLO BOULANGERIE & LAB MONTREAL,-7.00,outflow,Restaurants and coffee,yes,
+2026-06-25,download-transactions-10.csv,247,,RESTAURANT IL FOCOLAIO 514-879-1045,-83.44,outflow,Restaurants and coffee,yes,
+2026-06-25,download-transactions-11.csv,93,,FRAIS MANIPULATION/SANS PROV CONTREPASSÉ,5.00,inflow,Income / transfers in,no,inflow
+2026-06-26,download-transactions-10.csv,248,,PAIEMENT AUTOMATISE - MER CI,3762.36,inflow,Transfers / card payments,no,card_payment_or_credit

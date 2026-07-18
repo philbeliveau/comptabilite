@@ -1,0 +1,415 @@
+{% set page_title = "Compensation Planner" %}
+
+{% block content %}
+
+{% set defaults = extension.defaults() %}
+{% set salary_curve = extension.salary_curve() %}
+{% set brackets = extension.brackets() %}
+{% set reserve = extension.reserve() %}
+{% set scenario_rows = extension.scenario_rows() %}
+{% set custom_template = extension.custom_scenario_template() %}
+
+<style>
+  .cqc-planner-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .cqc-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .cqc-field {
+    display: grid;
+    gap: 5px;
+  }
+  .cqc-field label {
+    font-size: var(--cqc-font-xs);
+    color: var(--qc-text-secondary);
+    font-weight: var(--cqc-weight-semibold);
+    text-transform: uppercase;
+  }
+  .cqc-field input,
+  .cqc-field select {
+    width: 100%;
+    min-height: 34px;
+    border: 1px solid var(--qc-border);
+    border-radius: 8px;
+    padding: 6px 8px;
+    background: #fff;
+    color: var(--qc-text);
+  }
+  .cqc-panel {
+    background: var(--qc-surface-raised);
+    border: 1px solid var(--qc-border);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: var(--qc-shadow-xs);
+    margin-bottom: 16px;
+  }
+  .cqc-output-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .cqc-mini-chart {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(84px, 1fr));
+    gap: 8px;
+  }
+  .cqc-bracket {
+    border: 1px solid var(--qc-border);
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 76px;
+    background: #fff;
+  }
+  .cqc-bracket-active {
+    border-color: var(--qc-blue);
+    background: var(--qc-blue-lighter);
+  }
+  .cqc-note-list {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--qc-text-secondary);
+  }
+  @media (max-width: 980px) {
+    .cqc-planner-grid,
+    .cqc-output-grid {
+      grid-template-columns: 1fr;
+    }
+    .cqc-mini-chart {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<div class="cqc-page-header">
+  <h2>Compensation Planner</h2>
+  <span class="cqc-subtitle">Owner salary and cash extraction scenarios - planning only</span>
+</div>
+
+<div class="cqc-alert cqc-alert-warning">
+  Personal spending data is used only for owner compensation planning. Do not post it to the corporate ledger.
+  CPA must confirm payroll registration, salary/dividend/shareholder-loan treatment, corporate tax rate,
+  small-business deduction eligibility, and integration.
+</div>
+
+<div class="cqc-planner-grid">
+  <section class="cqc-panel">
+    <h3 class="cqc-section-title">Inputs</h3>
+    <div class="cqc-form-grid">
+      <div class="cqc-field">
+        <label for="monthlyBaseline">Monthly recurring spend</label>
+        <input id="monthlyBaseline" type="number" step="0.01" value="{{ defaults.monthlyBaseline }}">
+      </div>
+      <div class="cqc-field">
+        <label for="breathingRoom">Breathing room</label>
+        <input id="breathingRoom" type="number" step="0.01" value="{{ defaults.breathingRoom }}">
+      </div>
+      <div class="cqc-field">
+        <label for="emergencySavings">Emergency savings</label>
+        <input id="emergencySavings" type="number" step="0.01" value="{{ defaults.emergencySavings }}">
+      </div>
+      <div class="cqc-field">
+        <label for="targetNetMonthly">Manual target net</label>
+        <input id="targetNetMonthly" type="number" step="0.01" value="{{ defaults.targetNetMonthly }}">
+      </div>
+      <div class="cqc-field">
+        <label for="weddingTarget">Wedding target</label>
+        <input id="weddingTarget" type="number" step="0.01" value="{{ defaults.weddingTarget }}">
+      </div>
+      <div class="cqc-field">
+        <label for="weddingDate">Wedding date</label>
+        <input id="weddingDate" type="date" value="{{ defaults.weddingDate }}">
+      </div>
+      <div class="cqc-field">
+        <label for="houseTarget">House/down-payment target</label>
+        <input id="houseTarget" type="number" step="0.01" value="{{ defaults.houseTarget }}">
+      </div>
+      <div class="cqc-field">
+        <label for="houseDate">House target date</label>
+        <input id="houseDate" type="date" value="{{ defaults.houseDate }}">
+      </div>
+      <div class="cqc-field">
+        <label for="fhsaTarget">FHSA/CELIAPP target</label>
+        <input id="fhsaTarget" type="number" step="0.01" value="{{ defaults.fhsaTarget }}">
+      </div>
+      <div class="cqc-field">
+        <label for="fhsaAlreadyFunded">FHSA already funded</label>
+        <input id="fhsaAlreadyFunded" type="number" step="0.01" value="{{ defaults.fhsaAlreadyFunded }}">
+      </div>
+      <div class="cqc-field">
+        <label for="rrspTarget">RRSP yearly target</label>
+        <input id="rrspTarget" type="number" step="0.01" value="{{ defaults.rrspTarget }}">
+      </div>
+      <div class="cqc-field">
+        <label for="corporateReserveTarget">Corporate reserve target</label>
+        <input id="corporateReserveTarget" type="number" step="0.01" value="{{ defaults.corporateReserveTarget }}">
+      </div>
+      <div class="cqc-field">
+        <label for="corporateTaxRate">Corporate tax assumption %</label>
+        <input id="corporateTaxRate" type="number" step="0.01" value="{{ defaults.corporateTaxRate }}">
+      </div>
+      <div class="cqc-field">
+        <label for="extractionMode">Extraction assumption</label>
+        <select id="extractionMode">
+          <option value="salary" selected>Salary payroll estimate</option>
+          <option value="dividend">Dividend note only</option>
+          <option value="shareholderLoan">Shareholder-loan draw note</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="cqc-output-grid">
+      <div class="cqc-kpi">
+        <div class="cqc-kpi-label">Required monthly net cash</div>
+        <div class="cqc-kpi-value" id="requiredMonthlyNet">-</div>
+      </div>
+      <div class="cqc-kpi">
+        <div class="cqc-kpi-label">Implied annual net need</div>
+        <div class="cqc-kpi-value" id="requiredAnnualNet">-</div>
+      </div>
+      <div class="cqc-kpi">
+        <div class="cqc-kpi-label">Estimated gross salary</div>
+        <div class="cqc-kpi-value" id="grossSalary">-</div>
+      </div>
+      <div class="cqc-kpi">
+        <div class="cqc-kpi-label">Corporate cash not retained</div>
+        <div class="cqc-kpi-value" id="corporateCost">-</div>
+      </div>
+    </section>
+
+    <section class="cqc-panel">
+      <h3 class="cqc-section-title">Opportunity Cost</h3>
+      <p class="cqc-text-muted">
+        At the editable corporate tax assumption, retaining 1.00 $ of pre-tax corporate profit leaves
+        <strong id="retainedDollar">0.79 $</strong> inside the company. Extracting personally uses payroll
+        estimates from the Quebec salary engine where salary is selected.
+      </p>
+      <table class="cqc-table">
+        <caption class="cqc-sr-only">Personal extraction versus retained corporate cash</caption>
+        <thead>
+          <tr>
+            <th>Measure</th>
+            <th class="montant">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Gross salary required</td><td class="montant" id="oppGross">-</td></tr>
+          <tr><td>Employee deductions / personal taxes</td><td class="montant" id="oppDeductions">-</td></tr>
+          <tr><td>Employer payroll costs</td><td class="montant" id="oppEmployer">-</td></tr>
+          <tr><td>Net cash to owner</td><td class="montant" id="oppNet">-</td></tr>
+          <tr><td>Corporate cash not retained</td><td class="montant" id="oppCorpCost">-</td></tr>
+          <tr><td>Opportunity cost versus retention</td><td class="montant" id="oppRetained">-</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="cqc-panel">
+      <h3 class="cqc-section-title">Federal 2026 Brackets</h3>
+      <div class="cqc-mini-chart" id="federalBrackets"></div>
+      <h3 class="cqc-section-title">Quebec 2026 Brackets</h3>
+      <div class="cqc-mini-chart" id="quebecBrackets"></div>
+      <p class="cqc-text-muted">
+        Bracket highlights use estimated gross salary only. Combined marginal rates are not shown as final tax;
+        Quebec-specific payroll treatment is handled through the payroll engine estimate.
+      </p>
+    </section>
+
+    <section class="cqc-panel">
+      <h3 class="cqc-section-title">Scenario Comparison</h3>
+      <table class="cqc-table">
+        <caption class="cqc-sr-only">Owner compensation scenarios</caption>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th class="montant">Monthly net</th>
+            <th class="montant">Annual net</th>
+            <th class="montant">Gross salary</th>
+            <th class="montant">Corp cost</th>
+            <th class="montant">Retained alternative</th>
+            <th>Reserve room</th>
+          </tr>
+        </thead>
+        <tbody id="scenarioRows"></tbody>
+      </table>
+    </section>
+
+    <section class="cqc-panel">
+      <h3 class="cqc-section-title">Corporate Reserve Signal</h3>
+      <div class="cqc-kpi-row">
+        <div class="cqc-kpi">
+          <div class="cqc-kpi-label">Cash in bank accounts</div>
+          <div class="cqc-kpi-value">{{ "{:,.2f}".format(reserve.cash) }} $</div>
+        </div>
+        <div class="cqc-kpi">
+          <div class="cqc-kpi-label">Estimated TPS/TVQ reserve</div>
+          <div class="cqc-kpi-value cqc-warning">{{ "{:,.2f}".format(reserve.taxes) }} $</div>
+        </div>
+        <div class="cqc-kpi">
+          <div class="cqc-kpi-label">Available after TPS/TVQ</div>
+          <div class="cqc-kpi-value">{{ "{:,.2f}".format(reserve.availableAfterTaxes) }} $</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cqc-panel">
+      <h3 class="cqc-section-title">Warnings</h3>
+      <ul class="cqc-note-list">
+        <li>Salary estimates are payroll planning estimates, not final T1/TP-1 tax returns.</li>
+        <li>FHSA/CELIAPP and RRSP inputs are cash-flow targets here; deductibility and room must be confirmed.</li>
+        <li>The 2026 FHSA/CELIAPP default assumes 8,000 $ was already contributed.</li>
+        <li>Dividend and shareholder-loan options are labels for comparison only until CPA treatment is confirmed.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+  const defaults = {{ defaults | tojson }};
+  const salaryCurve = {{ salary_curve | tojson }};
+  const brackets = {{ brackets | tojson }};
+  const reserve = {{ reserve | tojson }};
+  const baseRows = {{ scenario_rows | tojson }};
+  const customTemplate = {{ custom_template | tojson }};
+  const referenceDate = new Date(defaults.dateReference + "T00:00:00");
+  const averageMonthDays = 30.4375;
+
+  const ids = [
+    "monthlyBaseline", "breathingRoom", "emergencySavings", "targetNetMonthly",
+    "weddingTarget", "weddingDate", "houseTarget", "houseDate", "fhsaTarget",
+    "fhsaAlreadyFunded", "rrspTarget", "corporateReserveTarget", "corporateTaxRate",
+    "extractionMode"
+  ];
+
+  const money = (value) => new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    maximumFractionDigits: 2
+  }).format(Number.isFinite(value) ? value : 0);
+
+  const num = (id) => {
+    const value = Number(document.getElementById(id).value);
+    return Number.isFinite(value) ? value : 0;
+  };
+
+  const monthsUntil = (dateText) => {
+    if (!dateText) return 0;
+    const target = new Date(dateText + "T00:00:00");
+    const days = (target - referenceDate) / 86400000;
+    return days <= 0 ? 0 : days / averageMonthDays;
+  };
+
+  const monthlyGoal = (amount, dateText) => {
+    if (amount <= 0) return 0;
+    const months = monthsUntil(dateText);
+    return months <= 0 ? amount : amount / months;
+  };
+
+  const findSalary = (annualNet) => {
+    for (const row of salaryCurve) {
+      if (row.net >= annualNet) return row;
+    }
+    return salaryCurve[salaryCurve.length - 1];
+  };
+
+  const currentParams = () => {
+    const calculatedMonthly =
+      num("monthlyBaseline")
+      + num("breathingRoom")
+      + num("emergencySavings")
+      + monthlyGoal(num("weddingTarget"), document.getElementById("weddingDate").value)
+      + monthlyGoal(num("houseTarget"), document.getElementById("houseDate").value)
+      + Math.max(0, num("fhsaTarget") - num("fhsaAlreadyFunded")) / 12
+      + num("rrspTarget") / 12;
+    return {
+      monthlyNet: Math.max(calculatedMonthly, num("targetNetMonthly")),
+      corporateTaxRate: num("corporateTaxRate") / 100,
+      reserveTarget: num("corporateReserveTarget")
+    };
+  };
+
+  const renderBrackets = (targetId, rows, gross) => {
+    const root = document.getElementById(targetId);
+    root.innerHTML = "";
+    for (const bracket of rows) {
+      const active = bracket.max === null ? gross >= bracket.min : gross <= bracket.max;
+      const div = document.createElement("div");
+      div.className = "cqc-bracket" + (active ? " cqc-bracket-active" : "");
+      div.innerHTML = `<strong>${(bracket.rate * 100).toFixed(2)}%</strong><br><span>${bracket.label}</span>`;
+      root.appendChild(div);
+      if (active) break;
+    }
+  };
+
+  const scenarioRow = (row, taxRate) => {
+    const reserveMargin = row.reserveMargin === null || row.reserveMargin === undefined
+      ? "n/a"
+      : row.reserveMargin >= 0
+        ? `<span class="cqc-success">${money(row.reserveMargin)}</span>`
+        : `<span class="cqc-error">${money(row.reserveMargin)}</span>`;
+    return `
+      <tr>
+        <td>${row.name}</td>
+        <td class="montant">${money(row.netMonthly)}</td>
+        <td class="montant">${money(row.netAnnual)}</td>
+        <td class="montant">${money(row.grossAnnual)}</td>
+        <td class="montant">${money(row.corporateCost)}</td>
+        <td class="montant">${money(row.corporateCost * (1 - taxRate))}</td>
+        <td>${reserveMargin}</td>
+      </tr>
+    `;
+  };
+
+  const update = () => {
+    const params = currentParams();
+    const annualNet = params.monthlyNet * 12;
+    const salary = findSalary(annualNet);
+    const retainedDollar = 1 - params.corporateTaxRate;
+    const retainedAlternative = salary.corporateCost * retainedDollar;
+    const customReserveMargin =
+      reserve.availableAfterTaxes - params.reserveTarget - salary.corporateCost;
+
+    document.getElementById("requiredMonthlyNet").textContent = money(params.monthlyNet);
+    document.getElementById("requiredAnnualNet").textContent = money(annualNet);
+    document.getElementById("grossSalary").textContent = money(salary.gross);
+    document.getElementById("corporateCost").textContent = money(salary.corporateCost);
+    document.getElementById("retainedDollar").textContent = money(retainedDollar);
+    document.getElementById("oppGross").textContent = money(salary.gross);
+    document.getElementById("oppDeductions").textContent = money(salary.deductions);
+    document.getElementById("oppEmployer").textContent = money(salary.employer);
+    document.getElementById("oppNet").textContent = money(salary.net);
+    document.getElementById("oppCorpCost").textContent = money(salary.corporateCost);
+    document.getElementById("oppRetained").textContent = money(retainedAlternative);
+
+    renderBrackets("federalBrackets", brackets.federal, salary.gross);
+    renderBrackets("quebecBrackets", brackets.quebec, salary.gross);
+
+    const custom = {
+      name: customTemplate.name,
+      netMonthly: params.monthlyNet,
+      netAnnual: annualNet,
+      grossAnnual: salary.gross,
+      corporateCost: salary.corporateCost,
+      reserveMargin: customReserveMargin
+    };
+    document.getElementById("scenarioRows").innerHTML = [custom, ...baseRows]
+      .map((row) => scenarioRow(row, params.corporateTaxRate))
+      .join("");
+  };
+
+  for (const id of ids) {
+    document.getElementById(id).addEventListener("input", update);
+    document.getElementById(id).addEventListener("change", update);
+  }
+  update();
+})();
+</script>
+
+{% endblock %}

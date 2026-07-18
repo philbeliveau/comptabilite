@@ -19,6 +19,8 @@ When uncertain, prefer surfacing ambiguity over automating through it.
 - Jurisdiction: Quebec, Canada
 - Entity: CCPC
 - Domain constraints: GST 5%, QST 9.975%, Quebec payroll contributions, CCA/DPA classes, shareholder loan rules
+- Company identifiers and registration evidence are captured in `docs/company-information.md`; consult it before preparing CPA packages, government-account summaries, or tax-registration references.
+- Quebec 2026 personal income-tax bracket reference is archived at `docs/tax-references/2026/impot_particuliers_quebec_2026.pdf`; consult it when discussing Quebec personal tax brackets or updating personal salary/tax-bracket scenarios.
 - Human CPA remains the final authority for tax filing and planning
 
 This matters because code changes should optimize for traceability, deterministic formulas, and clean export packages for a CPA review workflow.
@@ -56,7 +58,9 @@ Core code:
 Project data and config:
 - `rules/`: editable categorization and tax rules
 - `data/`: file-backed registries, processed imports, ML artifacts, corrections
+- `data/personal-spending/`: personal cash-flow tracking used for owner salary/compensation planning only; do not mix this into the corporate ledger
 - `docs/`: design docs
+- `docs/tax-references/`: archived government/reference PDFs for tax-bracket and tax-planning source material
 - `.planning/`: GSD planning artifacts and codebase maps
 
 Tests:
@@ -96,6 +100,7 @@ If the task is about:
 CLI commands:
 - `cqc` console script from `pyproject.toml`
 - app root: `src/compteqc/cli/app.py`
+- personal spending report: `uv run cqc personnel depenses <personal-csv>...`
 
 MCP server:
 - module entry: `src/compteqc/mcp/__main__.py`
@@ -195,6 +200,7 @@ These are working assumptions for analysis and draft bookkeeping only. They are 
   - `Google One 15.51`
   - `Microsoft 2.30`
 - Any home-office claim discussion should cite current CRA and Revenu Quebec guidance and should not present these proportions as legally confirmed entitlements.
+- When looking up Quebec personal tax brackets for 2026 salary planning, use `docs/tax-references/2026/impot_particuliers_quebec_2026.pdf` as a local reference and still label outputs as planning estimates subject to CPA review.
 
 ## Preferred Agent Behavior
 

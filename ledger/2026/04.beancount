@@ -57,3 +57,75 @@ option "name_expenses" "Depenses"
   note: "Achat personnel non lie au travail; traite comme avance au pret actionnaire, sans CTI/RTI ni depense d'entreprise."
   Passifs:CartesCredit:RBC  -1343.22 CAD
   Passifs:Pret-Actionnaire   1343.22 CAD
+
+2026-04-20 * "Revenu Quebec" "Remise TPS nette - periode 2026-03-03 au 2026-03-31"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "5"
+  document: "documents/2026/03/tps-tvq-filing/2026-03-tps-payment-rbc.pdf"
+  note: "Paiement code REV QC CODE PAI. Remise trimestrielle TPS pour la periode se terminant le 2026-03-31, echeance gouvernementale 2026-04-30; montant principalement declenche par Procom recu le 2026-04-10. Montant rapproche au sommaire documente dans docs/tps-tvq-2026-03-filing-note.md."
+  Actifs:Banque:RBC:Cheques  -592.87 CAD
+  Passifs:TPS-Percue          594.51 CAD
+  Actifs:TPS-Payee             -1.64 CAD
+
+2026-04-20 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/03/tps-tvq-filing/2026-03-tps-payment-rbc.pdf"
+
+2026-04-20 * "Revenu Quebec" "Remise TVQ nette - periode 2026-03-03 au 2026-03-31"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "6"
+  document: "documents/2026/03/tps-tvq-filing/2026-03-tvq-payment-rbc.pdf"
+  note: "Paiement code REV QC CODE PAI. Remise trimestrielle TVQ pour la periode se terminant le 2026-03-31, echeance gouvernementale 2026-04-30; montant principalement declenche par Procom recu le 2026-04-10. Montant rapproche au sommaire documente dans docs/tps-tvq-2026-03-filing-note.md."
+  Actifs:Banque:RBC:Cheques  -1182.77 CAD
+  Passifs:TVQ-Percue          1186.04 CAD
+  Actifs:TVQ-Payee              -3.27 CAD
+
+2026-04-20 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/03/tps-tvq-filing/2026-03-tvq-payment-rbc.pdf"
+
+2026-04-24 * "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "8"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-04-04 * "Fizz" "Allocation bureau a domicile - internet avril 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "54"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 49.44 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-04-28 * "Fizz" "Allocation bureau a domicile - internet avril 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "104"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 25.93 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    11.28 CAD
+  Actifs:TPS-Payee                     0.56 CAD
+  Actifs:TVQ-Payee                     1.13 CAD
+  Passifs:Pret-Actionnaire           -12.97 CAD
+
+2026-04-06 * "Colleen Marie Gru69U" "Allocation bureau a domicile - loyer avril 2026 (20%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-11.csv"
+  ligne: "18"
+  note: "Estimation de travail en cours basee sur l'utilisation du domicile comme bureau; voir AGENTS.md."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
+2026-04-19 * "Microsoft*Subscription Mississauga" "Abonnement logiciel"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "81"
+  note: "Traite comme depense d'entreprise payee personnellement; classification a revoir avec les recus/supports."
+  Depenses:Bureau:Abonnements-Logiciels    2.30 CAD
+  Passifs:Pret-Actionnaire                -2.30 CAD

@@ -1,0 +1,60 @@
+; Transactions juillet 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-07-02 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-15.csv"
+  ligne: "7"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-07-01 * "Google Cloud" "Services infonuagiques"
+  source: "personal-statement"
+  fichier_source: "download-transactions-16.csv"
+  ligne: "158"
+  note: "Traite comme depense d'entreprise payee personnellement; montant residuel a confirmer avec le recu."
+  Depenses:Bureau:Abonnements-Logiciels    1.01 CAD
+  Passifs:Pret-Actionnaire                -1.01 CAD
+
+2026-07-04 * "Fizz" "Allocation bureau a domicile - internet juillet 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-16.csv"
+  ligne: "163"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 49.44 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-07-10 * "Restaurant Novello" "Repas d'affaires"
+  source: "personal-statement"
+  fichier_source: "download-transactions-16.csv"
+  ligne: "175"
+  note: "Confirme par l'operateur comme depense d'entreprise payee personnellement; aucun credit TPS/TVQ comptabilise sans recu."
+  Depenses:Repas-Representation    243.05 CAD
+  Passifs:Pret-Actionnaire         -243.05 CAD
+
+2026-07-10 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-06-01 au 2026-06-30)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-15.csv"
+  ligne: "8"
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI167286.csv"
+  document_fiscal_id: "payment-pqi167286-20260710"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  periode_service: "2026-06-01/2026-06-30"
+  ref_paiement: "PQI167286"
+  ref_transaction: "PQI509668-P-1"
+  Actifs:Banque:RBC:Cheques   19350.29 CAD
+  Revenus:Consultation       -16830.00 CAD
+  Passifs:TPS-Percue           -841.50 CAD
+  Passifs:TVQ-Percue          -1678.79 CAD
+
+2026-07-10 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI167286.csv"

@@ -1,0 +1,133 @@
+; Transactions juin 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-06-01 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-8.csv"
+  ligne: "3"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-06-01 * "Virement Par Banque En Direct 9203" "Paiement carte de credit RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-8.csv"
+  ligne: "2"
+  note: "Confirme par l'operateur comme paiement de carte de credit."
+  Actifs:Banque:RBC:Cheques  -478.66 CAD
+  Passifs:CartesCredit:RBC    478.66 CAD
+
+2026-06-05 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-05-01 au 2026-05-31)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-8.csv"
+  ligne: "4"
+  document: "documents/2026/06/2026-06-05.procom-pqi507327.pdf"
+  document_fiscal_id: "doc-procom-pqi507327-20260605"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  normalisation_revenu: "oui"
+  periode_service: "2026-05-01/2026-05-31"
+  ref_paiement: "PQI507327"
+  ref_transaction: "PQI507327-P-1"
+  Actifs:Banque:RBC:Cheques   12836.96 CAD
+  Revenus:Consultation       -11165.00 CAD
+  Passifs:TPS-Percue           -558.25 CAD
+  Passifs:TVQ-Percue          -1113.71 CAD
+
+2026-06-05 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/06/2026-06-05.procom-pqi507327.pdf"
+
+2026-06-08 * "Virement Par Banque En Direct 4221" "Paiement carte de credit RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "16"
+  note: "Confirme par l'operateur comme paiement de carte de credit."
+  Actifs:Banque:RBC:Cheques  -5.82 CAD
+  Passifs:CartesCredit:RBC    5.82 CAD
+
+2026-06-18 * "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "17"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-06-24 * "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "18"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-06-24 * "Virement Services Bancaires Telephone" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "19"
+  note: "Montant apparie au depot personnel du 2026-06-24 avec la meme reference; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -4000.00 CAD
+  Passifs:Pret-Actionnaire    4000.00 CAD
+
+2026-06-27 * "Virement Envoyé Compte Personnel Rbc (Moi) CAWbbgNe" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-14.csv"
+  ligne: "5"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-06-29 * "Virement Envoyé Compte Personnel Rbc (Moi) CAAJJEwa" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-14.csv"
+  ligne: "6"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-06-29 * "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-15.csv"
+  ligne: "6"
+  note: "Deuxieme sortie de 2000 CAD constatee le 2026-06-29 vers le compte personnel; traitee comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-06-01 * "Colleen Marie Fedwe8" "Allocation bureau a domicile - loyer juin 2026 (20%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-11.csv"
+  ligne: "70"
+  note: "Estimation de travail en cours basee sur l'utilisation du domicile comme bureau; voir AGENTS.md. Le virement Benoit Paradis du meme jour n'est pas inclus faute de confirmation."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
+2026-06-04 * "Fizz" "Allocation bureau a domicile - internet juin 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "244"
+  note: "Allocation de 50% du service internet residentiel Fizz (charge TTC source: 49.44 CAD); split TPS/TVQ derive du montant alloue taxes incluses."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-06-01 * "Google*Cloud Ffjsxq Cc Google.Com" "Services infonuagiques"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "239"
+  note: "Traite comme depense d'entreprise payee personnellement; montant residuel a confirmer avec le recu."
+  Depenses:Bureau:Abonnements-Logiciels    0.65 CAD
+  Passifs:Pret-Actionnaire                -0.65 CAD
+
+2026-06-19 * "Microsoft*Subscription Halifax" "Abonnement logiciel"
+  source: "personal-statement"
+  fichier_source: "download-transactions-10.csv"
+  ligne: "286"
+  note: "Traite comme depense d'entreprise payee personnellement; classification a revoir avec les recus/supports."
+  Depenses:Bureau:Abonnements-Logiciels    2.30 CAD
+  Passifs:Pret-Actionnaire                -2.30 CAD

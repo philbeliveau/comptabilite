@@ -80,6 +80,7 @@ from compteqc.cli.reviser import reviser_app  # noqa: E402
 from compteqc.cli.cpa import cpa_app  # noqa: E402
 from compteqc.cli.fournisseur import fournisseur_app  # noqa: E402
 from compteqc.cli.aging import aging_app  # noqa: E402
+from compteqc.cli.personnel import personnel_app  # noqa: E402
 
 app.add_typer(importer_app, name="importer", help="Importer des fichiers bancaires")
 app.add_typer(paie_app, name="paie", help="Gestion de la paie")
@@ -90,6 +91,7 @@ app.add_typer(receipt_app, name="recu", help="Gestion des recus et documents")
 app.add_typer(cpa_app, name="cpa", help="Export CPA et rapports")
 app.add_typer(fournisseur_app, name="fournisseur", help="Gestion des factures fournisseurs (AP)")
 app.add_typer(aging_app, name="aging", help="Rapports de vieillissement AR/AP")
+app.add_typer(personnel_app, name="personnel", help="Suivi des depenses personnelles")
 app.command(name="soldes", help="Afficher les soldes de tous les comptes")(soldes)
 app.command(name="revue", help="Afficher les transactions non-classees")(revue)
 

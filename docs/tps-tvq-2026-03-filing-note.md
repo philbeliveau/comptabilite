@@ -94,7 +94,8 @@ Original totals without Procom:
 
 Support:
 
-- `/Users/philippebeliveau/Downloads/Payment-PQI160679.csv`
+- Permanent repo copy: `/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI160679.csv`
+- Earlier import copy: `/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/paie-mars/Payment-PQI160679.csv`
 - Procom transaction: PQI503215-P-1
 - Payment number: PQI160679
 - Worker order: 71254.1
@@ -116,6 +117,12 @@ Working conclusion:
 - Based on the Procom paystub showing `Date de l'operation: 31 mars 2026`, the
   Procom transaction belongs in the 2026-03-03 to 2026-03-31 TPS/TVQ return even
   though cash was received on 2026-04-10.
+- Operator clarification on 2026-06-29: the corporation files/remits sales taxes
+  quarterly. The first period was the March period ending 2026-03-31, with the
+  government due date/payment deadline of 2026-04-30. The amount to remit for
+  that first quarterly filing was driven mainly by the Procom cash received on
+  2026-04-10, because the underlying service period and Procom operation date
+  belonged to March.
 
 ## Corrected TVQ return
 
@@ -168,6 +175,8 @@ TVQ payment:
 - Payment code: SC012335995800014004
 - Amount if nothing has been paid: 1,182.77
 - Amount if original TVQ 217.19 was already paid: 965.58
+- Due/payment deadline for the first quarterly period: 2026-04-30
+- Bank withdrawal currently evidenced in the corporate RBC CSV: 2026-04-20
 - Permanent repo payment proof: `/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/03/tps-tvq-filing/2026-03-tvq-payment-rbc.pdf`
 
 ## TPS/GST filing
@@ -208,6 +217,8 @@ TPS/GST payment:
 - Payee at RBC: REVENU QUEBEC CODE DE PAIEMENT
 - Payment code: SC712335995800014900
 - Amount: 592.87
+- Due/payment deadline for the first quarterly period: 2026-04-30
+- Bank withdrawal currently evidenced in the corporate RBC CSV: 2026-04-20
 - Permanent repo payment proof: `/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/03/tps-tvq-filing/2026-03-tps-payment-rbc.pdf`
 
 ## Permanent proof folder
@@ -234,6 +245,10 @@ Correct total for the period after including Procom:
 - TPS/GST payable: 592.87
 - TVQ payable: 1,182.77
 - Combined payable: 1,775.64
+- This was the first quarterly TPS/TVQ remittance package. The payment deadline
+  shown in the government registration/filing materials was 2026-04-30. The
+  ledger preserves the corporate bank withdrawal date currently evidenced by the
+  RBC CSV: 2026-04-20.
 
 If original TVQ of 217.19 was already paid before the amendment:
 
@@ -247,3 +262,14 @@ The ledger currently records the Procom payment as a 2026-04-10 bank receipt in
 `ledger/2026/04.beancount`. For tax-report consistency, consider adjusting the
 ledger to recognize Procom revenue and collected TPS/TVQ on 2026-03-31, with
 the 2026-04-10 bank deposit clearing accounts receivable.
+
+As of the current ledger through 2026-06-29, after this first-period remittance
+has been posted, the remaining unremitted sales-tax estimate for the next
+quarter is:
+
+- TPS/GST net payable estimate: 1,461.36
+- TVQ/QST net payable estimate: 2,915.44
+- Combined sales-tax payable estimate: 4,376.80
+
+This remaining amount is a ledger estimate for CPA review and future quarterly
+filing, not a submitted return.
