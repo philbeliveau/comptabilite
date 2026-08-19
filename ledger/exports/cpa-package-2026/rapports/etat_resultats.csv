@@ -1,8 +1,13 @@
 Compte,GIFI,Montant
 --- REVENUS ---,,
-Revenus:Consultation,8000,2541.08
-Total revenus,,2541.08
+Revenus:Consultation,8000,58035.11
+Total revenus,,58035.11
 --- DEPENSES ---,,
-Depenses:Frais-Bancaires,8710,6.00
-Total depenses,,6.00
-RESULTAT NET,,2535.08
+Depenses:Bureau:Abonnements-Logiciels,8811,78.76
+Depenses:Bureau:Internet-Telecom,8811,141.84
+Depenses:Bureau:Loyer,8810,1420.00
+Depenses:Frais-Bancaires,8710,199.00
+Depenses:Non-Classe,9990,4000.00
+Depenses:Repas-Representation,8523,243.05
+Total depenses,,6082.65
+RESULTAT NET,,51952.46

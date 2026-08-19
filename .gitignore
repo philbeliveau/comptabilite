@@ -30,3 +30,15 @@ tests/fixtures/rbc_real_sample.csv
 transcript/
 research/
 screenshots
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
+*.heic
+*.tiff
+*.bmp
+*.avif

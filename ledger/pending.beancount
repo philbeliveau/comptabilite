@@ -4,25 +4,3 @@ option "name_liabilities" "Passifs"
 option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
-
-2026-04-22 ! "Virement Envoyé Hannah Diamong" "Virement envoye - classification a confirmer" #pending
-  source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-13.csv"
-  ligne: "7"
-  source_ia: "manual-review"
-  confiance: "0"
-  compte_propose: "Depenses:Non-Classe"
-  note: "Sortie corporative de 2000 CAD vers Hannah Diamong. Ne pas classer comme depense, salaire, dividende ou pret actionnaire sans confirmation."
-  Actifs:Banque:RBC:Cheques  -2000.00 CAD
-  Depenses:Non-Classe         2000.00 CAD
-
-2026-04-29 ! "Virement Envoyé Hannah Diamong" "Virement envoye - classification a confirmer" #pending
-  source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-13.csv"
-  ligne: "9"
-  source_ia: "manual-review"
-  confiance: "0"
-  compte_propose: "Depenses:Non-Classe"
-  note: "Sortie corporative de 2000 CAD vers Hannah Diamong. Ne pas classer comme depense, salaire, dividende ou pret actionnaire sans confirmation."
-  Actifs:Banque:RBC:Cheques  -2000.00 CAD
-  Depenses:Non-Classe         2000.00 CAD

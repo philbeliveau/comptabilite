@@ -90,6 +90,22 @@ option "name_expenses" "Depenses"
   Actifs:Banque:RBC:Cheques  -2000.00 CAD
   Passifs:Pret-Actionnaire    2000.00 CAD
 
+2026-04-22 * "Virement Envoyé Hannah Diamong" "Avance personnelle au dirigeant - pret actionnaire"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "7"
+  note: "Confirme par l'operateur comme un pret personnel qu'il s'est accorde; ce n'est pas une depense d'entreprise. Classification au pret actionnaire, a valider par le CPA."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-04-29 * "Virement Envoyé Hannah Diamong" "Avance personnelle au dirigeant - pret actionnaire"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-13.csv"
+  ligne: "9"
+  note: "Confirme par l'operateur comme un pret personnel qu'il s'est accorde; ce n'est pas une depense d'entreprise. Classification au pret actionnaire, a valider par le CPA."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
 2026-04-04 * "Fizz" "Allocation bureau a domicile - internet avril 2026 (50%)"
   source: "personal-statement"
   fichier_source: "download-transactions-10.csv"

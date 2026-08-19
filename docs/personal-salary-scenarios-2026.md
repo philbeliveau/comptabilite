@@ -24,6 +24,7 @@ This note is for planning only. It is not tax, legal, or mortgage advice.
 - Quebec personal tax-bracket reference archived locally: `docs/tax-references/2026/impot_particuliers_quebec_2026.pdf`.
 - Actual source deductions can differ from final tax owed depending on payroll setup, TD1/TP-1015 forms, and whether FHSA is reflected at source.
 - Mortgage underwriting varies by lender. In practice, clean T4 income usually matters more than shaving a few thousand dollars of RRQ.
+- Current recorded decision as of `2026-07-18`: target `70,000 CAD` gross salary for 2026; do not maximize RRSP/REER this year; treat the `8,000 CAD` CELIAPP/FHSA transfer as a one-time item. See `docs/salary-roadmap-2026.md`.
 
 ## Assumptions Used
 
@@ -115,25 +116,24 @@ Cons:
 
 ## My Practical Lean
 
-If the condo purchase in `2027` is real, the most defensible salary range is probably:
+Earlier mortgage-focused planning leaned higher. If the condo purchase in `2027` is the dominant objective, the most defensible salary range is probably:
 
 - `85,000` to `100,000`
 
-If I had to pick one default planning number:
+However, after deciding not to maximize RRSP/REER this year and treating the `8,000 CAD` CELIAPP/FHSA transfer as one-time, the current recorded working target is:
 
-- `100,000`
+- `70,000`
 
 Why:
 
-- It gives you a clean, mortgage-friendly salary
-- It already maxes RRQ/QPP, so there is no extra pension contribution penalty versus going much higher
+- It covers recurring personal cash needs with room above the strict baseline
+- It avoids paying extra salary mainly to create RRSP room that will not be used this year
+- It still provides cleaner T4/RL-1 employment income than a very low salary
 - It still lets the corporation retain a meaningful amount of profit
-- After payroll deductions, you still have about `72,645.92`
-- After also funding `FHSA` and `TFSA`, you still have about `57,645.92` of net personal cash flow before living expenses
 
-If you want to be slightly more tax-efficient and still look serious for a lender:
+Using the repo payroll estimate, `70,000 CAD` gross salary gives about `51,337.45 CAD` net pay before any shareholder-loan offset. If no salary has been formally posted yet and the target is caught up from July to December, that is about `11,666.67 CAD` gross salary per month.
 
-- `85,000` is the lower end I would consider
+If mortgage qualification becomes the priority, revisit the `85,000` to `100,000` range with the CPA.
 
 ## Next Questions To Pressure-Test
 
@@ -151,6 +151,7 @@ The estimates above align with the payroll rates and Quebec payroll engine in:
 - `src/compteqc/quebec/paie/impot_federal.py`
 - `src/compteqc/quebec/paie/impot_quebec.py`
 - `src/compteqc/quebec/paie/cotisations.py`
+- `docs/salary-roadmap-2026.md`
 
 Local reference used for Quebec personal tax brackets:
 

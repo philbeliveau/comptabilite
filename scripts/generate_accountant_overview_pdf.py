@@ -317,6 +317,7 @@ def source_files() -> list[str]:
         "ledger/main.beancount",
         "ledger/pending.beancount",
         "docs/company-information.md",
+        "docs/salary-roadmap-2026.md",
         "docs/personal-salary-scenarios-2026.md",
         "docs/tps-tvq-2026-03-filing-note.md",
         "Releves/2026/personal/2026/download-transactions-10.csv",
@@ -468,6 +469,7 @@ def generate() -> None:
             [
                 "Quebec incorporated solo IT consulting company with Procom as the main 2026 revenue stream.",
                 "Main planning ask: determine sustainable monthly compensation and whether payments should be salary, dividends, shareholder-loan repayment/draw, reimbursements, or a mix.",
+                "Current owner decision recorded on 2026-07-18: target 70,000 CAD gross salary for 2026; do not maximize RRSP/REER this year; treat the 8,000 CAD CELIAPP/FHSA transfer as a one-time savings event.",
                 f"Net recurring personal baseline after spouse rent contribution: {personal['net_monthly_average']}/month; gross before shared-housing offsets: {personal['gross_monthly_average']}/month.",
                 f"Base planning target remains {personal['planning_target']} if adding breathing room, CELIAPP/FHSA, wedding savings, house down payment, RRSP, and emergency reserve.",
                 "Personal-account data is used only as a compensation-planning summary; it is not mixed into the corporate ledger except specific business-paid-personally or owner-loan items.",
@@ -645,6 +647,20 @@ def generate() -> None:
     )
     story.append(Spacer(1, 0.1 * inch))
     story.append(table(salary_equivalent_table(), [2.45 * inch, 1.35 * inch, 1.45 * inch, 1.45 * inch], small=True))
+
+    story.append(Paragraph("Recorded 70,000 CAD salary roadmap", styles["Section"]))
+    story.extend(
+        paragraph_list(
+            [
+                "Owner working decision recorded 2026-07-18: target 70,000 CAD gross salary for 2026.",
+                "Repo payroll estimate: 70,000 CAD gross salary, 18,662.55 CAD employee deductions, 51,337.45 CAD net pay, 7,656.88 CAD employer payroll costs, and 77,656.88 CAD total company cost.",
+                "If no 2026 salary has been formally posted yet and the target is caught up from July to December, use about 11,666.67 CAD gross salary per month. Estimated net pay is about 8,556.24 CAD/month and employer costs about 1,276.15 CAD/month.",
+                "Actual monthly bank transfers should be confirmed by the CPA. If salary is used to clear existing shareholder-loan draws, apply net pay against Passifs:Pret-Actionnaire first and transfer only the excess cash to the personal account.",
+                "RRSP/REER maximization is not a 2026 objective. The 8,000 CAD CELIAPP/FHSA transfer is a one-time savings event, not recurring monthly spending.",
+            ],
+            styles,
+        )
+    )
 
     story.append(Paragraph("Using salary to clear shareholder-loan draws", styles["Section"]))
     story.append(

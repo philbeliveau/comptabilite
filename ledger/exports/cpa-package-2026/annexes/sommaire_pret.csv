@@ -1,7 +1,40 @@
 Date,Description,Type,Avance,Remboursement,Solde
-2026-03-16,Virement reçu PHILIPPEBELIVEAU CAGyBqvD,remboursement,,210.00,-210.00
-2026-03-27,Remboursement partiel MacBook Pro - virement vers compte personnel RBC,avance,2000.00,,1790.00
-2026-03-27,Depot personnel verse par erreur au compte corporatif,remboursement,,900.00,890.00
-2026-03-30,Remboursement final MacBook Pro - virement vers compte personnel RBC,avance,750.00,,1640.00
-2026-04-04,Retour partiel au compte personnel d'un depot errone,avance,895.08,,2535.08
-TOTAL,,,3645.08,1110.00,2535.08
+2026-03-02,Allocation bureau a domicile - loyer mars 2026 (20%),remboursement,,355.00,-355.00
+2026-03-04,Allocation bureau a domicile - internet mars 2026 (50%),remboursement,,24.72,-379.72
+2026-03-14,MacBook Pro 16 M2 Max 64GB 1TB - Facebook Marketplace,remboursement,,2750.00,-3129.72
+2026-03-16,Virement reçu PHILIPPEBELIVEAU CAGyBqvD,remboursement,,210.00,-3339.72
+2026-03-19,Abonnement logiciel,remboursement,,2.30,-3342.02
+2026-03-27,Remboursement partiel MacBook Pro - virement vers compte personnel RBC,avance,2000.00,,-1342.02
+2026-03-27,Depot personnel verse par erreur au compte corporatif,remboursement,,900.00,-2242.02
+2026-03-29,Allocation bureau a domicile - internet mars 2026 (50%),remboursement,,12.97,-2254.99
+2026-03-30,Abonnement logiciel,remboursement,,15.51,-2270.50
+2026-03-30,Remboursement final MacBook Pro - virement vers compte personnel RBC,avance,750.00,,-1520.50
+2026-04-01,Services infonuagiques,remboursement,,42.75,-1563.25
+2026-04-04,Retour partiel au compte personnel d'un depot errone,avance,895.08,,-668.17
+2026-04-04,Allocation bureau a domicile - internet avril 2026 (50%),remboursement,,24.72,-692.89
+2026-04-06,Allocation bureau a domicile - loyer avril 2026 (20%),remboursement,,355.00,-1047.89
+2026-04-17,Billet d'avion personnel paye avec carte corporative,avance,1343.22,,295.33
+2026-04-19,Abonnement logiciel,remboursement,,2.30,293.03
+2026-04-24,Virement vers compte personnel RBC,avance,2000.00,,2293.03
+2026-04-28,Allocation bureau a domicile - internet avril 2026 (50%),remboursement,,12.97,2280.06
+2026-05-01,Services infonuagiques,remboursement,,0.03,2280.03
+2026-05-04,Allocation bureau a domicile - loyer mai 2026 (20%),remboursement,,355.00,1925.03
+2026-05-04,Allocation bureau a domicile - internet mai 2026 (50%),remboursement,,24.72,1900.31
+2026-05-04,Abonnement logiciel,remboursement,,9.61,1890.70
+2026-05-19,Abonnement logiciel,remboursement,,2.30,1888.40
+2026-05-22,Allocation bureau a domicile - internet mai 2026 (50%),remboursement,,0.58,1887.82
+2026-05-29,Allocation bureau a domicile - internet mai 2026 (50%),remboursement,,12.97,1874.85
+2026-06-01,Allocation bureau a domicile - loyer juin 2026 (20%),remboursement,,355.00,1519.85
+2026-06-01,Services infonuagiques,remboursement,,0.65,1519.20
+2026-06-04,Allocation bureau a domicile - internet juin 2026 (50%),remboursement,,24.72,1494.48
+2026-06-18,Virement vers compte personnel RBC,avance,2000.00,,3494.48
+2026-06-19,Abonnement logiciel,remboursement,,2.30,3492.18
+2026-06-24,Virement vers compte personnel RBC,avance,2000.00,,5492.18
+2026-06-24,Virement vers compte personnel RBC,avance,4000.00,,9492.18
+2026-06-27,Virement vers compte personnel RBC,avance,2000.00,,11492.18
+2026-06-29,Virement vers compte personnel RBC,avance,2000.00,,13492.18
+2026-06-29,Virement vers compte personnel RBC,avance,2000.00,,15492.18
+2026-07-01,Services infonuagiques,remboursement,,1.01,15491.17
+2026-07-04,Allocation bureau a domicile - internet juillet 2026 (50%),remboursement,,24.72,15466.45
+2026-07-10,Repas d'affaires,remboursement,,243.05,15223.40
+TOTAL,,,20988.30,5764.90,15223.40

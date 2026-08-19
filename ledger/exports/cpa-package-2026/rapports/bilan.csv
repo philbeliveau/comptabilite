@@ -1,10 +1,17 @@
 Compte,GIFI,Montant
 --- ACTIFS ---,,
-Total actifs,,0.00
+Actifs:Banque:RBC:Cheques,1001,40371.94
+Actifs:Immobilisations:Informatique,1740,2750.00
+Actifs:TPS-Payee,1300,5.47
+Actifs:TVQ-Payee,1300,10.87
+Total actifs,,43138.28
 --- PASSIFS ---,,
-Passifs:Pret-Actionnaire,2480,-2535.08
-Total passifs,,-2535.08
+Passifs:CartesCredit:RBC,2700,-500.99
+Passifs:Pret-Actionnaire,2480,-15223.40
+Passifs:TPS-Percue,2620,2307.25
+Passifs:TVQ-Percue,2620,4602.96
+Total passifs,,-8814.18
 --- CAPITAUX PROPRES ---,,
-Resultat net de l'exercice,,2535.08
-Total capitaux propres,,2535.08
-TOTAL PASSIFS + CAPITAUX,,0.00
+Resultat net de l'exercice,,51952.46
+Total capitaux propres,,51952.46
+TOTAL PASSIFS + CAPITAUX,,43138.28
