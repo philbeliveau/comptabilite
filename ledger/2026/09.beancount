@@ -7,7 +7,7 @@ option "name_expenses" "Depenses"
 
 2026-09-14 * "Cathcart" "Repas d'affaires"
   source: "user-provided-receipt"
-  document: "/Users/philippebeliveau/Library/Mobile Documents/com~apple~CloudDocs/_Bureau_/Enact Conseils et Solutions Inc./accounting/resto-bouffe/IMG_3448.HEIC"
+  document: "Releves/2026/personal/2026/resto-bouffe/IMG_3448.HEIC"
   note: "Repas confirme comme depense d'entreprise par l'operateur; montant TTC. TPS/TVQ non reclamees separement."
   Depenses:Repas-Representation  18.98 CAD
   Passifs:Pret-Actionnaire      -18.98 CAD

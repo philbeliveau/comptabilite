@@ -90,7 +90,7 @@ option "name_expenses" "Depenses"
 
 2026-06-26 * "Time Out Market Montréal" "Repas d'affaires"
   source: "user-provided-receipt"
-  document: "/Users/philippebeliveau/Library/Mobile Documents/com~apple~CloudDocs/_Bureau_/Enact Conseils et Solutions Inc./accounting/resto-bouffe/IMG_3450.HEIC"
+  document: "Releves/2026/personal/2026/resto-bouffe/IMG_3450.HEIC"
   note: "Repas confirme comme depense d'entreprise par l'operateur; montant TTC. TPS/TVQ non reclamees separement."
   Depenses:Repas-Representation  19.55 CAD
   Passifs:Pret-Actionnaire      -19.55 CAD
