@@ -1,0 +1,67 @@
+; Transactions aout 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-07-27 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "3"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-08-03 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "4"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-08-07 * "Procom" "Paiement client Procom"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "5"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  note: "Montant brut RBC de 19 729.71 CAD rapproche a 17 160.00 CAD de services, 858.00 CAD de TPS et 1 711.71 CAD de TVQ. Le releve de paiement Procom reste a joindre."
+  Actifs:Banque:RBC:Cheques   19729.71 CAD
+  Revenus:Consultation       -17160.00 CAD
+  Passifs:TPS-Percue           -858.00 CAD
+  Passifs:TVQ-Percue          -1711.71 CAD
+
+2026-08-14 * "Virement Par Banque En Direct 7084" "Paiement carte de credit RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "6"
+  note: "Classe selon le descripteur recurrent des paiements de carte RBC; a rapprocher au releve de carte."
+  Actifs:Banque:RBC:Cheques  -1932.42 CAD
+  Passifs:CartesCredit:RBC    1932.42 CAD
+
+2026-08-14 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "7"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-08-19 * "Virement Envoye Compte Personnel Rbc (Moi) Caejevee" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "8"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-08-31 * "CFC Underwriting Limited" "Facture 881225 - police E&OT CIV ESP0040963194"
+  source: "facture-assurance-cfc"
+  fichier_source: "E&OT CIV - Facture #881225 2026-2027 - CFC #ESP0040963194.pdf"
+  numero_facture: "881225"
+  numero_police: "ESP0040963194"
+  periode_assurance: "2026-08-31 a 2027-08-31"
+  note: "Facture du courtier Lussier; montant du de 2511.00 CAD. Enregistre en assurance prepayee, paiement non confirme."
+  Actifs:Prepaye:Assurances    2511.00 CAD
+  Passifs:ComptesFournisseurs  -2511.00 CAD

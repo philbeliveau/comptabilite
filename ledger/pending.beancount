@@ -4,3 +4,11 @@ option "name_liabilities" "Passifs"
 option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
+
+2026-07-27 * "Revenu Quebec" "Remise TPS/TVQ - ventilation a confirmer"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-18.csv"
+  ligne: "2"
+  review_reason: "Confirme par l'operateur comme une remise TPS/TVQ. Le CSV ne fournit pas la ventilation TPS et TVQ; le justificatif Revenu Quebec est requis pour imputer les deux comptes correctement."
+  Actifs:Banque:RBC:Cheques  -5794.27 CAD
+  Passifs:Retenues-A-Payer

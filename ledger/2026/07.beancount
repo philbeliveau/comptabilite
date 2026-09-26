@@ -36,7 +36,8 @@ option "name_expenses" "Depenses"
   source: "personal-statement"
   fichier_source: "download-transactions-16.csv"
   ligne: "175"
-  note: "Confirme par l'operateur comme depense d'entreprise payee personnellement; aucun credit TPS/TVQ comptabilise sans recu."
+  document: "/Users/philippebeliveau/Library/Mobile Documents/com~apple~CloudDocs/_Bureau_/Enact Conseils et Solutions Inc./accounting/resto-bouffe/IMG_3449.HEIC"
+  note: "Recu Novello apparie a la transaction de 243.05 CAD deja comptabilisee; le recu de paiement ne ventile pas les taxes."
   Depenses:Repas-Representation    243.05 CAD
   Passifs:Pret-Actionnaire         -243.05 CAD
 

@@ -1,0 +1,21 @@
+; Transactions septembre 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-09-14 * "Cathcart" "Repas d'affaires"
+  source: "user-provided-receipt"
+  document: "/Users/philippebeliveau/Library/Mobile Documents/com~apple~CloudDocs/_Bureau_/Enact Conseils et Solutions Inc./accounting/resto-bouffe/IMG_3448.HEIC"
+  note: "Repas confirme comme depense d'entreprise par l'operateur; montant TTC. TPS/TVQ non reclamees separement."
+  Depenses:Repas-Representation  18.98 CAD
+  Passifs:Pret-Actionnaire      -18.98 CAD
+
+2026-09-16 * "Moishes" "Repas d'affaires"
+  source: "personal-statement"
+  fichier_source: "download-transactions-19.csv"
+  ligne: "128"
+  note: "Montant et date du releve; depense d'entreprise confirmee par l'operateur. Recu detaille non fourni, aucun credit TPS/TVQ reclame."
+  Depenses:Repas-Representation  206.66 CAD
+  Passifs:Pret-Actionnaire      -206.66 CAD

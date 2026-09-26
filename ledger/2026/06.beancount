@@ -88,6 +88,13 @@ option "name_expenses" "Depenses"
   Actifs:Banque:RBC:Cheques  -2000.00 CAD
   Passifs:Pret-Actionnaire    2000.00 CAD
 
+2026-06-26 * "Time Out Market Montréal" "Repas d'affaires"
+  source: "user-provided-receipt"
+  document: "/Users/philippebeliveau/Library/Mobile Documents/com~apple~CloudDocs/_Bureau_/Enact Conseils et Solutions Inc./accounting/resto-bouffe/IMG_3450.HEIC"
+  note: "Repas confirme comme depense d'entreprise par l'operateur; montant TTC. TPS/TVQ non reclamees separement."
+  Depenses:Repas-Representation  19.55 CAD
+  Passifs:Pret-Actionnaire      -19.55 CAD
+
 2026-06-29 * "Virement Envoyé Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
   source: "rbc-cheques-csv"
   fichier_source: "download-transactions-15.csv"
