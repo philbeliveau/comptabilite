@@ -66,6 +66,24 @@ The Revenu Quebec corporate income tax registration letter says the corporation 
   - Personal GST/HST cancellation letter addressed to Philippe Beliveau.
   - This appears personal, not corporate. It states a personal GST/HST registration was cancelled effective `2026-01-26`.
 
+## Corporate Investment Account (Wealth Manager)
+
+Lucas (2026-10-04) requested the following to open a corporate brokerage/investment account:
+
+- NEQ
+- CRA documents (registration letters, account numbers)
+- Incorporation documents on file
+- Void corporate cheque specimen (bank)
+
+| Item | In this repo? | Notes |
+| --- | --- | --- |
+| NEQ | Yes | `1181862674` (above) |
+| CRA / joint RQ letters (GST/HST, etc.) | Partially | Scans under `docs/corporate-files/`; listed in Source Documents below |
+| Incorporation (statutes, certificate) | Not catalogued | Add paths here when filed; check `docs/Gouvernement-poste/` for unscanned IDs |
+| Corporate void cheque | No | Obtain from corporate bank |
+
+Meeting notes, liquidity reserve (~20k), and follow-ups: [advisor-meetings/2026-10-04-remuneration-investissement-corporatif.md](advisor-meetings/2026-10-04-remuneration-investissement-corporatif.md).
+
 ## Handling Notes
 
 - Do not infer payroll registration from the GST/QST or corporate income tax registrations.
