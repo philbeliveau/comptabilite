@@ -456,7 +456,7 @@ def generate() -> None:
                 ["GST/HST / TPS-TVH", "79848 4770 RT0001"],
                 ["QST / TVQ", "1233599588 TQ0001"],
                 ["Corporate income tax file", "1233599588 IC0001"],
-                ["Payroll status", "No confirmed payroll account found in reviewed files"],
+                ["Source deductions / payroll (RQ)", "1233599588 RS0001"],
             ],
             [2.3 * inch, 4.7 * inch],
         )

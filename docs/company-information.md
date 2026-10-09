@@ -18,6 +18,7 @@ Use this as a bookkeeping and CPA-reference aid only. The CPA remains the final 
 - GST/HST / TPS-TVH account: `79848 4770 RT0001`
 - QST / TVQ identification and file: `1233599588 TQ0001`
 - Revenu Quebec corporate income tax identification and file: `1233599588 IC0001`
+- Revenu Quebec source deductions / payroll file: `1233599588 RS0001`
 
 ## Sales Tax Registration
 
@@ -29,9 +30,25 @@ Use this as a bookkeeping and CPA-reference aid only. The CPA remains the final 
 
 ## Payroll Registration Status
 
-No confirmed CRA payroll account or Quebec source-deductions/payroll file was found in the reviewed corporate files.
+### Revenu Québec (retenues à la source)
 
-The Revenu Quebec corporate income tax registration letter says the corporation must register for source deductions if it plans to pay a salary or remuneration. Confirm payroll-account setup with the CPA before posting salary, T4, RL-1, or payroll remittance entries.
+- Application **transmitted** on `2026-10-09` at `14:14:38` by Philippe Beliveau.
+- Portal reference number: `000019982`.
+- Declared first pay or remuneration date: `2026-09-30`.
+- Declared main activity: Consultant en TI.
+- Declared estimated monthly total (employee source deductions + employer contributions): `7 500,00` CAD.
+- Declared remittance frequency: monthly (`Mensuelle`).
+- Correspondence phone on the application: `514 773-4780`.
+
+- Payroll file (retenues à la source): `1233599588 RS0001` (same 10-digit identification as TVQ and corporate tax).
+
+Full accusé archive: [retenues-source-inscription-2026-10-09.md](retenues-source-inscription-2026-10-09.md).
+
+### CRA (federal payroll)
+
+No confirmed CRA payroll account was found in the reviewed corporate files before this Quebec application. Confirm federal payroll-account setup with the CPA before assuming T4 remittance coverage.
+
+Confirm payroll registration, remittance schedules, and ledger posting with the CPA before treating salary, T4, RL-1, or remittance entries as fully registered.
 
 ## Source Documents
 
@@ -84,8 +101,14 @@ Lucas (2026-10-04) requested the following to open a corporate brokerage/investm
 
 Meeting notes, liquidity reserve (~20k), and follow-ups: [advisor-meetings/2026-10-04-remuneration-investissement-corporatif.md](advisor-meetings/2026-10-04-remuneration-investissement-corporatif.md).
 
+## Registration Activity Log
+
+| Date | Event | Reference |
+| --- | --- | --- |
+| 2026-10-09 | Revenu Québec — demande d'inscription aux fichiers (retenues à la source) transmise | `000019982` — [detail](retenues-source-inscription-2026-10-09.md) |
+
 ## Handling Notes
 
-- Do not infer payroll registration from the GST/QST or corporate income tax registrations.
+- Do not infer payroll registration from the GST/QST or corporate income tax registrations alone; use explicit portal acknowledgements and official file numbers when available.
 - Do not include clicSEQUR access codes in generated accountant packages unless explicitly requested by the owner and handled securely.
 - Treat the personal GST/HST cancellation letter as owner context, not as a corporate registration document.
