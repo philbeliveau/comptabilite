@@ -5,17 +5,133 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
+2026-09-01 * "Fort Assurances" "Police E&O CFC - facture 520972875 (2026-09-01 a 2027-09-01)"
+  source: "facture-assurance-fort"
+  fichier_source: "ledger/documents/2026/09/assurance-fort/fort-facture-520972875-2026-09-01.png"
+  numero_facture: "520972875"
+  note: "Prime 1180 + taxe assurance 9% 106.20 + frais assureur 118 + honoraires 75 = 1479.20 CAD. Taxe d'assurance, pas TPS/TVQ recuperables."
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/09/assurance-fort/fort-facture-520972875-2026-09-01.png"
+  Actifs:Prepaye:Assurances    1479.20 CAD
+  Passifs:ComptesFournisseurs  -1479.20 CAD
+
+2026-09-01 document Actifs:Prepaye:Assurances "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/09/assurance-fort/fort-facture-520972875-2026-09-01.png"
+
+2026-09-01 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "12"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-09-02 * "Fort Assurances" "Paiement facture 520972875"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "13"
+  Actifs:Banque:RBC:Cheques       -1479.20 CAD
+  Passifs:ComptesFournisseurs      1479.20 CAD
+
+2026-09-04 * "Fizz" "Allocation bureau a domicile - internet septembre 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-19.csv"
+  ligne: "104"
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-09-04 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-08-01 au 2026-08-31)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "14"
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI170909.csv"
+  document_fiscal_id: "payment-pqi170909-20260904"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  periode_service: "2026-08-01/2026-08-31"
+  ref_paiement: "PQI170909"
+  ref_transaction: "PQI514221-P-1"
+  Actifs:Banque:RBC:Cheques   17200.26 CAD
+  Revenus:Consultation       -14960.00 CAD
+  Passifs:TPS-Percue           -748.00 CAD
+  Passifs:TVQ-Percue          -1492.26 CAD
+
+2026-09-04 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI170909.csv"
+
+2026-09-01 * "Google Cloud" "Services infonuagiques"
+  source: "personal-statement"
+  fichier_source: "download-transactions-19.csv"
+  ligne: "95"
+  note: "Charges Google Cloud de 0.01 et 3.08 CAD regroupees."
+  Depenses:Bureau:Abonnements-Logiciels    3.09 CAD
+  Passifs:Pret-Actionnaire                -3.09 CAD
+
+2026-09-08 * "Colleen Marie" "Allocation bureau a domicile - loyer septembre 2026 (20%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-22.csv"
+  ligne: "42"
+  note: "20% du loyer residentiel de 1775 CAD paye personnellement."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
 2026-09-14 * "Cathcart" "Repas d'affaires"
   source: "user-provided-receipt"
   document: "Releves/2026/personal/2026/resto-bouffe/IMG_3448.HEIC"
-  note: "Repas confirme comme depense d'entreprise par l'operateur; montant TTC. TPS/TVQ non reclamees separement."
-  Depenses:Repas-Representation  18.98 CAD
-  Passifs:Pret-Actionnaire      -18.98 CAD
+  note: "Recu avec TPS/TVQ; ITC repas estime a 50% sur les taxes (a valider CPA)."
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_depense: "tps_tvq"
+  taux_itc: "0.5"
+  taux_itr: "0.5"
+  Depenses:Repas-Representation    17.74 CAD
+  Actifs:TPS-Payee                 0.42 CAD
+  Actifs:TVQ-Payee                 0.82 CAD
+  Passifs:Pret-Actionnaire       -18.98 CAD
 
-2026-09-16 * "Moishes" "Repas d'affaires"
+2026-09-19 * "Microsoft" "Abonnement logiciel"
   source: "personal-statement"
   fichier_source: "download-transactions-19.csv"
-  ligne: "128"
-  note: "Montant et date du releve; depense d'entreprise confirmee par l'operateur. Recu detaille non fourni, aucun credit TPS/TVQ reclame."
-  Depenses:Repas-Representation  206.66 CAD
-  Passifs:Pret-Actionnaire      -206.66 CAD
+  ligne: "129"
+  Depenses:Bureau:Abonnements-Logiciels    2.30 CAD
+  Passifs:Pret-Actionnaire                -2.30 CAD
+
+2026-09-21 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "15"
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-09-21 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC (2e)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "16"
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-09-29 * "Place Montreal Trust" "Repas d'affaires"
+  source: "user-provided-receipt"
+  document: "Releves/2026/personal/2026/resto-bouffe/IMG_3463.HEIC"
+  note: "Recu avec TPS/TVQ; ITC repas estime a 50% sur les taxes (a valider CPA)."
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_depense: "tps_tvq"
+  taux_itc: "0.5"
+  taux_itr: "0.5"
+  Depenses:Repas-Representation    16.13 CAD
+  Actifs:TPS-Payee                  0.37 CAD
+  Actifs:TVQ-Payee                  0.75 CAD
+  Passifs:Pret-Actionnaire        -17.25 CAD
+
+2026-09-30 * "Kahwa Cafe" "Repas d'affaires"
+  source: "user-provided-receipt"
+  document: "Releves/2026/personal/2026/resto-bouffe/IMG_3465.HEIC"
+  note: "Recu avec TPS/TVQ; ITC repas estime a 50% sur les taxes (a valider CPA)."
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_depense: "tps_tvq"
+  taux_itc: "0.5"
+  taux_itr: "0.5"
+  Depenses:Repas-Representation    14.97 CAD
+  Actifs:TPS-Payee                  0.35 CAD
+  Actifs:TVQ-Payee                  0.69 CAD
+  Passifs:Pret-Actionnaire        -16.01 CAD

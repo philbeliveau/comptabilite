@@ -22,6 +22,8 @@ option "name_expenses" "Depenses"
   gifi: "1001"
 
 2025-01-01 open Actifs:ComptesClients CAD
+
+2025-01-01 open Actifs:Creances:Parties-Liees CAD
   gifi: "1060"
 
 2025-01-01 open Actifs:TPS-Payee CAD

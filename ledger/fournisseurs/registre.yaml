@@ -1,0 +1,18 @@
+- numero_reference: '14202'
+  numero_interne: FOUR-2026-001
+  fournisseur: GFKM Inc.
+  date_facture: '2026-10-28'
+  date_echeance: '2026-11-27'
+  lignes:
+  - description: Tenue de livres Q3-2026
+    montant: '450.00'
+    categorie_depense: Depenses:Honoraires-Professionnels:Comptable
+    tps_applicable: true
+    tvq_applicable: true
+    taux_itc: '1.0'
+    taux_itr: '1.0'
+  statut: received
+  date_paiement: null
+  methode_paiement: null
+  montant_paye: '0'
+  notes: Facture comptable/bookkeeping Q3-2026 (hamid@gfcm.ca).

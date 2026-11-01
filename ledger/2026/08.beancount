@@ -5,63 +5,97 @@ option "name_equity" "Capital"
 option "name_income" "Revenus"
 option "name_expenses" "Depenses"
 
-2026-07-27 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
-  source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-18.csv"
-  ligne: "3"
-  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
-  Actifs:Banque:RBC:Cheques  -2000.00 CAD
-  Passifs:Pret-Actionnaire    2000.00 CAD
-
 2026-08-03 * "Frais Mensuels" "Frais mensuels"
   source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-18.csv"
-  ligne: "4"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "5"
   Actifs:Banque:RBC:Cheques  -6.00 CAD
   Depenses:Frais-Bancaires    6.00 CAD
 
-2026-08-07 * "Procom" "Paiement client Procom"
+2026-08-03 * "Colleen Marie" "Allocation bureau a domicile - loyer aout 2026 (20%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-22.csv"
+  ligne: "28"
+  note: "20% du loyer residentiel de 1775 CAD paye personnellement; estimation de travail en cours, voir AGENTS.md."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
+2026-08-01 * "Google Cloud" "Services infonuagiques"
+  source: "personal-statement"
+  fichier_source: "download-transactions-19.csv"
+  ligne: "2"
+  note: "Charges Google Cloud de 3.39 et 0.01 CAD regroupees; depense d'entreprise payee personnellement."
+  Depenses:Bureau:Abonnements-Logiciels    3.40 CAD
+  Passifs:Pret-Actionnaire                -3.40 CAD
+
+2026-08-03 * "Fizz" "Allocation bureau a domicile - internet aout 2026 (50%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-19.csv"
+  ligne: "10"
+  note: "Allocation de 50% de la charge Fizz principale de 49.44 CAD (TX incl.); split TPS/TVQ sur portion allouee."
+  pricing_mode: "tax_included"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Bureau:Internet-Telecom    21.50 CAD
+  Actifs:TPS-Payee                     1.08 CAD
+  Actifs:TVQ-Payee                     2.14 CAD
+  Passifs:Pret-Actionnaire           -24.72 CAD
+
+2026-08-07 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-07-01 au 2026-07-31)"
   source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-18.csv"
-  ligne: "5"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "6"
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI168992.csv"
+  document_fiscal_id: "payment-pqi168992-20260807"
+  document_kind: "revenue"
   pricing_mode: "explicit_tax_lines"
   traitement_taxes_revenu: "tps_tvq"
-  note: "Montant brut RBC de 19 729.71 CAD rapproche a 17 160.00 CAD de services, 858.00 CAD de TPS et 1 711.71 CAD de TVQ. Le releve de paiement Procom reste a joindre."
+  periode_service: "2026-07-01/2026-07-31"
+  ref_paiement: "PQI168992"
+  ref_transaction: "PQI511795-P-1"
   Actifs:Banque:RBC:Cheques   19729.71 CAD
   Revenus:Consultation       -17160.00 CAD
   Passifs:TPS-Percue           -858.00 CAD
   Passifs:TVQ-Percue          -1711.71 CAD
 
+2026-08-07 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI168992.csv"
+
 2026-08-14 * "Virement Par Banque En Direct 7084" "Paiement carte de credit RBC"
   source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-18.csv"
-  ligne: "6"
-  note: "Classe selon le descripteur recurrent des paiements de carte RBC; a rapprocher au releve de carte."
+  fichier_source: "download-transactions-21.csv"
+  ligne: "8"
+  note: "Paiement carte corporative RBC; rapprocher au releve de carte."
   Actifs:Banque:RBC:Cheques  -1932.42 CAD
   Passifs:CartesCredit:RBC    1932.42 CAD
 
 2026-08-14 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
   source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-18.csv"
-  ligne: "7"
-  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  fichier_source: "download-transactions-21.csv"
+  ligne: "9"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire."
   Actifs:Banque:RBC:Cheques  -2000.00 CAD
   Passifs:Pret-Actionnaire    2000.00 CAD
 
-2026-08-19 * "Virement Envoye Compte Personnel Rbc (Moi) Caejevee" "Virement vers compte personnel RBC"
+2026-08-19 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
   source: "rbc-cheques-csv"
-  fichier_source: "download-transactions-18.csv"
-  ligne: "8"
-  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire, a confirmer par le CPA si salaire/dividende."
+  fichier_source: "download-transactions-21.csv"
+  ligne: "10"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire."
   Actifs:Banque:RBC:Cheques  -2000.00 CAD
   Passifs:Pret-Actionnaire    2000.00 CAD
 
-2026-08-31 * "CFC Underwriting Limited" "Facture 881225 - police E&OT CIV ESP0040963194"
-  source: "facture-assurance-cfc"
-  fichier_source: "E&OT CIV - Facture #881225 2026-2027 - CFC #ESP0040963194.pdf"
-  numero_facture: "881225"
-  numero_police: "ESP0040963194"
-  periode_assurance: "2026-08-31 a 2027-08-31"
-  note: "Facture du courtier Lussier; montant du de 2511.00 CAD. Enregistre en assurance prepayee, paiement non confirme."
-  Actifs:Prepaye:Assurances    2511.00 CAD
-  Passifs:ComptesFournisseurs  -2511.00 CAD
+2026-08-19 * "Microsoft" "Abonnement logiciel"
+  source: "personal-statement"
+  fichier_source: "download-transactions-19.csv"
+  ligne: "67"
+  Depenses:Bureau:Abonnements-Logiciels    2.30 CAD
+  Passifs:Pret-Actionnaire                -2.30 CAD
+
+2026-08-27 * "Audrey" "Pret a la soeur - remboursement attendu"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "11"
+  note: "Virement corporatif a Audrey Beliveau; traite comme creance jusqu'au remboursement, pas une depense."
+  Actifs:Banque:RBC:Cheques        -2000.00 CAD
+  Actifs:Creances:Parties-Liees     2000.00 CAD
+
+; Facture Lussier/CFC 881225 (2511 CAD) retiree: la police E&O retenue est Fort 520972875 (1479.20 CAD), comptabilisee en septembre.

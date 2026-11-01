@@ -1,0 +1,91 @@
+; Transactions octobre 2026
+option "name_assets" "Actifs"
+option "name_liabilities" "Passifs"
+option "name_equity" "Capital"
+option "name_income" "Revenus"
+option "name_expenses" "Depenses"
+
+2026-10-01 * "Frais Mensuels" "Frais mensuels"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "17"
+  Actifs:Banque:RBC:Cheques  -6.00 CAD
+  Depenses:Frais-Bancaires    6.00 CAD
+
+2026-10-02 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "18"
+  Actifs:Banque:RBC:Cheques  -1281.39 CAD
+  Passifs:Pret-Actionnaire    1281.39 CAD
+
+2026-10-02 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC (annule)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "19"
+  note: "Virement de 2000 CAD annule le meme jour par la banque; contre-passation."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-10-02 * "Virement annulé" "Annulation virement 2000 CAD"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "20"
+  Actifs:Banque:RBC:Cheques   2000.00 CAD
+  Passifs:Pret-Actionnaire   -2000.00 CAD
+
+2026-10-05 * "Revenu Canada" "Acompte provisionnel impot societes EMPTX"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "21"
+  note: "Paiement TAXES D'ENTREPRISE / EMPTX. Acompte d'impot sur le revenu, pas une depense et pas TPS/TVQ. Le CPA ventile federal/Quebec a la declaration."
+  Actifs:Banque:RBC:Cheques           -791.41 CAD
+  Passifs:Impots-A-Payer:Federal       791.41 CAD
+
+2026-10-09 * "Procom" "Paiement client Procom - Industrielle Alliance (2026-09-01 au 2026-09-30)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "22"
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI172988.csv"
+  document_fiscal_id: "payment-pqi172988-20261009"
+  document_kind: "revenue"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_revenu: "tps_tvq"
+  periode_service: "2026-09-01/2026-09-30"
+  ref_paiement: "PQI172988"
+  ref_transaction: "PQI515800-P-1"
+  Actifs:Banque:RBC:Cheques   19603.24 CAD
+  Revenus:Consultation       -17050.00 CAD
+  Passifs:TPS-Percue           -852.50 CAD
+  Passifs:TVQ-Percue          -1700.74 CAD
+
+2026-10-09 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI172988.csv"
+
+2026-10-13 * "Revenu Quebec" "Remise TPS/TVQ nette - periode Q3 2026 (estimation ventilation)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "23"
+  note: "Paiement REV QC CODE PAI de 2061.48 CAD. Ventilation estimee au prorata des soldes TPS/TVQ avant paiement; confirmer avec justificatif Revenu Quebec."
+  Actifs:Banque:RBC:Cheques  -2061.48 CAD
+  Passifs:TPS-Percue           690.28 CAD
+  Passifs:TVQ-Percue          1381.04 CAD
+  Actifs:TPS-Payee              -3.30 CAD
+  Actifs:TVQ-Payee              -6.54 CAD
+
+2026-10-28 * "GFKM Inc." "Tenue de livres Q3-2026 - facture 14202"
+  source: "facture-fournisseur-gfkm"
+  fichier_source: "ledger/documents/2026/10/2026-10-28.gfkm-inc-14202.pdf"
+  numero_facture: "14202"
+  numero_facture_interne: "FOUR-2026-001"
+  note: "Honoraires comptables/bookkeeping Q3-2026; solde du 517.39 CAD au 2026-10-28."
+  document: "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/10/2026-10-28.gfkm-inc-14202.pdf"
+  document_fiscal_id: "doc-gfkm-14202-20261028"
+  document_kind: "expense"
+  pricing_mode: "explicit_tax_lines"
+  traitement_taxes_depense: "tps_tvq"
+  Depenses:Honoraires-Professionnels:Comptable    450.00 CAD
+  Actifs:TPS-Payee                                  22.50 CAD
+  Actifs:TVQ-Payee                                  44.89 CAD
+  Passifs:ComptesFournisseurs                     -517.39 CAD
+
+2026-10-28 document Depenses:Honoraires-Professionnels:Comptable "/Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/documents/2026/10/2026-10-28.gfkm-inc-14202.pdf"

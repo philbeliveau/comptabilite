@@ -59,3 +59,30 @@ option "name_expenses" "Depenses"
   Passifs:TVQ-Percue          -1678.79 CAD
 
 2026-07-10 document Actifs:Banque:RBC:Cheques "/Users/philippebeliveau/Desktop/Notebook/comptabilite/Releves/2026/corporate/2026/procom/Payment-PQI167286.csv"
+
+2026-07-03 * "Colleen Marie" "Allocation bureau a domicile - loyer juillet 2026 (20%)"
+  source: "personal-statement"
+  fichier_source: "download-transactions-22.csv"
+  ligne: "4"
+  note: "20% du loyer residentiel de 1775 CAD paye personnellement; estimation de travail en cours, voir AGENTS.md."
+  Depenses:Bureau:Loyer             355.00 CAD
+  Passifs:Pret-Actionnaire         -355.00 CAD
+
+2026-07-27 * "Virement Envoye Compte Personnel Rbc (Moi)" "Virement vers compte personnel RBC"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "4"
+  note: "Sortie corporative vers le compte personnel; traite comme mouvement du pret actionnaire."
+  Actifs:Banque:RBC:Cheques  -2000.00 CAD
+  Passifs:Pret-Actionnaire    2000.00 CAD
+
+2026-07-27 * "Revenu Quebec" "Remise TPS/TVQ nette - periode Q2 2026 (estimation ventilation)"
+  source: "rbc-cheques-csv"
+  fichier_source: "download-transactions-21.csv"
+  ligne: "3"
+  note: "Paiement REV QC CODE PAI de 5794.27 CAD. Ventilation TPS/TVQ et ITC estimee au prorata des soldes Passifs:TPS-Percue et Passifs:TVQ-Percue avant paiement; confirmer avec le justificatif Revenu Quebec."
+  Actifs:Banque:RBC:Cheques  -5794.27 CAD
+  Passifs:TPS-Percue          1939.47 CAD
+  Passifs:TVQ-Percue          3871.14 CAD
+  Actifs:TPS-Payee              -5.47 CAD
+  Actifs:TVQ-Payee             -10.87 CAD

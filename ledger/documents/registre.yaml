@@ -74,3 +74,22 @@
   review_reason:
   created_at: '2026-06-07T16:25:00'
   updated_at: '2026-06-07T16:25:00'
+- id: doc-gfkm-14202-20261028
+  chemin_document: documents/2026/10/2026-10-28.gfkm-inc-14202.pdf
+  nom_fichier: 2026-10-28.gfkm-inc-14202.pdf
+  fournisseur: GFKM Inc.
+  date: '2026-10-28'
+  sous_total: '450.00'
+  montant_tps: '22.50'
+  montant_tvq: '44.89'
+  total: '517.39'
+  description: Tenue de livres Q3-2026 (facture 14202)
+  confiance: 1.0
+  document_kind: expense
+  pricing_mode: explicit_tax_lines
+  normalization_status: matched_and_normalized
+  matched_transaction_ref: /Users/philippebeliveau/Desktop/Notebook/comptabilite/ledger/2026/10.beancount:75
+  traitement_taxes: tps_tvq
+  review_reason:
+  created_at: '2026-11-01T11:40:00'
+  updated_at: '2026-11-01T11:40:00'
